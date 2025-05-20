@@ -26,7 +26,30 @@
 *.a
 *.lib
 
+# Dynamic link libraries (DLLs) - typically built into a 'bin' or 'x64/Debug' folder
+*.dll
+*.exp
+*.ilk
+*.pdb
+
 # Executables
 *.exe
 *.out
 *.app
+
+# Intermediate / Build Output Directories
+# --------------------------------------
+# Visual Studio default output directories
+bin/
+Bin/
+obj/
+Obj/
+x64/
+x86/
+ARM/
+
+# Common intermediate files from compilation
+*.pch # Precompiled header
+*.tlog # Build timing logs
+*.lastbuildstate # MSBuild state file
+*.log # General build logs
