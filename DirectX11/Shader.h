@@ -1,4 +1,5 @@
-﻿#include "D3DApp.h"
+﻿#pragma once
+#include "D3DApp.h"
 #include "Texture.h"
 #include <string>
 #include <map>

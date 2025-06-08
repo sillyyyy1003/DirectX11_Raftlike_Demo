@@ -1,37 +1,28 @@
-#pragma once
+ï»¿#pragma once
 #include "Windows.h"
 #include "CameraBase.h"
 #include "Transform.h"
 
-/// @brief ˆêlÌƒJƒƒ‰
+/// @brief ä¸€äººç§°ã‚«ãƒ¡ãƒ©
 class FirstPersonCamera : public CameraBase
 {
 private:
 
-    float mMoveSpeed = 5.0f;    //ˆÚ“®‘¬“x
+    float m_moveSpeed = 5.0f;    //ç§»å‹•é€Ÿåº¦
 
-    int mState = 0;
-    POINT mOldPos = { 0,0 };
+    int m_state = 0;
+    POINT m_oldPos = { 0,0 };
 
-    bool isLockPos = false;     // ˆÊ’uˆÚ“®‰Â”\H
-    bool isLockAngle = false;   // Šp“xŒÅ’èH
+    bool isLockPos = false;     // ä½ç½®ç§»å‹•å¯èƒ½ï¼Ÿ
+    bool isLockAngle = false;   // è§’åº¦å›ºå®šï¼Ÿ
 
-    //‰ŠúˆÊ’u
-    DirectX::XMFLOAT3 mDefaultPosition = {};
+    //åˆæœŸä½ç½®
+    DirectX::XMFLOAT3 m_defaultPosition = {};
 
-    //UpdateMove‚Åg‚í‚ê‚é•Ï”
-    DirectX::XMFLOAT3 mTargetPosition = {};
-    DirectX::XMFLOAT3 mTargetRotation = {};
-    DirectX::XMFLOAT3 mDirection = {};
-    float mDistance = 0.0f;         //ƒ^[ƒQƒbƒg‚Æ‚Ì‹——£
-    float mAccumulateTime = 0.f;    // “®‚«‚Ì—İÏŠÔ
-    float mDuration = 1.f;
-    bool isMoveToTarget = false;    // ‰ñ“]‰^“®‚·‚é‚©‚Ç‚¤‚©
-
-    //ƒJƒƒ‰—h‚ê‚Åg‚í‚ê‚é•Ï”
+    //ã‚«ãƒ¡ãƒ©æºã‚Œã§ä½¿ã‚ã‚Œã‚‹å¤‰æ•°
     bool isShaking = false;
-    DirectX::XMFLOAT2 mShakingAmplitude;    //—h‚ê‚Ì•
-    /*FastNoiseLite mNoise;*/
+    DirectX::XMFLOAT2 mShakingAmplitude;    //æºã‚Œã®å¹…
+
 
 public:
 
@@ -41,8 +32,6 @@ public:
         CAM_NONE,
         /// MOVE FREE
         CAM_FREE,
-        /// •âŠÔ‚ÅƒJƒƒ‰ˆÚ“®
-        CAM_MOVE,
         /// Camera Shaking
         CAM_SHAKE,
     };
@@ -54,80 +43,69 @@ public:
 
     void Update(float dt) override;
 
-    /// @brief ƒJƒƒ‰‚ÌˆÊ’uİ’è
+    /// @brief ã‚«ãƒ¡ãƒ©ã®ä½ç½®è¨­å®š
     void SetPosition(float x, float y, float z);
     void SetPosition(const DirectX::XMFLOAT3& pos);
 
-    /// @brief ƒJƒƒ‰‚ÌŒü‚«‚ğİ’è
-    /// @param pos ƒJƒƒ‰‚ÌˆÊ’u
-    /// @param target ƒ^[ƒQƒbƒg‚ÌˆÊ’u
-    /// @param up ã•ûŒü
+    /// @brief ã‚«ãƒ¡ãƒ©ã®å‘ãã‚’è¨­å®š
+    /// @param pos ã‚«ãƒ¡ãƒ©ã®ä½ç½®
+    /// @param target ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½ç½®
+    /// @param up ä¸Šæ–¹å‘
     void LookAt(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& target, const DirectX::XMFLOAT3& up);
 
 
     void LookAt(const DirectX::XMFLOAT3& target);
 
-    /// @brief ‚ ‚é•ûŒü‚É‰ˆ‚Á‚ÄŠÏ@
-    /// @param pos ƒJƒƒ‰‚ÌˆÊ’u
-    /// @param to •ûŒü
-    /// @param up ã•ûŒü
+    /// @brief ã‚ã‚‹æ–¹å‘ã«æ²¿ã£ã¦è¦³å¯Ÿ
+    /// @param pos ã‚«ãƒ¡ãƒ©ã®ä½ç½®
+    /// @param to æ–¹å‘
+    /// @param up ä¸Šæ–¹å‘
     void LookTo(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& to, const DirectX::XMFLOAT3& up);
 
-    /// @brief •½sˆÚ“®
-    /// @param d ‹——£
+    /// @brief å¹³è¡Œç§»å‹•
+    /// @param d è·é›¢
     void Strafe(float d);
 
-    /// @brief ’¼s
-    /// @param d ‹——£
+    /// @brief ç›´è¡Œ
+    /// @param d è·é›¢
     void Walk(float d);
 
-    /// @brief ‘O‚É’¼s
-    /// @param d ‹——£
+    /// @brief å‰ã«ç›´è¡Œ
+    /// @param d è·é›¢
     void MoveForward(float d);
 
-    void LookDown();
 
-    /// @brief ã‰ºŠÏ@
+    /// @brief ä¸Šä¸‹è¦³å¯Ÿ
     /// @param rad +:UP -:DOWN
     void Pitch(float rad);
 
-    /// @brief ¶‰EŠÏ@
+    /// @brief å·¦å³è¦³å¯Ÿ
     /// @param rad +:LEFT -:RIGHT
     void RotateY(float rad);
 
     void MoveUpward(float d);
 
-    /// @brief ƒJƒƒ‰‚ÌŠp“x‚ğƒƒbƒN‚·‚é
+    /// @brief ã‚«ãƒ¡ãƒ©ã®è§’åº¦ã‚’ãƒ­ãƒƒã‚¯ã™ã‚‹
     void LockCameraAngle(bool isLockAngle) { this->isLockAngle = isLockAngle; };
     bool GetAngleLock() { return isLockAngle; };
 
-    /// @brief ƒJƒƒ‰‚ÌˆÊ’u‚ğƒƒbƒN‚·‚é
+    /// @brief ã‚«ãƒ¡ãƒ©ã®ä½ç½®ã‚’ãƒ­ãƒƒã‚¯ã™ã‚‹
     void LockCameraPos(bool isLockPos) { this->isLockPos = isLockPos; };
     bool GetPosLock() { return isLockPos; };
 
 
     void LockCamera();
 
-    /// @brief 
-    /// @param targetPos w’èˆÊ’u
-    /// @param targetRot w’èŠp“x
-    /// @param duration ˆÚ“®ŠÔ
-	//void StartMoveToTarget(DirectX::XMFLOAT3 targetPos, DirectX::XMFLOAT3 targetRot, float duration);
-    //void BackToDefaultPos();
 
-    //bool IsEndMove();
-    //bool IsStartMove();
-
-    /// @brief ƒJƒƒ‰ó‘Ô‚ğİ’è‚·‚é
+    /// @brief ã‚«ãƒ¡ãƒ©çŠ¶æ…‹ã‚’è¨­å®šã™ã‚‹
     void SetCameraState(FirstPersonCamera::CameraKind state);
 
-    /// @brief ƒJƒƒ‰‚Ì—h‚ê‚ğİ’è‚·‚é
-    /// @param amplitude —h‚ê•
-    /// @param duration —h‚êŠÔ(-1‚Ìê‡‚Í‰i‰“)
-    /// @param frequency ü”g”
+    /// @brief ã‚«ãƒ¡ãƒ©ã®æºã‚Œã‚’è¨­å®šã™ã‚‹
+    /// @param amplitude æºã‚Œå¹…
+    /// @param duration æºã‚Œæ™‚é–“(-1ã®å ´åˆã¯æ°¸é )
+    /// @param frequency å‘¨æ³¢æ•°
     void SetShake(float amplitude, float frequency, float duration = -1);
 
-    void StopShake();
     bool GetShake() const { return isShaking; };
 
 
@@ -135,16 +113,6 @@ public:
 private:
     void UpdateState();
     void UpdateFlight(DirectX::XMFLOAT2 mouseMove, float dt);
-
-    /// @brief w’èˆÊ’uEŠp“x‚ÉˆÚ“®‚·‚é
-    void UpdateMove(float dt);//todo:need to fix the logic problems
-
-    void UpdateShake(float dt);
-
-    /// @brief “Á’èˆÊ’u‚ğƒAƒbƒv‚·‚é
-    /// @param dt 
-    void ZoomIn(float dt);
-
     void Shake(float dt);
 };
 

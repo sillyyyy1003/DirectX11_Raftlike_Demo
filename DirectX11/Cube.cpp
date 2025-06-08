@@ -5,7 +5,7 @@ Cube::Cube()
 {
 }
 
-void Cube::Init(const char* fileName)
+void Cube::Init()
 {
 
 	//Create Mesh 
@@ -64,7 +64,7 @@ void Cube::Init(const char* fileName)
 	};
 
 	//VERTEX List
-	std::vector<Vertex> vtxData;
+	std::vector<MeshBuffer::Vertex> vtxData;
 
 	vtxData.resize(24);
 	for (int i = 0; i < 6; i++)
@@ -80,7 +80,7 @@ void Cube::Init(const char* fileName)
 	for (UINT i = 0; i < m_meshes.size(); ++i)
 	{
 		//std::vector<Vertex::VtxPosColorNormal> vertexData;
-		std::vector<Vertex> vertexData;
+		std::vector<MeshBuffer::Vertex> vertexData;
 		std::vector<DWORD> indexData;
 		// 每个面有4个顶点
 		vertexData.resize(4);
@@ -95,7 +95,7 @@ void Cube::Init(const char* fileName)
 
 		MeshBuffer::MeshData desc = {};
 		desc.pVertex = vertexData.data();
-		desc.vertexSize = sizeof(Vertex);
+		desc.vertexSize = sizeof(MeshBuffer::Vertex);
 		desc.vertexCount = static_cast<UINT>(vertexData.size());
 		desc.pIndex = indexData.data();
 		desc.indexSize = sizeof(DWORD);

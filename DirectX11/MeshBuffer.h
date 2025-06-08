@@ -1,9 +1,24 @@
 ﻿#pragma once
-#include<D3DApp.h>
+#include"D3DApp.h"
 
 class MeshBuffer
 {
 public:
+
+	struct Vertex
+	{
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMFLOAT3 normal;
+		DirectX::XMFLOAT2 texCoord;
+	};
+
+	struct VtxPosNormalTexTangent
+	{
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMFLOAT3 normal;
+		DirectX::XMFLOAT2 tex;
+		DirectX::XMFLOAT3 tangent;
+	};
 
 	struct MeshData
 	{
@@ -17,20 +32,20 @@ public:
 		bool isWrite = true;	//データの書き換えが可能かどうか
 	};
 
-	MeshData mData = {};
+	MeshData m_meshData = {};
 
 	template <class T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
-	ComPtr<ID3D11Buffer> pVertexBuffer;
-	ComPtr<ID3D11Buffer> pIndexBuffer;
+	ComPtr<ID3D11Buffer> m_pVertexBuffer;
+	ComPtr<ID3D11Buffer> m_pIndexBuffer;
 
 public:
 
 	MeshBuffer(const MeshData& _data);
 	~MeshBuffer();
 
-	ID3D11Buffer* GetVertexBuffer() const { return pVertexBuffer.Get(); };
-	ID3D11Buffer* GetIndexBuffer() const { return pIndexBuffer.Get(); };
+	ID3D11Buffer* GetVertexBuffer() const { return m_pVertexBuffer.Get(); };
+	ID3D11Buffer* GetIndexBuffer() const { return m_pIndexBuffer.Get(); };
 
 	/// @brief 頂点バッファを書き換える
 	/// @param pVertex 頂点情報

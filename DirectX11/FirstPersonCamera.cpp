@@ -1,7 +1,7 @@
 ﻿#include "FirstPersonCamera.h"
+#include "Assets/Lib/imgui/Include/imgui.h"
 
-#include <imgui/Include/imgui.h>
-
+#include "D3DApp.h"
 #include "KInput.h"
 
 using namespace DirectX;
@@ -9,34 +9,45 @@ using namespace DirectX;
 
 void FirstPersonCamera::Init()
 {
-    ////Random
-    //mNoise.SetSeed(1);
-    //mNoise.SetFrequency(10.f);
-    //mNoise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+
 }
 
 void FirstPersonCamera::Update(float dt)
 {
     UpdateState();
 
+#ifdef _DEBUG
+    if (ImGui::Begin("Camera Option"))
+    {
+        ImGui::Checkbox("isLock", &isLockPos);
 
-    if (mState == CAM_NONE) return;
+        ImGui::Text("Position");
+        ImGui::Text("Float3 : x: %2f  y: %2f  z: %2f", this->GetPos().x, this->GetPos().y, this->GetPos().z);
 
-    switch (mState)
+        ImGui::Text("Rotation");
+        DirectX::XMFLOAT3 rot = { XMConvertToDegrees(m_transform.GetRotation().x),XMConvertToDegrees(m_transform.GetRotation().y),XMConvertToDegrees(m_transform.GetRotation().z) };
+        ImGui::Text("Float3 : x: %2f  y: %2f  z: %2f", rot.x, rot.y, rot.z);
+
+        ImGui::InputFloat("MoveSpeed", &m_moveSpeed);
+
+    }
+    ImGui::End();
+#endif
+
+    if (m_state == CAM_NONE) return;
+
+    switch (m_state)
     {
     case CAM_FREE:
         // マウス移動量
         POINT cursorPos;
         GetCursorPos(&cursorPos);
-        XMFLOAT2 mouseMove = DirectX::XMFLOAT2((float)cursorPos.x - mOldPos.x, (float)cursorPos.y - mOldPos.y);
-        mOldPos = cursorPos;
+        XMFLOAT2 mouseMove = DirectX::XMFLOAT2((float)cursorPos.x - m_oldPos.x, (float)cursorPos.y - m_oldPos.y);
+        m_oldPos = cursorPos;
         UpdateFlight(mouseMove, dt);
         break;
-    case CAM_MOVE:
-        UpdateMove(dt);
-        break;
     case CAM_SHAKE:
-        UpdateShake(dt);
+        //UpdateShake(dt);
         break;
     default:;
     }
@@ -94,31 +105,24 @@ void FirstPersonCamera::MoveForward(float d)
     m_transform.Translate(m_transform.GetForwardAxis(), d);
 }
 
-void FirstPersonCamera::LookDown()
-{
-    //XMFLOAT3 rotation = m_transform.GetRotationInRadian();
-    //rotation.x = -XM_PI / 2;
-    //m_transform.SetRotationInRadian(rotation);
-}
-
 void FirstPersonCamera::Pitch(float rad)
 {
-    //XMFLOAT3 rotation = m_transform.GetRotationInRadian();
-    //// LIMIT ROTATE DEGREE TO ±85°
-    //rotation.x += rad;
-    //if (rotation.x > XM_PI * 85 / 18)
-    //    rotation.x = XM_PI * 85 / 18;
-    //else if (rotation.x < -XM_PI * 85 / 18)
-    //    rotation.x = -XM_PI * 85 / 18;
+    XMFLOAT3 rotation = m_transform.GetRotation();
+    // 将绕x轴旋转弧度限制在[-7pi/18, 7pi/18]之间
+    rotation.x += rad;
+    if (rotation.x > XM_PI * 7 / 18)
+        rotation.x = XM_PI * 7 / 18;
+    else if (rotation.x < -XM_PI * 7 / 18)
+        rotation.x = -XM_PI * 7 / 18;
 
-    //m_transform.SetRotationInRadian(rotation);
+    m_transform.SetRotation(rotation);
 }
 
 void FirstPersonCamera::RotateY(float rad)
 {
-    //XMFLOAT3 rotation = m_transform.GetRotationInRadian();
-    //rotation.y = XMScalarModAngle(rotation.y + rad);
-    //m_transform.SetRotationInRadian(rotation);
+    XMFLOAT3 rotation = m_transform.GetRotation();
+    rotation.y = XMScalarModAngle(rotation.y + rad);
+    m_transform.SetRotation(rotation);
 }
 
 void FirstPersonCamera::MoveUpward(float d)
@@ -127,150 +131,75 @@ void FirstPersonCamera::MoveUpward(float d)
 }
 
 
-
-
 void FirstPersonCamera::LockCamera()
 {
     isLockAngle = true;
     isLockPos = true;
 }
 
-
-
-
-void FirstPersonCamera::ZoomIn(float dt)
-{
-    if (mAccumulateTime <= mDuration)
-    {
-        //累積時間
-        float step = dt / mDuration;
-        mAccumulateTime += dt;
-        m_transform.Translate(mDirection, step * mDistance);
-
-        Pitch(mTargetRotation.x * step);
-
-    }
-    else
-    {
-        //運動停止
-        isMoveToTarget = false;
-        //時間リセット
-        mAccumulateTime = 0.0f;
-
-    }
-}
-
 void FirstPersonCamera::Shake(float dt)
 {
-    mAccumulateTime += dt;
-
-    //float shakeX = mShakingAmplitude.x * mNoise.GetNoise(mAccumulateTime, 1.0f);
-    //float shakeY = mShakingAmplitude.y * mNoise.GetNoise(mAccumulateTime, 2.0f);
-
-    //SetPosition(mDefaultPosition.x + shakeX, mDefaultPosition.y + shakeY, mDefaultPosition.z);
+  
 
 }
 
 void FirstPersonCamera::SetCameraState(FirstPersonCamera::CameraKind state)
 {
-    mState = state;
+    m_state = state;
 }
 
 void FirstPersonCamera::SetShake(float amplitude, float frequency, float duration)
 {
-    //isShaking = true;
-    ////揺れ時間を設定
-    //mDuration = duration;
-
-    ////周波数設定
-    //mNoise.SetFrequency(frequency);
-
-    ////揺れは幅を設定
-    //mShakingAmplitude = { amplitude,amplitude };
-    ////元の位置を確定
-    //mDefaultPosition = this->GetPos();
-}
-
-void FirstPersonCamera::StopShake()
-{
-    isShaking = false;
-
-    mAccumulateTime = 0.f;
-
-    mDuration = 0.f;
-
+   
 }
 
 
 void FirstPersonCamera::UpdateState()
 {
-    //Zoom in の場合
-    if (isMoveToTarget)
-    {
-        mState = CAM_MOVE;
-        return;
-    }
-
-    //カメラ揺れの場合
-    if (isShaking)
-    {
-        mState = CAM_SHAKE;
-        return;
-    }
-
     // 操作の場合
-    CameraKind prev = (CameraKind)mState;
+    CameraKind prev = (CameraKind)m_state;
 
-    if (KInput::IsKeyPress(VK_MENU))//ALT
+	if (KInput::IsKeyPress(VK_RBUTTON))
     {
-        mState = CAM_NONE;
-        //if (KInput::IsKeyTrigger('R'))ResetCamera();//カメラの位置を元に戻す
-        
-    }
-    else if (KInput::IsKeyPress(VK_RBUTTON))
-    {
-        mState = CAM_FREE;
+        m_state = CAM_FREE;
     }
     else
     {
-        mState = CAM_NONE;
+        m_state = CAM_NONE;
     }
 
-    if (prev != mState)
-        GetCursorPos(&mOldPos);
-
-
+    if (prev != m_state)GetCursorPos(&m_oldPos);
 
 }
 
 void FirstPersonCamera::UpdateFlight(DirectX::XMFLOAT2 mouseMove, float dt)
 {
-    // if (!isLockAngle)
-    // {
-         //横回転
-    //float angleX = 360.0f * mouseMove.x / WIN_WIDTH;
-    //RotateY(angleX * dt * mMoveSpeed);
-    ////縦回転
-    //float angleY = 180.0f * mouseMove.y / WIN_HEIGHT;
-    //Pitch(angleY * dt * mMoveSpeed);
-    // }
+     if (!isLockAngle)
+     {
+     	//横回転
+		float angleX = 360.0f * mouseMove.x / WIN_WIDTH;
+		RotateY(angleX * dt * m_moveSpeed);
+		//縦回転
+		float angleY = 180.0f * mouseMove.y / WIN_HEIGHT;
+		Pitch(angleY * dt * m_moveSpeed);
+     }
 
-    // if (isLockPos)return;
+     if (isLockPos)return;
 
 
      // キー入力で移動
     if (KInput::IsKeyPress('W'))//Move Forward
-        Walk(dt * mMoveSpeed);
+        Walk(dt * m_moveSpeed);
     if (KInput::IsKeyPress('S'))//Move Backward
-        Walk(dt * -mMoveSpeed);
+        Walk(dt * -m_moveSpeed);
     if (KInput::IsKeyPress('A'))//Move Left
-        Strafe(dt * -mMoveSpeed);
+        Strafe(dt * -m_moveSpeed);
     if (KInput::IsKeyPress('D'))//Move Right
-        Strafe(dt * mMoveSpeed);
+        Strafe(dt * m_moveSpeed);
     if (KInput::IsKeyPress('Q'))
-        MoveUpward(dt * mMoveSpeed);
+        MoveUpward(dt * m_moveSpeed);
     if (KInput::IsKeyPress('E'))
-        MoveUpward(dt * -mMoveSpeed);
+        MoveUpward(dt * -m_moveSpeed);
 
     // Wheel入力
     //if (gD3D->GetMoveUnit() != 0)
@@ -281,36 +210,4 @@ void FirstPersonCamera::UpdateFlight(DirectX::XMFLOAT2 mouseMove, float dt)
 
 }
 
-void FirstPersonCamera::UpdateMove(float dt)
-{
-    ZoomIn(dt);
-}
 
-void FirstPersonCamera::UpdateShake(float dt)
-{
-    //延々と揺らす
-    if (mDuration < 0)
-    {
-        Shake(dt);
-
-    }
-    else
-    {
-        if (mAccumulateTime <= mDuration)
-        {
-            Shake(dt);
-
-        }
-        else
-        {
-            //時間リセット
-            mAccumulateTime = 0.0f;
-            //揺れを停止
-            isShaking = false;
-            //元の位置に戻す
-            SetPosition(mDefaultPosition);
-        }
-
-    }
-
-}

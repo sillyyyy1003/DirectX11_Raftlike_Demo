@@ -3,16 +3,12 @@
 #include <vector>
 #include "MeshBuffer.h"
 
-struct Vertex
-{
-	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT3 normal;
-	DirectX::XMFLOAT2 texCoord;
-};
+
 
 class Cube
 {
 private:
+
 	struct MeshData
 	{
 		std::unique_ptr<MeshBuffer> mesh;
@@ -22,7 +18,7 @@ private:
 
 public:
 	Cube();
-	void Init(const char* fileName);
+	void Init();
 	void Draw();
 
 };

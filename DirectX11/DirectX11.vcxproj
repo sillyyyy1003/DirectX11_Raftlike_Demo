@@ -74,12 +74,12 @@
     <IncludePath>$(ProjectDir)imgui\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(ProjectDir)imgui\Lib\Debug;C:\DirectXTex\lib\Debug;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\DirectXTex;$(ProjectDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Assets\Lib\imgui\Lib\Debug;$(ProjectDir)\Assets\Lib\Assimp\lib;$(ProjectDir)\Assets\Lib\DirectXTex\lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\Assets\Lib\DirectXTex;$(ProjectDir);$(ProjectDir)\Assets\Lib\imgui\Include;$(ProjectDir)\Assets\Lib\Assimp\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)imgui\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\imgui\Lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\Assets\Lib\imgui\Include;$(ProjectDir)\Assets\Lib\DirectXTex;$(ProjectDir)\Assets\Lib\Assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Assets\Lib\imgui\Lib\Release;$(ProjectDir)\Assets\Lib\DirectXTex\lib\Release;$(ProjectDir)\Assets\Lib\Assimp\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -116,9 +116,11 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,6 +139,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -144,6 +147,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <FxCompile>
+      <ObjectFileOutput>$(ProjectDir)\Assets\Shader\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CameraBase.cpp" />
@@ -151,15 +157,30 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="D3DApp.cpp" />
     <ClCompile Include="d3dUtil.cpp" />
+    <ClCompile Include="DebugLog.cpp" />
+    <ClCompile Include="DirLight.cpp" />
     <ClCompile Include="DXTrace.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="IEffect.cpp" />
     <ClCompile Include="FirstPersonCamera.cpp" />
     <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="KInput.cpp" />
+    <ClCompile Include="LightBase.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="MeshBuffer.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="RenderState.cpp" />
+    <ClCompile Include="SceneBase.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SignalBus.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UIElement.cpp" />
+    <ClCompile Include="UIFontSet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraBase.h" />
@@ -167,21 +188,37 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="D3DApp.h" />
     <ClInclude Include="d3dUtil.h" />
+    <ClInclude Include="DebugLog.h" />
+    <ClInclude Include="DirLight.h" />
     <ClInclude Include="DXTrace.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="IEffect.h" />
     <ClInclude Include="FirstPersonCamera.h" />
     <ClInclude Include="GameApp.h" />
+    <ClInclude Include="Geometry.h" />
     <ClInclude Include="KInput.h" />
+    <ClInclude Include="LightBase.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="MeshBuffer.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="PointLight.h" />
+    <ClInclude Include="RenderState.h" />
+    <ClInclude Include="SceneBase.hpp" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Signal.hpp" />
+    <ClInclude Include="SignalBus.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UIElement.h" />
+    <ClInclude Include="UIFontSet.h" />
     <ClInclude Include="WinMin.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Triangle.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="PS_Geometry.hlsl">
+    <FxCompile Include="PS_Blinn-Phong.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

@@ -1,5 +1,7 @@
 ﻿#include "CameraBase.h"
 
+#include "Material.h"
+
 using namespace DirectX;
 
 

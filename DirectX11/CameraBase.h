@@ -1,8 +1,6 @@
-#pragma once
+ï»¿#pragma once
 #include <DirectXMath.h>
-
 #include "Transform.h"
-
 
 namespace CameraSet
 {
@@ -23,7 +21,7 @@ protected:
 	float m_nearZ = 0.1f;
 	float m_farZ = 0.0f;
 	float m_aspect = 0.f;
-	float m_fovY = 0.0f;//Default:90‹
+	float m_fovY = 0.0f;//Default:90Â°
 
 
 public:
@@ -35,28 +33,28 @@ public:
 	virtual ~CameraBase() = default;
 	virtual void Update(float dt) = 0;
 
-	/// @brief ˆÊ’uæ“¾
+	/// @brief ä½ç½®å–å¾—
 	DirectX::XMFLOAT3 GetPos() const noexcept { return m_transform.GetPosition(); };
-	/// @brief ˆÊ’uİ’è
+	/// @brief ä½ç½®è¨­å®š
 	void SetPos(const DirectX::XMFLOAT3& pos) noexcept { m_transform.SetPosition(pos); };
 
-	/// @brief ã•ûŒüæ“¾
+	/// @brief ä¸Šæ–¹å‘å–å¾—
 	const DirectX::XMFLOAT3 GetUpDir()noexcept { return m_transform.GetUpAxis(); };
 
 	const DirectX::XMMATRIX GetViewXM()noexcept;
 	const DirectX::XMMATRIX GetProjXM(bool isReversed = false)noexcept;
 
-	/// @brief ƒrƒ…[s—ñ‚ğæ“¾
-	/// @param isTranspose s—ñ‚Ìs‚Æ—ñ‚ğŒğŠ·‚·‚é‚©
+	/// @brief ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—ã‚’å–å¾—
+	/// @param isTranspose è¡Œåˆ—ã®è¡Œã¨åˆ—ã‚’äº¤æ›ã™ã‚‹ã‹
 	/// @return 
 	const  DirectX::XMFLOAT4X4 GetViewXMF(bool isTranspose = true)noexcept;
 
-	/// @brief “Š‰es—ñ‚ğæ“¾
-	/// @param isTranspose s—ñ‚Ìs‚Æ—ñ‚ğŒğŠ·‚·‚é‚©
+	/// @brief æŠ•å½±è¡Œåˆ—ã‚’å–å¾—
+	/// @param isTranspose è¡Œåˆ—ã®è¡Œã¨åˆ—ã‚’äº¤æ›ã™ã‚‹ã‹
 	/// @return 
 	const DirectX::XMFLOAT4X4 GetProjXMF(bool isTranspose = true) noexcept;
 
-	/// @brief ƒJƒƒ‰‚Ìƒpƒ^[ƒ“‚ğİ’è
+	/// @brief ã‚«ãƒ¡ãƒ©ã®ãƒ‘ã‚¿ãƒ¼ãƒ³ã‚’è¨­å®š
 	/// @param _mode 
 	void SetCameraMode(CameraSet::CameraMode _mode) noexcept { m_mode = _mode; }
 

@@ -22,93 +22,246 @@
     <Filter Include="资源文件\PixelShader">
       <UniqueIdentifier>{f963a060-5922-4988-b3f7-3671ce20815a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\D3D">
+      <UniqueIdentifier>{c4c20de6-242a-4866-a109-c671973b0576}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\D3D">
+      <UniqueIdentifier>{60a363be-3c19-4e47-b031-8c17d8ddf359}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Camera">
+      <UniqueIdentifier>{a24d159b-69e2-4e76-8766-34d579f7b5e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Camera">
+      <UniqueIdentifier>{50d98ae4-9e81-4026-9313-82fe310532de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Light">
+      <UniqueIdentifier>{cd9cac7e-ef4b-40c9-9084-edf699d26b28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Light">
+      <UniqueIdentifier>{72ee4d6a-f66d-4656-9010-a872edc5b1cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Input">
+      <UniqueIdentifier>{021ec054-14f9-4c57-ac40-ebe26074df0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Input">
+      <UniqueIdentifier>{daac03c2-84a0-4625-ac01-8377097f67af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Scene">
+      <UniqueIdentifier>{19ea9847-cafd-4534-8722-47b8e31c712d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Model">
+      <UniqueIdentifier>{73f77dd5-8d9b-42f1-afb2-d9bbc524221c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Model">
+      <UniqueIdentifier>{9bc9e23b-ee13-44a9-bd89-259989ae0ed9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\GameObject">
+      <UniqueIdentifier>{e91362f8-549d-4efd-9400-edeae0b67281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Scene">
+      <UniqueIdentifier>{a8106209-0428-4fc9-8f10-4f16936ed782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\UI">
+      <UniqueIdentifier>{bb8f40c8-8369-4efe-92f5-f7700e9a9ec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\UI">
+      <UniqueIdentifier>{59966810-1e35-40e0-84e7-d3d5b10e2001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Render">
+      <UniqueIdentifier>{bcc94588-db12-44f7-8531-47b712186461}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Render">
+      <UniqueIdentifier>{a6e64caf-e6d2-45be-aa23-4656e21e7ceb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\GameObject">
+      <UniqueIdentifier>{6024e463-25f7-460f-87cb-8ad82ceb61a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\System">
+      <UniqueIdentifier>{9c74bad7-78ec-4915-b3c2-65e8d23304e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\System">
+      <UniqueIdentifier>{02e92b6a-4764-4ce5-b526-d9c566b11e26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="D3DApp.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="d3dUtil.cpp">
+      <Filter>源文件\D3D</Filter>
     </ClCompile>
-    <ClCompile Include="CpuTimer.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="D3DApp.cpp">
+      <Filter>源文件\D3D</Filter>
     </ClCompile>
     <ClCompile Include="DXTrace.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\D3D</Filter>
     </ClCompile>
-    <ClCompile Include="d3dUtil.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="GameApp.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="MeshBuffer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Cube.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="CpuTimer.cpp">
+      <Filter>源文件\D3D</Filter>
     </ClCompile>
     <ClCompile Include="CameraBase.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Camera</Filter>
     </ClCompile>
     <ClCompile Include="FirstPersonCamera.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="DirLight.cpp">
+      <Filter>源文件\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="LightBase.cpp">
+      <Filter>源文件\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>源文件\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>源文件\D3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>源文件\D3D</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderState.cpp">
+      <Filter>源文件\D3D</Filter>
     </ClCompile>
     <ClCompile Include="KInput.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>源文件\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>源文件\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneBase.cpp">
+      <Filter>源文件\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>源文件\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshBuffer.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="IEffect.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="UIElement.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFontSet.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>源文件\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>源文件\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameApp.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugLog.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="SignalBus.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry.cpp">
+      <Filter>源文件\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMin.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="D3DApp.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CpuTimer.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\D3D</Filter>
     </ClInclude>
-    <ClInclude Include="DXTrace.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="D3DApp.h">
+      <Filter>头文件\D3D</Filter>
     </ClInclude>
     <ClInclude Include="d3dUtil.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\D3D</Filter>
     </ClInclude>
-    <ClInclude Include="GameApp.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshBuffer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Cube.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="DXTrace.h">
+      <Filter>头文件\D3D</Filter>
     </ClInclude>
     <ClInclude Include="CameraBase.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Camera</Filter>
     </ClInclude>
     <ClInclude Include="FirstPersonCamera.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="LightBase.h">
+      <Filter>头文件\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>头文件\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DirLight.h">
+      <Filter>头文件\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>头文件\D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>头文件\D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderState.h">
+      <Filter>头文件\D3D</Filter>
     </ClInclude>
     <ClInclude Include="KInput.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneBase.hpp">
+      <Filter>源文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>头文件\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>头文件\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshBuffer.h">
+      <Filter>头文件\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFontSet.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="IEffect.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>头文件\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>头文件\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Signal.hpp">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="SignalBus.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugLog.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="GameApp.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry.h">
+      <Filter>头文件\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -123,7 +276,7 @@
     <FxCompile Include="VS_Triangle.hlsl">
       <Filter>资源文件\VertexShader</Filter>
     </FxCompile>
-    <FxCompile Include="PS_Geometry.hlsl">
+    <FxCompile Include="PS_Blinn-Phong.hlsl">
       <Filter>资源文件\PixelShader</Filter>
     </FxCompile>
     <FxCompile Include="VS_Geometry.hlsl">
