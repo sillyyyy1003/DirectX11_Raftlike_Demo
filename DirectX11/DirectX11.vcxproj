@@ -71,15 +71,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)imgui\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\Assets\Lib\DirectXTex;$(ProjectDir)\Assets\Lib\Assimp\include;$(ProjectDir)\Assets\Lib\imgui\Include;$(IncludePath);$(ProjectDir)</IncludePath>
+    <LibraryPath>$(ProjectDir)DirectX11\Assets\Lib\JoltPhysics\Lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(ProjectDir)\Assets\Lib\imgui\Lib\Debug;$(ProjectDir)\Assets\Lib\Assimp\lib;$(ProjectDir)\Assets\Lib\DirectXTex\lib\Debug;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)\Assets\Lib\DirectXTex;$(ProjectDir);$(ProjectDir)\Assets\Lib\imgui\Include;$(ProjectDir)\Assets\Lib\Assimp\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Assets\Lib\imgui\Lib\Debug;$(ProjectDir)\Assets\Lib\Assimp\lib;$(ProjectDir)\Assets\Lib\DirectXTex\lib\Debug;$(ProjectDir)\Assets\Lib\JoltPhysics\Lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\Assets\Lib\DirectXTex;$(ProjectDir);$(ProjectDir)\Assets\Lib\imgui\Include;$(ProjectDir)\Assets\Lib\Assimp\include;$(ProjectDir)\Assets\Lib\JoltPhysics\Include;$(ProjectDir)\Assets\Lib\JoltPhysics\Include\Jolt;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(ProjectDir)\Assets\Lib\imgui\Include;$(ProjectDir)\Assets\Lib\DirectXTex;$(ProjectDir)\Assets\Lib\Assimp\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\Assets\Lib\imgui\Lib\Release;$(ProjectDir)\Assets\Lib\DirectXTex\lib\Release;$(ProjectDir)\Assets\Lib\Assimp\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\Assets\Lib\imgui\Include;$(ProjectDir)\Assets\Lib\DirectXTex;$(ProjectDir)\Assets\Lib\Assimp\include;$(ProjectDir)\Assets\Lib\JoltPhysics\Include\Jolt;$(ProjectDir)\Assets\Lib\JoltPhysics\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\Assets\Lib\imgui\Lib\Release;$(ProjectDir)\Assets\Lib\DirectXTex\lib\Release;$(ProjectDir)\Assets\Lib\Assimp\lib;$(ProjectDir)\Assets\Lib\JoltPhysics\Lib\Release;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LibraryPath>$(ProjectDir)DirectX11\Assets\Lib\JoltPhysics\Lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -87,6 +91,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Assets\Lib\JoltPhysics\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -104,6 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -153,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CameraBase.cpp" />
+    <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="CpuTimer.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="D3DApp.cpp" />
@@ -166,24 +174,37 @@
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="KInput.cpp" />
+    <ClCompile Include="Layers.cpp" />
     <ClCompile Include="LightBase.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MeshBuffer.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="PBREffect.cpp" />
+    <ClCompile Include="PhysicsComponent.cpp" />
+    <ClCompile Include="PhysicsManager.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="RenderState.cpp" />
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SignalBus.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="ThirdPersonCamera.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UIBasicEffect.cpp" />
     <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="UIFontSet.cpp" />
+    <ClCompile Include="UIScaler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraBase.h" />
+    <ClInclude Include="CameraController.h" />
+    <ClInclude Include="Component.hpp" />
     <ClInclude Include="CpuTimer.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="D3DApp.h" />
@@ -197,11 +218,19 @@
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="KInput.h" />
+    <ClInclude Include="Layers.h" />
     <ClInclude Include="LightBase.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MeshBuffer.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="PBREffect.h" />
+    <ClInclude Include="PhysicsComponent.h" />
+    <ClInclude Include="PhysicsManager.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="Primitive.h" />
+    <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="RenderState.h" />
     <ClInclude Include="SceneBase.hpp" />
     <ClInclude Include="SceneManager.h" />
@@ -209,16 +238,26 @@
     <ClInclude Include="Signal.hpp" />
     <ClInclude Include="SignalBus.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="ThirdPersonCamera.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UIBasicEffect.h" />
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="UIFontSet.h" />
+    <ClInclude Include="UIScaler.h" />
     <ClInclude Include="WinMin.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LightHelper.hlsli" />
     <None Include="Triangle.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PS_Blinn-Phong.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="PS_PBR.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -238,7 +277,19 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\Assets\Shader\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\Shader\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+    <FxCompile Include="PS_UIElement.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="VS_Geometry.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="VS_PBR.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -257,6 +308,12 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\Assets\Shader\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\Assets\Shader\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="VS_UIElement.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

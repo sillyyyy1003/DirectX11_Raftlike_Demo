@@ -16,7 +16,7 @@ void BasicEffect::ApplyRenderState()
 {
 	GameApp::SetBlendState(RenderStates::BSTransparent);		//AlphaBlend
 	GameApp::SetSamplerState(RenderStates::SSLinearWrap);		//Default Sampling
-	GameApp::SetCullingMode(RenderStates::RSCullClockWise);	//表だけ
+	GameApp::SetCullingMode(nullptr);	//表だけ
 }
 
 void BasicEffect::Apply()
@@ -101,7 +101,7 @@ void BasicEffect::SetPointLight(std::vector<PointLight*> pointLights)
 
 }
 
-void BasicEffect::SetCameraMatrix(CameraBase* camera)
+void BasicEffect::SetCameraCB(CameraBase* camera)
 {
 	if (camera != nullptr)
 	{
@@ -132,40 +132,29 @@ void BasicEffect::SetCameraMatrix(CameraBase* camera)
 	}
 }
 
-/*
-void BasicEffect::SetCameraMatrix()
-{
-	if(m_pCamera)
-	{
-		DirectX::XMFLOAT4 camPos = {
-			m_pCamera->GetPos().x,
-			m_pCamera->GetPos().y,
-			m_pCamera->GetPos().z,
-		1.f
-		};
 
-		m_ps->WriteBuffer(2, &camPos);
-	}
-}
-*/
 
 void BasicEffect::SetWVPMatrix(const Transform& t, CameraBase* camera)
 {
 	DirectX::XMFLOAT4X4 mat[3];
 	mat[0] = t.GetLocalToWorldMatrix();
-	mat[1]=camera->GetViewXMF();
-	mat[2]=camera->GetProjXMF();
+	if (camera != nullptr)
+	{
+		mat[1] = camera->GetViewXMF();
+		mat[2] = camera->GetProjXMF();
+	}else
+	{
+#ifdef _DEBUG
+		if (m_pCamera == nullptr)
+			DebugLog::LogError("Camera is null");
+#endif
+		assert(m_pCamera != nullptr);
+		mat[1] = m_pCamera->GetViewXMF();
+		mat[2] = m_pCamera->GetProjXMF();
+	}
 
 	m_vs->WriteBuffer(0, mat);
 }
 
-void BasicEffect::SetWVPMatrix(const Transform& t)
-{
-	DirectX::XMFLOAT4X4 mat[3];
-	mat[0] = t.GetLocalToWorldMatrix();
-	mat[1] = m_pCamera->GetViewXMF();
-	mat[2] = m_pCamera->GetProjXMF();
 
-	m_vs->WriteBuffer(0, mat);
-}
 

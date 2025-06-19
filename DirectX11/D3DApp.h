@@ -4,12 +4,15 @@
 #include "WinMin.h"
 #include <d3d11_1.h>
 #include <d2d1.h>
+#include <d2d1helper.h>
+#include <dwrite.h>
+#include <wincodec.h>
 #include <DirectXMath.h>
 #include <dwrite.h>
 #include "CpuTimer.h"
-#include "Assets/Lib/imgui/Include/imgui.h"
-#include "Assets/Lib/imgui/Include/imgui_impl_dx11.h"
-#include "Assets/Lib/imgui/Include/imgui_impl_win32.h"
+#include <imgui.h>
+#include <imgui_impl_dx11.h>
+#include <imgui_impl_win32.h>
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -30,6 +33,7 @@ class DepthStencil;
 class D3DApp
 {
 public:
+
     D3DApp(HINSTANCE hInstance, const std::wstring& windowName);
     virtual ~D3DApp();
 
@@ -49,8 +53,8 @@ public:
     ID3D11DeviceContext* GetContext() const { return m_pd3dImmediateContext.Get(); };
     IDXGISwapChain* GetSwapChain() const { return m_pSwapChain.Get(); };
 
-
-
+	int GetWheelMoveUnit() { return m_moveUnit; }   // ホイールによる移動量を取得
+	void SetWheelMoveUnit(int unit) { m_moveUnit = unit; } // ホイールによる移動量を設定
 
 protected:
     /// <summary>
@@ -96,7 +100,8 @@ protected:
     // Direct2D
     ComPtr<ID2D1Factory> m_pd2dFactory;							// D2D工厂
     ComPtr<ID2D1RenderTarget> m_pd2dRenderTarget;				// D2D渲染目标
-    ComPtr<IDWriteFactory> m_pdwriteFactory;					// DWrite工厂
+    ComPtr<IDWriteFactory> m_pDWriteFactory;					// DWrite工厂
+
 
     // Direct3D 11
     ComPtr<ID3D11Device> m_pd3dDevice;                    
@@ -120,7 +125,8 @@ protected:
 
     FILE* fp = nullptr;
 
-
+    int m_scrollValue = 0;	// WIN_APIを使う
+    int m_moveUnit = 0;		// wheelによる移動量
 
 public:
     /// @brief サンプラーステート設定

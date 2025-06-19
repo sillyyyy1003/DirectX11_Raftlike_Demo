@@ -45,36 +45,29 @@ bool GameApp::Init()
 void GameApp::OnResize()
 {
     assert(m_pd2dFactory);
-    assert(m_pdwriteFactory);
+    assert(m_pDWriteFactory);
 
 	// 释放D2D的相关资源
-    //m_pColorBrush.Reset();
     m_pd2dRenderTarget.Reset();
 
     D3DApp::OnResize();
 
-    // 为D2D创建DXGI表面渲染目标
-    //ComPtr<IDXGISurface> surface;
-    //HRESULT hr = m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface), reinterpret_cast<void**>(surface.GetAddressOf()));
-    //D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
-    //D2D1_RENDER_TARGET_TYPE_DEFAULT,
-    //D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED));
-    //hr = m_pd2dFactory->CreateDxgiSurfaceRenderTarget(surface.Get(), &props, m_pd2dRenderTarget.GetAddressOf());
-    //surface.Reset();
+    ComPtr<IDXGISurface> surface;
+	HR(m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface), reinterpret_cast<void**>(surface.GetAddressOf())));
+    D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
+        D2D1_RENDER_TARGET_TYPE_DEFAULT,
+        D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED));
+    HRESULT hr = m_pd2dFactory->CreateDxgiSurfaceRenderTarget(surface.Get(), &props, m_pd2dRenderTarget.GetAddressOf());
+    surface.Reset();
 
-    //if (hr == S_OK)
-    //{
-    //    // 创建固定颜色刷和文本格式
-    //    //HR(m_pd2dRenderTarget->CreateSolidColorBrush(
-    //       /* D2D1::ColorF(D2D1::ColorF::White),
-    //        m_pColorBrush.GetAddressOf()));*/
-    //    //HR(m_pdwriteFactory->CreateTextFormat(L"宋体", nullptr, DWRITE_FONT_WEIGHT_NORMAL,
-    //      /*   DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL,20, L"zh-cn",m_pTextFormat.GetAddressOf()));*/
-    //}
-    //else
-    //{
-    //    assert(m_pd2dRenderTarget);
-    //}
+    if (hr == S_OK)
+    {
+
+    }
+    else
+    {
+        assert(m_pd2dRenderTarget);
+    }
 }
 
 void GameApp::UpdateScene(float dt)
@@ -96,6 +89,7 @@ void GameApp::DrawScene()
     //GameRender=================================================
 
     SceneManager::Get()->_draw();
+
     //GameRender=================================================
 
     ImGui::Render();
@@ -105,13 +99,17 @@ void GameApp::DrawScene()
 
 
 
+
 bool GameApp::InitResource()
 {
     // ======RenderState
     RenderStates::InitAll(m_pd3dDevice.Get());
 
     // ======Game内容初期化
-    SceneManager::Get()->Init();
+	SceneManager::Get()->InitD2DResource(m_pd2dRenderTarget.Get(), m_pDWriteFactory.Get()); // D2Dの初期化
+    
+    SceneManager::Get()->Init();    // Material/Effect/GameObjectの初期化
+    
 
     // ======events subscription
     m_pGameSignalBus = std::make_shared<GameSignalBus>();
@@ -134,13 +132,13 @@ void GameApp::ApplyResolutionPreset(Event::ResolutionPreset _preset)
     {
 	    default:
     case Event::ResolutionPreset::R_1080p:
-        SetWindowSize(1920, 1080);
+        SetWindowSize(Event::R_1080.x,Event::R_1080.y);
     	break;
     case Event::ResolutionPreset::R_720p:
-        SetWindowSize(1280 , 720);
+        SetWindowSize(Event::R_720.x, Event::R_720.y);
         break;
     case Event::ResolutionPreset::R_540p:
-        SetWindowSize(960, 540);
+        SetWindowSize(Event::R_540.x, Event::R_540.y);
         break;
     }
 }

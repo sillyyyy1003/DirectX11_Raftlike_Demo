@@ -82,6 +82,12 @@
     <Filter Include="头文件\System">
       <UniqueIdentifier>{02e92b6a-4764-4ce5-b526-d9c566b11e26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Controller">
+      <UniqueIdentifier>{4fa7f6ed-c24a-4394-95a1-d98712a53a6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Controller">
+      <UniqueIdentifier>{16ab3bc3-d469-4091-8e47-1609b5836e8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -171,6 +177,42 @@
     <ClCompile Include="Geometry.cpp">
       <Filter>源文件\System</Filter>
     </ClCompile>
+    <ClCompile Include="PBREffect.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Primitive.cpp">
+      <Filter>源文件\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="UIBasicEffect.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>源文件\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="UIScaler.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdPersonCamera.cpp">
+      <Filter>源文件\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Layers.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderComponent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMin.h">
@@ -224,9 +266,6 @@
     <ClInclude Include="Model.h">
       <Filter>头文件\Model</Filter>
     </ClInclude>
-    <ClInclude Include="MeshBuffer.h">
-      <Filter>头文件\Model</Filter>
-    </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>头文件\Scene</Filter>
     </ClInclude>
@@ -263,9 +302,54 @@
     <ClInclude Include="Geometry.h">
       <Filter>头文件\System</Filter>
     </ClInclude>
+    <ClInclude Include="PBREffect.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshBuffer.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>头文件\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="UIBasicEffect.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>头文件\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="UIScaler.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdPersonCamera.h">
+      <Filter>头文件\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderComponent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Triangle.hlsli">
+      <Filter>资源文件\hlsli</Filter>
+    </None>
+    <None Include="LightHelper.hlsli">
       <Filter>资源文件\hlsli</Filter>
     </None>
   </ItemGroup>
@@ -280,6 +364,18 @@
       <Filter>资源文件\PixelShader</Filter>
     </FxCompile>
     <FxCompile Include="VS_Geometry.hlsl">
+      <Filter>资源文件\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_PBR.hlsl">
+      <Filter>资源文件\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_PBR.hlsl">
+      <Filter>资源文件\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_UIElement.hlsl">
+      <Filter>资源文件\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_UIElement.hlsl">
       <Filter>资源文件\VertexShader</Filter>
     </FxCompile>
   </ItemGroup>

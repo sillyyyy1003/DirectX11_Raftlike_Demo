@@ -1,5 +1,5 @@
 ﻿#include "DirLight.h"
-#include "imgui.h"
+#include <imgui.h>
 void DirLight::Update(float dt)
 {
 #ifdef _DEBUG
@@ -27,10 +27,14 @@ void DirLight::Update(float dt)
 		ImGui::InputFloat3("Position", pos);
 		SetPosition(pos);
 
-		float _dir[3] = {
+		float dir[3] = {
 		m_dir.x,m_dir.y,m_dir.z };
-		ImGui::InputFloat3("Direction", _dir);
-		SetDirection(_dir);
+		ImGui::InputFloat3("Direction", dir);
+		SetDirection(dir);
+
+		float intensity = m_intensity;
+		ImGui::InputFloat("Intensity", &intensity);
+		SetIntensity(intensity);
 	}
 
 	ImGui::End();

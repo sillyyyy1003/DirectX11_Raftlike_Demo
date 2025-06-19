@@ -2,13 +2,17 @@
 #include <unordered_map>
 #include "SceneBase.hpp"
 #include "CameraBase.h"
+#include "CameraController.h"
 #include "Shader.h"
 #include "LightBase.h"
 #include "Cube.h"
 #include "GameObject.h"
 #include "IEffect.h"
 #include "Model.h"
+#include "PBREffect.h"
 #include "SignalBus.h"
+#include "UIBasicEffect.h"
+#include "UIElement.h"
 
 namespace SceneConfig{
 	enum SceneIndex :uint8_t
@@ -33,36 +37,59 @@ private:
 
 
 private:
-
+	// Cube
 	std::shared_ptr<PixelShader> m_pBasicBlinnPhongPixelShader;
 	std::shared_ptr<VertexShader> m_pBasicPosNormalTexVertexShader;
-	std::shared_ptr<CameraBase> m_pFirstPersonCamera;
+	// PBR Model
+	std::shared_ptr<PixelShader> m_pPBRPixelShader;
+	std::shared_ptr<VertexShader> m_pPBRVertexShader;
+	// UI Basic
+	std::shared_ptr<PixelShader> m_pUIElementPixelShader;
+	std::shared_ptr<VertexShader> m_pUIElementVertexShader;
+
+	// Camera
+	std::shared_ptr<CameraBase> m_pObserverCamera;
+	CameraBase* m_pCurrentCamera;
+	std::shared_ptr<CameraController> m_pCameraController;
 	std::shared_ptr<LightBase> lightBase;	
 
-	//Model
+	// Model
 	std::shared_ptr<Cube> cube;
 	std::shared_ptr<Model> model;
+	std::shared_ptr<Square> square;
 
 	// Material
-	std::shared_ptr<Material> m_pCubeMaterial;
+	std::shared_ptr<Material> m_pBlinnPhongMaterial;
+	std::shared_ptr<Material> m_pPBRModelMaterial;
+	std::shared_ptr<Material> m_pUIMaterial;
 
 	// Effect
 	std::shared_ptr<BasicEffect> m_pBasicEffect;
+	std::shared_ptr<PBREffect> m_pPBREffect;
+	std::shared_ptr<UIBasicEffect> m_pUIBasicEffect;
 
 	// Game Object
 	std::unique_ptr<GameObject> m_pGameObject;
+	std::unique_ptr<UIElement> m_pUIElement;
 
+	// Texture
 	std::shared_ptr<Texture> albedoTex;
+	std::shared_ptr<Texture> normalTex;
+	std::shared_ptr<Texture> metallicTex;
 
-
+	// Uiに関するLib
+	std::shared_ptr<UIFontSet> m_pUiFontSet;
+	std::shared_ptr<UIBrush> m_pUiBrush;
 
 	GameSignalBus* m_pGameSignalBus;
-	CameraBase* m_pCurrentCamera;
+	ID2D1RenderTarget* d2dRenderTarget;
+
 
 private:
 
 	SceneManager();
 	~SceneManager() = default;
+
 
 	/// @brief シーンデータ初期化
 	bool InitSceneMap();
@@ -81,6 +108,9 @@ public:
 
 	/// @brief 共通オブジェクトの読み込み・作成
 	void Init() override;
+
+	/// @brief D2D UIリソース初期化
+	void InitD2DResource(ID2D1RenderTarget* d2dRenderTarget, IDWriteFactory* writeFactory);
 
 	/// @brief データ保存・リソースリリース
 	void UnInit() override;

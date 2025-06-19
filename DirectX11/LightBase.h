@@ -52,6 +52,7 @@ protected:
 	DirectX::XMFLOAT4 m_ambient;
 	DirectX::XMFLOAT4 m_diffuse;
 
+	float m_intensity;		//強度
 	bool isEnable = true;
 
 public:
@@ -59,10 +60,11 @@ public:
 	virtual  ~LightBase() = default;
 
 	virtual void Update(float dt) = 0;
-	DirectX::XMFLOAT3 GetPosition()const { return m_pos; };
-	DirectX::XMFLOAT3 GetDirection()const { return m_dir; };
-	DirectX::XMFLOAT4 GetAmbient()const { return m_ambient; };
-	DirectX::XMFLOAT4 GetDiffuse()const { return m_diffuse; };
+	const DirectX::XMFLOAT3& GetPosition(){ return m_pos; };
+	const DirectX::XMFLOAT3& GetDirection()const { return m_dir; };
+	const DirectX::XMFLOAT4& GetAmbient() { return m_ambient; };
+	const DirectX::XMFLOAT4& GetDiffuse() { return m_diffuse; };
+	const float& GetIntensity(){ return m_intensity; };
 
 	bool GetEnable()const { return isEnable; };
 
@@ -80,6 +82,7 @@ public:
 
 	void SetEnable(bool isEnable) { this->isEnable = isEnable; };
 
+	void SetIntensity(float _intensity); //強度
 
 
 

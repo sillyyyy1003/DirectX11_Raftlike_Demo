@@ -6,6 +6,8 @@ using namespace Microsoft::WRL;
 ComPtr<ID3D11RasterizerState> RenderStates::RSNoCull = nullptr;
 ComPtr<ID3D11RasterizerState> RenderStates::RSWireframe = nullptr;
 ComPtr<ID3D11RasterizerState> RenderStates::RSCullClockWise = nullptr;
+ComPtr<ID3D11RasterizerState> RenderStates::RSShadow = nullptr;
+
 
 ComPtr<ID3D11SamplerState> RenderStates::SSAnisotropicWrap = nullptr;
 ComPtr<ID3D11SamplerState> RenderStates::SSLinearWrap = nullptr;
@@ -34,26 +36,34 @@ void RenderStates::InitAll(ID3D11Device* device)
     if (IsInit())
         return;
 
-    D3D11_RASTERIZER_DESC rasterizerDesc;
-    ZeroMemory(&rasterizerDesc, sizeof(rasterizerDesc));
+    CD3D11_RASTERIZER_DESC rasterizerDesc(CD3D11_DEFAULT{});
 
+    // 线框模式
     rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
     rasterizerDesc.CullMode = D3D11_CULL_NONE;
-    rasterizerDesc.FrontCounterClockwise = false;
-    rasterizerDesc.DepthClipEnable = true;
     HR(device->CreateRasterizerState(&rasterizerDesc, RSWireframe.GetAddressOf()));
 
+    // 无背面剔除模式
     rasterizerDesc.FillMode = D3D11_FILL_SOLID;
     rasterizerDesc.CullMode = D3D11_CULL_NONE;
     rasterizerDesc.FrontCounterClockwise = false;
-    rasterizerDesc.DepthClipEnable = true;
     HR(device->CreateRasterizerState(&rasterizerDesc, RSNoCull.GetAddressOf()));
 
+    // 顺时针剔除模式
     rasterizerDesc.FillMode = D3D11_FILL_SOLID;
     rasterizerDesc.CullMode = D3D11_CULL_BACK;
     rasterizerDesc.FrontCounterClockwise = true;
-    rasterizerDesc.DepthClipEnable = true;
     HR(device->CreateRasterizerState(&rasterizerDesc, RSCullClockWise.GetAddressOf()));
+
+    // 深度偏移模式
+    rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+    rasterizerDesc.CullMode = D3D11_CULL_NONE;
+    rasterizerDesc.FrontCounterClockwise = false;
+    rasterizerDesc.DepthBias = 0;
+    rasterizerDesc.DepthBiasClamp = 0.0f;
+    rasterizerDesc.SlopeScaledDepthBias = 1.0f;
+    HR(device->CreateRasterizerState(&rasterizerDesc, RSShadow.GetAddressOf()));
+
 
     // ******************
     D3D11_SAMPLER_DESC sampDesc;

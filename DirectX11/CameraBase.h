@@ -2,17 +2,6 @@
 #include <DirectXMath.h>
 #include "Transform.h"
 
-namespace CameraSet
-{
-	enum CameraMode
-	{
-		CAM_NONE,
-		CAM_FIRST_PERSON,
-		CAM_THIRD_FREE,
-		CAM_THIRD_TRACK,
-	};
-};
-
 class CameraBase
 {
 protected:
@@ -26,7 +15,6 @@ protected:
 
 public:
 
-	CameraSet::CameraMode m_mode = CameraSet::CAM_NONE;
 	Transform m_transform = {};
 
 	CameraBase();
@@ -54,9 +42,8 @@ public:
 	/// @return 
 	const DirectX::XMFLOAT4X4 GetProjXMF(bool isTranspose = true) noexcept;
 
-	/// @brief カメラのパターンを設定
-	/// @param _mode 
-	void SetCameraMode(CameraSet::CameraMode _mode) noexcept { m_mode = _mode; }
-
+	/// @brief 目標位置を撮る
+	/// @param target 
+	virtual void SetTarget(const DirectX::XMFLOAT3& target){};
 
 };

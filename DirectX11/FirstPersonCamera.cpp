@@ -1,11 +1,19 @@
 ﻿#include "FirstPersonCamera.h"
-#include "Assets/Lib/imgui/Include/imgui.h"
-
+#include <imgui.h>
 #include "D3DApp.h"
 #include "KInput.h"
 
 using namespace DirectX;
 
+
+FirstPersonCamera::FirstPersonCamera():
+m_moveSpeed(5.f),
+m_state(0),
+m_oldPos(0,0),
+m_defaultPosition(0, 0, 0),
+m_windowSize(WIN_WIDTH,WIN_HEIGHT)
+{
+}
 
 void FirstPersonCamera::Init()
 {
@@ -19,8 +27,6 @@ void FirstPersonCamera::Update(float dt)
 #ifdef _DEBUG
     if (ImGui::Begin("Camera Option"))
     {
-        ImGui::Checkbox("isLock", &isLockPos);
-
         ImGui::Text("Position");
         ImGui::Text("Float3 : x: %2f  y: %2f  z: %2f", this->GetPos().x, this->GetPos().y, this->GetPos().z);
 
@@ -29,7 +35,6 @@ void FirstPersonCamera::Update(float dt)
         ImGui::Text("Float3 : x: %2f  y: %2f  z: %2f", rot.x, rot.y, rot.z);
 
         ImGui::InputFloat("MoveSpeed", &m_moveSpeed);
-
     }
     ImGui::End();
 #endif
@@ -45,9 +50,6 @@ void FirstPersonCamera::Update(float dt)
         XMFLOAT2 mouseMove = DirectX::XMFLOAT2((float)cursorPos.x - m_oldPos.x, (float)cursorPos.y - m_oldPos.y);
         m_oldPos = cursorPos;
         UpdateFlight(mouseMove, dt);
-        break;
-    case CAM_SHAKE:
-        //UpdateShake(dt);
         break;
     default:;
     }
@@ -131,12 +133,6 @@ void FirstPersonCamera::MoveUpward(float d)
 }
 
 
-void FirstPersonCamera::LockCamera()
-{
-    isLockAngle = true;
-    isLockPos = true;
-}
-
 void FirstPersonCamera::Shake(float dt)
 {
   
@@ -148,11 +144,12 @@ void FirstPersonCamera::SetCameraState(FirstPersonCamera::CameraKind state)
     m_state = state;
 }
 
-void FirstPersonCamera::SetShake(float amplitude, float frequency, float duration)
-{
-   
-}
 
+
+void FirstPersonCamera::SetTarget(const DirectX::XMFLOAT3& target)
+{
+    m_transform.LookAt(target);
+}
 
 void FirstPersonCamera::UpdateState()
 {
@@ -174,17 +171,13 @@ void FirstPersonCamera::UpdateState()
 
 void FirstPersonCamera::UpdateFlight(DirectX::XMFLOAT2 mouseMove, float dt)
 {
-     if (!isLockAngle)
-     {
-     	//横回転
-		float angleX = 360.0f * mouseMove.x / WIN_WIDTH;
-		RotateY(angleX * dt * m_moveSpeed);
-		//縦回転
-		float angleY = 180.0f * mouseMove.y / WIN_HEIGHT;
-		Pitch(angleY * dt * m_moveSpeed);
-     }
 
-     if (isLockPos)return;
+    //横回転
+	float angleX = 360.0f * mouseMove.x / m_windowSize.x;
+	RotateY(angleX * dt * m_moveSpeed);
+	//縦回転
+	float angleY = 180.0f * mouseMove.y / m_windowSize.y;
+    Pitch(angleY * dt * m_moveSpeed);
 
 
      // キー入力で移動
@@ -200,13 +193,6 @@ void FirstPersonCamera::UpdateFlight(DirectX::XMFLOAT2 mouseMove, float dt)
         MoveUpward(dt * m_moveSpeed);
     if (KInput::IsKeyPress('E'))
         MoveUpward(dt * -m_moveSpeed);
-
-    // Wheel入力
-    //if (gD3D->GetMoveUnit() != 0)
-    //{
-    //    MoveForward(gD3D->GetMoveUnit() * 0.2f);
-    //    gD3D->SetMoveUnit(0);
-    //}
 
 }
 

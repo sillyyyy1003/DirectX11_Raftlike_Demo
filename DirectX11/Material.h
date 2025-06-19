@@ -29,16 +29,17 @@ public:
 	/// <summary>
 	/// 読み込んたテクスチャをマテリアルに設定する
 	/// </summary>
-	/// <param name="type">テクスチャ種類</param>
-	/// <param name="tex"></param>
+	/// <param name="type""テクスチャ種類</param"
+	/// <param name="tex""</param"
 	void SetTexture(TextureType type, Texture* tex);
 
 	/// <summary>
 	/// テクスチャを返す
 	/// </summary>
-	/// <param name="type">テクスチャ種類</param>
-	/// <returns></returns>
+	/// <param name="type""テクスチャ種類</param"
+	/// <returns"</returns"
 	Texture* GetTexture(TextureType type);
+	bool GetTextureEnable();
 
 	DirectX::XMFLOAT4 GetAmbient()const { return m_ambient; };
 	DirectX::XMFLOAT4 GetDiffuse()const { return m_diffuse; };

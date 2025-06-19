@@ -8,21 +8,11 @@ class FirstPersonCamera : public CameraBase
 {
 private:
 
-    float m_moveSpeed = 5.0f;    //移動速度
-
-    int m_state = 0;
-    POINT m_oldPos = { 0,0 };
-
-    bool isLockPos = false;     // 位置移動可能？
-    bool isLockAngle = false;   // 角度固定？
-
-    //初期位置
-    DirectX::XMFLOAT3 m_defaultPosition = {};
-
-    //カメラ揺れで使われる変数
-    bool isShaking = false;
-    DirectX::XMFLOAT2 mShakingAmplitude;    //揺れの幅
-
+    float m_moveSpeed;                          //移動速度
+    int m_state;
+    POINT m_oldPos;
+    DirectX::XMFLOAT3 m_defaultPosition;       //初期位置
+    DirectX::XMFLOAT2 m_windowSize;            //Window Size
 
 public:
 
@@ -32,11 +22,9 @@ public:
         CAM_NONE,
         /// MOVE FREE
         CAM_FREE,
-        /// Camera Shaking
-        CAM_SHAKE,
     };
 
-    FirstPersonCamera() = default;
+    FirstPersonCamera();
     ~FirstPersonCamera() override = default;
 
     void Init();
@@ -74,7 +62,6 @@ public:
     /// @param d 距離
     void MoveForward(float d);
 
-
     /// @brief 上下観察
     /// @param rad +:UP -:DOWN
     void Pitch(float rad);
@@ -85,30 +72,18 @@ public:
 
     void MoveUpward(float d);
 
-    /// @brief カメラの角度をロックする
-    void LockCameraAngle(bool isLockAngle) { this->isLockAngle = isLockAngle; };
-    bool GetAngleLock() { return isLockAngle; };
-
-    /// @brief カメラの位置をロックする
-    void LockCameraPos(bool isLockPos) { this->isLockPos = isLockPos; };
-    bool GetPosLock() { return isLockPos; };
-
-
-    void LockCamera();
-
-
     /// @brief カメラ状態を設定する
     void SetCameraState(FirstPersonCamera::CameraKind state);
 
-    /// @brief カメラの揺れを設定する
-    /// @param amplitude 揺れ幅
-    /// @param duration 揺れ時間(-1の場合は永遠)
-    /// @param frequency 周波数
-    void SetShake(float amplitude, float frequency, float duration = -1);
 
-    bool GetShake() const { return isShaking; };
+    /// @brief 目標位置を撮る
+    /// @param target 
+    void SetTarget(const DirectX::XMFLOAT3& target) override;
 
 
+    /// @brief WindowSizeを変更する
+    /// @param windowSize 
+    void SetWindowSize(DirectX::XMFLOAT2 windowSize) { m_windowSize = windowSize; };
 
 private:
     void UpdateState();

@@ -47,3 +47,8 @@ void LightBase::SetDiffuse(float* diffuse)
 {
 	m_diffuse = DirectX::XMFLOAT4(diffuse[0], diffuse[1], diffuse[2], diffuse[3]);
 }
+
+void LightBase::SetIntensity(float _intensity)
+{
+	m_intensity = _intensity;
+}

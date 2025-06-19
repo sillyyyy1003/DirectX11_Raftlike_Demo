@@ -14,6 +14,14 @@ public:
 	IEffect();
 	virtual ~IEffect();
 	virtual void Apply() = 0;
+
+	
+	virtual void SetMaterial(Material* mat){};
+	virtual void SetWVPMatrix(const Transform& t, CameraBase* camera = nullptr){};
+	virtual void SetDirLight() {}
+	virtual void SetCameraCB(CameraBase* camera = nullptr) {};
+	
+
 };
 
 /// <summary>
@@ -31,11 +39,8 @@ protected:
 	PixelShader* m_ps;
 	VertexShader* m_vs;
 
-	Texture* m_pAlbedoTex;
 	CameraBase* m_pCamera;
 	LightBase* m_pDirLight;
-	
-
 
 public:
 	BasicEffect() = default;
@@ -43,7 +48,6 @@ public:
 
 	void InitPixelShader(PixelShader* _ps) { m_ps = _ps; };
 	void InitVertexShader(VertexShader* _vs) { m_vs = _vs; };
-	void InitTexture(Texture* _tex) { m_pAlbedoTex = _tex; };
 	void InitCamera(CameraBase* _camera) { m_pCamera = _camera; };
 	void InitEffectDirLight(LightBase* _light) { m_pDirLight = _light; };
 
@@ -56,26 +60,21 @@ public:
 
 	/// @brief シェーダーに渡すマテリアルデータ
 	/// @param mat 
-	void SetMaterial(Material* mat);
+	void SetMaterial(Material* mat)override;
+
+	/// @brief シェーダーに渡すライトデータ
+	void SetDirLight()override;
+
+	/// @brief カメラConstantBufferを設定する
+	/// @param camera 
+	void SetCameraCB(CameraBase* camera = nullptr) override;
+
+	/// @brief シェーダーにWVPデータを渡す
+	void SetWVPMatrix(const Transform& t, CameraBase* camera = nullptr)override;
 
 	/// @brief シェーダーに渡すライトデータ
 	/// @param light  
 	void SetDirLight(DirLight* light);
-
-	/// @brief シェーダーに渡すライトデータ
-	void SetDirLight();
-
 	//todo:Set to Pixel Shader
 	void SetPointLight(std::vector<PointLight*> pointLights);
-
-	/// @brief カメラ
-	/// @param camera 
-	void SetCameraMatrix(CameraBase* camera = nullptr);
-	//void SetCameraMatrix();
-
-	/// @brief シェーダーにWVPデータを渡す
-	void SetWVPMatrix(const Transform& t, CameraBase* camera);
-
-	/// @brief シェーダーにWVPデータを渡す
-	void SetWVPMatrix(const Transform& t);
 };

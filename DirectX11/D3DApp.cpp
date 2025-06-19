@@ -155,13 +155,14 @@ void D3DApp::OnResize()
     m_pDepthStencilView.Reset();
     m_pDepthStencilBuffer.Reset();
 
-    // Reset swap chain & Render target view
+
     ComPtr<ID3D11Texture2D> backBuffer;
-    HR(m_pSwapChain->ResizeBuffers(1, m_ClientWidth, m_ClientHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
-    HR(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf())));;
+    HR(m_pSwapChain->ResizeBuffers(1, m_ClientWidth, m_ClientHeight, DXGI_FORMAT_B8G8R8A8_UNORM, 0));	
+    HR(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf())));
     HR(m_pd3dDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, m_pRenderTargetView.GetAddressOf()));
 
-    D3D11SetDebugObjectName(backBuffer.Get(), "BackBuffer[0]");
+	D3D11SetDebugObjectName(backBuffer.Get(), "BackBuffer[0]");
+
     backBuffer.Reset();
 
 
@@ -331,6 +332,10 @@ LRESULT D3DApp::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         return 0;
     case WM_MOUSEMOVE:
         return 0;
+    case WM_MOUSEWHEEL:
+        m_scrollValue = GET_WHEEL_DELTA_WPARAM(wParam);
+        m_moveUnit = m_scrollValue / 120;
+        return 0;
     }
 
     return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -382,8 +387,8 @@ bool D3DApp::InitDirect3D()
 {
     HRESULT hr = S_OK;
 
-    // D3d device
-    UINT createDeviceFlags = 0;
+	// Create D3D device and context.
+    UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;	// Direct2D需要支持BGRA格式
 #if defined(DEBUG) || defined(_DEBUG)  
     createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -394,10 +399,8 @@ bool D3DApp::InitDirect3D()
         D3D_DRIVER_TYPE_WARP,
         D3D_DRIVER_TYPE_REFERENCE,
     };
-
     UINT numDriverTypes = ARRAYSIZE(driverTypes);
 
-    
     D3D_FEATURE_LEVEL featureLevels[] =
     {
         D3D_FEATURE_LEVEL_11_1,
@@ -407,7 +410,6 @@ bool D3DApp::InitDirect3D()
 
     D3D_FEATURE_LEVEL featureLevel;
     D3D_DRIVER_TYPE d3dDriverType;
-
     for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++)
     {
         d3dDriverType = driverTypes[driverTypeIndex];
@@ -416,6 +418,7 @@ bool D3DApp::InitDirect3D()
 
         if (hr == E_INVALIDARG)
         {
+   
             hr = D3D11CreateDevice(nullptr, d3dDriverType, nullptr, createDeviceFlags, &featureLevels[1], numFeatureLevels - 1,
                 D3D11_SDK_VERSION, m_pd3dDevice.GetAddressOf(), &featureLevel, m_pd3dImmediateContext.GetAddressOf());
         }
@@ -430,42 +433,41 @@ bool D3DApp::InitDirect3D()
         return false;
     }
 
-    // Check feature level support level11
     if (featureLevel != D3D_FEATURE_LEVEL_11_0 && featureLevel != D3D_FEATURE_LEVEL_11_1)
     {
         MessageBox(0, L"Direct3D Feature Level 11 unsupported.", 0, 0);
         return false;
     }
 
-    // Check MSAA Support Quality
+	// Check MSAA quality levels.
     m_pd3dDevice->CheckMultisampleQualityLevels(
-        DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_4xMsaaQuality);
+        DXGI_FORMAT_B8G8R8A8_UNORM, 4, &m_4xMsaaQuality);	// 注意此处DXGI_FORMAT_B8G8R8A8_UNORM
     assert(m_4xMsaaQuality > 0);
+
 
     ComPtr<IDXGIDevice> dxgiDevice = nullptr;
     ComPtr<IDXGIAdapter> dxgiAdapter = nullptr;
-    ComPtr<IDXGIFactory1> dxgiFactory1 = nullptr;   
-    ComPtr<IDXGIFactory2> dxgiFactory2 = nullptr;  
+    ComPtr<IDXGIFactory1> dxgiFactory1 = nullptr;	
+    ComPtr<IDXGIFactory2> dxgiFactory2 = nullptr;	
 
- 
     HR(m_pd3dDevice.As(&dxgiDevice));
     HR(dxgiDevice->GetAdapter(dxgiAdapter.GetAddressOf()));
     HR(dxgiAdapter->GetParent(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(dxgiFactory1.GetAddressOf())));
 
-
+	// Check if has IDXGIFactory2 support.
     hr = dxgiFactory1.As(&dxgiFactory2);
-    // if include supportD3D11.1
+	
     if (dxgiFactory2 != nullptr)
     {
         HR(m_pd3dDevice.As(&m_pd3dDevice1));
         HR(m_pd3dImmediateContext.As(&m_pd3dImmediateContext1));
-       
+        //SwapChain Description 
         DXGI_SWAP_CHAIN_DESC1 sd;
         ZeroMemory(&sd, sizeof(sd));
         sd.Width = m_ClientWidth;
         sd.Height = m_ClientHeight;
-        sd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        // set or not Msaa
+        sd.Format = DXGI_FORMAT_B8G8R8A8_UNORM;		// 注意此处DXGI_FORMAT_B8G8R8A8_UNORM
+
         if (m_Enable4xMsaa)
         {
             sd.SampleDesc.Count = 4;
@@ -487,23 +489,21 @@ bool D3DApp::InitDirect3D()
         fd.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
         fd.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         fd.Windowed = TRUE;
-        
         HR(dxgiFactory2->CreateSwapChainForHwnd(m_pd3dDevice.Get(), m_hMainWnd, &sd, &fd, nullptr, m_pSwapChain1.GetAddressOf()));
         HR(m_pSwapChain1.As(&m_pSwapChain));
     }
     else
     {
-     
+		//SwapChain Description for D3D11.0
         DXGI_SWAP_CHAIN_DESC sd;
         ZeroMemory(&sd, sizeof(sd));
         sd.BufferDesc.Width = m_ClientWidth;
         sd.BufferDesc.Height = m_ClientHeight;
         sd.BufferDesc.RefreshRate.Numerator = 60;
         sd.BufferDesc.RefreshRate.Denominator = 1;
-        sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;	// 注意此处DXGI_FORMAT_B8G8R8A8_UNORM
         sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-
         if (m_Enable4xMsaa)
         {
             sd.SampleDesc.Count = 4;
@@ -522,12 +522,9 @@ bool D3DApp::InitDirect3D()
         sd.Flags = 0;
         HR(dxgiFactory1->CreateSwapChain(m_pd3dDevice.Get(), &sd, m_pSwapChain.GetAddressOf()));
     }
-  
+
+ 
     dxgiFactory1->MakeWindowAssociation(m_hMainWnd, DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_WINDOW_CHANGES);
-
-
-    D3D11SetDebugObjectName(m_pd3dImmediateContext.Get(), "ImmediateContext");
-    DXGISetDebugObjectName(m_pSwapChain.Get(), "SwapChain");
 
     OnResize();
 
@@ -553,7 +550,7 @@ bool D3DApp::InitImGui()
 bool D3DApp::InitDirectX2D()
 {
     HR(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, m_pd2dFactory.GetAddressOf()));
-    HR(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory),reinterpret_cast<IUnknown**>(m_pdwriteFactory.GetAddressOf())));
+    HR(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory),reinterpret_cast<IUnknown**>(m_pDWriteFactory.GetAddressOf())));
 
     return true;
 }

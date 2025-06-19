@@ -9,7 +9,7 @@ void Cube::Init()
 {
 
 	//Create Mesh 
-	m_meshes.resize(6);
+	m_pMeshes.resize(6);
 	const float d = 0.5f;
 	XMFLOAT4 color(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -77,7 +77,7 @@ void Cube::Init()
 
 	//SetVertices(vtxData);
 
-	for (UINT i = 0; i < m_meshes.size(); ++i)
+	for (UINT i = 0; i < m_pMeshes.size(); ++i)
 	{
 		//std::vector<Vertex::VtxPosColorNormal> vertexData;
 		std::vector<MeshBuffer::Vertex> vertexData;
@@ -101,13 +101,13 @@ void Cube::Init()
 		desc.indexSize = sizeof(DWORD);
 		desc.indexCount = static_cast<UINT>(indexData.size());
 		desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		m_meshes[i].mesh = std::make_unique<MeshBuffer>(desc);
+		m_pMeshes[i].mesh = std::make_unique<MeshBuffer>(desc);
 	}
 }
 
 void Cube::Draw()
 {
-	for (auto it = m_meshes.begin(); it != m_meshes.end(); ++it)
+	for (auto it = m_pMeshes.begin(); it != m_pMeshes.end(); ++it)
 	{
 		it->mesh->Draw();
 	}

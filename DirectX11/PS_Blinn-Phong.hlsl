@@ -1,4 +1,4 @@
-//Use Lambert Model
+///@brief Blinn-Phong Lighting model with texture sampling
 
 struct PS_IN
 {
@@ -38,6 +38,7 @@ float4 main(PS_IN pin) : SV_TARGET
 	float4 color = albedoTex.Sample(mySampler, pin.tex);
 	float3 N = normalize(pin.normal);
 	float3 toEye = normalize(-cameraPos.xyz);
+
 	//ŠÂ‹«ŒõŒvŽZ
 	float4 ambientColor = ambient * lightAmbient;
 	float3 lightVec = normalize(lightPos.xyz);

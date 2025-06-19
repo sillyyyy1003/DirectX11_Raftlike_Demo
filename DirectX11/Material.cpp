@@ -16,6 +16,12 @@ Texture* Material::GetTexture(TextureType type)
 	return it->second;
 }
 
+bool Material::GetTextureEnable()
+{
+	if (m_textureList.size() == 0)return false;
+	else return true;
+}
+
 void Material::SetAmbient(const DirectX::XMFLOAT4& ambient) 
 {
 	m_ambient = ambient;

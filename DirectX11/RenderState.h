@@ -16,7 +16,8 @@ public:
 public:
     static ComPtr<ID3D11RasterizerState> RSWireframe;		         
     static ComPtr<ID3D11RasterizerState> RSNoCull;			            
-    static ComPtr<ID3D11RasterizerState> RSCullClockWise;	          
+    static ComPtr<ID3D11RasterizerState> RSCullClockWise;
+    static ComPtr<ID3D11RasterizerState> RSShadow;				
 
     static ComPtr<ID3D11SamplerState> SSLinearWrap;			           
     static ComPtr<ID3D11SamplerState> SSAnisotropicWrap;		    

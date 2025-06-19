@@ -2,10 +2,10 @@
 #include <memory>
 #include <vector>
 #include "MeshBuffer.h"
+#include "Primitive.h"
 
 
-
-class Cube
+class Cube:public Primitive
 {
 private:
 
@@ -14,12 +14,12 @@ private:
 		std::unique_ptr<MeshBuffer> mesh;
 	};
 	using Meshes = std::vector<MeshData>;
-	Meshes m_meshes;
+	Meshes m_pMeshes;
 
 public:
 	Cube();
 	void Init();
-	void Draw();
+	void Draw() override;
 
 };
 
