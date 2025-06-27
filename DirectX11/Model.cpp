@@ -15,7 +15,7 @@ Model::Model()
 
 bool Model::Load(const char* file, bool flip, bool simpleMode)
 {
-	DebugLog::Log("モデル読み込み開始");
+	DebugLog::Log("Start model loading");
 	int flag = 0;
 	if (simpleMode)
 	{
