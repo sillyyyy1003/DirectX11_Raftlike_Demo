@@ -133,8 +133,6 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)Assets\Lib\imgui\Lib\Debug;$(ProjectDir)Assets\Lib\Assimp\lib\Debug;$(ProjectDir)Assets\Lib\DirectXTex\lib\Debug;$(ProjectDir)Assets\Lib\JoltPhysics\Lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)\Assets\Shader\%(Filename).cso</ObjectFileOutput>
