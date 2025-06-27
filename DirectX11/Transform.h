@@ -54,6 +54,7 @@ public:
 
     void SetPosition(const DirectX::XMFLOAT3& position);
     void SetPosition(float x, float y, float z);
+    void SetPosition(float* pos);
 
     void Rotate(const DirectX::XMFLOAT3& eulerAnglesInRadian);
     void RotateAxis(const DirectX::XMFLOAT3& axis, float radian);

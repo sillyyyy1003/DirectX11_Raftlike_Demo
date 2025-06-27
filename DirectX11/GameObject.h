@@ -15,9 +15,13 @@ class GameObject
 protected:
 
 	Transform m_transform;
-	std::unique_ptr<RenderComponent> m_pRenderComponent;						//Game ObjectはRenderComponentを持つ
-	std::unordered_map<MyComponent::ComponentType, Component*> m_components;	// GameObjectが持つコンポーネントのリスト
-	
+	std::unique_ptr<RenderComponent> m_pRenderComponent;						// Game ObjectはRenderComponentを持つ
+	std::unordered_map<MyComponent::ComponentType, Component*> m_components;	// 持つコンポーネントのリスト
+
+#ifdef _DEBUG
+	DirectX::XMFLOAT3 m_debugCollisionScale;
+#endif
+
 public:
 
 	GameObject();
@@ -55,8 +59,24 @@ public:
 	T* GetComponent(MyComponent::ComponentType type)
 	{
 		auto it = m_components.find(type);
-		return it != m_components.end() ? it->second : nullptr;
+		if (it != m_components.end())
+		{
+			return dynamic_cast<T*>(it->second);  // 类型安全地转换基类指针为子类指针
+		}
+
+		return nullptr;
 	}
+
+#ifdef _DEBUG
+	/// @brief Set debug collision scale for visualization
+	/// @param scale Scale factor for collision visualization
+	void SetDebugCollisionScale(const DirectX::XMFLOAT3& scale) { m_debugCollisionScale = scale; };
+
+	/// @brief Get debug collision scale
+	/// @return Current debug collision scale
+	const DirectX::XMFLOAT3& GetDebugCollisionScale() const { return m_debugCollisionScale; };
+#endif
+
 
 };
 

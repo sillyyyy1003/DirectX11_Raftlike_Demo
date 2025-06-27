@@ -61,6 +61,12 @@ public:
 	/// @param uiBrush Brush lib
 	virtual void Init(UIFontSet* fontSet, const char* fontName, UIBrush* uiBrush);
 
+	/// @brief Mesh‚¾‚¯‚Ì‰Šú‰»
+	/// @param effect •`‰æ—pFX
+	/// @param material ”wŒiƒƒbƒVƒ…—pƒ}ƒeƒŠƒAƒ‹
+	/// @param model ”wŒiƒƒbƒVƒ…
+	virtual void Init(IEffect* effect, Material* material, Primitive* model);
+
 	void SetPosition(const DirectX::XMFLOAT3& pos);
 	void SetPosition(float x, float y, float z = 0.1f);
 	void SetPosition(const float* pos);
@@ -72,7 +78,7 @@ public:
 	//=====•`‰æ
 	/// @brief •¶š&ƒƒbƒVƒ…•`‰æ
 	/// @param text 
-	virtual void DrawUi(const char* text);
+	virtual void DrawUi(const char* text = nullptr);
 
 	/// @brief •¶š•`‰æ
 	/// @param text 

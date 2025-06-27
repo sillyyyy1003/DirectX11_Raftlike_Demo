@@ -51,6 +51,9 @@ public:
 	void SetSpecular(const DirectX::XMFLOAT4& specular);
 	void SetEmission(const DirectX::XMFLOAT4& emission);
 
+	/// @brief Default Colorに設定する
+	void SetDefaultMaterial();
+
 };
 
 

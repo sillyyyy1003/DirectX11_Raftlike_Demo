@@ -21,21 +21,22 @@ cbuffer Material:register(b1)
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;
+	float isTexEnable;
+	float pad1, pad2, pad3;
 }
 
 cbuffer CameraPos:register(b2){
 	float4 cameraPos;
 }
 
-Texture2D albedoTex : register(t0);
-Texture2D normalMap : register(t1);
-Texture2D metallicSmoothMap : register(t2);
+Texture2D myTex : register(t0);
 SamplerState mySampler : register(s0);
 
 
 float4 main(PS_IN pin) : SV_TARGET
 {
-	float4 color = albedoTex.Sample(mySampler, pin.tex);
+	float4 color = float4(1, 1, 1, 1);
+	color = lerp(diffuse, myTex.Sample(mySampler, pin.tex), isTexEnable);
 	float3 N = normalize(pin.normal);
 	float3 toEye = normalize(-cameraPos.xyz);
 

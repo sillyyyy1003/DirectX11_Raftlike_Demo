@@ -1,4 +1,4 @@
-#include "RenderComponent.h"
+ï»¿#include "RenderComponent.h"
 
 void RenderComponent::Render(Transform& transform)
 {
@@ -21,7 +21,7 @@ void RenderComponent::Render(Transform& transform)
 	//Apply
 	m_pEffect->Apply();
 
-	//•`‰æ
+	//æç”»
 	m_pModel->Draw();
 }
 
@@ -40,6 +40,6 @@ void UIRenderComponent::Render(Transform& transform)
 	//Effect Bind
 	m_pEffect->Apply();
 
-	//Model•`‰æ
+	//Modelæç”»
 	m_pModel->Draw();
 }

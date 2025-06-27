@@ -56,6 +56,16 @@ void UIElement::Init(UIFontSet* fontSet, const char* fontName, UIBrush* uiBrush)
 	m_pSolidBrush = uiBrush->GetSolidBrush();
 }
 
+void UIElement::Init(IEffect* effect, Material* material, Primitive* model)
+{
+	// UIMeshの初期化
+	m_pUiMesh = std::make_unique<UIMesh>();
+
+	m_pUiMesh->SetEffect(effect);
+	m_pUiMesh->SetMaterial(material);
+	m_pUiMesh->SetModel(model);
+}
+
 
 void UIElement::DrawUi(const char* text)
 {
@@ -68,6 +78,8 @@ void UIElement::DrawUi(const char* text)
 
 void UIElement::DrawTextW(const char* text)
 {
+	if (m_pTextFormat == nullptr || m_pSolidBrush == nullptr)return;
+
 	// 文字変換 const char->std::wstring
 	std::string str(text);
 	int strSize = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, nullptr, 0);
@@ -82,6 +94,7 @@ void UIElement::DrawTextW(const char* text)
 
 void UIElement::DrawMesh()
 {
+	if (m_pUiMesh == nullptr)return;
 	m_pUiMesh->Draw();
 }
 

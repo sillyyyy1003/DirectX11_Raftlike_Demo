@@ -19,6 +19,7 @@ void BasicEffect::ApplyRenderState()
 	GameApp::SetCullingMode(nullptr);	//表だけ
 }
 
+
 void BasicEffect::Apply()
 {
 
@@ -41,19 +42,28 @@ void BasicEffect::SetMaterial(Material* mat)
 		DirectX::XMFLOAT4 ambient;
 		DirectX::XMFLOAT4 diffuse;
 		DirectX::XMFLOAT4 specular;
+		float isTexEnable;
+		float padding[3]; // Padding to make the struct size a multiple of 16 bytes
 	};
 
+
+	bool isTexEnable = mat->GetTextureEnable();
 	Material material = {
 		mat->GetAmbient(),
 		mat->GetDiffuse(),
-		mat->GetSpecular()
+		mat->GetSpecular(),
+		(float)isTexEnable,
+		{0.0f, 0.0f, 0.0f} // Padding to ensure the struct is 16-byte aligned
 	};
+
 
 	//Set Material
 	m_ps->WriteBuffer(	1, &material);
 
 	//Set Texture
-	m_ps->SetTexture(0, mat->GetTexture(::Material::Albedo));
+	if(isTexEnable)	//Textureが有効な場合のみセット
+		m_ps->SetTexture(0, mat->GetTexture(::Material::Albedo));
+	
 }
 
 void BasicEffect::SetDirLight(DirLight* light)

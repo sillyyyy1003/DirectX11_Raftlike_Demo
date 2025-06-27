@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "FirstPersonCamera.h"
 #include "GameObject.h"
+#include "PlayerController.h"
 
 /// <summary>
 /// Player
@@ -9,12 +10,18 @@ class Player :
     public GameObject
 {
 private:
-
-
+	//Playerの動きを扱う
+	std::unique_ptr<PlayerController> m_pPlayerController;
+	//Cameraの動き
+	//CameraController* m_pCameraController;
+	std::shared_ptr <CameraController> m_pCameraController;
+public:
 
 
 public:
 	Player();
+
+	void Init();
 
 	void Update(float dt)override;
 	void Draw() override;
@@ -40,7 +47,7 @@ public:
 	/// @param rad +:LEFT -:RIGHT
 	void RotateY(float rad);
 
-	
+	CameraController* GetCameraController() { return m_pCameraController.get(); }
 
 };
 

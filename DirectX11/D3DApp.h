@@ -56,6 +56,8 @@ public:
 	int GetWheelMoveUnit() { return m_moveUnit; }   // ホイールによる移動量を取得
 	void SetWheelMoveUnit(int unit) { m_moveUnit = unit; } // ホイールによる移動量を設定
 
+    POINT GetWindowCenterPos();
+
 protected:
     /// <summary>
     /// Init Main Window
@@ -127,6 +129,7 @@ protected:
 
     int m_scrollValue = 0;	// WIN_APIを使う
     int m_moveUnit = 0;		// wheelによる移動量
+
 
 public:
     /// @brief サンプラーステート設定

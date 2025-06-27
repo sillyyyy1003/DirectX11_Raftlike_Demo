@@ -1,4 +1,4 @@
-#include <cstdarg>
+ï»¿#include <cstdarg>
 #include "PhysicsManager.h"
 #include "DebugLog.h"
 
@@ -47,7 +47,7 @@ void PhysicsManager::Init()
 	RegisterTypes();
 
 	//pre-allocating 10 MB to avoid having to do allocations during the physics update.
-	m_tempAllocator = make_unique<TempAllocatorImpl>(10 * 1024 * 1024);
+	m_tempAllocator = make_unique<TempAllocatorImpl>(64 * 1024 * 1024);
 
 	m_jobSystem = make_unique<JobSystemThreadPool>(cMaxPhysicsJobs, cMaxPhysicsBarriers, thread::hardware_concurrency() - 1);
 
@@ -63,13 +63,15 @@ void PhysicsManager::Init()
 	m_pContactListener = make_shared<MyContactListener>();
 	m_pPhysicsSystem->SetContactListener(m_pContactListener.get());
 
+	m_pPhysicsSystem->SetGravity({ 0,-9.8f,0 });
+
 }
 
 void PhysicsManager::UnInit()
 {
 	BodyInterface& bodyInterface = GetBodyInterface();
 
-	//======‘S‚Ä‚Ìƒ{ƒfƒB‚ðíœ‚µ‚Ä‚©‚çAPhysicsSystem‚ð”jŠü‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B========
+	//======å…¨ã¦ã®ãƒœãƒ‡ã‚£ã‚’å‰Šé™¤ã—ã¦ã‹ã‚‰ã€PhysicsSystemã‚’ç ´æ£„ã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚========
 	{
 		for (auto id : m_bodies)
 		{
@@ -88,6 +90,11 @@ void PhysicsManager::UnInit()
 	m_pPhysicsSystem.reset();	// Release the physics system
 	m_pContactListener.reset();	// Release the contact listener
 	m_pBodyActivationListener.reset();	// Release the body activation listener
+}
+
+void PhysicsManager::Update(float dt)
+{
+	m_pPhysicsSystem->Update(dt, JoltPhysics::cCollisionSteps, m_tempAllocator.get(), m_jobSystem.get());
 }
 
 BodyInterface& PhysicsManager::GetBodyInterface()
@@ -126,6 +133,15 @@ void PhysicsManager::DeleteRigidBody(BodyID id)
 	std::erase(m_bodies, id);	//every id has its own param, so we can use std::erase to remove it from the list.
 
 }
+
+void PhysicsManager::SetBodyCreationMass(float _mass, BodyCreationSettings& settings)
+{
+	MassProperties msp;
+	msp.ScaleToMass(1.0f); //actual mass in kg
+	settings.mMassPropertiesOverride = msp;
+	settings.mOverrideMassProperties = EOverrideMassProperties::CalculateInertia;
+}
+
 
 
 

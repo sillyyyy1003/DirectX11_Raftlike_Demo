@@ -36,9 +36,13 @@ private:
 	std::shared_ptr <CameraBase> m_pThirdPersonCamera;	// Third Personカメラ
 	CameraBase* m_pCurrentCamera;
 
+	//First Person Camera param
+	DirectX::XMFLOAT3 m_cameraOffset;			//player offset
+
 	//todo:can be removed
-	DirectX::XMFLOAT2 m_windowSize;            //Window Size//todo:can be removed
-	float m_moveSpeed;                         //移動速度 
+	DirectX::XMFLOAT2 m_windowSize;            //Window Size
+	float m_moveSpeed;                         //移動速度
+
 
 public:
 	CameraController();
@@ -46,15 +50,14 @@ public:
 
 	void Update(float dt);
 
-	//void OnMouseMove();
-
 	/// @brief 現在のカメラポインターを取得
 	/// @return 
 	CameraBase* GetCamera() { return m_pCurrentCamera; };
 
 	/// @brief 外部からカメラのTransformを設定する
 	void UpdateCameraTransform(const Transform& transform);
-	
+
+	bool GetFirstPersonCamera();
 
 protected:
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <memory>
 
 #include "MeshBuffer.h"
@@ -15,17 +15,17 @@ public:
 };
 
 /// <summary>
-/// Square Mesh
+/// SquareMesh Mesh
 /// </summary>
-class Square : public Primitive
+class SquareMesh : public Primitive
 {
 private:
 
 	std::unique_ptr<MeshBuffer> m_pMeshBuffer;
 
 public:
-	Square() = default;
-	~Square() override = default;
+	SquareMesh() = default;
+	~SquareMesh() override = default;
 
 	void Init();
 	void Draw() override;
