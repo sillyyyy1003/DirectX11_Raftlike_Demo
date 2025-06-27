@@ -2,7 +2,7 @@
 #include "DebugLog.h"
 #include <assimp/postprocess.h>
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 #pragma comment(lib, "assimp-vc143-mtd.lib")
 #else
 #pragma comment(lib, "assimp-vc143-mt.lib")
@@ -15,7 +15,7 @@ Model::Model()
 
 bool Model::Load(const char* file, bool flip, bool simpleMode)
 {
-	DebugLog::Log("モデル読み込み開始");
+	DebugLog::Log("Start model loading");
 	int flag = 0;
 	if (simpleMode)
 	{
@@ -97,7 +97,7 @@ bool Model::Load(const char* file, bool flip, bool simpleMode)
 		m_meshes.push_back(mesh);
 	}
 
-	DebugLog::Log("モデル読み込み完了");
+	DebugLog::Log("Loading model finished");
 	return true;
 }
 

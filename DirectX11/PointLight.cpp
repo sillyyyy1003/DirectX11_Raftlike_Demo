@@ -7,7 +7,7 @@ PointLight::PointLight():m_range(10.0f),m_attenuation(1,0,0)
 
 void PointLight::Update(float dt)
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 	if (ImGui::Begin("Point Light Option"))
 	{
 		ImGui::Checkbox("isEnable", &isEnable);

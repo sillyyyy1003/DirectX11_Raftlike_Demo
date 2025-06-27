@@ -97,7 +97,7 @@ void SceneManager::Update(float dt)
 
 void SceneManager::Draw()
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
     //Geometry
     DirectX::XMFLOAT4X4 fmat;
     DirectX::XMStoreFloat4x4(&fmat, DirectX::XMMatrixIdentity());
@@ -221,7 +221,10 @@ bool SceneManager::InitResource()
     m_pPlayerCollider = make_shared<PhysicsComponent>();
     m_pPlayerCollider->Init(playerBoxSettings, EActivation::Activate);
     m_pPlayer->AddComponent(MyComponent::ComponentType::Physics, m_pPlayerCollider.get());
+
+#if defined(_DEBUG) || defined(DEBUG)
     m_pPlayer->SetDebugCollisionScale({ .8f,1.6f,.8f });
+#endif
 
 	//Collider Debug Render Component配置
     m_pDebugColliderRender = make_shared<RenderComponent>();

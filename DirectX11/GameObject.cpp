@@ -29,7 +29,7 @@ void GameObject::Draw()
 	assert(m_pRenderComponent != nullptr);
 	m_pRenderComponent->Render(m_transform);
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 	// Draw debug information if needed
 	if(GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender) != nullptr)
 	{

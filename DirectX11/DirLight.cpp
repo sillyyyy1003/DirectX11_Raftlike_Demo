@@ -2,7 +2,7 @@
 #include <imgui.h>
 void DirLight::Update(float dt)
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 
 	if (ImGui::Begin("Light Option"))
 	{

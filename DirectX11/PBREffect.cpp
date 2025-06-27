@@ -80,7 +80,7 @@ void PBREffect::SetCameraCB(CameraBase* camera)
 	}
 	else
 	{
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 		if (m_pCamera == nullptr)
 			DebugLog::LogError("Camera is null");
 #endif
@@ -107,7 +107,7 @@ void PBREffect::SetWVPMatrix(const Transform& t, CameraBase* camera)
 	}
 	else
 	{
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 		if (m_pCamera == nullptr)
 			DebugLog::LogError("Camera is null");
 #endif

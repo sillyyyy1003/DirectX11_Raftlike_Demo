@@ -75,8 +75,8 @@
     <LibraryPath>$(ProjectDir)DirectX11\Assets\Lib\JoltPhysics\Lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(ProjectDir)\Assets\Lib\imgui\Lib\Debug;$(ProjectDir)\Assets\Lib\Assimp\lib;$(ProjectDir)\Assets\Lib\DirectXTex\lib\Debug;$(ProjectDir)\Assets\Lib\JoltPhysics\Lib\Debug;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)\Assets\Lib\DirectXTex;$(ProjectDir);$(ProjectDir)\Assets\Lib\imgui\Include;$(ProjectDir)\Assets\Lib\Assimp\include;$(ProjectDir)\Assets\Lib\JoltPhysics\Include;$(ProjectDir)\Assets\Lib\JoltPhysics\Include\Jolt;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)\Assets\Lib\imgui\Include;$(ProjectDir)\Assets\Lib\DirectXTex;$(ProjectDir)\Assets\Lib\Assimp\include;$(ProjectDir)\Assets\Lib\JoltPhysics\Include\Jolt;$(ProjectDir)\Assets\Lib\JoltPhysics\Include;$(IncludePath)</IncludePath>
@@ -92,8 +92,6 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Assets\Lib\DirectXTex;$(ProjectDir)\Assets\Lib\Assimp\include;$(ProjectDir)\Assets\Lib\imgui\Include;$(IncludePath);$(ProjectDir)</AdditionalIncludeDirectories>
-      <AdditionalDependencies>$(ProjectDir)\Assets\Lib\imgui\Lib\Debug;$(ProjectDir)\Assets\Lib\Assimp\lib;$(ProjectDir)\Assets\Lib\DirectXTex\lib\Debug;$(ProjectDir)\Assets\Lib\JoltPhysics\Lib\Debug;$(LibraryPath)</AdditionalDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -129,10 +127,12 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>$(ProjectDir)Assets\Lib\imgui\Include;$(ProjectDir)Assets\Lib\Assimp\include;$(ProjectDir)Assets\Lib\DirectXTex;$(ProjectDir)Assets\Lib\JoltPhysics\Include\Jolt;$(ProjectDir)Assets\Lib\JoltPhysics\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)Assets\Lib\imgui\Lib\Debug;$(ProjectDir)Assets\Lib\Assimp\lib;$(ProjectDir)Assets\Lib\DirectXTex\lib\Debug;$(ProjectDir)Assets\Lib\JoltPhysics\Lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)\Assets\Shader\%(Filename).cso</ObjectFileOutput>
@@ -148,12 +148,20 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>
+      $(ProjectDir)Assets\Lib\imgui\Include;
+      $(ProjectDir)Assets\Lib\Assimp\include;
+      $(ProjectDir)Assets\Lib\DirectXTex;
+      $(ProjectDir)Assets\Lib\JoltPhysics\Include\Jolt;
+      %(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)Assets\Lib\imgui\Lib\Release;$(ProjectDir)Assets\Lib\Assimp\lib;$(ProjectDir)Assets\Lib\DirectXTex\lib\Release;$(ProjectDir)Assets\Lib\JoltPhysics\Lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)\Assets\Shader\%(Filename).cso</ObjectFileOutput>

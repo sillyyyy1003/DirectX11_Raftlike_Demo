@@ -1,0 +1,53 @@
+name: Windows Debug Build (MSBuild)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  # Path to the solution file relative to the root of the project.
+  SOLUTION_FILE_PATH: DirectX11.sln
+
+  # Configuration type to build.
+  BUILD_CONFIGURATION: Debug
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository (with LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      - name: Restore NuGet packages
+        run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+
+      # --- 调试步骤：确认 imgui.lib 是否存在且为大文件 ---
+      - name: List contents of imgui.lib dir
+        run: dir DirectX11\Assets\Lib\imgui\Lib\Debug
+
+      - name: Check all .lib file sizes
+        run: |
+          Get-ChildItem -Recurse -Filter *.lib | Select-Object FullName,Length
+
+      # --- 编译 ---
+      - name: Build Solution (Debug x64)
+        run: msbuild ${{env.SOLUTION_FILE_PATH}} /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:Platform=x64
+
+      # --- 上传生成的可执行文件 ---
+      - name: Upload Debug .exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: Debug-Binary
+          path: |
+            x64\Debug\*.exe

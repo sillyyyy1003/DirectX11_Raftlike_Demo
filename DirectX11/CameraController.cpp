@@ -22,7 +22,7 @@ CameraController::CameraController() :
 
 void CameraController::Update(float dt)
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 
 	if (KInput::IsKeyTrigger(VK_F1))
 	{

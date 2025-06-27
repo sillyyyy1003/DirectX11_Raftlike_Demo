@@ -80,7 +80,7 @@ template<class T> T* SceneBase::AddSubScene()
 /// <returns>生成したオブジェクト</returns>
 template<class T> T* SceneBase::CreateObj(const char* name)
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 	// デバッグ中のみ、名称ダブりがないかチェック
 	Objects::iterator it = m_objects.find(name);
 	if (it != m_objects.end())

@@ -24,7 +24,7 @@ void FirstPersonCamera::Update(float dt)
 {
     UpdateState();
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
     if (ImGui::Begin("Camera Option"))
     {
         ImGui::Text("Position");
