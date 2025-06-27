@@ -16,7 +16,7 @@ HRESULT CreateShaderFromFile(
     else
     {
         DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
         // 设置 D3DCOMPILE_DEBUG 标志用于获取着色器调试信息。该标志可以提升调试体验，
         // 但仍然允许着色器进行优化操作
         dwShaderFlags |= D3DCOMPILE_DEBUG;

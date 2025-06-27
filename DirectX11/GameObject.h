@@ -18,7 +18,7 @@ protected:
 	std::unique_ptr<RenderComponent> m_pRenderComponent;						// Game ObjectはRenderComponentを持つ
 	std::unordered_map<MyComponent::ComponentType, Component*> m_components;	// 持つコンポーネントのリスト
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 	DirectX::XMFLOAT3 m_debugCollisionScale;
 #endif
 
@@ -67,7 +67,7 @@ public:
 		return nullptr;
 	}
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 	/// @brief Set debug collision scale for visualization
 	/// @param scale Scale factor for collision visualization
 	void SetDebugCollisionScale(const DirectX::XMFLOAT3& scale) { m_debugCollisionScale = scale; };

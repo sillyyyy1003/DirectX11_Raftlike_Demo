@@ -35,7 +35,7 @@ void UIFontSet::CreateTextFormat(ID2D1RenderTarget* d2dRenderTarget, IDWriteFact
 
 IDWriteTextFormat* UIFontSet::GetFont(const char* fontName)
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 	// Check if the font exists in the list
 	if (m_fontList.find(fontName) != m_fontList.end())
 	{

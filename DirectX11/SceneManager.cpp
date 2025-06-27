@@ -97,7 +97,7 @@ void SceneManager::Update(float dt)
 
 void SceneManager::Draw()
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
     //Geometry
     DirectX::XMFLOAT4X4 fmat;
     DirectX::XMStoreFloat4x4(&fmat, DirectX::XMMatrixIdentity());

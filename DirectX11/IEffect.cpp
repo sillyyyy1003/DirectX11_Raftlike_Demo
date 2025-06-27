@@ -126,7 +126,7 @@ void BasicEffect::SetCameraCB(CameraBase* camera)
 	
 	}else
 	{
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 		if (m_pCamera == nullptr)
 			DebugLog::LogError("Camera is null");
 #endif
@@ -154,7 +154,7 @@ void BasicEffect::SetWVPMatrix(const Transform& t, CameraBase* camera)
 		mat[2] = camera->GetProjXMF();
 	}else
 	{
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 		if (m_pCamera == nullptr)
 			DebugLog::LogError("Camera is null");
 #endif

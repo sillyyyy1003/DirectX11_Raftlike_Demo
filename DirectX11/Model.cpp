@@ -2,7 +2,7 @@
 #include "DebugLog.h"
 #include <assimp/postprocess.h>
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 #pragma comment(lib, "assimp-vc143-mtd.lib")
 #else
 #pragma comment(lib, "assimp-vc143-mt.lib")

@@ -20,7 +20,7 @@ void Player::Init()
 
 void Player::Update(float dt)
 {
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 
 	if(ImGui::Begin("Player"))
 	{
@@ -70,8 +70,7 @@ void Player::Update(float dt)
 
 void Player::Draw()
 {
-	GameObject::Draw();
-
+	//Physical Collider Render
 	if(GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender))
 	{
 		RenderComponent* debugRender = GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender);

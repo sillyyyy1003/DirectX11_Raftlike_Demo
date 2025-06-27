@@ -26,7 +26,7 @@ GameApp::~GameApp()
 bool GameApp::Init()
 {
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
     // 標準出力の割り当て
     AllocConsole();
     freopen_s(&fp, "CON", "w", stdout);
