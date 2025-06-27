@@ -70,6 +70,7 @@ void Player::Update(float dt)
 
 void Player::Draw()
 {
+#if defined(_DEBUG) || defined(DEBUG)
 	//Physical Collider Render
 	if(GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender))
 	{
@@ -81,6 +82,7 @@ void Player::Draw()
 		};
 		debugRender->Render(t);
 	}
+#endif	
 }
 
 void Player::Strafe(float d)
