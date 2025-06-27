@@ -41,3 +41,12 @@ void Material::SetEmission(const DirectX::XMFLOAT4& emission)
 {
 	m_emission = emission;
 }
+
+void Material::SetDefaultMaterial()
+{
+	SetAmbient({1,1,1,1});
+	SetDiffuse({ 1,1,1,1 });
+	SetSpecular({ 0,0,0,0 });
+	SetEmission({ 0,0,0,0 });
+
+}

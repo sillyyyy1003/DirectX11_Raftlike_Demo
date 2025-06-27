@@ -1,6 +1,7 @@
 ﻿#include "CameraController.h"
 #include <memory>
 #include "Cube.h"
+#include "DebugLog.h"
 #include "FirstPersonCamera.h"
 #include "KInput.h"
 #include "ThirdPersonCamera.h"
@@ -8,6 +9,7 @@
 CameraController::CameraController() :
 	m_mode(CameraMode::Free),
 	m_state(CameraKind::CamNone),
+	m_cameraOffset({0,1.5f,0}),
 	m_oldPos(0, 0),
 	m_moveSpeed(5.f),
 	m_pCurrentCamera(nullptr),
@@ -27,15 +29,22 @@ void CameraController::Update(float dt)
 		// FreeCameraに切り替え
 		m_mode = CameraMode::Free;
 		// 位置をリセット
-		m_pFirstPersonCamera->m_transform.SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, -5.0f));
+		m_pFirstPersonCamera->m_transform.SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -10.0f));  //Default Pos
+		m_pFirstPersonCamera->SetTarget({ 0,0,0 });
 		// 今使っているカメラのをFirstPersonCameraに切り替え
 		m_pCurrentCamera = m_pFirstPersonCamera.get();
+		// Show Cursor
+		ShowCursor(TRUE);
+		DebugLog::Log("[Camera]:Free Camera");
 	}
 	if (KInput::IsKeyTrigger(VK_F2))
 	{
 		m_mode = CameraMode::FirstPerson;
 		// 今使っているカメラのをFirstPersonCameraに切り替え
 		m_pCurrentCamera = m_pFirstPersonCamera.get();
+		//Hide cursor
+		ShowCursor(FALSE);
+		DebugLog::Log("[Camera]:First Camera Camera");
 	}
 	/*if (KInput::IsKeyTrigger(VK_F3))
 	{
@@ -45,6 +54,7 @@ void CameraController::Update(float dt)
 		m_pCurrentCamera = m_pThirdPersonCamera.get();
 	}
 	*/
+	
 
 #endif
 	switch (m_mode)
@@ -60,8 +70,23 @@ void CameraController::Update(float dt)
 
 void CameraController::UpdateCameraTransform(const Transform& transform)
 {
-	m_pFirstPersonCamera->SetPos(transform.GetPosition());
+	//First Personのみ
+	if (m_mode != CameraMode::FirstPerson)return;
+
+	//Calculate pos with offset
+	DirectX::XMFLOAT3 cameraPos = {
+		transform.GetPosition().x+m_cameraOffset.x,
+		transform.GetPosition().y+m_cameraOffset.y,
+		transform.GetPosition().z+m_cameraOffset.z
+	};
+
+	m_pFirstPersonCamera->SetPos(cameraPos);
 	m_pFirstPersonCamera->m_transform.SetRotation(transform.GetRotation());
+}
+
+bool CameraController::GetFirstPersonCamera()
+{
+	return m_mode == CameraMode::FirstPerson;
 }
 
 void CameraController::UpdateThirdPerson(float dt)

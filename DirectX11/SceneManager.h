@@ -10,6 +10,7 @@
 #include "IEffect.h"
 #include "Model.h"
 #include "PBREffect.h"
+#include "Player.h"
 #include "SignalBus.h"
 #include "UIBasicEffect.h"
 #include "UIElement.h"
@@ -30,6 +31,7 @@ class SceneManager:public SceneBase
 private:
 
 	SceneConfig::SceneIndex m_currentSceneIndex;	//今はどのシーン
+
 	typedef std::unordered_map<std::string, SceneConfig::SceneIndex> SceneMap;
 	SceneMap m_sceneMap;	//シーンのリストを保存する
 
@@ -37,6 +39,8 @@ private:
 
 
 private:
+	
+	std::unique_ptr<Player> m_pPlayer;
 	// Cube
 	std::shared_ptr<PixelShader> m_pBasicBlinnPhongPixelShader;
 	std::shared_ptr<VertexShader> m_pBasicPosNormalTexVertexShader;
@@ -48,34 +52,56 @@ private:
 	std::shared_ptr<VertexShader> m_pUIElementVertexShader;
 
 	// Camera
-	std::shared_ptr<CameraBase> m_pObserverCamera;
 	CameraBase* m_pCurrentCamera;
-	std::shared_ptr<CameraController> m_pCameraController;
 	std::shared_ptr<LightBase> lightBase;	
 
 	// Model
 	std::shared_ptr<Cube> cube;
 	std::shared_ptr<Model> model;
-	std::shared_ptr<Square> square;
+	std::shared_ptr<SquareMesh> square;
+
+	// Physical Component
+	std::shared_ptr<PhysicsComponent> m_pAppleCollider;
+	std::shared_ptr<PhysicsComponent> m_pCubeCollider;
+	std::shared_ptr<PhysicsComponent> m_pFloorCollider;
+	std::shared_ptr<PhysicsComponent> m_pPlayerCollider;
+
+	std::shared_ptr<RenderComponent>  m_pDebugColliderRender;
+
 
 	// Material
 	std::shared_ptr<Material> m_pBlinnPhongMaterial;
-	std::shared_ptr<Material> m_pPBRModelMaterial;
+	std::shared_ptr<Material> m_pDebugMaterial;
+	std::shared_ptr<Material> m_pPBRFoodMaterial;
+	std::shared_ptr<Material> m_pFloorMaterial;
 	std::shared_ptr<Material> m_pUIMaterial;
+	std::shared_ptr<Material> m_pUIAimMaterial;
 
 	// Effect
 	std::shared_ptr<BasicEffect> m_pBasicEffect;
+	std::shared_ptr<BasicEffect> m_pDebugEffect;
 	std::shared_ptr<PBREffect> m_pPBREffect;
 	std::shared_ptr<UIBasicEffect> m_pUIBasicEffect;
 
 	// Game Object
-	std::unique_ptr<GameObject> m_pGameObject;
+	std::unique_ptr<GameObject> m_pApple;
+	std::unique_ptr<GameObject> m_pBanana;
+	std::unique_ptr<GameObject> m_pCubeObject;
+	std::unique_ptr<GameObject> m_pFloor;
+
+
+	// Ui
 	std::unique_ptr<UIElement> m_pUIElement;
+	std::unique_ptr<UIElement> m_pUIAim;
 
 	// Texture
 	std::shared_ptr<Texture> albedoTex;
 	std::shared_ptr<Texture> normalTex;
 	std::shared_ptr<Texture> metallicTex;
+
+	std::shared_ptr<Texture> m_pUiAimTex;
+
+
 
 	// Uiに関するLib
 	std::shared_ptr<UIFontSet> m_pUiFontSet;

@@ -88,6 +88,24 @@
     <Filter Include="头文件\Controller">
       <UniqueIdentifier>{16ab3bc3-d469-4091-8e47-1609b5836e8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Physics">
+      <UniqueIdentifier>{b2357d3f-2317-4839-91a4-89d4debd3d64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Component">
+      <UniqueIdentifier>{d483bc32-d21b-4662-8f6a-e57e6253866b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Component">
+      <UniqueIdentifier>{c1f6eb68-047f-4095-bb11-7bbc2fe17aee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Physics">
+      <UniqueIdentifier>{4309e33c-e7ec-49a9-b8ad-742d84c385cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Player">
+      <UniqueIdentifier>{0606e12a-bf91-4bcf-b87e-d29eff3db4c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Player">
+      <UniqueIdentifier>{17e01991-c984-45bf-a530-1ee2423301f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -186,9 +204,6 @@
     <ClCompile Include="UIBasicEffect.cpp">
       <Filter>源文件\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="CameraController.cpp">
       <Filter>源文件\Controller</Filter>
     </ClCompile>
@@ -198,19 +213,25 @@
     <ClCompile Include="ThirdPersonCamera.cpp">
       <Filter>源文件\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerController.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsComponent.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="Layers.cpp">
+      <Filter>源文件\Physics</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsManager.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Layers.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Physics</Filter>
     </ClCompile>
     <ClCompile Include="RenderComponent.cpp">
+      <Filter>源文件\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>源文件\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>源文件\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>源文件\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeFactory.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -314,9 +335,6 @@
     <ClInclude Include="UIBasicEffect.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CameraController.h">
       <Filter>头文件\Controller</Filter>
     </ClInclude>
@@ -326,22 +344,28 @@
     <ClInclude Include="ThirdPersonCamera.h">
       <Filter>头文件\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerController.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="Component.hpp">
+      <Filter>头文件\Component</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsComponent.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsManager.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Layers.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Component</Filter>
     </ClInclude>
     <ClInclude Include="RenderComponent.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Component.hpp">
+    <ClInclude Include="PhysicsManager.h">
+      <Filter>头文件\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers.h">
+      <Filter>头文件\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>头文件\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>头文件\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeFactory.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

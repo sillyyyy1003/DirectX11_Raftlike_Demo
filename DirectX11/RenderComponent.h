@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include "Component.hpp"
 #include "Material.h"
 #include "IEffect.h"
 #include "Primitive.h"
 
 
-/// @brief •`‰æ‹@”\‚ğ‚ÂƒRƒ“ƒ|[ƒlƒ“ƒg
+/// @brief æç”»æ©Ÿèƒ½ã‚’æŒã¤ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
 class RenderComponent : public Component
 {
 protected:
@@ -18,13 +18,13 @@ public:
 	RenderComponent() : m_pMaterial(nullptr), m_pEffect(nullptr), m_pModel(nullptr) {}
 	virtual ~RenderComponent() = default;
 
-	/// @brief ƒ}ƒeƒŠƒAƒ‹”z’u
+	/// @brief ãƒãƒ†ãƒªã‚¢ãƒ«é…ç½®
 	void SetMaterial(Material* mat) { m_pMaterial = mat; };
 
-	/// @brief Render Effect”z’u
+	/// @brief Render Effecté…ç½®
 	void SetEffect(IEffect* effect) { m_pEffect = effect; };
 
-	/// @brief ƒ‚ƒfƒ‹”z’u
+	/// @brief ãƒ¢ãƒ‡ãƒ«é…ç½®
 	void SetModel(Primitive* _model) { m_pModel = _model; };
 
 	Material* GetMaterial() const { return m_pMaterial; }
@@ -35,7 +35,7 @@ public:
 
 };
 
-/// @brief UI‚Ì•`‰æƒRƒ“ƒ|[ƒlƒ“ƒg
+/// @brief UIã®æç”»ã‚³ãƒ³ãƒãƒ¼ãƒãƒ³ãƒˆ
 class UIRenderComponent :
 	public RenderComponent
 {
@@ -43,7 +43,7 @@ public:
 	UIRenderComponent() = default;
 	virtual ~UIRenderComponent() override= default;
 
-	/// @brief UI‚Ì•`‰æ
+	/// @brief UIã®æç”»
 	void Render(Transform& transform) override;
 
 };

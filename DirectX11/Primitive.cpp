@@ -2,7 +2,7 @@
 
 #include <vector>
 
-void Square::Init()
+void SquareMesh::Init()
 {
 	// Create Mesh
 	// Pos Normal TexCoord ’¸“_‚ðŽg‚¤
@@ -44,7 +44,7 @@ void Square::Init()
 
 }
 
-void Square::Draw()
+void SquareMesh::Draw()
 {
 	m_pMeshBuffer->Draw();
 }

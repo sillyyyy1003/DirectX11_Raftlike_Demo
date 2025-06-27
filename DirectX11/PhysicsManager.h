@@ -30,6 +30,8 @@ namespace JoltPhysics
 	static constexpr uint cNumBodyMutexes = 0; // Autodetect
 	static constexpr uint cMaxBodyPairs = 65536;
 	static constexpr uint cMaxContactConstraints = 20480;
+
+	static constexpr uint cCollisionSteps = 1;	// How many collision detection steps per physics update
 }
 
 
@@ -62,6 +64,8 @@ public:
 	BodyID CreateRigidBody(const BodyCreationSettings& settings, EActivation activation);
 
 	void DeleteRigidBody(BodyID id);
+
+	void SetBodyCreationMass(float _mass, BodyCreationSettings& settings);
 
 
 private:

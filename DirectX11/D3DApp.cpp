@@ -342,6 +342,13 @@ LRESULT D3DApp::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 }
 
 
+POINT D3DApp::GetWindowCenterPos()
+{
+    POINT center = { m_ClientWidth / 2,m_ClientHeight / 2 };
+    ClientToScreen(m_hMainWnd, &center);
+    return center;  
+}
+
 bool D3DApp::InitMainWindow()
 {
     WNDCLASS wc;
@@ -573,6 +580,7 @@ void D3DApp::CalculateFrameStats()
         outs << m_MainWndCaption << L"    "
             << L"FPS: " << fps << L"    "
             << L"Frame Time: " << mspf << L" (ms)";
+
         SetWindowText(m_hMainWnd, outs.str().c_str());
 
         // Reset for next average.

@@ -81,8 +81,12 @@ DirectX::XMVECTOR Transform::GetForwardAxisXM() const
 
 XMFLOAT4X4 Transform::GetLocalToWorldMatrix() const
 {
-    XMFLOAT4X4 res;
-    XMStoreFloat4x4(&res, GetLocalToWorldMatrixXM());
+    // Transpose処理
+    XMMATRIX world = GetLocalToWorldMatrixXM();
+    world = XMMatrixTranspose(world);
+
+	XMFLOAT4X4 res;
+    XMStoreFloat4x4(&res, world);
     return res;
 }
 
@@ -97,8 +101,12 @@ XMMATRIX Transform::GetLocalToWorldMatrixXM() const
 
 XMFLOAT4X4 Transform::GetWorldToLocalMatrix() const
 {
+    // Transpose処理
+    XMMATRIX m= GetWorldToLocalMatrixXM();
+    m = XMMatrixTranspose(m);
+
     XMFLOAT4X4 res;
-    XMStoreFloat4x4(&res, GetWorldToLocalMatrixXM());
+    XMStoreFloat4x4(&res, m);
     return res;
 }
 
@@ -136,6 +144,11 @@ void Transform::SetPosition(const XMFLOAT3& position)
 void Transform::SetPosition(float x, float y, float z)
 {
     m_Position = XMFLOAT3(x, y, z);
+}
+
+void Transform::SetPosition(float* pos)
+{
+    m_Position = { pos[0],pos[1],pos[2] };
 }
 
 void Transform::Rotate(const XMFLOAT3& eulerAnglesInRadian)
