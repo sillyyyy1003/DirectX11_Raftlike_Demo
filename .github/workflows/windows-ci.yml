@@ -33,14 +33,18 @@ jobs:
         with:
           lfs: true
 
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1
-
-      - name: Restore NuGet packages
-        run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
-
-      - name: Setup MSBuild
+      - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.3.1
 
-      - name: Build with MSBuild
-        run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
+      - name: Restore NuGet packages
+        run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+
+      - name: Build Solution (Debug x64)
+        run: msbuild ${{env.SOLUTION_FILE_PATH}} /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:Platform=x64
+
+      - name: Upload Debug .exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: Debug-Binary
+          path: |
+            x64\Debug\*.exe
