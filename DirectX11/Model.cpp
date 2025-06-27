@@ -97,7 +97,7 @@ bool Model::Load(const char* file, bool flip, bool simpleMode)
 		m_meshes.push_back(mesh);
 	}
 
-	DebugLog::Log("モデル読み込み完了");
+	DebugLog::Log("Loading model finished");
 	return true;
 }
 
