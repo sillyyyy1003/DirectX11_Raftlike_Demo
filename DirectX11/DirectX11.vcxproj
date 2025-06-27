@@ -92,7 +92,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Assets\Lib\JoltPhysics\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Assets\Lib\DirectXTex;$(ProjectDir)\Assets\Lib\Assimp\include;$(ProjectDir)\Assets\Lib\imgui\Include;$(IncludePath);$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalDependencies>$(ProjectDir)\Assets\Lib\imgui\Lib\Debug;$(ProjectDir)\Assets\Lib\Assimp\lib;$(ProjectDir)\Assets\Lib\DirectXTex\lib\Debug;$(ProjectDir)\Assets\Lib\JoltPhysics\Lib\Debug;$(LibraryPath)</AdditionalDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
