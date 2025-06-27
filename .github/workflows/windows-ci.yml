@@ -1,8 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Windows Debug Build (MSBuild)
 
 on:
@@ -16,8 +11,6 @@ env:
   SOLUTION_FILE_PATH: DirectX11.sln
 
   # Configuration type to build.
-  # You can convert this to a build matrix if you need coverage of multiple configuration types.
-  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
   BUILD_CONFIGURATION: Debug
 
 permissions:
@@ -39,9 +32,19 @@ jobs:
       - name: Restore NuGet packages
         run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
+      # --- 调试步骤：确认 imgui.lib 是否存在且为大文件 ---
+      - name: List contents of imgui.lib dir
+        run: dir DirectX11\Assets\Lib\imgui\Lib\Debug
+
+      - name: Check all .lib file sizes
+        run: |
+          Get-ChildItem -Recurse -Filter *.lib | Select-Object FullName,Length
+
+      # --- 编译 ---
       - name: Build Solution (Debug x64)
         run: msbuild ${{env.SOLUTION_FILE_PATH}} /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:Platform=x64
 
+      # --- 上传生成的可执行文件 ---
       - name: Upload Debug .exe
         uses: actions/upload-artifact@v4
         with:
