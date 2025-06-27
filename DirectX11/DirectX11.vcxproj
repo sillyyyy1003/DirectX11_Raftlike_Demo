@@ -127,30 +127,14 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>
-      $(ProjectDir)Assets\Lib\imgui\Include;
-      $(ProjectDir)Assets\Lib\Assimp\include;
-      $(ProjectDir)Assets\Lib\DirectXTex;
-      $(ProjectDir)Assets\Lib\JoltPhysics\Include\Jolt;
-      %(AdditionalIncludeDirectories)
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Assets\Lib\imgui\Include;$(ProjectDir)Assets\Lib\Assimp\include;$(ProjectDir)Assets\Lib\DirectXTex;$(ProjectDir)Assets\Lib\JoltPhysics\Include\Jolt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-       <AdditionalLibraryDirectories>
-      $(ProjectDir)Assets\Lib\imgui\Debug;
-      $(ProjectDir)Assets\Lib\Assimp\lib\Debug;
-      $(ProjectDir)Assets\Lib\DirectXTex\lib\Debug;
-      $(ProjectDir)Assets\Lib\JoltPhysics\Lib\Debug;
-      %(AdditionalLibraryDirectories)
-    </AdditionalLibraryDirectories>
-    <AdditionalDependencies>
-      imgui.lib;
-      assimp-vc143-mtd.lib;
-      DirectXTex.lib;
-      Jolt.lib;
-    </AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)Assets\Lib\imgui\Lib\Debug;$(ProjectDir)Assets\Lib\Assimp\lib\Debug;$(ProjectDir)Assets\Lib\DirectXTex\lib\Debug;$(ProjectDir)Assets\Lib\JoltPhysics\Lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)\Assets\Shader\%(Filename).cso</ObjectFileOutput>
