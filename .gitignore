@@ -24,7 +24,7 @@
 *.lai
 *.la
 *.a
-#*.lib
+*.lib
 
 # Dynamic link libraries (DLLs) - typically built into a 'bin' or 'x64/Debug' folder
 *.dll

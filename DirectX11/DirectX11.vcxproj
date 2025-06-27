@@ -132,7 +132,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)Assets\Lib\imgui\Lib\Debug\;$(ProjectDir)Assets\Lib\Assimp\lib\Debug\;$(ProjectDir)Assets\Lib\DirectXTex\lib\Debug\;$(ProjectDir)Assets\Lib\JoltPhysics\Lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)Assets\Lib\imgui\Lib\Debug;$(ProjectDir)Assets\Lib\Assimp\lib;$(ProjectDir)Assets\Lib\DirectXTex\lib\Debug;$(ProjectDir)Assets\Lib\JoltPhysics\Lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)\Assets\Shader\%(Filename).cso</ObjectFileOutput>
@@ -161,7 +161,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)Assets\Lib\imgui\Lib\Release;$(ProjectDir)Assets\Lib\Assimp\lib\Release;$(ProjectDir)Assets\Lib\DirectXTex\lib\Release;$(ProjectDir)Assets\Lib\JoltPhysics\Lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)Assets\Lib\imgui\Lib\Release;$(ProjectDir)Assets\Lib\Assimp\lib;$(ProjectDir)Assets\Lib\DirectXTex\lib\Release;$(ProjectDir)Assets\Lib\JoltPhysics\Lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)\Assets\Shader\%(Filename).cso</ObjectFileOutput>
