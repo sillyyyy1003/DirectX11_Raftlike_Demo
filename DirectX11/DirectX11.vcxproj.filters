@@ -234,6 +234,9 @@
     <ClCompile Include="ShapeFactory.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMin.h">
@@ -366,6 +369,9 @@
       <Filter>头文件\Player</Filter>
     </ClInclude>
     <ClInclude Include="ShapeFactory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
