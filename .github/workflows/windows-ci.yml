@@ -12,6 +12,9 @@ env:
 
   # Configuration type to build.
   BUILD_CONFIGURATION: Debug
+  
+  # Fix encode problem.
+  LANG: en_US.UTF-8
 
   # Compile using UTF-8
   LANG: en_US.UTF-8
