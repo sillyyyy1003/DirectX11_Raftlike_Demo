@@ -217,7 +217,7 @@ bool SceneManager::InitResource()
     m_pFloor->GetTransform().SetScale(10.f, .5f, 10.f);
 
     //Player Collider作成
-    BodyCreationSettings playerBoxSettings(new BoxShape(RVec3(0.4, 0.8f, 0.4f)), { 0,0,0 }, Quat::sIdentity(), EMotionType::Kinematic, Layers::PLAYER);
+    BodyCreationSettings playerBoxSettings(new BoxShape(RVec3(0.4f, 0.8f, 0.4f)), { 0,0,0 }, Quat::sIdentity(), EMotionType::Kinematic, Layers::PLAYER);
     m_pPlayerCollider = make_shared<PhysicsComponent>();
     m_pPlayerCollider->Init(playerBoxSettings, EActivation::Activate);
     m_pPlayer->AddComponent(MyComponent::ComponentType::Physics, m_pPlayerCollider.get());
