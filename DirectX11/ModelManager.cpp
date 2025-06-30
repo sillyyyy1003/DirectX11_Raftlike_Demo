@@ -29,7 +29,7 @@ void ModelManager::LoadModel(const char* modelName, const char* filePath)
 	auto it = m_models.find(modelName);
 	if (it != m_models.end())
 	{
-		DebugLog::LogWarning("[ModelManager]{} already exists!", modelName);
+		DebugLog::LogWarning("[ModelManager] {} already exists!", modelName);
 		return;
 	}
 
@@ -41,15 +41,16 @@ void ModelManager::LoadModel(const char* modelName, const char* filePath)
 		std::string(modelName),
 		std::string(filePath)
 	};
-	DebugLog::Log("[ModelManager]Loaded model: {}", modelName);
+	DebugLog::Log("[ModelManager] Loaded model: {}", modelName);
 }
 
 bool ModelManager::LoadModels(const char* jsonFilePath)
 {
+	// json file check
 	std::ifstream ifs(jsonFilePath);
 	if (!ifs.is_open())
 	{
-		DebugLog::LogError("[ModelManager]Failed to open JSON file: {}", jsonFilePath);
+		DebugLog::LogError("[ModelManager] Failed to open JSON file: {}", jsonFilePath);
 		return false;
 	}
 		
@@ -57,17 +58,19 @@ bool ModelManager::LoadModels(const char* jsonFilePath)
  
     for (const auto& modelEntry : j["models"])
     {
+		// Check if the model entry contains the required fields
         if (!modelEntry.contains("name") || !modelEntry.contains("file"))
         {
-            std::cerr << "[Warning] Skipping model entry with missing 'name' or 'file'.\n";
+			DebugLog::LogWarning("[ModelManager] Skipping model entry with missing 'name' or 'file'.");
             continue;
         }
 
+
         std::string name = modelEntry["name"];
         std::string filePath = modelEntry["file"];
-
         std::shared_ptr<Model> model = std::make_shared<Model>();
 		model->Init(filePath.c_str());
+		// Check if the model was loaded successfully
         if (!model)
         {
             std::cerr << "[Warning] Failed to load model from: " << filePath << std::endl;
@@ -75,13 +78,13 @@ bool ModelManager::LoadModels(const char* jsonFilePath)
         	continue;
         }
 
+		// emplace data into the map
         ModelData data;
         data.model = model;
         data.name = name;
         data.filePath = filePath;
-
-        m_models[name] = std::move(data);
-        std::cout << "[Info] Loaded model '" << name << "' from '" << filePath << "'\n";
+		m_models.emplace(name, model);
+		DebugLog::Log("[ModelManager] Loaded model: {}", name);
     }
 
     return true;

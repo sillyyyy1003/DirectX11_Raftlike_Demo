@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "GameObject.h"
 #include "IEffect.h"
 #include "Material.h"
@@ -12,7 +12,7 @@ namespace
 }
 
 /// <summary>
-/// UI}Œ`‚ÌŠî’êƒNƒ‰ƒX
+/// UIå›³å½¢ã®åŸºåº•ã‚¯ãƒ©ã‚¹
 /// </summary>
 class UIMesh :public GameObject
 {
@@ -23,7 +23,7 @@ public:
 };
 
 
-/// @brief UI•`‰æ‚ÌŠî’êƒNƒ‰ƒX
+/// @brief UIæç”»ã®åŸºåº•ã‚¯ãƒ©ã‚¹
 class UIElement
 {
 protected:
@@ -31,40 +31,40 @@ protected:
 	template <class T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	std::unique_ptr<UIMesh> m_pUiMesh;					// UIƒƒbƒVƒ…
+	std::unique_ptr<UIMesh> m_pUiMesh;					// UIãƒ¡ãƒƒã‚·ãƒ¥
 
-	IDWriteTextFormat* m_pTextFormat;					// •¶š•\¦
-	ID2D1SolidColorBrush* m_pSolidBrush;				// •¶šF
-	ID2D1RenderTarget* m_pd2dRenderTarget = nullptr;	// •`‰æƒRƒ}ƒ“ƒh
+	IDWriteTextFormat* m_pTextFormat;					// æ–‡å­—è¡¨ç¤º
+	ID2D1SolidColorBrush* m_pSolidBrush;				// æ–‡å­—è‰²
+	ID2D1RenderTarget* m_pd2dRenderTarget = nullptr;	// æç”»ã‚³ãƒãƒ³ãƒ‰
 
-	//Transform m_transform;								// ˆÊ’uE‰ñ“]EŠgk
-	D2D1_RECT_F m_textRect;								// •¶š‚Ì•`‰æ—Ìˆæ
+	//Transform m_transform;								// ä½ç½®ãƒ»å›è»¢ãƒ»æ‹¡ç¸®
+	D2D1_RECT_F m_textRect;								// æ–‡å­—ã®æç”»é ˜åŸŸ
 
-	UIScaler* m_pUiScaler = nullptr;					// UIƒXƒP[ƒŠƒ“ƒO
+	UIScaler* m_pUiScaler = nullptr;					// UIã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 
 public:
 	UIElement(ID2D1RenderTarget* renderTarget);
 	virtual ~UIElement() = default;
 
-	/// @brief ”wŒiŠÜ‚ŞƒƒbƒVƒ…‚Ì‰Šú‰»
-	/// @param effect •`‰æ—pFX
-	/// @param material ”wŒiƒƒbƒVƒ…—pƒ}ƒeƒŠƒAƒ‹
-	/// @param model ”wŒiƒƒbƒVƒ…
-	/// @param fontSet ƒtƒHƒ“ƒgƒtƒH[ƒ}ƒbƒg
+	/// @brief èƒŒæ™¯å«ã‚€ãƒ¡ãƒƒã‚·ãƒ¥ã®åˆæœŸåŒ–
+	/// @param effect æç”»ç”¨FX
+	/// @param material èƒŒæ™¯ãƒ¡ãƒƒã‚·ãƒ¥ç”¨ãƒãƒ†ãƒªã‚¢ãƒ«
+	/// @param model èƒŒæ™¯ãƒ¡ãƒƒã‚·ãƒ¥
+	/// @param fontSet ãƒ•ã‚©ãƒ³ãƒˆãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
 	/// @param fontName 
 	/// @param uiBrush 
 	virtual void Init(IEffect* effect, Material* material,Primitive* model,UIFontSet* fontSet, const char* fontName,UIBrush* uiBrush);
 
-	/// @brief •¶š‚¾‚¯‚Ì‰Šú‰»
+	/// @brief æ–‡å­—ã ã‘ã®åˆæœŸåŒ–
 	/// @param fontSet Font lib
-	/// @param fontName	ƒtƒHƒ“ƒg–¼
+	/// @param fontName	ãƒ•ã‚©ãƒ³ãƒˆå
 	/// @param uiBrush Brush lib
 	virtual void Init(UIFontSet* fontSet, const char* fontName, UIBrush* uiBrush);
 
-	/// @brief Mesh‚¾‚¯‚Ì‰Šú‰»
-	/// @param effect •`‰æ—pFX
-	/// @param material ”wŒiƒƒbƒVƒ…—pƒ}ƒeƒŠƒAƒ‹
-	/// @param model ”wŒiƒƒbƒVƒ…
+	/// @brief Meshã ã‘ã®åˆæœŸåŒ–
+	/// @param effect æç”»ç”¨FX
+	/// @param material èƒŒæ™¯ãƒ¡ãƒƒã‚·ãƒ¥ç”¨ãƒãƒ†ãƒªã‚¢ãƒ«
+	/// @param model èƒŒæ™¯ãƒ¡ãƒƒã‚·ãƒ¥
 	virtual void Init(IEffect* effect, Material* material, Primitive* model);
 
 	void SetPosition(const DirectX::XMFLOAT3& pos);
@@ -75,26 +75,26 @@ public:
 	void SetScale(float x, float y, float z = 1.0f);
 	void SetScale(const float* scale);
 
-	//=====•`‰æ
-	/// @brief •¶š&ƒƒbƒVƒ…•`‰æ
+	//=====æç”»
+	/// @brief æ–‡å­—&ãƒ¡ãƒƒã‚·ãƒ¥æç”»
 	/// @param text 
 	virtual void DrawUi(const char* text = nullptr);
 
-	/// @brief •¶š•`‰æ
+	/// @brief æ–‡å­—æç”»
 	/// @param text 
 	virtual void DrawTextW(const char* text);
 
-	/// @brief UIƒƒbƒVƒ…‚Ì•`‰æ
+	/// @brief UIãƒ¡ãƒƒã‚·ãƒ¥ã®æç”»
 	virtual void DrawMesh();
 
 	virtual void Update(float dt);
 
 	
 protected:
-	/// @brief •¶š•`‰æˆÊ’uİ’è@’†SˆÊ’u‚ğŠî€‚É•¶š‚Ì•`‰æˆÊ’u‚ğİ’è‚·‚é
+	/// @brief æ–‡å­—æç”»ä½ç½®è¨­å®šã€€ä¸­å¿ƒä½ç½®ã‚’åŸºæº–ã«æ–‡å­—ã®æç”»ä½ç½®ã‚’è¨­å®šã™ã‚‹
 	void AdjustTextRectPos(float x, float y);
 
-	/// @brief •¶š•`‰æ—Ìˆæ‚ÌƒTƒCƒY‚ğİ’è‚·‚é@’†SˆÊ’u‚ğŠî€‚É•¶š‚Ì•`‰æˆÊ’u‚ğİ’è‚·‚é
+	/// @brief æ–‡å­—æç”»é ˜åŸŸã®ã‚µã‚¤ã‚ºã‚’è¨­å®šã™ã‚‹ã€€ä¸­å¿ƒä½ç½®ã‚’åŸºæº–ã«æ–‡å­—ã®æç”»ä½ç½®ã‚’è¨­å®šã™ã‚‹
 	void AdjustTextRectSize(float width, float height);
 
 	void UpdateScale();

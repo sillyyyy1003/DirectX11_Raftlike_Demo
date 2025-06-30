@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Jolt.h>
 #include <Physics/Body/BodyActivationListener.h>
 #include <Physics/Collision/ContactListener.h>
@@ -73,8 +73,8 @@ public:
 		m_objectToBroadPhase[Layers::ENEMY] = BroadPhaseLayers::MOVING;
 		m_objectToBroadPhase[Layers::WEAPON] = BroadPhaseLayers::MOVING;
 		m_objectToBroadPhase[Layers::ITEM] = BroadPhaseLayers::MOVING;
-		m_objectToBroadPhase[Layers::BOAT] = BroadPhaseLayers::NON_MOVING;  //‘D‚Í“®‚©‚È‚¢‚Ì‚Å”ñ“®“I‚Éİ’è
-		m_objectToBroadPhase[Layers::BUILDING] = BroadPhaseLayers::NON_MOVING; //Œš•¨‚à“®‚©‚È‚¢‚Ì‚Å”ñ“®“I‚Éİ’è
+		m_objectToBroadPhase[Layers::BOAT] = BroadPhaseLayers::NON_MOVING;  //èˆ¹ã¯å‹•ã‹ãªã„ã®ã§éå‹•çš„ã«è¨­å®š
+		m_objectToBroadPhase[Layers::BUILDING] = BroadPhaseLayers::NON_MOVING; //å»ºç‰©ã‚‚å‹•ã‹ãªã„ã®ã§éå‹•çš„ã«è¨­å®š
 	}
 
 	virtual uint					GetNumBroadPhaseLayers() const override
@@ -157,8 +157,8 @@ public:
 	virtual void			OnContactAdded(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold, ContactSettings& ioSettings) override
 	{
 		//cout << "A contact was added" << endl;
-		DebugLog::Log("A contact was added\n");
-		//========‚±‚±‚ÅOnCollisionEnter‚ÌƒƒWƒbƒN‚ğ’Ç‰Á‚·‚é
+		DebugLog::Log("[Physics] A contact was added.");
+		//========ã“ã“ã§OnCollisionEnterã®ãƒ­ã‚¸ãƒƒã‚¯ã‚’è¿½åŠ ã™ã‚‹
 
 	}
 
@@ -169,9 +169,9 @@ public:
 	/// @param ioSettings 
 	virtual void			OnContactPersisted(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold, ContactSettings& ioSettings) override
 	{
-		DebugLog::Log("A contact was persisted\n");
+		DebugLog::Log("[Physics] A contact was persisted.");
 		//cout << "A contact was persisted" << endl;
-		//========‚±‚±‚ÅOnCollisionStay‚ÌƒƒWƒbƒN‚ğ’Ç‰Á‚·‚é
+		//========ã“ã“ã§OnCollisionStayã®ãƒ­ã‚¸ãƒƒã‚¯ã‚’è¿½åŠ ã™ã‚‹
 		
 
 
@@ -182,9 +182,9 @@ public:
 	virtual void			OnContactRemoved(const SubShapeIDPair& inSubShapePair) override
 	{
 		
-		DebugLog::Log("A contact was removed");
+		DebugLog::Log("[Physics] A contact was removed.");
 		//cout << "A contact was removed" << endl;
-		//========‚±‚±‚ÅOnCollisionExit‚ÌƒƒWƒbƒN‚ğ’Ç‰Á‚·‚é
+		//========ã“ã“ã§OnCollisionExitã®ãƒ­ã‚¸ãƒƒã‚¯ã‚’è¿½åŠ ã™ã‚‹
 	}
 };
 
@@ -198,13 +198,13 @@ public:
 	virtual void		OnBodyActivated(const BodyID& inBodyID, uint64 inBodyUserData) override
 	{
 		//cout << "A body got activated" << endl;
-		DebugLog::Log("A body got activated\n");
+		DebugLog::Log("[Physics] A body got activated.");
 		
 	}
 
 	virtual void		OnBodyDeactivated(const BodyID& inBodyID, uint64 inBodyUserData) override
 	{
 		//cout << "A body went to sleep" << endl;
-		DebugLog::Log("A body went to sleep\n");
+		DebugLog::Log("[Physics] A body went to sleep.");
 	}
 };
