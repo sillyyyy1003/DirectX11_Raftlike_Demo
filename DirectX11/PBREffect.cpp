@@ -1,4 +1,4 @@
-#include "PBREffect.h"
+Ôªø#include "PBREffect.h"
 
 #include "DebugLog.h"
 #include "GameApp.h"
@@ -16,7 +16,7 @@ void PBREffect::ApplyRenderState()
 {
 	GameApp::SetBlendState(RenderStates::BSTransparent);		//AlphaBlend
 	GameApp::SetSamplerState(RenderStates::SSLinearWrap);		//Default Sampling
-	GameApp::SetCullingMode(RenderStates::RSNoCull);	//ï\ÇæÇØ
+	GameApp::SetCullingMode(RenderStates::RSNoCull);	//Ë°®„Å†„Åë
 }
 
 void PBREffect::Apply()
@@ -49,7 +49,7 @@ void PBREffect::SetDirLight()
 		
 		DirectX::XMFLOAT4 diffuse;
 		DirectX::XMFLOAT3 lightPos;
-		float lightIntensity;			//åıÇÃã≠Ç≥
+		float lightIntensity;			//ÂÖâ„ÅÆÂº∑„Åï
 
 	};
 

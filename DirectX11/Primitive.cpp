@@ -1,11 +1,11 @@
-#include "Primitive.h"
+Ôªø#include "Primitive.h"
 
 #include <vector>
 
 void SquareMesh::Init()
 {
 	// Create Mesh
-	// Pos Normal TexCoord í∏ì_ÇégÇ§
+	// Pos Normal TexCoord È†ÇÁÇπ„Çí‰Ωø„ÅÜ
 	const float d = 0.5f;
 	DirectX::XMFLOAT4 color(1.0f, 1.0f, 1.0f, 1.0f);
 	DirectX::XMFLOAT3 pos[] = {
