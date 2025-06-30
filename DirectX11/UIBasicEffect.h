@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include "IEffect.h"
 
 /// <summary>
-/// Šî–{‚ÌUIƒŒƒ“ƒ_ƒŠƒ“ƒO
+/// åŸºæœ¬ã®UIãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
 /// </summary>
 class UIBasicEffect:
 	public IEffect
@@ -12,7 +12,7 @@ protected:
 	PixelShader* m_ps;
 	VertexShader* m_vs;
 
-	DirectX::XMFLOAT2 m_viewSize;	//Œ»İƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY
+	DirectX::XMFLOAT2 m_viewSize;	//ç¾åœ¨ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚º
 
 public:
 
@@ -24,18 +24,18 @@ public:
 	void InitPixelShader(PixelShader* _ps) { m_ps = _ps; };
 	void InitVertexShader(VertexShader* _vs) { m_vs = _vs; };
 
-	/// @brief •½s“Š‰e‚ğg‚¤•`‰æ
+	/// @brief å¹³è¡ŒæŠ•å½±ã‚’ä½¿ã†æç”»
 	/// @param t
 	///	@param camera
 	void SetWVPMatrix(const Transform& t, CameraBase* camera = nullptr) override;
 
-	/// @brief Šî–{F‚Ìİ’u
+	/// @brief åŸºæœ¬è‰²ã®è¨­ç½®
 	/// @param mat 
 	void SetMaterial(Material* mat) override;
 
 	void ApplyRenderState();
 
-	/// @brief c‰¡‚Ì”ä—¦•ÏX
+	/// @brief ç¸¦æ¨ªã®æ¯”ç‡å¤‰æ›´
 	/// @param size 
 	void SetViewSize(const DirectX::XMFLOAT2& size) { m_viewSize = size; };
 

@@ -1,26 +1,26 @@
-#pragma once
+ï»¿#pragma once
 #include <DirectXMath.h>
 #include "Cube.h"
 
 /// <summary>
-/// ƒEƒBƒ“ƒhƒEƒTƒCƒY’²®—pUI‚ÌƒXƒP[ƒ‹‚ğ’²®‚·‚éƒNƒ‰ƒX
+/// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºèª¿æ•´ç”¨UIã®ã‚¹ã‚±ãƒ¼ãƒ«ã‚’èª¿æ•´ã™ã‚‹ã‚¯ãƒ©ã‚¹
 /// </summary>
 class UIScaler
 {
 private:
-	bool m_isDirty = false;								//UiƒXƒP[ƒ‹‚ª•ÏX‚³‚ê‚½‚©‚Ç‚¤‚©
+	bool m_isDirty = false;								//Uiã‚¹ã‚±ãƒ¼ãƒ«ãŒå¤‰æ›´ã•ã‚ŒãŸã‹ã©ã†ã‹
 
-	DirectX::XMFLOAT2 m_scale;		//UIƒXƒP[ƒ‹
-	DirectX::XMFLOAT2 m_referenceWindowSize = {};			//ƒEƒBƒ“ƒhƒEƒTƒCƒY
-	DirectX::XMFLOAT2 m_currentWindowSize = {};			//Œ»İ‚ÌƒEƒBƒ“ƒhƒEƒTƒCƒY
+	DirectX::XMFLOAT2 m_scale;		//UIã‚¹ã‚±ãƒ¼ãƒ«
+	DirectX::XMFLOAT2 m_referenceWindowSize = {};			//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚º
+	DirectX::XMFLOAT2 m_currentWindowSize = {};			//ç¾åœ¨ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚º
 
 public:
 	UIScaler();
 	~UIScaler() = default;
 
 	void UpdateScaler();
-	const DirectX::XMFLOAT2& GetScale() const { return m_scale; }	//UIƒXƒP[ƒ‹‚ğæ“¾
-	const DirectX::XMFLOAT2& GetReferenceWindowSize() const { return m_referenceWindowSize; }	//QÆƒEƒBƒ“ƒhƒEƒTƒCƒY‚ğæ“¾
+	const DirectX::XMFLOAT2& GetScale() const { return m_scale; }	//UIã‚¹ã‚±ãƒ¼ãƒ«ã‚’å–å¾—
+	const DirectX::XMFLOAT2& GetReferenceWindowSize() const { return m_referenceWindowSize; }	//å‚ç…§ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºã‚’å–å¾—
 	const DirectX::XMFLOAT2 GetCurrentWindowSize() const { return m_currentWindowSize; };
 
 	void SetWindowSize(const DirectX::XMFLOAT2& windowSize);
