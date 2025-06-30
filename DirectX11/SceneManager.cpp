@@ -3,6 +3,7 @@
 #include "FirstPersonCamera.h"
 #include "Geometry.h"
 #include "KInput.h"
+#include "ModelManager.h"
 #include "PhysicsManager.h"
 #include "ShapeFactory.h"
 
@@ -63,6 +64,9 @@ void SceneManager::Init()
     // 物理システムの初期化
     PhysicsManager::Instance().Init();
 
+	// Load models
+    ModelManager::Instance().LoadModels("Assets/ConfigFile/Config.json");
+
 	//==========Material/Shader/Effect/Texture
     InitEffect();
     //==========Model/GameObject/UiObject/Physics Collider
@@ -75,6 +79,8 @@ void SceneManager::Init()
 void SceneManager::UnInit()
 {
     Geometry::Uninit(); //Geometryの終了処理
+
+	ModelManager::Instance().UnInit(); // モデルマネージャーの終了処理
 
 	PhysicsManager::Instance().UnInit(); // 物理システムの終了処理
 }
@@ -147,15 +153,13 @@ bool SceneManager::InitResource()
     cube = std::make_shared<Cube>();
     cube->Init();
 
-    model = std::make_shared<Model>();
-    model->Init("Assets/Model/Apple.fbx");
-
     square = std::make_shared<SquareMesh>();
     square->Init();
 
+
     //=====GameObjectの初期化
     m_pApple = std::make_unique<GameObject>();
-    m_pApple->SetModel(model.get());
+    m_pApple->SetModel(ModelManager::Instance().GetModel("Food_Apple"));
     m_pApple->SetMaterial(m_pPBRFoodMaterial.get());
     m_pApple->SetEffect(m_pPBREffect.get());
 

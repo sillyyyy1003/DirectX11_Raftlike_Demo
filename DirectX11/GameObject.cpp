@@ -6,6 +6,12 @@ GameObject::GameObject()
 	m_pRenderComponent = std::make_unique<RenderComponent>();
 }
 
+void GameObject::SetModel(Primitive* model)
+{
+	assert(model != nullptr);
+	m_pRenderComponent->SetModel(model);
+}
+
 void GameObject::Update(float dt)
 {
 	//==========Update Physics

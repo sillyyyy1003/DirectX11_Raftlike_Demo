@@ -34,7 +34,7 @@ public:
 	void SetEffect(IEffect* effect) { m_pRenderComponent->SetEffect(effect); };
 
 	/// @brief モデル配置
-	void SetModel(Primitive* model) { m_pRenderComponent->SetModel(model); };
+	void SetModel(Primitive* model);;
 
 	virtual void Update(float dt);
 	virtual void Draw();

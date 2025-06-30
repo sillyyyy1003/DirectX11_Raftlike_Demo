@@ -1,0 +1,16 @@
+{
+  "models": [
+    {
+      "name": "Food_Apple",
+      "file": "Assets/Model/Apple.fbx"
+    },
+    {
+      "name": "Building_Grill",
+      "file": "Assets/Model/Grill1.fbx"
+    },
+    {
+      "name": "Building_WoodFloor",
+      "file": "Assets/Model/WoodFloor1.fbx"
+    }
+  ]
+}

@@ -144,7 +144,7 @@ public:
 	virtual ValidateResult	OnContactValidate(const Body& inBody1, const Body& inBody2, RVec3Arg inBaseOffset, const CollideShapeResult& inCollisionResult) override
 	{
 		//cout << "Contact validate callback" << endl;
-		DebugLog::Log("Contact validate callback\n");
+		//DebugLog::Log("Contact validate callback\n");
 		// Allows you to ignore a contact before it is created (using layers to not make objects collide is cheaper!)
 		return ValidateResult::AcceptAllContactsForThisBodyPair;
 	}
@@ -157,7 +157,7 @@ public:
 	virtual void			OnContactAdded(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold, ContactSettings& ioSettings) override
 	{
 		//cout << "A contact was added" << endl;
-		DebugLog::Log("[Physics] A contact was added.");
+		//DebugLog::Log("[Physics] A contact was added.");
 		//========ここでOnCollisionEnterのロジックを追加する
 
 	}
@@ -169,7 +169,7 @@ public:
 	/// @param ioSettings 
 	virtual void			OnContactPersisted(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold, ContactSettings& ioSettings) override
 	{
-		DebugLog::Log("[Physics] A contact was persisted.");
+		//DebugLog::Log("[Physics] A contact was persisted.");
 		//cout << "A contact was persisted" << endl;
 		//========ここでOnCollisionStayのロジックを追加する
 		
@@ -182,7 +182,7 @@ public:
 	virtual void			OnContactRemoved(const SubShapeIDPair& inSubShapePair) override
 	{
 		
-		DebugLog::Log("[Physics] A contact was removed.");
+		//DebugLog::Log("[Physics] A contact was removed.");
 		//cout << "A contact was removed" << endl;
 		//========ここでOnCollisionExitのロジックを追加する
 	}
@@ -198,13 +198,13 @@ public:
 	virtual void		OnBodyActivated(const BodyID& inBodyID, uint64 inBodyUserData) override
 	{
 		//cout << "A body got activated" << endl;
-		DebugLog::Log("[Physics] A body got activated.");
+		//DebugLog::Log("[Physics] A body got activated.");
 		
 	}
 
 	virtual void		OnBodyDeactivated(const BodyID& inBodyID, uint64 inBodyUserData) override
 	{
 		//cout << "A body went to sleep" << endl;
-		DebugLog::Log("[Physics] A body went to sleep.");
+		//DebugLog::Log("[Physics] A body went to sleep.");
 	}
 };

@@ -20,6 +20,7 @@ public:
 	/// @return true: 成功, false: 失敗 
 	bool LoadModels(const char* jsonFilePath);
 
+	void UnInit();
 private:
 	ModelManager()=default;
 	~ModelManager() = default;

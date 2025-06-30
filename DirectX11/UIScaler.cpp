@@ -1,4 +1,4 @@
-#include "UIScaler.h"
+ï»¿#include "UIScaler.h"
 
 UIScaler::UIScaler():
 	m_referenceWindowSize(WIN_WIDTH,WIN_HEIGHT) // Default reference size
@@ -16,7 +16,7 @@ void UIScaler::UpdateScaler()
 		m_scale.x = m_currentWindowSize.x / m_referenceWindowSize.x;
 		m_scale.y = m_currentWindowSize.y / m_referenceWindowSize.y;
 
-		// •ÏX‚³‚ê‚½ê‡‚Ì‚İXV‚·‚é
+		// å¤‰æ›´ã•ã‚ŒãŸå ´åˆã®ã¿æ›´æ–°ã™ã‚‹
 		m_isDirty = false;
 	}
 }
