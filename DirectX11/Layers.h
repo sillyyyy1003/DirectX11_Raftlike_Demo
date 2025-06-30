@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Jolt.h>
 #include <Physics/Body/BodyActivationListener.h>
 #include <Physics/Collision/ContactListener.h>
@@ -73,8 +73,8 @@ public:
 		m_objectToBroadPhase[Layers::ENEMY] = BroadPhaseLayers::MOVING;
 		m_objectToBroadPhase[Layers::WEAPON] = BroadPhaseLayers::MOVING;
 		m_objectToBroadPhase[Layers::ITEM] = BroadPhaseLayers::MOVING;
-		m_objectToBroadPhase[Layers::BOAT] = BroadPhaseLayers::NON_MOVING;  //‘D‚Í“®‚©‚È‚¢‚Ì‚Å”ñ“®“I‚Éİ’è
-		m_objectToBroadPhase[Layers::BUILDING] = BroadPhaseLayers::NON_MOVING; //Œš•¨‚à“®‚©‚È‚¢‚Ì‚Å”ñ“®“I‚Éİ’è
+		m_objectToBroadPhase[Layers::BOAT] = BroadPhaseLayers::NON_MOVING;  //èˆ¹ã¯å‹•ã‹ãªã„ã®ã§éå‹•çš„ã«è¨­å®š
+		m_objectToBroadPhase[Layers::BUILDING] = BroadPhaseLayers::NON_MOVING; //å»ºç‰©ã‚‚å‹•ã‹ãªã„ã®ã§éå‹•çš„ã«è¨­å®š
 	}
 
 	virtual uint					GetNumBroadPhaseLayers() const override
@@ -158,7 +158,7 @@ public:
 	{
 		//cout << "A contact was added" << endl;
 		DebugLog::Log("[Physics] A contact was added.");
-		//========‚±‚±‚ÅOnCollisionEnter‚ÌƒƒWƒbƒN‚ğ’Ç‰Á‚·‚é
+		//========ã“ã“ã§OnCollisionEnterã®ãƒ­ã‚¸ãƒƒã‚¯ã‚’è¿½åŠ ã™ã‚‹
 
 	}
 
@@ -171,7 +171,7 @@ public:
 	{
 		DebugLog::Log("[Physics] A contact was persisted.");
 		//cout << "A contact was persisted" << endl;
-		//========‚±‚±‚ÅOnCollisionStay‚ÌƒƒWƒbƒN‚ğ’Ç‰Á‚·‚é
+		//========ã“ã“ã§OnCollisionStayã®ãƒ­ã‚¸ãƒƒã‚¯ã‚’è¿½åŠ ã™ã‚‹
 		
 
 
@@ -184,7 +184,7 @@ public:
 		
 		DebugLog::Log("[Physics] A contact was removed.");
 		//cout << "A contact was removed" << endl;
-		//========‚±‚±‚ÅOnCollisionExit‚ÌƒƒWƒbƒN‚ğ’Ç‰Á‚·‚é
+		//========ã“ã“ã§OnCollisionExitã®ãƒ­ã‚¸ãƒƒã‚¯ã‚’è¿½åŠ ã™ã‚‹
 	}
 };
 
