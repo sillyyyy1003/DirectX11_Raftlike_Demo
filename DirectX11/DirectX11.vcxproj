@@ -128,6 +128,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <AdditionalIncludeDirectories>$(ProjectDir)Assets\Lib\imgui\Include;$(ProjectDir)Assets\Lib\Assimp\include;$(ProjectDir)Assets\Lib\DirectXTex;$(ProjectDir)Assets\Lib\JoltPhysics\Include\Jolt;$(ProjectDir)Assets\Lib\JoltPhysics\Include\;$(ProjectDir)Assets\Lib;$(ProjectDir)Assets\Lib\nolmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -148,6 +149,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>
       $(ProjectDir)Assets\Lib\imgui\Include;
       $(ProjectDir)Assets\Lib\Assimp\include;
