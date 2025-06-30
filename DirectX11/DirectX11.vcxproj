@@ -127,7 +127,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <AdditionalIncludeDirectories>$(ProjectDir)Assets\Lib\imgui\Include;$(ProjectDir)Assets\Lib\Assimp\include;$(ProjectDir)Assets\Lib\DirectXTex;$(ProjectDir)Assets\Lib\JoltPhysics\Include\Jolt;$(ProjectDir)Assets\Lib\JoltPhysics\Include\;$(ProjectDir)Assets\Lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Assets\Lib\imgui\Include;$(ProjectDir)Assets\Lib\Assimp\include;$(ProjectDir)Assets\Lib\DirectXTex;$(ProjectDir)Assets\Lib\JoltPhysics\Include\Jolt;$(ProjectDir)Assets\Lib\JoltPhysics\Include\;$(ProjectDir)Assets\Lib;$(ProjectDir)Assets\Lib\nolmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
