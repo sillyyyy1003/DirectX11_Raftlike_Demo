@@ -55,17 +55,13 @@ private:
 	CameraBase* m_pCurrentCamera;
 	std::shared_ptr<LightBase> lightBase;	
 
-	// Model
-	std::shared_ptr<Cube> cube;
-	std::shared_ptr<Model> model;
-	std::shared_ptr<SquareMesh> square;
-
 	// Physical Component
 	std::shared_ptr<PhysicsComponent> m_pAppleCollider;
 	std::shared_ptr<PhysicsComponent> m_pCubeCollider;
 	std::shared_ptr<PhysicsComponent> m_pFloorCollider;
 	std::shared_ptr<PhysicsComponent> m_pPlayerCollider;
 
+	// Physical Debug Render Component
 	std::shared_ptr<RenderComponent>  m_pDebugColliderRender;
 
 

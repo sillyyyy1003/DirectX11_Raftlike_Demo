@@ -1,25 +1,31 @@
-#pragma once
+ï»¿#pragma once
 #include <unordered_map>
 #include "Model.h"
 
 
-/// @brief ‘S‚Ä‚Ìƒ‚ƒfƒ‹‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+/// @brief å…¨ã¦ã®ãƒ¢ãƒ‡ãƒ«ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
 class ModelManager
 {
 public:
 	static ModelManager& Instance();
-	Model* GetModel(const char* modelName);
+	Primitive* GetModel(const char* modelName);
 
-	/// @brief ƒ‚ƒfƒ‹‚ğƒ[ƒh‚·‚é
-	///	@param modelName ƒ‚ƒfƒ‹‚Ì–¼‘O
-	/// @param filePath ƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX
+	/// @brief ãƒ¢ãƒ‡ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
+	///	@param modelName ãƒ¢ãƒ‡ãƒ«ã®åå‰
+	/// @param filePath ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹
 	void LoadModel(const char* modelName, const char* filePath);
 
-	/// @brief Json File‚©‚çƒ‚ƒfƒ‹‚ğƒ[ƒh‚·‚é
+	/// @brief Json Fileã‹ã‚‰ãƒ¢ãƒ‡ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
 	/// @param jsonFilePath 
-	/// @return true: ¬Œ÷, false: ¸”s 
+	/// @return true: æˆåŠŸ, false: å¤±æ•— 
 	bool LoadModels(const char* jsonFilePath);
 
+	/// @brief Load Model from Program
+	/// @param modelName Model name
+	/// @param model shared pointer to Model
+	void LoadModel(const char* modelName, const std::shared_ptr<Primitive>& model);
+
+	void UnInit();
 private:
 	ModelManager()=default;
 	~ModelManager() = default;
@@ -28,13 +34,13 @@ private:
 
 	struct ModelData
 	{
-		std::shared_ptr<Model> model;
+		std::shared_ptr<Primitive> model;
 		std::string name;		// model name as map key
 		std::string filePath;	// Load path for the model file
 	};
 
 	using Models = std::unordered_map<std::string, ModelData>;
-	Models m_models; ///< ƒ‚ƒfƒ‹‚Ì–¼‘O‚Æƒ‚ƒfƒ‹ƒf[ƒ^‚Ìƒ}ƒbƒv
+	Models m_models; ///< ãƒ¢ãƒ‡ãƒ«ã®åå‰ã¨ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ—
 
 };
 

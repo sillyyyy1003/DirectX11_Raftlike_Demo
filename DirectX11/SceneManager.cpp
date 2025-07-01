@@ -1,8 +1,8 @@
 ﻿#include "SceneManager.h"
 #include "DirLight.h"
-#include "FirstPersonCamera.h"
 #include "Geometry.h"
 #include "KInput.h"
+#include "ModelManager.h"
 #include "PhysicsManager.h"
 #include "ShapeFactory.h"
 
@@ -63,10 +63,15 @@ void SceneManager::Init()
     // 物理システムの初期化
     PhysicsManager::Instance().Init();
 
+	// Load models
+    ModelManager::Instance().LoadModels("Assets/ConfigFile/Config.json");
+
 	//==========Material/Shader/Effect/Texture
     InitEffect();
+
     //==========Model/GameObject/UiObject/Physics Collider
     InitResource();
+
     //==========Scene map
     InitSceneMap();
 
@@ -75,6 +80,8 @@ void SceneManager::Init()
 void SceneManager::UnInit()
 {
     Geometry::Uninit(); //Geometryの終了処理
+
+	ModelManager::Instance().UnInit(); // モデルマネージャーの終了処理
 
 	PhysicsManager::Instance().UnInit(); // 物理システムの終了処理
 }
@@ -143,19 +150,20 @@ void SceneManager::SetSignalBus(GameSignalBus* _signal)
 
 bool SceneManager::InitResource()
 {
-    //====モデルの読み込み
-    cube = std::make_shared<Cube>();
-    cube->Init();
+    //====モデル作成
+    std::shared_ptr<Cube> cube = std::make_shared<Cube>();
+	cube->Init();
+    ModelManager::Instance().LoadModel("Cube",cube); //Add Model to Model Manager as an instance
 
-    model = std::make_shared<Model>();
-    model->Init("Assets/Model/Apple.fbx");
-
-    square = std::make_shared<SquareMesh>();
+    std::shared_ptr<SquareMesh> square = std::make_shared<SquareMesh>();
     square->Init();
+    ModelManager::Instance().LoadModel("Square", square);   //Add Model to Model Manager as an instance 
+
+
 
     //=====GameObjectの初期化
     m_pApple = std::make_unique<GameObject>();
-    m_pApple->SetModel(model.get());
+    m_pApple->SetModel(ModelManager::Instance().GetModel("Food_Apple"));
     m_pApple->SetMaterial(m_pPBRFoodMaterial.get());
     m_pApple->SetEffect(m_pPBREffect.get());
 
@@ -303,35 +311,22 @@ bool SceneManager::InitEffect()
 
     //Init Material
     m_pBlinnPhongMaterial = std::make_shared<Material>();
-    m_pBlinnPhongMaterial->SetAmbient({ 1,1,1,1 });
-    m_pBlinnPhongMaterial->SetDiffuse({ 1,1,1,1.f });
-    m_pBlinnPhongMaterial->SetSpecular({ 0,0,0,64 });
 
     m_pPBRFoodMaterial = std::make_shared<Material>();
-    m_pPBRFoodMaterial->SetAmbient({ 1,1,1,1 });
-    m_pPBRFoodMaterial->SetDiffuse({ 1,1,1,1.f });
-    m_pPBRFoodMaterial->SetSpecular({ 0,0,0,0 });
     m_pPBRFoodMaterial->SetTexture(Material::Albedo, albedoTex.get());
     m_pPBRFoodMaterial->SetTexture(Material::Normal, normalTex.get());
     m_pPBRFoodMaterial->SetTexture(Material::Metallic_Smooth, metallicTex.get());
 
     m_pUIMaterial = std::make_shared<Material>();
-    m_pUIMaterial->SetAmbient({ 1,1,1,1 });
     m_pUIMaterial->SetDiffuse({ 0,0,1,1 });
-    m_pUIMaterial->SetSpecular({ 0,0,0,0 });
 
 	m_pDebugMaterial = std::make_shared<Material>();
-    m_pDebugMaterial->SetAmbient({ 1,1,1,1 });
     m_pDebugMaterial->SetDiffuse({ 0,1,0,0.2f });
-    m_pDebugMaterial->SetSpecular({ 0,0,0,0 });
 
     m_pFloorMaterial = std::make_shared<Material>();
-	m_pFloorMaterial->SetAmbient({ 1,1,1,1 });
 	m_pFloorMaterial->SetDiffuse({ 0.2f,0.2f,0.6f,0.4f });
-    m_pFloorMaterial->SetSpecular({ 0,0,0,0 });
 
     m_pUIAimMaterial = std::make_shared<Material>();
-    m_pUIAimMaterial->SetDefaultMaterial();
     m_pUIAimMaterial->SetTexture(Material::Albedo, m_pUiAimTex.get());
 
 	return true;

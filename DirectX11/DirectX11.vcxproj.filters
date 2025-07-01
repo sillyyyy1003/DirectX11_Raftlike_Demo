@@ -189,7 +189,7 @@
     <ClCompile Include="DebugLog.cpp">
       <Filter>源文件\System</Filter>
     </ClCompile>
-    <ClCompile Include="SignalBus.cpp">
+    <ClCompile Include="GameSignalBus.cpp">
       <Filter>源文件\System</Filter>
     </ClCompile>
     <ClCompile Include="Geometry.cpp">
@@ -235,6 +235,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ModelManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LivingEntity.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UIBar.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -314,7 +320,7 @@
     <ClInclude Include="Signal.hpp">
       <Filter>头文件\System</Filter>
     </ClInclude>
-    <ClInclude Include="SignalBus.h">
+    <ClInclude Include="GameSignalBus.h">
       <Filter>头文件\System</Filter>
     </ClInclude>
     <ClInclude Include="DebugLog.h">
@@ -372,6 +378,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ModelManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LivingEntity.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UIBar.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
