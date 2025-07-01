@@ -67,10 +67,13 @@ void UIElement::Init(IEffect* effect, Material* material, Primitive* model)
 }
 
 
-void UIElement::DrawUi(const char* text)
+void UIElement::Draw(const char* text)
 {
 	// 背景描画
 	DrawMesh();
+
+	// check if there is words
+	if (!text)return;
 
 	// 文字描画
 	DrawTextW(text);

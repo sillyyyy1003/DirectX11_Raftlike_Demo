@@ -17,8 +17,7 @@ class UIComponent
 public:
 	virtual ~UIComponent() = default;
 	virtual void Update(float dt) = 0;
-	virtual void Draw() {}
-	virtual void Draw(const char* text = nullptr) {}
+	virtual void Draw(const char* text = nullptr) = 0;
 };
 
 
@@ -67,7 +66,7 @@ protected:
 
 public:
 	UIElement(ID2D1RenderTarget* renderTarget);
-	virtual ~UIElement() = default;
+	~UIElement() override = default;
 
 	/// @brief 背景含むメッシュの初期化
 	/// @param effect 描画用FX
@@ -101,7 +100,7 @@ public:
 	//=====描画
 	/// @brief 文字&メッシュ描画
 	/// @param text 
-	virtual void Draw(const char* text = nullptr);
+	virtual void Draw(const char* text = nullptr) override;
 
 	/// @brief 文字描画
 	/// @param text 
@@ -110,7 +109,7 @@ public:
 	/// @brief UIメッシュの描画
 	virtual void DrawMesh();
 
-	virtual void Update(float dt);
+	virtual void Update(float dt) override;
 
 	
 protected:

@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <memory>
 #include "D3DApp.h"
-#include "SignalBus.h"
+#include "GameSignalBus.h"
 #include "UIFontSet.h"
 
 
