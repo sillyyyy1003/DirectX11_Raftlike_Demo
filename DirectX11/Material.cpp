@@ -1,6 +1,6 @@
 ﻿#include "Material.h"
 
-Material::Material():m_ambient(0,0,0,0),m_diffuse(1,1,1,1),m_specular(0,0,0,1),m_emission(0,0,0,0)
+Material::Material():m_ambient(0.5f,0.5f,0.5f,1.f),m_diffuse(1,1,1,1),m_specular(0,0,0,1),m_emission(0,0,0,0)
 {
 }
 
@@ -48,5 +48,4 @@ void Material::SetDefaultMaterial()
 	SetDiffuse({ 1,1,1,1 });
 	SetSpecular({ 0,0,0,0 });
 	SetEmission({ 0,0,0,0 });
-
 }

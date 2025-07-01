@@ -5,23 +5,23 @@
 ///	include two mesh: background & bar
 ///	Base: Component
 ///	todo: 之后要考虑屏幕大小变化的时候所有的大小需要适配另一个函数
-class UIBar :public Component
+class UIBar :public UIComponent
 {
 
 public:
 	UIBar();
 	~UIBar() override = default;
 
-	/// @brief UIの位置とサイズを設定する
-	/// @param pos 位置
-	/// @param scale サイズ
-	void Init(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& scale);
+	
+	void Init(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& scale, Material* bgMaterial = nullptr, Material* barMaterial = nullptr);
 
 	/// @brief Update bar render status
 	/// @param volume current percentage (0~1)
 	void UpdateUI(float volume);
 
+	void Draw(const char* string = nullptr) override;
 
+	void Update(float dt) override;
 
 private:
 	std::unique_ptr<UIMesh> m_backgroundMesh;

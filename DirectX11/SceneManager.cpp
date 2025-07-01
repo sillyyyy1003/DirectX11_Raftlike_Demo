@@ -48,6 +48,7 @@ void SceneManager::Init()
     //現在使っているカメラとして設定
     SetCurrentCamera(m_pPlayer->GetCameraController()->GetCamera());
 
+
 	//Scene作成
 
 
@@ -96,7 +97,6 @@ void SceneManager::Update(float dt)
 	m_pFloor->Update(dt);
 
     m_pPlayer->Update(dt);
-
 
 	//m_pGameSignalBus->OnResolutionChangeRequest.Emit(Event::ResolutionPreset::R_1080p);
     
