@@ -11,20 +11,43 @@ namespace
 	constexpr D2D1_RECT_F DefaultRectSize = { 0,0,100,100 };//UI Default Size (100x100)
 }
 
+/// @brief virtual class for UI Component
+class UIComponent
+{
+public:
+	virtual ~UIComponent() = default;
+	virtual void Update(float dt) = 0;
+	virtual void Draw() {}
+	virtual void Draw(const char* text = nullptr) {}
+};
+
+
 /// <summary>
 /// UI図形の基底クラス
 /// </summary>
-class UIMesh :public GameObject
+class UIMesh
 {
 public:
 	UIMesh();
 	void SetViewSize(const DirectX::XMFLOAT2& _viewSize);
-	void Draw() override;
+	void Draw();
+
+	void SetMaterial(Material* mat) { m_pRenderComponent->SetMaterial(mat); }
+	void SetEffect(IEffect* iEffect) { m_pRenderComponent->SetEffect(iEffect); }
+	void SetModel(Primitive* p) { m_pRenderComponent->SetModel(p); }
+
+	Transform& GetTransform() { return m_transform; }
+
+protected:
+
+	Transform m_transform;
+	std::shared_ptr<RenderComponent> m_pRenderComponent;
 };
 
 
 /// @brief UI描画の基底クラス
-class UIElement
+class UIElement :
+	public UIComponent
 {
 protected:
 
@@ -37,7 +60,7 @@ protected:
 	ID2D1SolidColorBrush* m_pSolidBrush;				// 文字色
 	ID2D1RenderTarget* m_pd2dRenderTarget = nullptr;	// 描画コマンド
 
-	//Transform m_transform;								// 位置・回転・拡縮
+	//Transform m_transform;							// 位置・回転・拡縮
 	D2D1_RECT_F m_textRect;								// 文字の描画領域
 
 	UIScaler* m_pUiScaler = nullptr;					// UIスケーリング
@@ -78,7 +101,7 @@ public:
 	//=====描画
 	/// @brief 文字&メッシュ描画
 	/// @param text 
-	virtual void DrawUi(const char* text = nullptr);
+	virtual void Draw(const char* text = nullptr);
 
 	/// @brief 文字描画
 	/// @param text 
@@ -98,8 +121,5 @@ protected:
 	void AdjustTextRectSize(float width, float height);
 
 	void UpdateScale();
-	
-
-
 };
 

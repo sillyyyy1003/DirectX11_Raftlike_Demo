@@ -10,3 +10,5 @@ Start model loading
 Loading model finished
 [ModelManager] Loaded model: Building_WoodFloor
 [ModelManager] Finish Loading model!
+[ModelManager] Loaded model: Cube
+[ModelManager] Loaded model: Square

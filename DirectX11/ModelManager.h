@@ -8,7 +8,7 @@ class ModelManager
 {
 public:
 	static ModelManager& Instance();
-	Model* GetModel(const char* modelName);
+	Primitive* GetModel(const char* modelName);
 
 	/// @brief モデルをロードする
 	///	@param modelName モデルの名前
@@ -20,6 +20,11 @@ public:
 	/// @return true: 成功, false: 失敗 
 	bool LoadModels(const char* jsonFilePath);
 
+	/// @brief Load Model from Program
+	/// @param modelName Model name
+	/// @param model shared pointer to Model
+	void LoadModel(const char* modelName, const std::shared_ptr<Primitive>& model);
+
 	void UnInit();
 private:
 	ModelManager()=default;
@@ -29,7 +34,7 @@ private:
 
 	struct ModelData
 	{
-		std::shared_ptr<Model> model;
+		std::shared_ptr<Primitive> model;
 		std::string name;		// model name as map key
 		std::string filePath;	// Load path for the model file
 	};

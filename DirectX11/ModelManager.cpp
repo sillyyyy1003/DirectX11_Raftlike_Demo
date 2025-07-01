@@ -11,7 +11,7 @@ ModelManager& ModelManager::Instance()
 	return instance;
 }
 
-Model* ModelManager::GetModel(const char* modelName)
+Primitive* ModelManager::GetModel(const char* modelName)
 {
 	auto it = m_models.find(std::string(modelName));
 	if (it != m_models.end())
@@ -98,6 +98,28 @@ bool ModelManager::LoadModels(const char* jsonFilePath)
     }
 	DebugLog::Log("[ModelManager] Finish Loading model!");
     return true;
+}
+
+void ModelManager::LoadModel(const char* modelName, const std::shared_ptr<Primitive>& model)
+{
+	// Check if the model already exists in the map
+	auto it = m_models.find(modelName);
+	if (it != m_models.end())
+	{
+		DebugLog::LogWarning("[ModelManager] {} already exists!", modelName);
+		return;
+	}
+
+	//move ptr and reset former ptr
+	std::shared_ptr<Primitive> modelPtr = std::move(model);
+
+	// Add the model to the map
+	m_models[modelName] = {
+		modelPtr,
+		std::string(modelName),
+		std::string("") // No file path provided
+	};
+	DebugLog::Log("[ModelManager] Loaded model: {}", modelName);
 }
 
 void ModelManager::UnInit()

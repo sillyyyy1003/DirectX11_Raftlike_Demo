@@ -55,7 +55,6 @@ void Player::Update(float dt)
 		
 	}
 
-
 	//=======Camera Update
 	m_pCameraController->Update(dt);
 	m_pCameraController->UpdateCameraTransform(m_transform);
@@ -63,7 +62,6 @@ void Player::Update(float dt)
 
 	//=======Input
 	m_pPlayerController->Update(dt);
-
 
 	//GameLogic
 }

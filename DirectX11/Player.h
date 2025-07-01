@@ -12,8 +12,10 @@ class Player :
 private:
 	//Playerの動きを扱う
 	std::unique_ptr<PlayerController> m_pPlayerController;
+
 	//Cameraの動き
 	std::shared_ptr <CameraController> m_pCameraController;
+
 public:
 
 
