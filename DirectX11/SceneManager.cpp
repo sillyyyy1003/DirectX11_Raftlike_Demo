@@ -69,8 +69,10 @@ void SceneManager::Init()
 
 	//==========Material/Shader/Effect/Texture
     InitEffect();
+
     //==========Model/GameObject/UiObject/Physics Collider
     InitResource();
+
     //==========Scene map
     InitSceneMap();
 
