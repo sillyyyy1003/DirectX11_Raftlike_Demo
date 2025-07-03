@@ -99,7 +99,8 @@ void SceneManager::Update(float dt)
     m_pPlayer->Update(dt);
 
 	//m_pGameSignalBus->OnResolutionChangeRequest.Emit(Event::ResolutionPreset::R_1080p);
-    
+
+
 }
 
 void SceneManager::Draw()
@@ -138,7 +139,8 @@ void SceneManager::Draw()
     m_pPlayer->Draw();
 
     //Ui描画
-    m_pUIAim->DrawUi();
+    m_pUiAim->Draw();
+    m_pUiBar->Draw();
 
 }
 
@@ -183,10 +185,21 @@ bool SceneManager::InitResource()
     m_pUIElement->SetPosition(0, 0);
     m_pUIElement->SetScale(200, 200);
 
-    m_pUIAim = std::make_unique<UIElement>(d2dRenderTarget);
-    m_pUIAim->Init(m_pUIBasicEffect.get(), m_pUIAimMaterial.get(), square.get());
-    m_pUIAim->SetPosition(0, 0);
-    m_pUIAim->SetScale(32, 32);
+
+    m_pUiAim = make_unique<UIMesh>();
+    m_pUiAim->SetEffect(m_pUIBasicEffect.get());
+    m_pUiAim->SetMaterial(m_pUIAimMaterial.get());
+    m_pUiAim->SetModel(ModelManager::Instance().GetModel("Square"));
+    m_pUiAim->GetTransform().SetPosition({0,0,0.1f});
+    m_pUiAim->GetTransform().SetScale({ 32,32,1.f });
+
+    m_pUiBar = make_unique<UIBar>();
+    m_pUiBar->Init({ -500.f,-200.f,0.1f },
+        { 300.f,32.f },
+        m_pUiBarBgMaterial.get(),
+        m_pUiBarMaterial.get(),
+        m_pUIBasicEffect.get(),
+        m_pUIBasicEffect.get());
 
     //=====物理の初期化
 
@@ -328,6 +341,12 @@ bool SceneManager::InitEffect()
 
     m_pUIAimMaterial = std::make_shared<Material>();
     m_pUIAimMaterial->SetTexture(Material::Albedo, m_pUiAimTex.get());
+
+    m_pUiBarMaterial = std::make_shared<Material>();
+    m_pUiBarMaterial->SetDiffuse({ 1.f,0.f,0.f,1.f });
+
+    m_pUiBarBgMaterial = std::make_shared<Material>();
+    m_pUiBarBgMaterial->SetDiffuse({ 0,0,1.f,1.f });
 
 	return true;
 }

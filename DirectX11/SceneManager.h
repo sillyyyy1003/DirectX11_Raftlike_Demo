@@ -12,6 +12,7 @@
 #include "GameSignalBus.h"
 #include "UIBasicEffect.h"
 #include "UIElement.h"
+#include "UIBar.h"
 
 namespace SceneConfig{
 	enum SceneIndex :uint8_t
@@ -68,8 +69,13 @@ private:
 	std::shared_ptr<Material> m_pDebugMaterial;
 	std::shared_ptr<Material> m_pPBRFoodMaterial;
 	std::shared_ptr<Material> m_pFloorMaterial;
+
 	std::shared_ptr<Material> m_pUIMaterial;
 	std::shared_ptr<Material> m_pUIAimMaterial;
+
+	std::shared_ptr<Material> m_pUiBarMaterial;
+	std::shared_ptr<Material> m_pUiBarBgMaterial;
+
 
 	// Effect
 	std::shared_ptr<BasicEffect> m_pBasicEffect;
@@ -86,8 +92,9 @@ private:
 
 	// Ui
 	std::unique_ptr<UIElement> m_pUIElement;
-	std::unique_ptr<UIElement> m_pUIAim;
-
+	std::unique_ptr<UIMesh> m_pUiAim;
+	std::unique_ptr<UIBar> m_pUiBar;
+ 
 	// Texture
 	std::shared_ptr<Texture> albedoTex;
 	std::shared_ptr<Texture> normalTex;
@@ -103,6 +110,8 @@ private:
 
 	GameSignalBus* m_pGameSignalBus;
 	ID2D1RenderTarget* d2dRenderTarget;
+
+	float hp = 100;
 
 
 private:

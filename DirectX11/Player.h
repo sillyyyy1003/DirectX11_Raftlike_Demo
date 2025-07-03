@@ -1,7 +1,9 @@
 ﻿#pragma once
 #include "FirstPersonCamera.h"
 #include "GameObject.h"
+#include "HungerComponent.h"
 #include "PlayerController.h"
+#include "UIElement.h"
 
 /// <summary>
 /// Player
@@ -9,14 +11,7 @@
 class Player :
     public GameObject
 {
-private:
-	//Playerの動きを扱う
-	std::unique_ptr<PlayerController> m_pPlayerController;
 
-	//Cameraの動き
-	std::shared_ptr <CameraController> m_pCameraController;
-
-public:
 
 
 public:
@@ -49,6 +44,17 @@ public:
 	void RotateY(float rad);
 
 	CameraController* GetCameraController() { return m_pCameraController.get(); }
+
+private:
+	//Playerの動きを扱う
+	std::unique_ptr<PlayerController> m_pPlayerController;
+
+	//Cameraの動き
+	std::shared_ptr <CameraController> m_pCameraController;
+
+	// Hunger manager
+	std::shared_ptr<HungerComponent> m_pHungerComponent;
+
 
 };
 

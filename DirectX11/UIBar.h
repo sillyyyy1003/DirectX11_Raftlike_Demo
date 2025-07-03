@@ -12,8 +12,15 @@ public:
 	UIBar();
 	~UIBar() override = default;
 
-	
-	void Init(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& scale, Material* bgMaterial = nullptr, Material* barMaterial = nullptr);
+	/// @brief UIBar Init
+	/// @param pos 
+	/// @param scale 
+	/// @param bgMaterial 
+	/// @param barMaterial 
+	/// @param bgEffect 
+	/// @param barEffect 
+	void Init(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& scale, Material* bgMaterial, Material* barMaterial,IEffect* bgEffect, IEffect* barEffect);
+
 
 	/// @brief Update bar render status
 	/// @param volume current percentage (0~1)
@@ -25,9 +32,9 @@ public:
 
 private:
 	std::unique_ptr<UIMesh> m_backgroundMesh;
-	std::shared_ptr<UIMesh> m_barMesh;
+	std::unique_ptr<UIMesh> m_barMesh;
 
-	DirectX::XMFLOAT3 m_position;		// UI position
+	DirectX::XMFLOAT3 m_position;		// UI position AnchorPos:LeftMiddle
 	DirectX::XMFLOAT3 m_scale;			// UI scale (width & height)
 
 
