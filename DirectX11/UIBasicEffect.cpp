@@ -24,12 +24,14 @@ void UIBasicEffect::Apply()
 void UIBasicEffect::SetWVPMatrix(const Transform& t, CameraBase* camera)
 {
 	// WVP 計算
-	DirectX::XMMATRIX WVP[3];
-	WVP[0] = t.GetLocalToWorldMatrixXM();
-	WVP[1] = DirectX::XMMatrixIdentity();
-	WVP[2]= DirectX::XMMatrixOrthographicLH(m_viewSize.x, m_viewSize.y, 0.1f, 3.0f);
+	DirectX::XMFLOAT4X4 mat[3];
+	mat[0] = t.GetLocalToWorldMatrix();
+	DirectX::XMMATRIX view = DirectX::XMMatrixTranspose(DirectX::XMMatrixIdentity());
+	XMStoreFloat4x4(&mat[1],view);
+	DirectX::XMMATRIX proj = DirectX::XMMatrixTranspose(DirectX::XMMatrixOrthographicLH(m_viewSize.x, m_viewSize.y, 0.1f, 3.0f));
+	XMStoreFloat4x4(&mat[2], proj);
 
-	m_vs->WriteBuffer(0, WVP);
+	m_vs->WriteBuffer(0, mat);
 
 }
 

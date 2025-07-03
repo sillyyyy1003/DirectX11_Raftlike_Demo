@@ -15,9 +15,9 @@ struct VS_OUT
 
 cbuffer WVP : register(b0)
 {
-	MATRIX world;
-	MATRIX view;
-	MATRIX proj;
+	float4x4 world;
+	float4x4 view;
+	float4x4 proj;
 }
 
 VS_OUT main(VS_IN vin)

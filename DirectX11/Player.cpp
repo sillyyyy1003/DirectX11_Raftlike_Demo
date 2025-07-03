@@ -14,6 +14,12 @@ void Player::Init()
 	m_pPlayerController = std::make_unique<PlayerController>(this);
 	//CameraController初期化
 	m_pCameraController = std::make_shared<CameraController>();
+
+	//hunger component初期化→初期値
+	//todo:make this can load from config file
+	m_pHungerComponent = std::make_shared<HungerComponent>(200.f);
+	AddComponent(MyComponent::ComponentType::HungerManager, m_pHungerComponent.get());
+
 }
 
 
@@ -63,7 +69,8 @@ void Player::Update(float dt)
 	//=======Input
 	m_pPlayerController->Update(dt);
 
-	//GameLogic
+	//=======Status Update
+	m_pHungerComponent->Update(dt);	//空腹度
 }
 
 void Player::Draw()
@@ -80,7 +87,10 @@ void Player::Draw()
 		};
 		debugRender->Render(t);
 	}
-#endif	
+#endif
+
+	//Ui Draw
+	m_pHungerComponent->Draw();
 }
 
 void Player::Strafe(float d)
