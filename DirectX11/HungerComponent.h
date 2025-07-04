@@ -1,11 +1,12 @@
 ﻿#pragma once
 #include "UIBar.h"
 
-class HungerComponent
+class HungerComponent:
+	public Component
 {
 public:
     HungerComponent(float initialValue);
-    ~HungerComponent() =default;
+    ~HungerComponent() override = default;
 
     void Update(float dt);
 

@@ -254,6 +254,7 @@ bool SceneManager::InitResource()
     m_pDebugColliderRender->SetModel(cube.get());
 
     m_pPlayer->AddComponent(MyComponent::ComponentType::DebugRender, m_pDebugColliderRender.get());
+    m_pPlayer->GetComponent<HungerComponent>(MyComponent::ComponentType::HungerManager)->SetUIComponent(m_pUiBar.get());
 
 
 
