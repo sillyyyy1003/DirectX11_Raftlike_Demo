@@ -33,9 +33,6 @@ bool PhysicsManager::AssertFailedImpl(const char* expr, const char* msg, const c
 void PhysicsManager::Init()
 {
 
-	// Register allocation hook.
-	RegisterDefaultAllocator();
-
 	// Install trace and assert callbacks
 	Trace = TraceImpl;
 	JPH_IF_ENABLE_ASSERTS(AssertFailed = AssertFailedImpl);
@@ -47,12 +44,12 @@ void PhysicsManager::Init()
 	RegisterTypes();
 
 	//pre-allocating 10 MB to avoid having to do allocations during the physics update.
-	m_tempAllocator = make_unique<TempAllocatorImpl>(64 * 1024 * 1024);
+	m_tempAllocator = make_shared<TempAllocatorImpl>(64 * 1024 * 1024);
 
 	m_jobSystem = make_unique<JobSystemThreadPool>(cMaxPhysicsJobs, cMaxPhysicsBarriers, thread::hardware_concurrency() - 1);
 
 	//Init Physics System
-	m_pPhysicsSystem = make_unique<PhysicsSystem>();
+	m_pPhysicsSystem = make_shared<PhysicsSystem>();
 	m_pPhysicsSystem->Init(JoltPhysics::cNumBodies, JoltPhysics::cNumBodyMutexes, JoltPhysics::cMaxBodyPairs, JoltPhysics::cMaxContactConstraints, m_broadPhaseLayerInterface, m_objectVsBroadPhaseLayerFilter, m_objectVsObjectLayerFilter);
 
 	// A body activation listener gets notified when bodies activate and go to sleep
@@ -60,8 +57,10 @@ void PhysicsManager::Init()
 	m_pPhysicsSystem->SetBodyActivationListener(m_pBodyActivationListener.get());
 
 	// A contact listener gets notified when bodies (are about to) collide, and when they separate again.
-	m_pContactListener = make_shared<MyContactListener>();
-	m_pPhysicsSystem->SetContactListener(m_pContactListener.get());
+	m_pObjectContactListener = make_shared<ObjectContactListener>();
+	m_pPhysicsSystem->SetContactListener(m_pObjectContactListener.get());
+
+	m_pPlayerContactListener = make_shared<MyPlayerContactListener>();
 
 	m_pPhysicsSystem->SetGravity({ 0,-9.8f,0 });
 
@@ -88,7 +87,7 @@ void PhysicsManager::UnInit()
 	m_tempAllocator.reset();	// Reset the temp allocator
 	m_jobSystem.reset();		// Release the job system
 	m_pPhysicsSystem.reset();	// Release the physics system
-	m_pContactListener.reset();	// Release the contact listener
+	m_pObjectContactListener.reset();	// Release the contact listener
 	m_pBodyActivationListener.reset();	// Release the body activation listener
 }
 

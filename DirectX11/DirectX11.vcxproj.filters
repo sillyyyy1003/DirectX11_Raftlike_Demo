@@ -243,6 +243,15 @@
     <ClCompile Include="UIBar.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="HungerComponent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Capsule.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCharacter.cpp">
+      <Filter>源文件\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMin.h">
@@ -383,8 +392,17 @@
     <ClInclude Include="LivingEntity.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="UIBar.h">
+    <ClInclude Include="HungerComponent.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Capsule.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UIBar.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCharacter.h">
+      <Filter>头文件\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

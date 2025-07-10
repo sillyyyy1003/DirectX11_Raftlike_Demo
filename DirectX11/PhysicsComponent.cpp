@@ -64,8 +64,19 @@ void PhysicsComponent::SyncPhysicsToTransform(Transform& transform)
 
 void PhysicsComponent::SyncTransformToPhysics(const Transform& transform)
 {
-	this->SetPosition(transform.GetPosition());
-	this->SetRotation(transform.GetRotation());
+	this->SetPosition(transform.GetPosition());//Sync Position
+	this->SetRotation(transform.GetRotation());//Sync Rotation
+}
+
+void PhysicsComponent::PlayerSyncTransformToPhysics(const Transform& transform)
+{
+	this->SetPosition(transform.GetPosition()); 
+	// キャラ回転のみ更新する
+	DirectX::XMFLOAT3 rot = {
+		transform.GetRotation().x,
+		transform.GetRotation().y,
+		0.f };
+	this->SetRotation(rot); 
 }
 
 DirectX::XMFLOAT3 PhysicsComponent::GetPosition() const

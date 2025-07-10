@@ -22,23 +22,24 @@ public:
 
 	/// @brief 平行移動
 	/// @param d 距離
-	void Strafe(float d);
+	void Strafe(float dt);
 
 	/// @brief 直行
 	/// @param d 距離
-	void Walk(float d);
+	void Walk(float dt);
 
 	/// @brief 前に直行
 	/// @param d 距離
-	void MoveForward(float d);
+	void MoveForward(float dt);
 
 	/// @brief 上下観察
 	/// @param rad +:UP -:DOWN
-	void Pitch(float rad);
+	void Pitch(float dt);
 
 	/// @brief 左右観察
 	/// @param rad +:LEFT -:RIGHT
-	void RotateY(float rad);
+	void RotateY(float dt);
+
 
 	CameraController* GetCameraController() { return m_pCameraController.get(); }
 
@@ -52,6 +53,13 @@ private:
 	// Hunger manager
 	std::shared_ptr<HungerComponent> m_pHungerComponent;
 
+	std::shared_ptr<PlayerCharacter> m_pPlayerCharacter;
+
+
+	// 移動関連
+	DirectX::XMFLOAT3 m_moveVelocity;
+	float m_moveSpeed;
+	bool m_isGrounded;	//地面につけてるか？
 
 };
 
