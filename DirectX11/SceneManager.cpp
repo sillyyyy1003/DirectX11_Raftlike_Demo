@@ -1,4 +1,6 @@
 ﻿#include "SceneManager.h"
+
+#include "Capsule.h"
 #include "DirLight.h"
 #include "Geometry.h"
 #include "KInput.h"
@@ -39,6 +41,9 @@ bool SceneManager::InitSceneMap()
 
 void SceneManager::Init()
 {
+    // 物理システムの初期化
+    PhysicsManager::Instance().Init();
+
     //Player
     m_pPlayer = std::make_unique<Player>();
     m_pPlayer->Init();  //Player Controller
@@ -52,17 +57,12 @@ void SceneManager::Init()
 	//Scene作成
 
 
-
-
 	//Base Light作成
     lightBase = std::make_shared<DirLight>();
     lightBase->SetPosition({ 0,10,0 });
     lightBase->SetAmbient({ 0.5f,0.5f,0.5f,1 });
     lightBase->SetDiffuse({ 0.5f,0.5f,0.5f,1.f });
 	lightBase->SetIntensity(10.f);
-
-    // 物理システムの初期化
-    PhysicsManager::Instance().Init();
 
 	// Load models
     ModelManager::Instance().LoadModels("Assets/ConfigFile/Config.json");
@@ -161,6 +161,9 @@ bool SceneManager::InitResource()
     square->Init();
     ModelManager::Instance().LoadModel("Square", square);   //Add Model to Model Manager as an instance 
 
+    std::shared_ptr<Capsule> capsule = std::make_shared<Capsule>();
+	capsule->Init(16, 16,16);
+	ModelManager::Instance().LoadModel("Capsule", capsule); //Add Model to Model Manager as an instance
 
 
     //=====GameObjectの初期化
@@ -170,7 +173,7 @@ bool SceneManager::InitResource()
     m_pApple->SetEffect(m_pPBREffect.get());
 
     m_pCubeObject = std::make_unique<GameObject>();
-    m_pCubeObject->SetModel(cube.get());
+    m_pCubeObject->SetModel(ModelManager::Instance().GetModel("Capsule"));
     m_pCubeObject->SetMaterial(m_pBlinnPhongMaterial.get());
     m_pCubeObject->SetEffect(m_pBasicEffect.get());
 
@@ -253,9 +256,10 @@ bool SceneManager::InitResource()
     m_pDebugColliderRender->SetMaterial(m_pDebugMaterial.get());
     m_pDebugColliderRender->SetModel(cube.get());
 
+    //
     m_pPlayer->AddComponent(MyComponent::ComponentType::DebugRender, m_pDebugColliderRender.get());
+    //Set Ui Component to hunger component
     m_pPlayer->GetComponent<HungerComponent>(MyComponent::ComponentType::HungerManager)->SetUIComponent(m_pUiBar.get());
-
 
 
 

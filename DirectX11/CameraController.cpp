@@ -75,9 +75,9 @@ void CameraController::UpdateCameraTransform(const Transform& transform)
 
 	//Calculate pos with offset
 	DirectX::XMFLOAT3 cameraPos = {
-		transform.GetPosition().x+m_cameraOffset.x,
-		transform.GetPosition().y+m_cameraOffset.y,
-		transform.GetPosition().z+m_cameraOffset.z
+		transform.GetPosition().x + m_cameraOffset.x,
+		transform.GetPosition().y + m_cameraOffset.y,
+		transform.GetPosition().z + m_cameraOffset.z
 	};
 
 	m_pFirstPersonCamera->SetPos(cameraPos);

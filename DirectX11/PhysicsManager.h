@@ -67,6 +67,10 @@ public:
 
 	void SetBodyCreationMass(float _mass, BodyCreationSettings& settings);
 
+	PhysicsSystem* GetPhysicsSystem() { return m_pPhysicsSystem.get(); }
+	TempAllocator* GetTempAllocator() { return m_tempAllocator.get(); }
+	ObjectContactListener* GetContactListener() { return m_pObjectContactListener.get(); }
+	MyPlayerContactListener* GetPlayerContactListener() { return m_pPlayerContactListener.get(); }
 
 private:
 	PhysicsManager() = default;
@@ -76,10 +80,11 @@ private:
 
 	// Jolt
 	int m_collisionSteps = 1;	//// How many collision detection steps per physics update
-	std::unique_ptr<TempAllocator> m_tempAllocator;	// Temporary allocator for Jolt
 	std::unique_ptr<JobSystem> m_jobSystem;	// Job system for Jolt
-	std::unique_ptr<PhysicsSystem> m_pPhysicsSystem;	// Physics system
-	std::shared_ptr<MyContactListener> m_pContactListener;	// Contact listener for collision events
+	std::shared_ptr<TempAllocator> m_tempAllocator;	// Temporary allocator for Jolt
+	std::shared_ptr<PhysicsSystem> m_pPhysicsSystem;	// Physics system
+	std::shared_ptr<ObjectContactListener> m_pObjectContactListener;	// Contact listener for collision events
+	std::shared_ptr<MyPlayerContactListener> m_pPlayerContactListener;		
 	std::shared_ptr<MyBodyActivationListener> m_pBodyActivationListener;	// Body activation listener for body state changes
 
 	BPLayerInterfaceImpl m_broadPhaseLayerInterface;

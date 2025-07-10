@@ -4,7 +4,6 @@
 #include <Physics/EActivation.h>
 #include <Physics/Body/BodyCreationSettings.h>
 #include <Physics/Body/BodyID.h>
-
 #include "Component.hpp"
 #include "Layers.h"
 #include "Transform.h"
@@ -53,7 +52,11 @@ public:
 
 	/// @brief 更新した位置と回転をTransformに反映
 	void SyncPhysicsToTransform(Transform& transform);
+	/// @brief 更新したTransformを物理に反映
 	void SyncTransformToPhysics(const Transform& transform);
+	/// @brief プレイヤーのTransformを物理に反映
+	///	位置＆Y軸回転のみ反映
+	void PlayerSyncTransformToPhysics(const Transform& transform);
 
 	DirectX::XMFLOAT3 GetPosition() const;
 	DirectX::XMFLOAT3 GetRotation() const;

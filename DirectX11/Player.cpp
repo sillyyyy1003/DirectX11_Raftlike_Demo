@@ -2,16 +2,31 @@
 
 #include <memory>
 
+namespace
+{
+	constexpr float moveSpeed = 5.f;
+	constexpr float rotateLimit = DirectX::XM_PI * 7 / 18;	// 70度, 限制玩家上下视角旋转范围
+	
+}
+
 Player::Player():
 m_pPlayerController(nullptr),
-m_pCameraController(nullptr)
+m_pCameraController(nullptr),
+m_moveSpeed(moveSpeed),
+m_moveVelocity(0,0,0)
 {
 }
 
 void Player::Init()
 {
+	//Player Character (Physics Init)
+	m_pPlayerCharacter = std::make_shared<PlayerCharacter>();
+	m_pPlayerCharacter->Init();
+
 	//PlayerController初期化
-	m_pPlayerController = std::make_unique<PlayerController>(this);
+	//m_pPlayerController = std::make_unique<PlayerController>(this);
+	m_pPlayerController = std::make_unique<PlayerController>(this,m_pPlayerCharacter.get());
+
 	//CameraController初期化
 	m_pCameraController = std::make_shared<CameraController>();
 
@@ -53,13 +68,15 @@ void Player::Update(float dt)
 
 
 	//Physics
-	if(GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics))
-	{
-		PhysicsComponent* physics = GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics);
-		//Sync Physics move
-		physics->SyncTransformToPhysics(GetTransform());
-		
-	}
+	//if(GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics))
+	//{
+	//	PhysicsComponent* physics = GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics);
+	//	//Sync Physics move
+	//	physics->PlayerSyncTransformToPhysics(GetTransform());
+	//	
+	//}
+	m_pPlayerCharacter->Update(dt);
+
 
 	//=======Camera Update
 	m_pCameraController->Update(dt);
@@ -82,8 +99,8 @@ void Player::Draw()
 		RenderComponent* debugRender = GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender);
 		Transform t = {
 			m_debugCollisionScale,
-			this->GetTransform().GetRotation(),
-			this->GetTransform().GetPosition(),
+			m_transform.GetRotation(),
+			m_pPlayerCharacter->GetPosition(),
 		};
 		debugRender->Render(t);
 	}
@@ -93,41 +110,46 @@ void Player::Draw()
 	m_pHungerComponent->Draw();
 }
 
-void Player::Strafe(float d)
+void Player::Strafe(float dt)
 {
-	m_transform.Translate(m_transform.GetRightAxis(), d);
+	float distance = dt * m_moveSpeed;
+	m_transform.Translate(m_transform.GetRightAxis(), distance);
 }
 
-void Player::Walk(float d)
+void Player::Walk(float dt)
 {
+	float distance = dt * m_moveSpeed;
 	DirectX::XMFLOAT3 rightAxis = m_transform.GetRightAxis();
 	DirectX::XMVECTOR rightVec = XMLoadFloat3(&rightAxis);
 	DirectX::XMVECTOR frontVec = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(rightVec, DirectX::g_XMIdentityR1));
 	DirectX::XMFLOAT3 front;
 	XMStoreFloat3(&front, frontVec);
-	m_transform.Translate(front, d);
+	m_transform.Translate(front, distance);
 }
 
-void Player::MoveForward(float d)
+void Player::MoveForward(float dt)
 {
-	m_transform.Translate(m_transform.GetForwardAxis(), d);
+	float distance = dt * m_moveSpeed;
+	m_transform.Translate(m_transform.GetForwardAxis(), distance);
 }
 
-void Player::Pitch(float rad)
+void Player::Pitch(float dt)
 {
+	float rad = m_moveSpeed * dt;
 	DirectX::XMFLOAT3 rotation = m_transform.GetRotation();
-	// 将绕x轴旋转弧度限制在[-7pi/18, 7pi/18]之间
+
 	rotation.x += rad;
-	if (rotation.x > DirectX::XM_PI * 7 / 18)
-		rotation.x = DirectX::XM_PI * 7 / 18;
-	else if (rotation.x < -DirectX::XM_PI * 7 / 18)
-		rotation.x = -DirectX::XM_PI * 7 / 18;
+	if (rotation.x > rotateLimit)
+		rotation.x = rotateLimit;
+	else if (rotation.x < -rotateLimit)
+		rotation.x = -rotateLimit;
 
 	m_transform.SetRotation(rotation);
 }
 
-void Player::RotateY(float rad)
+void Player::RotateY(float dt)
 {
+	float rad = m_moveSpeed * dt;
 	DirectX::XMFLOAT3 rotation = m_transform.GetRotation();
 	rotation.y = DirectX::XMScalarModAngle(rotation.y + rad);
 	m_transform.SetRotation(rotation);

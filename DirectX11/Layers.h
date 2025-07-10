@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <Jolt.h>
 #include <Physics/Body/BodyActivationListener.h>
+#include <Physics/Character/CharacterVirtual.h>
 #include <Physics/Collision/ContactListener.h>
 #include <Physics/Collision/BroadPhase/BroadPhaseLayer.h>
 
@@ -131,7 +132,7 @@ public:
 };
 
 
-class MyContactListener : public ContactListener
+class ObjectContactListener : public ContactListener
 {
 public:
 	// See: ContactListener
@@ -184,6 +185,13 @@ public:
 		//cout << "A contact was removed" << endl;
 		//========ここでOnCollisionExitのロジックを追加する
 	}
+};
+
+
+class MyPlayerContactListener:
+	public CharacterContactListener
+{
+	
 };
 
 // An example activation listener
