@@ -13,4 +13,5 @@ Loading model finished
 [ModelManager] Loaded model: Cube
 [ModelManager] Loaded model: Square
 [ModelManager] Loaded model: Capsule
-[Camera]:First Camera Camera
+[Physics] A contact was added.
+[Physics] A character contact was added.

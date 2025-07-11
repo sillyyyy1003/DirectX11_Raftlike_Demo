@@ -1,6 +1,11 @@
 ﻿#include "Capsule.h"
 #include <vector>
+namespace
+{
+	static constexpr float Radius = 0.25f;	// Capsuleの半径
+	static constexpr float Height = 0.5f;	// Capsule中間部分の高さ
 
+}
 Capsule::Capsule() :
 	m_Mesh(nullptr)
 {
@@ -13,8 +18,8 @@ void Capsule::Init(UINT levels, UINT slices, UINT stacks)
 	std::vector<DWORD> idx;
 
 	float phi = 0.0f, theta = 0.0f;
-	float radius = 0.5f;
-	float height = 1.0f;
+	float radius = Radius;
+	float height = 1.f;
 	float h2 = height / 2.0f;
 	float per_phi = DirectX::XM_PI / levels;
 	float per_theta = DirectX::XM_2PI / slices;

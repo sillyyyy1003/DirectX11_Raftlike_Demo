@@ -173,7 +173,7 @@ bool SceneManager::InitResource()
     m_pApple->SetEffect(m_pPBREffect.get());
 
     m_pCubeObject = std::make_unique<GameObject>();
-    m_pCubeObject->SetModel(ModelManager::Instance().GetModel("Capsule"));
+    m_pCubeObject->SetModel(ModelManager::Instance().GetModel("Cube"));
     m_pCubeObject->SetMaterial(m_pBlinnPhongMaterial.get());
     m_pCubeObject->SetEffect(m_pBasicEffect.get());
 
@@ -217,11 +217,12 @@ bool SceneManager::InitResource()
 
     // Create BodyCreationSettings
     RefConst<Shape> defaultBoxSettings = ShapeFactory::Instance().GetOrCreateBox(RVec3(0.5f, 0.5f, 0.5f));
-    BodyCreationSettings cubeBoxSettings(defaultBoxSettings, { -3,0.5f,0, }, Quat::sIdentity(), EMotionType::Kinematic, Layers::PLAYER);
+    BodyCreationSettings cubeBoxSettings(defaultBoxSettings, {0,0,0 }, Quat::sIdentity(), EMotionType::Kinematic, Layers::ITEM);
     m_pCubeCollider = make_shared<PhysicsComponent>();
     m_pCubeCollider->Init(cubeBoxSettings, EActivation::Activate);  //Create& Add
     m_pCubeObject->AddComponent(MyComponent::ComponentType::Physics, m_pCubeCollider.get());
     m_pCubeObject->GetTransform().SetScale(1, 1, 1);
+	m_pCubeObject->GetTransform().SetPosition({ -3, 0.5f, 0 });
 
     BodyCreationSettings appleBoxSettings(new BoxShape(RVec3(0.25f, 0.25f, 0.25f)), { 3,3,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM);
 
@@ -234,29 +235,22 @@ bool SceneManager::InitResource()
     m_pApple->GetTransform().SetScale(0.1f, 0.1f, 0.1f);
 
 
-    BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(5.f, 0.5f, 5.f)), { 0,-.5f,0, }, Quat::sIdentity(), EMotionType::Kinematic, Layers::BOAT);
+    BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(5.f, 0.05f, 5.f)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Kinematic, Layers::BOAT);
     m_pFloorCollider = make_shared<PhysicsComponent>();
     m_pFloorCollider->Init(floorBoxSettings, EActivation::Activate);
     m_pFloor->AddComponent(MyComponent::ComponentType::Physics, m_pFloorCollider.get());
-    m_pFloor->GetTransform().SetScale(10.f, .5f, 10.f);
+    m_pFloor->GetTransform().SetScale(10.f, .1f, 10.f);
+    m_pFloor->GetTransform().SetPosition(0, -0.05f, 0);
 
-    //Player Collider作成
-    BodyCreationSettings playerBoxSettings(new BoxShape(RVec3(0.4f, 0.8f, 0.4f)), { 0,0,0 }, Quat::sIdentity(), EMotionType::Kinematic, Layers::PLAYER);
-    m_pPlayerCollider = make_shared<PhysicsComponent>();
-    m_pPlayerCollider->Init(playerBoxSettings, EActivation::Activate);
-    m_pPlayer->AddComponent(MyComponent::ComponentType::Physics, m_pPlayerCollider.get());
 
-#if defined(_DEBUG) || defined(DEBUG)
-    m_pPlayer->SetDebugCollisionScale({ .8f,1.6f,.8f });
-#endif
 
 	//Collider Debug Render Component配置
     m_pDebugColliderRender = make_shared<RenderComponent>();
     m_pDebugColliderRender->SetEffect(m_pDebugEffect.get());
     m_pDebugColliderRender->SetMaterial(m_pDebugMaterial.get());
-    m_pDebugColliderRender->SetModel(cube.get());
+    m_pDebugColliderRender->SetModel(ModelManager::Instance().GetModel("Capsule"));
 
-    //
+	//Debug Collider Render ComponentをPlayerに追加
     m_pPlayer->AddComponent(MyComponent::ComponentType::DebugRender, m_pDebugColliderRender.get());
     //Set Ui Component to hunger component
     m_pPlayer->GetComponent<HungerComponent>(MyComponent::ComponentType::HungerManager)->SetUIComponent(m_pUiBar.get());

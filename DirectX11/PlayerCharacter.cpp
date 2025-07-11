@@ -9,7 +9,7 @@
 
 namespace 
 {
-	static constexpr float MoveSpeed = 6.f;
+	static constexpr float MoveSpeed = 4.f;
 	static constexpr float JumpSpeed = 4.f;
 	constexpr float RotateLimit = DirectX::XM_PI * 7 / 18;	// 70度, 限制玩家上下视角旋转范围
 
@@ -17,7 +17,7 @@ namespace
 	static constexpr float CharacterRadiusStanding = 0.3f;
 	static constexpr float CharacterHeightCrouching = 0.8f;
 	static constexpr float CharacterRadiusCrouching = 0.3f;
-	static constexpr float InnerShapeFraction = 0.9f;
+	static constexpr float InnerShapeFraction = 1.f;		//  内部形状的比例，暂时设定内外部一致
 
 	static constexpr EBackFaceMode sBackFaceMode = EBackFaceMode::CollideWithBackFaces;
 	static constexpr float MaxSlopeAngle = DegreesToRadians(45.f);
@@ -32,14 +32,15 @@ namespace
 	static constexpr bool PlayerCanPushOtherCharacters = true;
 	static constexpr bool OtherCharactersCanPushPlayer = true;
 	
-	
+	static constexpr bool EnableCharacterInertia = true;
 }
 
 PlayerCharacter::PlayerCharacter() :
-	//m_pCharacter(nullptr),
 	m_jumpSpeed(JumpSpeed),
 	m_moveSpeed(MoveSpeed),
-	m_moveDirection(0,0,0)
+	m_moveDirection(0,0,0),
+	m_desiredVelocity(0,0,0),
+	m_enableCharacterInertia(EnableCharacterInertia)
 {
 }
 
@@ -54,6 +55,13 @@ void PlayerCharacter::Init()
 	m_crouchingShape = RotatedTranslatedShapeSettings(Vec3(0, 0.5f * CharacterHeightCrouching + CharacterRadiusCrouching, 0), Quat::sIdentity(), new CapsuleShape(0.5f * CharacterHeightCrouching, CharacterRadiusCrouching)).Create().Get();
 	m_innerStandingShape = RotatedTranslatedShapeSettings(Vec3(0, 0.5f * CharacterHeightStanding + CharacterRadiusStanding, 0), Quat::sIdentity(), new CapsuleShape(0.5f * InnerShapeFraction * CharacterHeightStanding, InnerShapeFraction * CharacterRadiusStanding)).Create().Get();
 	m_innerCrouchingShape = RotatedTranslatedShapeSettings(Vec3(0, 0.5f * CharacterHeightCrouching + CharacterRadiusCrouching, 0), Quat::sIdentity(), new CapsuleShape(0.5f * InnerShapeFraction * CharacterHeightCrouching, InnerShapeFraction * CharacterRadiusCrouching)).Create().Get();
+
+#ifdef _DEBUG
+	//CapsuleShape  	Create a capsule centered around the origin with one sphere cap at (0, -inHalfHeightOfCylinder, 0) and the other at (0, inHalfHeightOfCylinder, 0)
+	m_debugDrawHeight = CharacterHeightStanding;	//Capsule Height = Cylinder Height + 2 * Radius
+	m_debugDrawRadius = CharacterRadiusStanding;
+#endif
+
 	Ref<CharacterVirtualSettings> settings = new CharacterVirtualSettings();
 
 	// Create 'player' character
@@ -81,11 +89,78 @@ void PlayerCharacter::Init()
 
 void PlayerCharacter::Update(float deltaTime)
 {
+	PhysicsSystem* system = PhysicsManager::Instance().GetPhysicsSystem();
+	TempAllocator* tempAllocator = PhysicsManager::Instance().GetTempAllocator();
 	bool playerControlsHorizontalVelocity = m_ControlMovementDuringJump || m_pCharacter->IsSupported();
+	if (playerControlsHorizontalVelocity)
+	{
+		// Smooth the player input
+		m_desiredVelocity = m_enableCharacterInertia ? 0.25f * m_moveDirection * m_moveSpeed + 0.75f * m_desiredVelocity : m_moveDirection * m_moveSpeed;
+
+		// True if the player intended to move
+		m_allowSliding = !m_moveDirection.IsNearZero();
+	}
+	else
+	{
+		// While in air we allow sliding
+		m_allowSliding = true;
+	}
+
+	// Update the character rotation and its up vector to match the up vector set by the user settings
+	Quat character_up_rotation = Quat::sEulerAngles(Vec3(0, 0, 0));
+	m_pCharacter->SetUp(character_up_rotation.RotateAxisY());
+	m_pCharacter->SetRotation(character_up_rotation);
+
 
 	// A cheaper way to update the character's ground velocity,
 	// the platforms that the character is standing on may have changed velocity
 	m_pCharacter->UpdateGroundVelocity();
+
+	// Determine new basic velocity
+	Vec3 current_vertical_velocity = m_pCharacter->GetLinearVelocity().Dot(m_pCharacter->GetUp()) * m_pCharacter->GetUp();
+	Vec3 ground_velocity = m_pCharacter->GetGroundVelocity();
+	Vec3 new_velocity;
+	bool moving_towards_ground = (current_vertical_velocity.GetY() - ground_velocity.GetY()) < 0.1f;
+	if (m_pCharacter->GetGroundState() == CharacterVirtual::EGroundState::OnGround	// If on ground
+		&& (m_enableCharacterInertia ?
+			moving_towards_ground													// Inertia enabled: And not moving away from ground
+			: !m_pCharacter->IsSlopeTooSteep(m_pCharacter->GetGroundNormal())))			// Inertia disabled: And not on a slope that is too steep
+	{
+		// Assume velocity of ground when on ground
+		new_velocity = ground_velocity;
+
+		// Jump
+		if (m_wantToJump && moving_towards_ground)
+		{
+			new_velocity += m_jumpSpeed * m_pCharacter->GetUp();
+			m_wantToJump = false;	// Reset jump request
+		}
+			
+	}
+	else
+		new_velocity = current_vertical_velocity;
+
+	// Gravity
+	new_velocity += (character_up_rotation * system->GetGravity()) * deltaTime;
+
+	if (playerControlsHorizontalVelocity)
+	{
+		// Player input
+		new_velocity += character_up_rotation * m_desiredVelocity;
+	}
+	else
+	{
+		// Preserve horizontal velocity
+		Vec3 current_horizontal_velocity = m_pCharacter->GetLinearVelocity() - current_vertical_velocity;
+		new_velocity += current_horizontal_velocity;
+	}
+
+	// Update character velocity
+	m_pCharacter->SetLinearVelocity(new_velocity);
+
+	//todo:if switch stance
+
+
 
 	// Settings for our update function
 	CharacterVirtual::ExtendedUpdateSettings update_settings;
@@ -98,8 +173,8 @@ void PlayerCharacter::Update(float deltaTime)
 	else
 		update_settings.mWalkStairsStepUp = m_pCharacter->GetUp() * update_settings.mWalkStairsStepUp.Length();
 
-	PhysicsSystem* system = PhysicsManager::Instance().GetPhysicsSystem();
-	TempAllocator* tempAllocator = PhysicsManager::Instance().GetTempAllocator();
+
+
 	m_pCharacter->ExtendedUpdate(deltaTime,
 		-m_pCharacter->GetUp() * system->GetGravity().Length(),
 		update_settings,
@@ -109,17 +184,6 @@ void PlayerCharacter::Update(float deltaTime)
 		{ },
 		*tempAllocator);
 
-#ifdef _DEBUG
-	if(ImGui::Begin("CharacterVirtual"))
-	{
-		ImGui::Text("Pos:%f,%f,%f", m_pCharacter->GetPosition().GetX(), m_pCharacter->GetPosition().GetY(), m_pCharacter->GetPosition().GetZ());
-		ImGui::Text("Velocity:%f,%f,%f", m_pCharacter->GetLinearVelocity().GetX(), m_pCharacter->GetLinearVelocity().GetY(), m_pCharacter->GetLinearVelocity().GetZ());
-		ImGui::Text("Rotation:%f,%f,%f", RadiansToDegrees(m_pCharacter->GetRotation().GetEulerAngles().GetX()), RadiansToDegrees(m_pCharacter->GetRotation().GetEulerAngles().GetY()), RadiansToDegrees(m_pCharacter->GetRotation().GetEulerAngles().GetZ()));
-	}
-	ImGui::End();
-
-#endif
-
 }
 
 void PlayerCharacter::SetRotation(const DirectX::XMFLOAT3& rot)
@@ -128,15 +192,16 @@ void PlayerCharacter::SetRotation(const DirectX::XMFLOAT3& rot)
 	m_pCharacter->SetRotation(q);
 }
 
-void PlayerCharacter::Move(Vec3Arg& moveDir)
+void PlayerCharacter::SetMoveDir(Vec3Arg& moveDir)
 {
 	Quat rotation = m_pCharacter->GetRotation();	//Local Rotationを獲得
 	m_moveDirection = rotation * moveDir;			//進行方向を計算
-	Vec3 moveStep = m_moveSpeed * m_moveDirection;	//移動量計算
-	moveStep.SetY(0);								//Y軸を０にする
+	//Vec3 moveStep = m_moveSpeed * m_moveDirection;	//移動量計算
 
-	m_pCharacter->SetLinearVelocity(moveStep);
+	//moveStep.SetY(0);								//Y軸を０にする
+	//m_pCharacter->SetLinearVelocity(moveStep);
 
+	//m_desiredVelocity = moveStep;					//移動量を保存
 }
 
 DirectX::XMFLOAT3 PlayerCharacter::GetPosition()
@@ -146,6 +211,31 @@ DirectX::XMFLOAT3 PlayerCharacter::GetPosition()
 		m_pCharacter->GetPosition().GetY(),
 		m_pCharacter->GetPosition().GetZ()
 	};
+}
+
+DirectX::XMFLOAT3 PlayerCharacter::GetEulerRotation()
+{
+	return DirectX::XMFLOAT3{
+		m_pCharacter->GetRotation().GetEulerAngles().GetX(),
+		m_pCharacter->GetRotation().GetEulerAngles().GetY(),
+		m_pCharacter->GetRotation().GetEulerAngles().GetZ()
+	};
+}
+
+void PlayerCharacter::SyncPlayerWorldPosition(Transform& t)
+{
+	t.SetPosition(GetPosition());
+}
+
+void PlayerCharacter::SetPosition(const DirectX::XMFLOAT3& pos)
+{
+	Vec3 position = Vec3(pos.x, pos.y, pos.z);
+	m_pCharacter->SetPosition(position);
+}
+
+void PlayerCharacter::Jump()
+{
+	m_wantToJump = true;
 }
 
 

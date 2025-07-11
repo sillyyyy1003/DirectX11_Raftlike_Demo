@@ -44,22 +44,19 @@ public:
 	CameraController* GetCameraController() { return m_pCameraController.get(); }
 
 private:
-	//Playerの動きを扱う
+	// Playerの動きを扱う
 	std::unique_ptr<PlayerController> m_pPlayerController;
 
-	//Cameraの動き
+	// Cameraの動き
 	std::shared_ptr <CameraController> m_pCameraController;
 
 	// Hunger manager
 	std::shared_ptr<HungerComponent> m_pHungerComponent;
 
+	// 物理挙動を扱う
 	std::shared_ptr<PlayerCharacter> m_pPlayerCharacter;
 
-
-	// 移動関連
-	DirectX::XMFLOAT3 m_moveVelocity;
-	float m_moveSpeed;
-	bool m_isGrounded;	//地面につけてるか？
+	float m_speed;
 
 };
 

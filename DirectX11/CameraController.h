@@ -59,6 +59,7 @@ public:
 
 	bool GetFirstPersonCamera();
 
+
 protected:
 
 	void UpdateThirdPerson(float dt);
