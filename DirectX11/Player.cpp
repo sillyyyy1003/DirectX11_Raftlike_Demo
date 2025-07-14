@@ -90,16 +90,16 @@ void Player::Draw()
 		// Debug Renderスケールを設定（形はCapsule x=z=radius*2 y=height/2）
 		// Capsuleの初期高さは2.fなので、y軸のスケールは半分にする
 		DirectX::XMFLOAT3 scale = {
-			m_pPlayerCharacter->GetDebugDrawRadius()*2.f,
+			m_pPlayerCharacter->GetDebugDrawRadius() * 2.f,
 			m_pPlayerCharacter->GetDebugDrawHeight() * 0.5f,
-			m_pPlayerCharacter->GetDebugDrawRadius()*2.f,
+			m_pPlayerCharacter->GetDebugDrawRadius() * 2.f,
 		};
 		DirectX::XMFLOAT3 rotation = m_pPlayerCharacter->GetEulerRotation();
 
 		//CharacterVirtual.GetPosition()はキャラクターの足の位置なので、DebugRenderを正確に表示するために、y軸の位置を調整
 		float shapeOffset = m_pPlayerCharacter->GetDebugDrawHeight() * 0.5f; // Capsuleの中心位置を調整するためのオフセット
 		DirectX::XMFLOAT3 position = m_pPlayerCharacter->GetPosition();
-		position.y += m_pPlayerCharacter->GetDebugDrawHeight() * 0.25f; // 足の位置からCapsuleの中心位置に調整
+		position.y += 0.5f * (scale.y + m_pPlayerCharacter->GetDebugDrawRadius()); // 足の位置からCapsuleの中心位置に調整(cylinder height+ half sphere radius)
 
 		RenderComponent* debugRender = GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender);
 		Transform t = {
@@ -107,6 +107,7 @@ void Player::Draw()
 			rotation,
 			position
 		};
+
 		debugRender->Render(t);
 	}
 #endif

@@ -14,10 +14,10 @@ namespace
 	constexpr float RotateLimit = DirectX::XM_PI * 7 / 18;	// 70度, 限制玩家上下视角旋转范围
 
 	static constexpr float CharacterHeightStanding = 1.35f;
-	static constexpr float CharacterRadiusStanding = 0.3f;
+	static constexpr float CharacterRadiusStanding = 0.5f;
 	static constexpr float CharacterHeightCrouching = 0.8f;
-	static constexpr float CharacterRadiusCrouching = 0.3f;
-	static constexpr float InnerShapeFraction = 1.f;		//  内部形状的比例，暂时设定内外部一致
+	static constexpr float CharacterRadiusCrouching = 0.5f;
+	static constexpr float InnerShapeFraction = 0.8f;		//  内部形状的比例 0.8
 
 	static constexpr EBackFaceMode sBackFaceMode = EBackFaceMode::CollideWithBackFaces;
 	static constexpr float MaxSlopeAngle = DegreesToRadians(45.f);
@@ -56,9 +56,11 @@ void PlayerCharacter::Init()
 	m_innerStandingShape = RotatedTranslatedShapeSettings(Vec3(0, 0.5f * CharacterHeightStanding + CharacterRadiusStanding, 0), Quat::sIdentity(), new CapsuleShape(0.5f * InnerShapeFraction * CharacterHeightStanding, InnerShapeFraction * CharacterRadiusStanding)).Create().Get();
 	m_innerCrouchingShape = RotatedTranslatedShapeSettings(Vec3(0, 0.5f * CharacterHeightCrouching + CharacterRadiusCrouching, 0), Quat::sIdentity(), new CapsuleShape(0.5f * InnerShapeFraction * CharacterHeightCrouching, InnerShapeFraction * CharacterRadiusCrouching)).Create().Get();
 
+	
 #ifdef _DEBUG
 	//CapsuleShape  	Create a capsule centered around the origin with one sphere cap at (0, -inHalfHeightOfCylinder, 0) and the other at (0, inHalfHeightOfCylinder, 0)
-	m_debugDrawHeight = CharacterHeightStanding;	//Capsule Height = Cylinder Height + 2 * Radius
+	//元の位置は0.5f * CharacterHeightStanding + CharacterRadiusStandingなので、描画する際にまだRadius一個分ずれる必要ある
+	m_debugDrawHeight = CharacterHeightStanding + 2.f * CharacterRadiusStanding;	//Capsule Height = Cylinder Height + 2 * Radius
 	m_debugDrawRadius = CharacterRadiusStanding;
 #endif
 
