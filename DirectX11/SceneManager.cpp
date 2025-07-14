@@ -45,7 +45,7 @@ void SceneManager::Init()
     PhysicsManager::Instance().Init();
 
     //Player
-    m_pPlayer = std::make_unique<Player>();
+    m_pPlayer = std::make_shared<Player>();
     m_pPlayer->Init();  //Player Controller
     m_pPlayer->GetCameraController()->GetCamera()->SetPos({ 0,10,-10 });
     m_pPlayer->GetCameraController()->GetCamera()->SetTarget({0,0,0});
@@ -141,6 +141,7 @@ void SceneManager::Draw()
     //Ui描画
     m_pUiAim->Draw();
     m_pUiBar->Draw();
+	
 
 }
 
@@ -253,8 +254,8 @@ bool SceneManager::InitResource()
 	//Debug Collider Render ComponentをPlayerに追加
     m_pPlayer->AddComponent(MyComponent::ComponentType::DebugRender, m_pDebugColliderRender.get());
     //Set Ui Component to hunger component
-    m_pPlayer->GetComponent<HungerComponent>(MyComponent::ComponentType::HungerManager)->SetUIComponent(m_pUiBar.get());
-
+    m_pPlayer->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->SetUIComponent(m_pUiBar.get());
+     m_pUIElement->SetProvider(m_pPlayer.get(), UIFormat::FormatHunger);
 
 
 	//=====Geometryの初期化

@@ -62,15 +62,10 @@ void UIBar::UpdateUI(float volume)
 	m_barMesh->GetTransform().SetPosition(currPos);
 }
 
-void UIBar::Draw(const char* string)
+void UIBar::Draw()
 {
 	m_barMesh->Draw();
 	m_backgroundMesh->Draw();
 	
 }
-
-void UIBar::Update(float dt)
-{
-}
-
 

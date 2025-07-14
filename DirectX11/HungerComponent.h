@@ -23,6 +23,7 @@ public:
 
     void SetUIComponent(UIBar* pUi);
 
+	/// @brief UI描画
     void Draw();
 
 private:

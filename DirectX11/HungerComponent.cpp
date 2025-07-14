@@ -4,7 +4,7 @@
 HungerComponent::HungerComponent(float initialValue) :
 	m_initialHungerValue(initialValue),
 	m_currentHungerValue(initialValue),
-	m_starveSpeed(1.f),
+	m_starveSpeed(0.f),
 	m_pUiComponent(nullptr)
 {
 }
@@ -19,8 +19,10 @@ void HungerComponent::Update(float dt)
 	// 空腹度ゼロ以下の場合
 	if (m_currentHungerValue <= 0)m_isStarve = true;
 
-	//Uiある場合、更新する
+	
+	//check if ui is set
 	assert(m_pUiComponent != nullptr);
+	//Ui更新(percentage)
 	m_pUiComponent->UpdateUI(m_currentHungerValue / m_initialHungerValue);
 
 }

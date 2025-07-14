@@ -1,18 +1,20 @@
 ﻿#include "Player.h"
-
 #include <memory>
 
 namespace
 {
-	constexpr float moveSpeed = 5.f;
-	constexpr float rotateLimit = DirectX::XM_PI * 7 / 18;	// 70度, 限制玩家上下视角旋转范围
+	constexpr float MoveSpeed = 5.f;
+	constexpr float RotateLimit = DirectX::XM_PI * 7 / 18;	// 70度, 限制玩家上下视角旋转范围
+	constexpr float HungerInitialValue = 200.f;	// 初期の空腹度
+	constexpr float HungerStarveSpeed = 1.f;	// 空腹度の減少速度（1秒あたり1ポイント減少）
+	constexpr float ThirstInitialValue = 200.f;	// 初期の渇き度
 	
 }
 
 Player::Player():
 	m_pPlayerController(nullptr),
 	m_pCameraController(nullptr),
-	m_speed(moveSpeed)
+	m_speed(MoveSpeed)
 {
 }
 
@@ -23,17 +25,16 @@ void Player::Init()
 	m_pPlayerCharacter->Init();
 
 	//PlayerController初期化
-	m_pPlayerController = std::make_unique<PlayerController>(this,m_pPlayerCharacter.get());
+	m_pPlayerController = std::make_unique<PlayerController>(this, m_pPlayerCharacter.get());
 
 	//CameraController初期化
 	m_pCameraController = std::make_shared<CameraController>();
 
 	//hunger component初期化→初期値
-	//todo:make this can load from config file
-	m_pHungerComponent = std::make_shared<HungerComponent>(200.f);
-	AddComponent(MyComponent::ComponentType::HungerManager, m_pHungerComponent.get());
+	m_pHungerComponent = std::make_shared<HungerComponent>(HungerInitialValue);
+	m_pHungerComponent->SetStarveSpeed(HungerStarveSpeed); //空腹度の減少速度を設定（1秒あたり1ポイント減少）
+	AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent.get());		// HungerComponentをPlayerに追加
 
-	m_pPlayerCharacter->SetPosition({ 0,5.f,0 });
 }
 
 
@@ -96,11 +97,11 @@ void Player::Draw()
 		};
 		DirectX::XMFLOAT3 rotation = m_pPlayerCharacter->GetEulerRotation();
 
-		//CharacterVirtual.GetPosition()はキャラクターの足の位置なので、DebugRenderを正確に表示するために、y軸の位置を調整
-		float shapeOffset = m_pPlayerCharacter->GetDebugDrawHeight() * 0.5f; // Capsuleの中心位置を調整するためのオフセット
+		//CharacterVirtual.GetPosition()はキャラクターの足の位置なので、DebugRenderを正確に表示するために、y軸の位置を調整		
+		// 足の位置からCapsuleの中心位置に調整(cylinder height+ half sphere radius)
 		DirectX::XMFLOAT3 position = m_pPlayerCharacter->GetPosition();
-		position.y += 0.5f * (scale.y + m_pPlayerCharacter->GetDebugDrawRadius()); // 足の位置からCapsuleの中心位置に調整(cylinder height+ half sphere radius)
-
+		position.y += 0.5f * (scale.y + m_pPlayerCharacter->GetDebugDrawRadius()); 
+		
 		RenderComponent* debugRender = GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender);
 		Transform t = {
 			scale,
@@ -113,7 +114,8 @@ void Player::Draw()
 #endif
 
 	//Ui Draw
-	m_pHungerComponent->Draw();
+	m_pHungerComponent->Draw();	//Hunger UI
+
 }
 
 void Player::Strafe(float dt)
@@ -145,10 +147,10 @@ void Player::Pitch(float dt)
 	DirectX::XMFLOAT3 rotation = m_transform.GetRotation();
 
 	rotation.x += rad;
-	if (rotation.x > rotateLimit)
-		rotation.x = rotateLimit;
-	else if (rotation.x < -rotateLimit)
-		rotation.x = -rotateLimit;
+	if (rotation.x > RotateLimit)
+		rotation.x = RotateLimit;
+	else if (rotation.x < -RotateLimit)
+		rotation.x = -RotateLimit;
 
 	m_transform.SetRotation(rotation);
 }

@@ -231,26 +231,38 @@
     <ClCompile Include="PlayerController.cpp">
       <Filter>源文件\Player</Filter>
     </ClCompile>
-    <ClCompile Include="ShapeFactory.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelManager.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="LivingEntity.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="UIBar.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="HungerComponent.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Capsule.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerCharacter.cpp">
       <Filter>源文件\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="HungerComponent.cpp">
+      <Filter>源文件\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="LivingEntity.cpp">
+      <Filter>源文件\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Capsule.cpp">
+      <Filter>源文件\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>源文件\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ShapeFactory.cpp">
+      <Filter>源文件\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="UIBar.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirstComponent.cpp">
+      <Filter>源文件\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ITextBind.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UIText.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -383,26 +395,38 @@
     <ClInclude Include="Player.h">
       <Filter>头文件\Player</Filter>
     </ClInclude>
-    <ClInclude Include="ShapeFactory.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelManager.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="LivingEntity.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="HungerComponent.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Capsule.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="UIBar.h">
       <Filter>头文件\UI</Filter>
     </ClInclude>
     <ClInclude Include="PlayerCharacter.h">
       <Filter>头文件\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="HungerComponent.h">
+      <Filter>头文件\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="LivingEntity.h">
+      <Filter>头文件\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManager.h">
+      <Filter>头文件\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Capsule.h">
+      <Filter>头文件\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeFactory.h">
+      <Filter>头文件\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirstComponent.h">
+      <Filter>头文件\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ITextBind.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UIText.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
