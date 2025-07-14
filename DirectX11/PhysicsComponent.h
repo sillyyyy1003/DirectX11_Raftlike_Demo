@@ -74,5 +74,7 @@ public:
 
 	float GetMass()const;
 
+	EMotionType GetEmotionType();
+
 };
 

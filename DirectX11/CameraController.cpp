@@ -80,8 +80,8 @@ void CameraController::UpdateCameraTransform(const Transform& transform)
 		transform.GetPosition().z + m_cameraOffset.z
 	};
 
-	m_pFirstPersonCamera->SetPos(cameraPos);
-	m_pFirstPersonCamera->m_transform.SetRotation(transform.GetRotation());
+	m_pFirstPersonCamera->SetPos(cameraPos);	//位置更新
+	m_pFirstPersonCamera->m_transform.SetRotation(transform.GetRotation());		//回転更新
 }
 
 bool CameraController::GetFirstPersonCamera()

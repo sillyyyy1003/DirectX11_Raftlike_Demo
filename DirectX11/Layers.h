@@ -156,7 +156,7 @@ public:
 	/// @param ioSettings 
 	virtual void			OnContactAdded(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold, ContactSettings& ioSettings) override
 	{
-		//DebugLog::Log("[Physics] A contact was added.");
+		DebugLog::Log("[Physics] A contact was added.");
 		//========ここでOnCollisionEnterのロジックを追加する
 
 	}
@@ -181,7 +181,7 @@ public:
 	virtual void			OnContactRemoved(const SubShapeIDPair& inSubShapePair) override
 	{
 		
-		//DebugLog::Log("[Physics] A contact was removed.");
+		DebugLog::Log("[Physics] A contact was removed.");
 		//cout << "A contact was removed" << endl;
 		//========ここでOnCollisionExitのロジックを追加する
 	}
@@ -191,7 +191,32 @@ public:
 class MyPlayerContactListener:
 	public CharacterContactListener
 {
-	
+public:
+	// Called whenever the character collides with a body.
+	virtual void			OnContactAdded(const CharacterVirtual* inCharacter, const BodyID& inBodyID2, const SubShapeID& inSubShapeID2, RVec3Arg inContactPosition, Vec3Arg inContactNormal, CharacterContactSettings& ioSettings) override
+	{
+		DebugLog::Log("[Physics] A character contact was added.");
+	}
+
+	// Called whenever the character persists colliding with a body.
+	virtual void			OnContactPersisted(const CharacterVirtual* inCharacter, const BodyID& inBodyID2, const SubShapeID& inSubShapeID2, RVec3Arg inContactPosition, Vec3Arg inContactNormal, CharacterContactSettings& ioSettings) override
+	{
+		
+	}
+
+	// Called whenever the character loses contact with a body.
+	virtual void			OnContactRemoved(const CharacterVirtual* inCharacter, const BodyID& inBodyID2, const SubShapeID& inSubShapeID2) override
+	{
+		DebugLog::Log("[Physics] A character contact was move.");
+		
+	}
+protected:
+	// Common function to be called when contacts are added/persisted
+	void					OnContactCommon(const CharacterVirtual* inCharacter, const BodyID& inBodyID2, const SubShapeID& inSubShapeID2, RVec3Arg inContactPosition, Vec3Arg inContactNormal, CharacterContactSettings& ioSettings)
+	{
+		
+	}
+
 };
 
 // An example activation listener

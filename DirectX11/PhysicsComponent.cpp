@@ -14,9 +14,7 @@ PhysicsComponent::~PhysicsComponent()
 
 void PhysicsComponent::Init(const BodyCreationSettings& settings, EActivation activation)
 {
-	
 	m_bodyID = PhysicsManager::Instance().GetBodyInterface().CreateAndAddBody(settings, activation);
-
 }
 
 void PhysicsComponent::init(BodyID id)
@@ -138,5 +136,11 @@ float PhysicsComponent::GetMass() const
 {
 	return m_mass;
 
+}
+
+EMotionType PhysicsComponent::GetEmotionType()
+{
+	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
+	return bi.GetMotionType(m_bodyID);
 }
 

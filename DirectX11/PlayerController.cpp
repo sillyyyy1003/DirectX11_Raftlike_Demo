@@ -15,7 +15,7 @@ PlayerController::PlayerController(Player* player, PlayerCharacter* playerCharac
 void PlayerController::Update(float dt)
 {
     if (!m_isControllable)return;
-    //Cursor Move
+    //Cursor SetMoveDir
     {
         POINT cursorPos;
         GetCursorPos(&cursorPos);
@@ -26,32 +26,32 @@ void PlayerController::Update(float dt)
         float angleX = 360.0f * dx / m_windowSize.x;
         float angleY = 180.0f * dy / m_windowSize.y;
 
-        m_pPlayer->RotateY(angleX * dt);       //プレイヤーのY回転計算
-        m_pPlayer->Pitch(angleY * dt);         //カメラの視角回転計算
-        m_pPlayerCharacter->SetRotation({0,m_pPlayer->GetTransform().GetRotation().y,0});//Colliderの回転はY軸だけ
+        //プレイヤーのY回転計算
+        m_pPlayer->RotateY(angleX * dt);
+        //カメラの視角回転計算
+        m_pPlayer->Pitch(angleY * dt);
+        //Colliderの回転はY軸だけ
+        m_pPlayerCharacter->SetRotation({0,m_pPlayer->GetTransform().GetRotation().y,0});
 
         SetCursorPos(m_centerPos.x, m_centerPos.y);
     }
 
-    // キー入力で移動
-    //if (KInput::IsKeyPress('W'))//Move Forward
-    //    m_pPlayer->Walk(dt);
-    //if (KInput::IsKeyPress('S'))//Move Backward
-    //    m_pPlayer->Walk(-dt);
-    //if (KInput::IsKeyPress('A'))//Move Left
-    //    m_pPlayer->Strafe(-dt );
-    //if (KInput::IsKeyPress('D'))//Move Right
-    //    m_pPlayer->Strafe(dt);
-    //if (KInput::IsKeyPress(VK_SPACE))   //Jump
-    //    m_pPlayer->Jump();
 
     Vec3 dir = { 0,0,0 };
-    if (KInput::IsKeyPress('W'))dir.SetZ(1.f);//Move Forward
-    if (KInput::IsKeyPress('S'))dir.SetZ(-1.f);//Move Backward
-    if (KInput::IsKeyPress('A'))dir.SetX(-1.f);//Move Left
-    if (KInput::IsKeyPress('D'))dir.SetX(1.f);//Move Right
 
-    m_pPlayerCharacter->Move(dir);
+    if (KInput::IsKeyPress('W'))//SetMoveDir Forward
+        dir.SetZ(1.f);
+    if (KInput::IsKeyPress('S'))//SetMoveDir Backward
+        dir.SetZ(-1.f);
+    if (KInput::IsKeyPress('A'))//SetMoveDir Left
+        dir.SetX(-1.f);
+    if (KInput::IsKeyPress('D'))//SetMoveDir Right
+        dir.SetX(1.f);
+
+    m_pPlayerCharacter->SetMoveDir(dir);//移動方向を設定する
+
+    if (KInput::IsKeyTrigger(VK_SPACE)) //ジャンプ
+		m_pPlayerCharacter->Jump(); 
 
 }
 

@@ -10,10 +10,9 @@ namespace
 }
 
 Player::Player():
-m_pPlayerController(nullptr),
-m_pCameraController(nullptr),
-m_moveSpeed(moveSpeed),
-m_moveVelocity(0,0,0)
+	m_pPlayerController(nullptr),
+	m_pCameraController(nullptr),
+	m_speed(moveSpeed)
 {
 }
 
@@ -24,7 +23,6 @@ void Player::Init()
 	m_pPlayerCharacter->Init();
 
 	//PlayerController初期化
-	//m_pPlayerController = std::make_unique<PlayerController>(this);
 	m_pPlayerController = std::make_unique<PlayerController>(this,m_pPlayerCharacter.get());
 
 	//CameraController初期化
@@ -35,6 +33,7 @@ void Player::Init()
 	m_pHungerComponent = std::make_shared<HungerComponent>(200.f);
 	AddComponent(MyComponent::ComponentType::HungerManager, m_pHungerComponent.get());
 
+	m_pPlayerCharacter->SetPosition({ 0,5.f,0 });
 }
 
 
@@ -66,24 +65,16 @@ void Player::Update(float dt)
 	ImGui::End();
 #endif
 
-
-	//Physics
-	//if(GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics))
-	//{
-	//	PhysicsComponent* physics = GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics);
-	//	//Sync Physics move
-	//	physics->PlayerSyncTransformToPhysics(GetTransform());
-	//	
-	//}
+	//　物理挙動更新
 	m_pPlayerCharacter->Update(dt);
-
+	m_pPlayerCharacter->SyncPlayerWorldPosition(m_transform);	//Transformを更新
 
 	//=======Camera Update
 	m_pCameraController->Update(dt);
-	m_pCameraController->UpdateCameraTransform(m_transform);
-	m_pPlayerController->m_isControllable = m_pCameraController->GetFirstPersonCamera();
+	m_pCameraController->UpdateCameraTransform(m_transform);		//playerのTransformをCameraControllerに反映
 
 	//=======Input
+	m_pPlayerController->m_isControllable = m_pCameraController->GetFirstPersonCamera();	//カメラがFirstPersonCameraなら操作可能
 	m_pPlayerController->Update(dt);
 
 	//=======Status Update
@@ -96,12 +87,27 @@ void Player::Draw()
 	//Physical Collider Render
 	if(GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender))
 	{
+		// Debug Renderスケールを設定（形はCapsule x=z=radius*2 y=height/2）
+		// Capsuleの初期高さは2.fなので、y軸のスケールは半分にする
+		DirectX::XMFLOAT3 scale = {
+			m_pPlayerCharacter->GetDebugDrawRadius() * 2.f,
+			m_pPlayerCharacter->GetDebugDrawHeight() * 0.5f,
+			m_pPlayerCharacter->GetDebugDrawRadius() * 2.f,
+		};
+		DirectX::XMFLOAT3 rotation = m_pPlayerCharacter->GetEulerRotation();
+
+		//CharacterVirtual.GetPosition()はキャラクターの足の位置なので、DebugRenderを正確に表示するために、y軸の位置を調整
+		float shapeOffset = m_pPlayerCharacter->GetDebugDrawHeight() * 0.5f; // Capsuleの中心位置を調整するためのオフセット
+		DirectX::XMFLOAT3 position = m_pPlayerCharacter->GetPosition();
+		position.y += 0.5f * (scale.y + m_pPlayerCharacter->GetDebugDrawRadius()); // 足の位置からCapsuleの中心位置に調整(cylinder height+ half sphere radius)
+
 		RenderComponent* debugRender = GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender);
 		Transform t = {
-			m_debugCollisionScale,
-			m_transform.GetRotation(),
-			m_pPlayerCharacter->GetPosition(),
+			scale,
+			rotation,
+			position
 		};
+
 		debugRender->Render(t);
 	}
 #endif
@@ -112,13 +118,13 @@ void Player::Draw()
 
 void Player::Strafe(float dt)
 {
-	float distance = dt * m_moveSpeed;
+	float distance = dt * m_speed;
 	m_transform.Translate(m_transform.GetRightAxis(), distance);
 }
 
 void Player::Walk(float dt)
 {
-	float distance = dt * m_moveSpeed;
+	float distance = dt * m_speed;
 	DirectX::XMFLOAT3 rightAxis = m_transform.GetRightAxis();
 	DirectX::XMVECTOR rightVec = XMLoadFloat3(&rightAxis);
 	DirectX::XMVECTOR frontVec = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(rightVec, DirectX::g_XMIdentityR1));
@@ -129,13 +135,13 @@ void Player::Walk(float dt)
 
 void Player::MoveForward(float dt)
 {
-	float distance = dt * m_moveSpeed;
+	float distance = dt * m_speed;
 	m_transform.Translate(m_transform.GetForwardAxis(), distance);
 }
 
 void Player::Pitch(float dt)
 {
-	float rad = m_moveSpeed * dt;
+	float rad = m_speed * dt;
 	DirectX::XMFLOAT3 rotation = m_transform.GetRotation();
 
 	rotation.x += rad;
@@ -149,7 +155,7 @@ void Player::Pitch(float dt)
 
 void Player::RotateY(float dt)
 {
-	float rad = m_moveSpeed * dt;
+	float rad = m_speed * dt;
 	DirectX::XMFLOAT3 rotation = m_transform.GetRotation();
 	rotation.y = DirectX::XMScalarModAngle(rotation.y + rad);
 	m_transform.SetRotation(rotation);

@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "Primitive.h"
 
+///@brief Default Capsule
+///半径:0.25,高さ:1.0
 class Capsule:
 	public Primitive
 {

@@ -18,7 +18,18 @@ void GameObject::Update(float dt)
 	if(GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)!=nullptr)
 	{
 		PhysicsComponent* physics = GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics);
-		physics->SyncPhysicsToTransform(m_transform);
+		switch(physics->GetEmotionType())
+		{
+		case JPH::EMotionType::Dynamic:
+			physics->SyncPhysicsToTransform(m_transform);
+			break;
+		case JPH::EMotionType::Kinematic:
+			physics->SyncTransformToPhysics(m_transform);
+			break;
+		case JPH::EMotionType::Static:
+			physics->SyncTransformToPhysics(m_transform);
+			break;
+		}
 	}
 
 	//==========Update Input
