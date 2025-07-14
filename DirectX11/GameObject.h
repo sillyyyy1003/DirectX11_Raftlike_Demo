@@ -16,7 +16,9 @@ protected:
 
 	Transform m_transform;
 	std::unique_ptr<RenderComponent> m_pRenderComponent;						// Game ObjectはRenderComponentを持つ
-	std::unordered_map<MyComponent::ComponentType, Component*> m_components;	// 持つコンポーネントのリスト
+
+	typedef std::unordered_map<MyComponent::ComponentType, Component*> Components;
+	Components m_components;// 持つコンポーネントのリスト
 
 #if defined(_DEBUG) || defined(DEBUG)
 	DirectX::XMFLOAT3 m_debugCollisionScale;

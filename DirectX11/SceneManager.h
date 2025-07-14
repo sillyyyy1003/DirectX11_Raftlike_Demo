@@ -39,7 +39,7 @@ private:
 
 private:
 	
-	std::unique_ptr<Player> m_pPlayer;
+	std::shared_ptr<Player> m_pPlayer;
 	// Cube
 	std::shared_ptr<PixelShader> m_pBasicBlinnPhongPixelShader;
 	std::shared_ptr<VertexShader> m_pBasicPosNormalTexVertexShader;

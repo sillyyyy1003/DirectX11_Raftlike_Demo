@@ -1,23 +1,17 @@
 ﻿#pragma once
 #include "GameObject.h"
 #include "IEffect.h"
+#include "ITextBind.h"
 #include "Material.h"
-#include "MeshBuffer.h"
 #include "UIFontSet.h"
 #include "UIScaler.h"
-
-namespace
-{
-	constexpr D2D1_RECT_F DefaultRectSize = { 0,0,100,100 };//UI Default Size (100x100)
-}
 
 /// @brief virtual class for UI Component
 class UIComponent
 {
 public:
 	virtual ~UIComponent() = default;
-	virtual void Update(float dt) = 0;
-	virtual void Draw(const char* text = nullptr) = 0;
+	virtual void Draw() = 0;
 };
 
 
@@ -46,7 +40,7 @@ protected:
 
 /// @brief UI描画の基底クラス
 class UIElement :
-	public UIComponent
+	public UIComponent, public ITextBind
 {
 protected:
 
@@ -59,13 +53,15 @@ protected:
 	ID2D1SolidColorBrush* m_pSolidBrush;				// 文字色
 	ID2D1RenderTarget* m_pd2dRenderTarget = nullptr;	// 描画コマンド
 
-	//Transform m_transform;							// 位置・回転・拡縮
 	D2D1_RECT_F m_textRect;								// 文字の描画領域
-
 	UIScaler* m_pUiScaler = nullptr;					// UIスケーリング
+
+	std::string m_staticText;
+	TextProvider m_textProvider;
 
 public:
 	UIElement(ID2D1RenderTarget* renderTarget);
+
 	~UIElement() override = default;
 
 	/// @brief 背景含むメッシュの初期化
@@ -99,18 +95,17 @@ public:
 
 	//=====描画
 	/// @brief 文字&メッシュ描画
-	/// @param text 
-	virtual void Draw(const char* text = nullptr) override;
+	virtual void Draw() override;
 
 	/// @brief 文字描画
-	/// @param text 
-	virtual void DrawTextW(const char* text);
+	virtual void DrawTextW(const std::string& str);
 
 	/// @brief UIメッシュの描画
 	virtual void DrawMesh();
 
-	virtual void Update(float dt) override;
+	void SetStaticText(const std::string& text) override;
 
+	void SetTextProvider(TextProvider provider) override;
 	
 protected:
 	/// @brief 文字描画位置設定　中心位置を基準に文字の描画位置を設定する

@@ -1,8 +1,11 @@
 ﻿#include "UIElement.h"
-
 #include "RenderComponent.h"
 #include "UIBasicEffect.h"
 
+namespace
+{
+	constexpr D2D1_RECT_F DefaultRectSize = { 0,0,100,100 };//UI Default Size (100x100)
+}
 UIMesh::UIMesh()
 {
 	m_pRenderComponent = std::make_unique<UIRenderComponent>();
@@ -19,15 +22,16 @@ void UIMesh::Draw()
 	m_pRenderComponent->Render(m_transform);
 }
 
+
+//================UIElement
 UIElement::UIElement(ID2D1RenderTarget* renderTarget):
 m_pUiMesh(nullptr),
 m_pTextFormat(nullptr),
 m_pSolidBrush(nullptr),
 m_pd2dRenderTarget(renderTarget),
-m_textRect(::DefaultRectSize)
+m_textRect(DefaultRectSize)
 {
 }
-
 
 void UIElement::Init(IEffect* effect, Material* material, Primitive* model, UIFontSet* fontSet, const char* fontName,UIBrush* uiBrush)
 {
@@ -67,30 +71,31 @@ void UIElement::Init(IEffect* effect, Material* material, Primitive* model)
 }
 
 
-void UIElement::Draw(const char* text)
+void UIElement::Draw()
 {
-	// 背景描画
+	//===========背景描画
 	DrawMesh();
 
-	// check if there is words
-	if (!text)return;
-
-	// 文字描画
+	//===========文字描画
+	// 文字が設定されていない場合は描画しない
+	if (!m_textProvider && m_staticText.empty())return;
+	// 文字が設定されている場合 
+	std::string text = m_textProvider ? m_textProvider() : m_staticText; //外部から文字設定する場合はm_textProviderを使用する
 	DrawTextW(text);
 }
 
-void UIElement::DrawTextW(const char* text)
+void UIElement::DrawTextW(const std::string& str)
 {
+	// check if there is words
 	if (m_pTextFormat == nullptr || m_pSolidBrush == nullptr)return;
 
 	// 文字変換 const char->std::wstring
-	std::string str(text);
 	int strSize = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, nullptr, 0);
 	std::wstring wStr(strSize, 0);
 	MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &wStr[0], strSize);
 
 	m_pd2dRenderTarget->BeginDraw();
-
+	
 	m_pd2dRenderTarget->DrawTextW(wStr.c_str(), (UINT32)wStr.size(), m_pTextFormat, m_textRect, m_pSolidBrush);
 	m_pd2dRenderTarget->EndDraw();
 }
@@ -101,8 +106,15 @@ void UIElement::DrawMesh()
 	m_pUiMesh->Draw();
 }
 
-void UIElement::Update(float dt)
+void UIElement::SetStaticText(const std::string& text)
 {
+	m_staticText = text;
+	m_textProvider = nullptr;
+}
+
+void UIElement::SetTextProvider(TextProvider provider)
+{
+	m_textProvider = provider;
 }
 
 void UIElement::AdjustTextRectPos(float x, float y)
@@ -128,14 +140,15 @@ void UIElement::AdjustTextRectSize(float width, float height)
 
 void UIElement::UpdateScale()
 {
-	m_pUiMesh->SetViewSize(m_pUiScaler->GetScale());
+	if(m_pUiMesh)
+		m_pUiMesh->SetViewSize(m_pUiScaler->GetScale());
 }
 
 void UIElement::SetPosition(const DirectX::XMFLOAT3& pos)
 {
-	//m_transform.SetPosition(pos);
 	//mesh位置設定
-	m_pUiMesh->GetTransform().SetPosition(pos);
+	if (m_pUiMesh)	//if mesh is not null
+		m_pUiMesh->GetTransform().SetPosition(pos);
 
 	//Convert D3D to Screen
 	float x, y;
@@ -159,9 +172,10 @@ void UIElement::SetPosition(const float* pos)
 
 void UIElement::SetScale(const DirectX::XMFLOAT3& scale)
 {
-	//m_transform.SetScale(scale);
+
 	//Mesh Size 設定
-	m_pUiMesh->GetTransform().SetScale(scale);
+	if (m_pUiMesh)	//if mesh is not null
+		m_pUiMesh->GetTransform().SetScale(scale);
 
 	//Text Rect Size設定
 	AdjustTextRectSize(scale.x, scale.y);

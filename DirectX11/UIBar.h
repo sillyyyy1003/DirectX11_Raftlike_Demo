@@ -26,9 +26,8 @@ public:
 	/// @param volume current percentage (0~1)
 	void UpdateUI(float volume);
 
-	void Draw(const char* string = nullptr) override;
+	void Draw() override;
 
-	void Update(float dt) override;
 
 private:
 	std::unique_ptr<UIMesh> m_backgroundMesh;

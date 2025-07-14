@@ -1,9 +1,7 @@
 ﻿#pragma once
-#include "FirstPersonCamera.h"
 #include "GameObject.h"
 #include "HungerComponent.h"
 #include "PlayerController.h"
-#include "UIElement.h"
 
 /// <summary>
 /// Player
@@ -57,6 +55,8 @@ private:
 	std::shared_ptr<PlayerCharacter> m_pPlayerCharacter;
 
 	float m_speed;
+
+	bool m_isInNegativeState = false;	/// true>>if player is in negative state, like hunger, thirst, etc.
 
 };
 
