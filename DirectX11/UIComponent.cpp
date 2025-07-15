@@ -94,12 +94,11 @@ void UIText::DrawTextW(const std::string& str)
 	MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &wStr[0], strSize);
 
 	m_pd2dRenderTarget->BeginDraw();
-	
-	if(m_isCenterAlignment)
-		m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER); // 中央揃え
-	else
-		m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING); // 左揃え
 
+	// 文字色を反映
+	m_pSolidBrush->SetColor(D2D1_COLOR_F(m_color));
+
+	// 文字描画
 	m_pd2dRenderTarget->DrawTextW(wStr.c_str(), (UINT32)wStr.size(), m_pTextFormat, m_textRect, m_pSolidBrush);
 
 	m_pd2dRenderTarget->EndDraw();

@@ -38,7 +38,7 @@ public:
 private:
 
 	typedef std::map<Priority, std::shared_ptr<UILayer>> Layers;
-	Layers m_layers;	//Map of layers, sorted by priority
+	Layers m_layers;	//Map of layers, sorted by priority　数字が多いほど手前に表示される
 
 	typedef std::map<std::string, Priority> LayerNameList;
 	LayerNameList m_layerNameList;	//Map of layer names to their priorities

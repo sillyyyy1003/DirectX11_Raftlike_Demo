@@ -25,7 +25,8 @@ void SceneManager::InitD2DResource(ID2D1RenderTarget* _d2dRenderTarget, IDWriteF
     m_pUiFontSet = std::make_shared<UIFontSet>();
     m_pUiBrush = std::make_shared<UIBrush>();
 
-    m_pUiFontSet->InitFontList();   // Textデータ設定
+    //m_pUiFontSet->InitFontList();   // Textデータ設定
+    m_pUiFontSet->LoadFontList("Assets/ConfigFile/Font.json");
     m_pUiFontSet->CreateTextFormat(d2dRenderTarget, _writeFactory);   //Textフォーマット設定
 
     m_pUiBrush->InitBrush(d2dRenderTarget);

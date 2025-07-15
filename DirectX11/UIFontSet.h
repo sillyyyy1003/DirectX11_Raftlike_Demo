@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include <unordered_map>
+#include <nlohmann/json_fwd.hpp>
+
 #include "D3DApp.h"
 
 /// @brief Fontを管理するクラス
@@ -10,12 +12,14 @@ protected:
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 	struct Font
 	{
-		std::string FontName;	//用途名
-		float FontSize;			//フォントのサイズ
+		std::string FontName;	// 用途名
+		std::wstring FontFamily;// フォント
+		float FontSize;			// フォントのサイズ
+		bool isCentered;		// true>>中央寄せ false>>左寄せ
 		ComPtr<IDWriteTextFormat> FontFormat;
 
-		Font(std::string name, float size) : FontName(name), FontSize(size), FontFormat(nullptr) {}
-		Font() : FontName("Default"), FontSize(1.f), FontFormat(nullptr) {}
+		Font(const std::string& name, const std::wstring& font, float size, bool isCenter) : FontName(name),FontFamily(font), FontSize(size), isCentered(isCenter),FontFormat(nullptr) {}
+		Font() : FontName("Default"), FontFamily(L"Arial"),FontSize(1.f),isCentered(false), FontFormat(nullptr) {}
 	};
 
 	typedef std::unordered_map<std::string, Font> FontList;
@@ -31,6 +35,8 @@ public:
 	/// @brief Fontデータの初期化
 	///	todo: jsonファイルからの読み込みに変更する
 	void InitFontList();
+
+	void LoadFontList(const char* fileName);
 
 	/// @brief FontFormatを作成する
 	void CreateTextFormat(ID2D1RenderTarget* d2dRenderTarget, IDWriteFactory* writeFactory);

@@ -1,0 +1,34 @@
+{
+  "Fonts": [
+    {
+      "Name": "TitleFont",
+      "FontFamily": "Arial",
+      "FontSize":90,
+      "IsCentered":true
+    },
+    {
+      "Name": "OptionFont",
+      "FontFamily": "Arial",
+      "FontSize":35,
+      "IsCentered":true
+    },
+    {
+      "Name": "MessageFont",
+      "FontFamily": "Arial",
+      "FontSize":25,
+      "IsCentered":false
+    }
+  ],
+  "BrushColor":
+  [
+    {
+
+    },
+    {
+
+    },
+    {
+
+    }
+  ]
+}
