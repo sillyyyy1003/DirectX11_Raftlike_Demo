@@ -19,7 +19,6 @@ protected:
 	};
 
 	typedef std::unordered_map<std::string, Font> FontList;
-
 	FontList m_fontList;	//すべてのFontを保存する
 
 

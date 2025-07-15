@@ -217,11 +217,14 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="UIBar.cpp" />
     <ClCompile Include="UIBasicEffect.cpp" />
+    <ClCompile Include="UIButton.cpp" />
     <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="UIFontSet.cpp" />
+    <ClCompile Include="UILayer.cpp" />
     <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="UIMesh.cpp" />
     <ClCompile Include="UIScaler.cpp" />
-    <ClCompile Include="UIText.cpp" />
+    <ClCompile Include="UIComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CameraBase.h" />
@@ -272,11 +275,14 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UIBar.h" />
     <ClInclude Include="UIBasicEffect.h" />
+    <ClInclude Include="UIButton.h" />
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="UIFontSet.h" />
+    <ClInclude Include="UILayer.h" />
     <ClInclude Include="UIManager.h" />
+    <ClInclude Include="UIMesh.h" />
     <ClInclude Include="UIScaler.h" />
-    <ClInclude Include="UIText.h" />
+    <ClInclude Include="UIComponent.h" />
     <ClInclude Include="WinMin.h" />
   </ItemGroup>
   <ItemGroup>

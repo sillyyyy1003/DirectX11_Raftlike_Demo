@@ -13,8 +13,8 @@ UIBar::UIBar() :
 void UIBar::Init(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& scale, Material* bgMaterial,
 	Material* barMaterial, IEffect* bgEffect, IEffect* barEffect)
 {
-	m_barMesh = std::make_unique<UIMesh>();
-	m_backgroundMesh = std::make_unique<UIMesh>();
+	m_barMesh = std::make_unique<UIRender>();
+	m_backgroundMesh = std::make_unique<UIRender>();
 
 	//Set pos & scale 
 	m_position = pos;

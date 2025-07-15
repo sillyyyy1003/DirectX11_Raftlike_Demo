@@ -30,8 +30,8 @@ public:
 
 
 private:
-	std::unique_ptr<UIMesh> m_backgroundMesh;
-	std::unique_ptr<UIMesh> m_barMesh;
+	std::unique_ptr<UIRender> m_backgroundMesh;
+	std::unique_ptr<UIRender> m_barMesh;
 
 	DirectX::XMFLOAT3 m_position;		// UI position AnchorPos:LeftMiddle
 	DirectX::XMFLOAT3 m_scale;			// UI scale (width & height)

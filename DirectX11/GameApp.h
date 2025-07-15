@@ -23,8 +23,8 @@ public:
     void OnResize()override;
     void UpdateScene(float dt)override;
     void DrawScene()override;
-
-
+    
+    static POINT GetCursorPosition();
 
 
 };

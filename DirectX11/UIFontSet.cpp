@@ -6,7 +6,7 @@
 void UIFontSet::InitFontList()
 {
 	Font titleFont = { "TitleFont", 60 };
-	Font optionFont = { "OptionFont", 35 };
+	Font optionFont = { "OptionFont", 25 };
 
 	m_fontList["TitleFont"] = titleFont;
 	m_fontList["OptionFont"] = optionFont;

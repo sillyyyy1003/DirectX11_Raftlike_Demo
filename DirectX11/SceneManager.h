@@ -13,6 +13,7 @@
 #include "UIBasicEffect.h"
 #include "UIElement.h"
 #include "UIBar.h"
+#include "UIButton.h"
 
 namespace SceneConfig{
 	enum SceneIndex :uint8_t
@@ -92,8 +93,9 @@ private:
 
 	// Ui
 	std::unique_ptr<UIElement> m_pUIElement;
-	std::unique_ptr<UIMesh> m_pUiAim;
+	std::unique_ptr<UIRender> m_pUiAim;
 	std::unique_ptr<UIBar> m_pUiBar;
+	std::shared_ptr<UIButton> m_pUiButton;
  
 	// Texture
 	std::shared_ptr<Texture> albedoTex;
