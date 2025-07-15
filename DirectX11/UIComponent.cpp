@@ -1,8 +1,26 @@
-﻿#include "UIText.h"
+﻿#include "UIComponent.h"
+#include "UIBasicEffect.h"
+
 namespace
 {
 	constexpr D2D1_RECT_F DefaultRectSize = { 0,0,100,100 };//UI Default Size (100x100)
 	const D2D1::ColorF DefaultColor = {1,1,1,1};//White Color
+}
+
+UIRender::UIRender()
+{
+	m_pRenderComponent = std::make_unique<UIRenderComponent>();
+}
+
+void UIRender::SetViewSize(const DirectX::XMFLOAT2& _viewSize)
+{
+	dynamic_cast<UIBasicEffect*>(m_pRenderComponent->GetEffect())->SetViewSize(_viewSize);
+}
+
+void UIRender::Draw()
+{
+	assert(m_pRenderComponent != nullptr);
+	m_pRenderComponent->Render(m_transform);
 }
 
 UIText::UIText(ID2D1RenderTarget* renderTarget):
@@ -58,6 +76,13 @@ void UIText::SetTextProvider(TextProvider provider)
 	m_textProvider = provider;
 }
 
+void UIText::SetCenterAlignment(bool isCenterAlignment)
+{
+	m_isCenterAlignment = isCenterAlignment;
+}
+
+
+
 void UIText::DrawTextW(const std::string& str)
 {
 	// check if there is words
@@ -69,8 +94,14 @@ void UIText::DrawTextW(const std::string& str)
 	MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &wStr[0], strSize);
 
 	m_pd2dRenderTarget->BeginDraw();
+	
+	if(m_isCenterAlignment)
+		m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER); // 中央揃え
+	else
+		m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING); // 左揃え
 
 	m_pd2dRenderTarget->DrawTextW(wStr.c_str(), (UINT32)wStr.size(), m_pTextFormat, m_textRect, m_pSolidBrush);
+
 	m_pd2dRenderTarget->EndDraw();
 }
 

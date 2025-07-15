@@ -72,7 +72,8 @@ void GameApp::OnResize()
 
 void GameApp::UpdateScene(float dt)
 {
-    //GameUpdate
+    
+    // GameUpdate
     SceneManager::Get()->_update(dt);
 
 }
@@ -97,7 +98,13 @@ void GameApp::DrawScene()
     HR(m_pSwapChain->Present(0, 0));
 }
 
-
+POINT GameApp::GetCursorPosition()
+{
+    POINT cursor;
+    GetCursorPos(&cursor);
+	ScreenToClient(gD3D->MainWnd(), &cursor);
+    return cursor;
+}
 
 
 bool GameApp::InitResource()

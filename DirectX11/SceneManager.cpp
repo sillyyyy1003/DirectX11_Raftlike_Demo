@@ -7,6 +7,7 @@
 #include "ModelManager.h"
 #include "PhysicsManager.h"
 #include "ShapeFactory.h"
+#include "UIManager.h"
 
 
 SceneManager::SceneManager():
@@ -98,6 +99,7 @@ void SceneManager::Update(float dt)
 
     m_pPlayer->Update(dt);
 
+	UIManager::GetInstance().Update(dt); //UIManagerの更新処理
 	//m_pGameSignalBus->OnResolutionChangeRequest.Emit(Event::ResolutionPreset::R_1080p);
 
 
@@ -141,8 +143,9 @@ void SceneManager::Draw()
     //Ui描画
     m_pUiAim->Draw();
     m_pUiBar->Draw();
-	
 
+    //m_pUIElement->Draw();
+    UIManager::GetInstance().Draw();
 }
 
 void SceneManager::SetSignalBus(GameSignalBus* _signal)
@@ -188,9 +191,10 @@ bool SceneManager::InitResource()
     m_pUIElement->Init(m_pUIBasicEffect.get(), m_pUIMaterial.get(), square.get(), m_pUiFontSet.get(), "OptionFont", m_pUiBrush.get());
     m_pUIElement->SetPosition(0, 0);
     m_pUIElement->SetScale(200, 200);
+	m_pUIElement->SetStaticText("Hello World!");
 
 
-    m_pUiAim = make_unique<UIMesh>();
+    m_pUiAim = make_unique<UIRender>();
     m_pUiAim->SetEffect(m_pUIBasicEffect.get());
     m_pUiAim->SetMaterial(m_pUIAimMaterial.get());
     m_pUiAim->SetModel(ModelManager::Instance().GetModel("Square"));
@@ -204,6 +208,15 @@ bool SceneManager::InitResource()
         m_pUiBarMaterial.get(),
         m_pUIBasicEffect.get(),
         m_pUIBasicEffect.get());
+
+    m_pUiButton = make_shared<UIButton>(d2dRenderTarget);
+    m_pUiButton->Init(m_pUIBasicEffect.get(), m_pUIMaterial.get(), square.get(), m_pUiFontSet.get(), "OptionFont", m_pUiBrush.get());
+    m_pUiButton->SetButton({ -300,0,0.5f }, 100.f, 30.f);
+	m_pUiButton->SetStaticText("Button1");
+    m_pUiButton->SetCenterAlignment();
+
+    UIManager::GetInstance().AddUiLayer("Button", 1);
+    UIManager::GetInstance().GetUILayer("Button")->AddComponent(m_pUiButton);
 
     //=====物理の初期化
 
@@ -255,7 +268,7 @@ bool SceneManager::InitResource()
     m_pPlayer->AddComponent(MyComponent::ComponentType::DebugRender, m_pDebugColliderRender.get());
     //Set Ui Component to hunger component
     m_pPlayer->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->SetUIComponent(m_pUiBar.get());
-     m_pUIElement->SetProvider(m_pPlayer.get(), UIFormat::FormatHunger);
+    // m_pUIElement->SetProvider(m_pPlayer.get(), UIFormat::FormatHunger);
 
 
 	//=====Geometryの初期化

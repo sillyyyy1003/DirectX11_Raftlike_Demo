@@ -1,63 +1,18 @@
 ﻿#pragma once
-#include "GameObject.h"
-#include "IEffect.h"
+#include "UIComponent.h"
 #include "ITextBind.h"
-#include "Material.h"
-#include "UIFontSet.h"
-#include "UIScaler.h"
-
-/// @brief virtual class for UI Component
-class UIComponent
-{
-public:
-	virtual ~UIComponent() = default;
-	virtual void Draw() = 0;
-};
-
-
-/// <summary>
-/// UI図形の基底クラス
-/// </summary>
-class UIMesh
-{
-public:
-	UIMesh();
-	void SetViewSize(const DirectX::XMFLOAT2& _viewSize);
-	void Draw();
-
-	void SetMaterial(Material* mat) { m_pRenderComponent->SetMaterial(mat); }
-	void SetEffect(IEffect* iEffect) { m_pRenderComponent->SetEffect(iEffect); }
-	void SetModel(Primitive* p) { m_pRenderComponent->SetModel(p); }
-
-	Transform& GetTransform() { return m_transform; }
-
-protected:
-
-	Transform m_transform;
-	std::shared_ptr<RenderComponent> m_pRenderComponent;
-};
-
 
 /// @brief UI描画の基底クラス
+///	Mesh & Textの描画を行う
 class UIElement :
-	public UIComponent, public ITextBind
+	public UIComponent
 {
 protected:
 
-	template <class T>
-	using ComPtr = Microsoft::WRL::ComPtr<T>;
+	std::unique_ptr<UIRender> m_pUiRender;				// UIメッシュ
+	std::unique_ptr<UIText> m_pUiText;					// UI文字
 
-	std::unique_ptr<UIMesh> m_pUiMesh;					// UIメッシュ
-
-	IDWriteTextFormat* m_pTextFormat;					// 文字表示
-	ID2D1SolidColorBrush* m_pSolidBrush;				// 文字色
-	ID2D1RenderTarget* m_pd2dRenderTarget = nullptr;	// 描画コマンド
-
-	D2D1_RECT_F m_textRect;								// 文字の描画領域
 	UIScaler* m_pUiScaler = nullptr;					// UIスケーリング
-
-	std::string m_staticText;
-	TextProvider m_textProvider;
 
 public:
 	UIElement(ID2D1RenderTarget* renderTarget);
@@ -71,7 +26,7 @@ public:
 	/// @param fontSet フォントフォーマット
 	/// @param fontName 
 	/// @param uiBrush 
-	virtual void Init(IEffect* effect, Material* material,Primitive* model,UIFontSet* fontSet, const char* fontName,UIBrush* uiBrush);
+	virtual void Init(IEffect* effect, Material* material, Primitive* model, UIFontSet* fontSet, const char* fontName, UIBrush* uiBrush);
 
 	/// @brief 文字だけの初期化
 	/// @param fontSet Font lib
@@ -97,22 +52,16 @@ public:
 	/// @brief 文字&メッシュ描画
 	virtual void Draw() override;
 
-	/// @brief 文字描画
-	virtual void DrawTextW(const std::string& str);
+	void SetStaticText(const std::string& text);
 
-	/// @brief UIメッシュの描画
-	virtual void DrawMesh();
+	void SetTextProvider(ITextBind::TextProvider provider);
 
-	void SetStaticText(const std::string& text) override;
+	/// @brief Set Mesh diffuse color
+	/// @param color 
+	void SetMeshDiffuseColor(const DirectX::XMFLOAT4& color);
 
-	void SetTextProvider(TextProvider provider) override;
-	
+	void SetCenterAlignment(bool isCenter = true);
 protected:
-	/// @brief 文字描画位置設定　中心位置を基準に文字の描画位置を設定する
-	void AdjustTextRectPos(float x, float y);
-
-	/// @brief 文字描画領域のサイズを設定する　中心位置を基準に文字の描画位置を設定する
-	void AdjustTextRectSize(float width, float height);
 
 	void UpdateScale();
 };
