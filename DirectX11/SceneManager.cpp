@@ -1,8 +1,8 @@
 ﻿#include "SceneManager.h"
-
 #include "Capsule.h"
 #include "DirLight.h"
 #include "Geometry.h"
+#include "ItemDataBase.h"
 #include "KInput.h"
 #include "ModelManager.h"
 #include "PhysicsManager.h"
@@ -11,25 +11,23 @@
 
 
 SceneManager::SceneManager():
-isChangeScene(false),
 m_currentSceneIndex(SceneConfig::SCENE_NONE),
+isChangeScene(false),
 m_pCurrentCamera(nullptr),
 m_pGameSignalBus(nullptr)
 {
 }
 
-void SceneManager::InitD2DResource(ID2D1RenderTarget* _d2dRenderTarget, IDWriteFactory* _writeFactory)
+void SceneManager::InitD2DResource()
 {
-    d2dRenderTarget = _d2dRenderTarget;
-
     m_pUiFontSet = std::make_shared<UIFontSet>();
     m_pUiBrush = std::make_shared<UIBrush>();
 
     //m_pUiFontSet->InitFontList();   // Textデータ設定
     m_pUiFontSet->LoadFontList("Assets/ConfigFile/Font.json");
-    m_pUiFontSet->CreateTextFormat(d2dRenderTarget, _writeFactory);   //Textフォーマット設定
+    m_pUiFontSet->CreateTextFormat(gD3D->GetD2DRenderTarget(), gD3D->GetWriteFactory());   //Textフォーマット設定
 
-    m_pUiBrush->InitBrush(d2dRenderTarget);
+    m_pUiBrush->InitBrush(gD3D->GetD2DRenderTarget());
 }
 
 bool SceneManager::InitSceneMap()
@@ -94,11 +92,13 @@ void SceneManager::Update(float dt)
     lightBase->Update(dt);
 	PhysicsManager::Instance().Update(dt); // 物理システムの更新
 
-    m_pApple->Update(dt);
 	m_pCubeObject->Update(dt);
 	m_pFloor->Update(dt);
 
-    m_pPlayer->Update(dt);
+    m_appleInstance->Update(dt);
+    m_appleInstance1->Update(dt);
+
+	m_pPlayer->Update(dt);
 
 	UIManager::GetInstance().Update(dt); //UIManagerの更新処理
 	//m_pGameSignalBus->OnResolutionChangeRequest.Emit(Event::ResolutionPreset::R_1080p);
@@ -136,10 +136,11 @@ void SceneManager::Draw()
     Geometry::DrawLines();
 #endif
 
-    m_pApple->Draw();
     m_pCubeObject->Draw();
     m_pFloor->Draw();
     m_pPlayer->Draw();
+    m_appleInstance->Draw();
+    m_appleInstance1->Draw();
 
     //Ui描画
     m_pUiAim->Draw();
@@ -172,23 +173,35 @@ bool SceneManager::InitResource()
 
 
     //=====GameObjectの初期化
-    m_pApple = std::make_unique<GameObject>();
-    m_pApple->SetModel(ModelManager::Instance().GetModel("Food_Apple"));
-    m_pApple->SetMaterial(m_pPBRFoodMaterial.get());
-    m_pApple->SetEffect(m_pPBREffect.get());
+    std::shared_ptr<RenderComponent> appleRenderComponent = std::make_shared<RenderComponent>();
+    appleRenderComponent->SetModel(ModelManager::Instance().GetModel("Food_Apple"));
+    appleRenderComponent->SetMaterial(m_pPBRFoodMaterial.get());
+    appleRenderComponent->SetEffect(m_pPBREffect.get());
+
+    std::shared_ptr<Food> apple = std::make_shared<Food>(20.f);
+    ItemDataBase::Instance().RegisterItem("Apple", apple);
+
+    m_appleInstance = make_unique<ItemInstance>(ItemDataBase::Instance().GetItem("Apple"), 5);
+    m_appleInstance->AddComponent(MyComponent::ComponentType::Render, appleRenderComponent);
+
+    m_appleInstance1 = make_unique<ItemInstance>(ItemDataBase::Instance().GetItem("Apple"), 2);
+    m_appleInstance1->AddComponent(MyComponent::ComponentType::Render, appleRenderComponent);
 
     m_pCubeObject = std::make_unique<GameObject>();
-    m_pCubeObject->SetModel(ModelManager::Instance().GetModel("Cube"));
-    m_pCubeObject->SetMaterial(m_pBlinnPhongMaterial.get());
-    m_pCubeObject->SetEffect(m_pBasicEffect.get());
+	std::shared_ptr<RenderComponent> cubeRenderComponent = std::make_shared<RenderComponent>();
+	m_pCubeObject->AddComponent(MyComponent::ComponentType::Render, cubeRenderComponent);
+    cubeRenderComponent->SetModel(ModelManager::Instance().GetModel("Cube"));
+    cubeRenderComponent->SetMaterial(m_pBlinnPhongMaterial.get());
+    cubeRenderComponent->SetEffect(m_pBasicEffect.get());
 
     m_pFloor = std::make_unique<GameObject>();
-    m_pFloor->SetModel(cube.get());
-    m_pFloor->SetMaterial(m_pFloorMaterial.get());
-    m_pFloor->SetEffect(m_pBasicEffect.get());
+	std::shared_ptr<RenderComponent> floorRenderComponent = std::make_shared<RenderComponent>();
+	m_pFloor->AddComponent(MyComponent::ComponentType::Render, floorRenderComponent);
+	floorRenderComponent->SetModel(ModelManager::Instance().GetModel("Cube"));
+	floorRenderComponent->SetMaterial(m_pFloorMaterial.get());
+	floorRenderComponent->SetEffect(m_pBasicEffect.get());
 
-
-    m_pUIElement = std::make_unique<UIElement>(d2dRenderTarget);
+    m_pUIElement = std::make_unique<UIElement>();
     m_pUIElement->Init(m_pUIBasicEffect.get(), m_pUIMaterial.get(), square.get(), m_pUiFontSet.get(), "OptionFont", m_pUiBrush.get());
     m_pUIElement->SetPosition(0, 0);
     m_pUIElement->SetScale(200, 200);
@@ -210,7 +223,7 @@ bool SceneManager::InitResource()
         m_pUIBasicEffect.get(),
         m_pUIBasicEffect.get());
 
-    m_pUiButton = make_shared<UIButton>(d2dRenderTarget);
+    m_pUiButton = make_shared<UIButton>();
     m_pUiButton->Init(m_pUIBasicEffect.get(), m_pUIMaterial.get(), square.get(), m_pUiFontSet.get(), "OptionFont", m_pUiBrush.get());
     m_pUiButton->SetButton({ -300,0,0.5f }, 100.f, 30.f);
 	m_pUiButton->SetStaticText("Button1");
@@ -235,25 +248,33 @@ bool SceneManager::InitResource()
     BodyCreationSettings cubeBoxSettings(defaultBoxSettings, {0,0,0 }, Quat::sIdentity(), EMotionType::Kinematic, Layers::ITEM);
     m_pCubeCollider = make_shared<PhysicsComponent>();
     m_pCubeCollider->Init(cubeBoxSettings, EActivation::Activate);  //Create& Add
-    m_pCubeObject->AddComponent(MyComponent::ComponentType::Physics, m_pCubeCollider.get());
+    m_pCubeObject->AddComponent(MyComponent::ComponentType::Physics, m_pCubeCollider);
     m_pCubeObject->GetTransform().SetScale(1, 1, 1);
 	m_pCubeObject->GetTransform().SetPosition({ -3, 0.5f, 0 });
 
-    BodyCreationSettings appleBoxSettings(new BoxShape(RVec3(0.25f, 0.25f, 0.25f)), { 3,3,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM);
 
-    // Set the mass properties for the apple box
-    PhysicsManager::Instance().SetBodyCreationMass(1.f, appleBoxSettings);
+    BodyCreationSettings appleBoxSettings(new BoxShape(RVec3(0.25f, 0.25f, 0.25f)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM);
+    PhysicsManager::Instance().SetBodyCreationMass(1.f, appleBoxSettings);// Set the mass properties for the apple box
+    std::shared_ptr<PhysicsComponent> appleCollider = make_shared<PhysicsComponent>();
+    appleCollider->Init(appleBoxSettings, EActivation::Activate);  //Create& Add
+	m_appleInstance->AddComponent(MyComponent::ComponentType::Physics, appleCollider);
+    m_appleInstance->GetTransform().SetScale(0.1f, 0.1f, 0.1f);
+    m_appleInstance->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->SetPosition(0, 3, 3);
 
-    m_pAppleCollider = make_shared<PhysicsComponent>();
-    m_pAppleCollider->Init(appleBoxSettings, EActivation::Activate);  //Create& Add
-    m_pApple->AddComponent(MyComponent::ComponentType::Physics, m_pAppleCollider.get());
-    m_pApple->GetTransform().SetScale(0.1f, 0.1f, 0.1f);
+    BodyCreationSettings appleBoxSettings1(new BoxShape(RVec3(0.25f, 0.25f, 0.25f)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM);
+    PhysicsManager::Instance().SetBodyCreationMass(1.f, appleBoxSettings1);// Set the mass properties for the apple box
+    std::shared_ptr<PhysicsComponent> appleCollider1 = make_shared<PhysicsComponent>();
+    appleCollider1->Init(appleBoxSettings1, EActivation::Activate);  //Create& Add
+    m_appleInstance1->AddComponent(MyComponent::ComponentType::Physics, appleCollider1);
+    m_appleInstance1->GetTransform().SetScale(0.1f, 0.1f, 0.1f);
+    m_appleInstance1->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->SetPosition(3, 3, 0);
+
 
 
     BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(5.f, 0.05f, 5.f)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Kinematic, Layers::BOAT);
     m_pFloorCollider = make_shared<PhysicsComponent>();
     m_pFloorCollider->Init(floorBoxSettings, EActivation::Activate);
-    m_pFloor->AddComponent(MyComponent::ComponentType::Physics, m_pFloorCollider.get());
+    m_pFloor->AddComponent(MyComponent::ComponentType::Physics, m_pFloorCollider);
     m_pFloor->GetTransform().SetScale(10.f, .1f, 10.f);
     m_pFloor->GetTransform().SetPosition(0, -0.05f, 0);
 
@@ -266,7 +287,7 @@ bool SceneManager::InitResource()
     m_pDebugColliderRender->SetModel(ModelManager::Instance().GetModel("Capsule"));
 
 	//Debug Collider Render ComponentをPlayerに追加
-    m_pPlayer->AddComponent(MyComponent::ComponentType::DebugRender, m_pDebugColliderRender.get());
+    m_pPlayer->AddComponent(MyComponent::ComponentType::DebugRender, m_pDebugColliderRender);
     //Set Ui Component to hunger component
     m_pPlayer->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->SetUIComponent(m_pUiBar.get());
     // m_pUIElement->SetProvider(m_pPlayer.get(), UIFormat::FormatHunger);

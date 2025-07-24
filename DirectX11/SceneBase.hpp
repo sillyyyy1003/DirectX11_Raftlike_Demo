@@ -1,20 +1,14 @@
-﻿#ifndef __SCENE_BASE_HPP__
-#define __SCENE_BASE_HPP__
-
+﻿#pragma once
 #include <memory>
 #include <map>
 #include <string>
 #include <list>
 #include <Windows.h>
+#include "Component.hpp"
 
-// @brief シーン追加用オブジェクト
-class SceneObjectBase
-{
-public:
-	virtual ~SceneObjectBase() {}
-};
+
 template<class T>
-class SceneObject : public SceneObjectBase
+class SceneObject : public Component
 {
 public:
 	SceneObject(std::shared_ptr<T> ptr) : m_pObj(ptr) {}
@@ -26,7 +20,7 @@ public:
 class SceneBase
 {
 private:
-	using Objects = std::map<std::string, std::shared_ptr<SceneObjectBase>>;
+	using Objects = std::map<std::string, std::shared_ptr<Component>>;
 	using Items = std::list<std::string >;
 public:
 	SceneBase();
@@ -94,7 +88,7 @@ template<class T> T* SceneBase::CreateObj(const char* name)
 
 	// オブジェクト生成
 	std::shared_ptr<T> ptr = std::make_shared<T>();
-	m_objects.insert(std::pair<std::string, std::shared_ptr<SceneObjectBase>>(name, std::make_shared<SceneObject<T>>(ptr)));
+	m_objects.insert(std::pair<std::string, std::shared_ptr<Component>>(name, std::make_shared<SceneObject<T>>(ptr)));
 	m_items.push_back(name);
 	return ptr.get();
 }
@@ -115,5 +109,3 @@ template<class T> T* SceneBase::GetObj(const char* name)
 	std::shared_ptr<SceneObject<T>> ptr = std::reinterpret_pointer_cast<SceneObject<T>>(it->second);
 	return ptr->m_pObj.get();
 }
-
-#endif // __SCENE_BASE_HPP__

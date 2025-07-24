@@ -6,7 +6,7 @@ class UIButton:
 	public UIElement
 {
 public:
-	UIButton(ID2D1RenderTarget* renderTarget);
+	UIButton();
 	~UIButton() override = default;
 
 	bool HitTest(float x, float y) const override;

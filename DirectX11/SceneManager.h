@@ -14,6 +14,7 @@
 #include "UIElement.h"
 #include "UIBar.h"
 #include "UIButton.h"
+#include "Item.h"
 
 namespace SceneConfig{
 	enum SceneIndex :uint8_t
@@ -41,12 +42,14 @@ private:
 private:
 	
 	std::shared_ptr<Player> m_pPlayer;
-	// Cube
+
+	// Basic shader
 	std::shared_ptr<PixelShader> m_pBasicBlinnPhongPixelShader;
 	std::shared_ptr<VertexShader> m_pBasicPosNormalTexVertexShader;
-	// PBR Model
+	// PBR Shader
 	std::shared_ptr<PixelShader> m_pPBRPixelShader;
 	std::shared_ptr<VertexShader> m_pPBRVertexShader;
+
 	// UI Basic
 	std::shared_ptr<PixelShader> m_pUIElementPixelShader;
 	std::shared_ptr<VertexShader> m_pUIElementVertexShader;
@@ -56,7 +59,7 @@ private:
 	std::shared_ptr<LightBase> lightBase;	
 
 	// Physical Component
-	std::shared_ptr<PhysicsComponent> m_pAppleCollider;
+	std::shared_ptr<PhysicsComponent> m_pAppleCollider1;
 	std::shared_ptr<PhysicsComponent> m_pCubeCollider;
 	std::shared_ptr<PhysicsComponent> m_pFloorCollider;
 	std::shared_ptr<PhysicsComponent> m_pPlayerCollider;
@@ -71,9 +74,9 @@ private:
 	std::shared_ptr<Material> m_pPBRFoodMaterial;
 	std::shared_ptr<Material> m_pFloorMaterial;
 
+	//Ui Material 
 	std::shared_ptr<Material> m_pUIMaterial;
 	std::shared_ptr<Material> m_pUIAimMaterial;
-
 	std::shared_ptr<Material> m_pUiBarMaterial;
 	std::shared_ptr<Material> m_pUiBarBgMaterial;
 
@@ -85,11 +88,12 @@ private:
 	std::shared_ptr<UIBasicEffect> m_pUIBasicEffect;
 
 	// Game Object
-	std::unique_ptr<GameObject> m_pApple;
-	std::unique_ptr<GameObject> m_pBanana;
 	std::unique_ptr<GameObject> m_pCubeObject;
 	std::unique_ptr<GameObject> m_pFloor;
 
+	//Item
+	std::unique_ptr<ItemInstance> m_appleInstance;
+	std::unique_ptr<ItemInstance> m_appleInstance1;
 
 	// Ui
 	std::unique_ptr<UIElement> m_pUIElement;
@@ -101,21 +105,13 @@ private:
 	std::shared_ptr<Texture> albedoTex;
 	std::shared_ptr<Texture> normalTex;
 	std::shared_ptr<Texture> metallicTex;
-
 	std::shared_ptr<Texture> m_pUiAimTex;
-
-
 
 	// Uiに関するLib
 	std::shared_ptr<UIFontSet> m_pUiFontSet;
 	std::shared_ptr<UIBrush> m_pUiBrush;
 
 	GameSignalBus* m_pGameSignalBus;
-	ID2D1RenderTarget* d2dRenderTarget;
-
-	float hp = 100;
-
-
 private:
 
 	SceneManager();
@@ -141,7 +137,7 @@ public:
 	void Init() override;
 
 	/// @brief D2D UIリソース初期化
-	void InitD2DResource(ID2D1RenderTarget* d2dRenderTarget, IDWriteFactory* writeFactory);
+	void InitD2DResource();
 
 	/// @brief データ保存・リソースリリース
 	void UnInit() override;

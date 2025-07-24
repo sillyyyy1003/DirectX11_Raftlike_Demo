@@ -33,7 +33,7 @@ void Player::Init()
 	//hunger component初期化→初期値
 	m_pHungerComponent = std::make_shared<HungerComponent>(HungerInitialValue);
 	m_pHungerComponent->SetStarveSpeed(HungerStarveSpeed); //空腹度の減少速度を設定（1秒あたり1ポイント減少）
-	AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent.get());		// HungerComponentをPlayerに追加
+	AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent);		// HungerComponentをPlayerに追加
 
 }
 

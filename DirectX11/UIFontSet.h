@@ -36,7 +36,9 @@ public:
 	///	todo: jsonファイルからの読み込みに変更する
 	void InitFontList();
 
-	void LoadFontList(const char* fileName);
+	/// @brief json fileから設定を読み込み
+	/// @param fileName 
+	bool LoadFontList(const char* fileName);
 
 	/// @brief FontFormatを作成する
 	void CreateTextFormat(ID2D1RenderTarget* d2dRenderTarget, IDWriteFactory* writeFactory);
@@ -44,7 +46,7 @@ public:
 	/// @brief TextFormatを取得する
 	/// @param fontName 
 	/// @return 
-	IDWriteTextFormat* GetFont(const char* fontName);
+	IDWriteTextFormat* GetTextFormat(const char* fontName);
 };
 
 

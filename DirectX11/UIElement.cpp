@@ -2,10 +2,10 @@
 #include "UIBasicEffect.h"
 
 //================UIElement
-UIElement::UIElement(ID2D1RenderTarget* renderTarget):
+UIElement::UIElement():
 m_pUiRender(nullptr)
 {
-	m_pUiText = std::make_unique<UIText>(renderTarget);
+	m_pUiText = std::make_unique<UIText>();
 }
 
 void UIElement::Init(IEffect* effect, Material* material, Primitive* model, UIFontSet* fontSet, const char* fontName,UIBrush* uiBrush)

@@ -1,15 +1,8 @@
 ﻿#include "GameObject.h"
 
-GameObject::GameObject()
+GameObject::GameObject() :
+	m_transform(Transform())
 {
-	m_transform = Transform();
-	m_pRenderComponent = std::make_unique<RenderComponent>();
-}
-
-void GameObject::SetModel(Primitive* model)
-{
-	assert(model != nullptr);
-	m_pRenderComponent->SetModel(model);
 }
 
 void GameObject::Update(float dt)
@@ -43,8 +36,8 @@ void GameObject::Update(float dt)
 
 void GameObject::Draw()
 {
-	assert(m_pRenderComponent != nullptr);
-	m_pRenderComponent->Render(m_transform);
+	if (GetComponent<RenderComponent>(MyComponent::ComponentType::Render) != nullptr)
+		GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->Render(m_transform);
 
 #if defined(_DEBUG) || defined(DEBUG)
 	// Draw debug information if needed
@@ -56,9 +49,6 @@ void GameObject::Draw()
 		GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender)->Render(debugTransform);
 	}
 #endif 
-
-
-
 
 }
 
