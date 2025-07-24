@@ -15,7 +15,7 @@ protected:
 	UIScaler* m_pUiScaler = nullptr;					// UIスケーリング
 
 public:
-	UIElement(ID2D1RenderTarget* renderTarget);
+	UIElement();
 
 	~UIElement() override = default;
 

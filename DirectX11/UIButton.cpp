@@ -1,8 +1,7 @@
 #include "UIButton.h"
 
 
-UIButton::UIButton(ID2D1RenderTarget* renderTarget):
-	UIElement(renderTarget),
+UIButton::UIButton():
 	m_isPressed(false),
 	m_isHovered(false),
 	m_onClick(nullptr),

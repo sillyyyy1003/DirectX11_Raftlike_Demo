@@ -10,6 +10,8 @@ class Player :
     public GameObject
 {
 public:
+	
+
 	Player();
 
 	void Init();
@@ -57,6 +59,8 @@ private:
 	float m_speed;
 
 	bool m_isInNegativeState = false;	/// true>>if player is in negative state, like hunger, thirst, etc.
+
+	
 
 };
 

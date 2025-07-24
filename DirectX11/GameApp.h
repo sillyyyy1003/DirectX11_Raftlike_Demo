@@ -26,6 +26,5 @@ public:
     
     static POINT GetCursorPosition();
 
-
 };
 

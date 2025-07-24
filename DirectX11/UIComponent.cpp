@@ -1,4 +1,6 @@
 ﻿#include "UIComponent.h"
+
+#include "GameApp.h"
 #include "UIBasicEffect.h"
 
 namespace
@@ -23,10 +25,9 @@ void UIRender::Draw()
 	m_pRenderComponent->Render(m_transform);
 }
 
-UIText::UIText(ID2D1RenderTarget* renderTarget):
+UIText::UIText():
 	m_pTextFormat(nullptr),
 	m_pSolidBrush(nullptr),
-	m_pd2dRenderTarget(renderTarget),
 	m_textRect(DefaultRectSize),
 	m_color(DefaultColor)//White Color
 {
@@ -35,7 +36,7 @@ UIText::UIText(ID2D1RenderTarget* renderTarget):
 void UIText::Init(UIFontSet* fontSet, const char* fontName, UIBrush* uiBrush)
 {
 	// TextFormatの初期化
-	m_pTextFormat = fontSet->GetFont(fontName);
+	m_pTextFormat = fontSet->GetTextFormat(fontName);
 
 	// Brushの初期化
 	m_pSolidBrush = uiBrush->GetSolidBrush();
@@ -93,15 +94,17 @@ void UIText::DrawTextW(const std::string& str)
 	std::wstring wStr(strSize, 0);
 	MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &wStr[0], strSize);
 
-	m_pd2dRenderTarget->BeginDraw();
+	ID2D1RenderTarget* pd2dRenderTarget = gD3D->GetD2DRenderTarget();
+
+	pd2dRenderTarget->BeginDraw();
 
 	// 文字色を反映
 	m_pSolidBrush->SetColor(D2D1_COLOR_F(m_color));
 
 	// 文字描画
-	m_pd2dRenderTarget->DrawTextW(wStr.c_str(), (UINT32)wStr.size(), m_pTextFormat, m_textRect, m_pSolidBrush);
+	pd2dRenderTarget->DrawTextW(wStr.c_str(), (UINT32)wStr.size(), m_pTextFormat, m_textRect, m_pSolidBrush);
 
-	m_pd2dRenderTarget->EndDraw();
+	pd2dRenderTarget->EndDraw();
 }
 
 void UIText::AdjustTextRectPos(float x, float y)

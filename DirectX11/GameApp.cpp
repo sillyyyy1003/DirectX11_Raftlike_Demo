@@ -113,7 +113,7 @@ bool GameApp::InitResource()
     RenderStates::InitAll(m_pd3dDevice.Get());
 
     // ======Game内容初期化
-	SceneManager::Get()->InitD2DResource(m_pd2dRenderTarget.Get(), m_pDWriteFactory.Get()); // D2Dの初期化
+	SceneManager::Get()->InitD2DResource(); // D2Dの初期化
     
     SceneManager::Get()->Init();    // Material/Effect/GameObjectの初期化
     

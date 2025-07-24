@@ -13,5 +13,7 @@ Loading model finished
 [ModelManager] Loaded model: Cube
 [ModelManager] Loaded model: Square
 [ModelManager] Loaded model: Capsule
+[ItemDataBase] Apple is registered!
 [Physics] A character contact was added.
+[Physics] A contact was added.
 [Physics] A contact was added.

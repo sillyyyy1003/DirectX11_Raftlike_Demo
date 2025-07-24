@@ -16,7 +16,7 @@ protected:
 
 public:
 	RenderComponent() : m_pMaterial(nullptr), m_pEffect(nullptr), m_pModel(nullptr) {}
-	virtual ~RenderComponent() = default;
+	virtual ~RenderComponent() override = default;
 
 	/// @brief マテリアル配置
 	void SetMaterial(Material* mat) { m_pMaterial = mat; };

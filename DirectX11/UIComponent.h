@@ -67,7 +67,7 @@ class UIText :
 {
 public:
 
-	UIText(ID2D1RenderTarget* renderTarget);
+	UIText();
 	~UIText() override = default;
 
 	void Init(UIFontSet* fontSet, const char* fontName, UIBrush* uiBrush);
@@ -100,7 +100,7 @@ private:
 
 	IDWriteTextFormat* m_pTextFormat;					// 文字表示
 	ID2D1SolidColorBrush* m_pSolidBrush;				// Font Brush			
-	ID2D1RenderTarget* m_pd2dRenderTarget = nullptr;	// 描画コマンド
+	//ID2D1RenderTarget* m_pd2dRenderTarget = nullptr;	// 描画コマンド
 	D2D1_RECT_F m_textRect;								// 文字の描画領域
 	std::string m_staticText;
 	TextProvider m_textProvider;

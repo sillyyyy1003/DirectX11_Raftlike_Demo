@@ -186,6 +186,9 @@
     <ClCompile Include="FirstPersonCamera.cpp" />
     <ClCompile Include="GameApp.cpp" />
     <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="ItemDataBase.cpp" />
     <ClCompile Include="ITextBind.cpp" />
     <ClCompile Include="KInput.cpp" />
     <ClCompile Include="Layers.cpp" />
@@ -211,6 +214,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShapeFactory.cpp" />
     <ClCompile Include="GameSignalBus.cpp" />
+    <ClCompile Include="ShipTile.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="ThirdPersonCamera.cpp" />
     <ClCompile Include="ThirstComponent.cpp" />
@@ -244,6 +248,9 @@
     <ClInclude Include="FirstPersonCamera.h" />
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="Geometry.h" />
+    <ClInclude Include="Inventory.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="ItemDataBase.h" />
     <ClInclude Include="ITextBind.h" />
     <ClInclude Include="KInput.h" />
     <ClInclude Include="Layers.h" />
@@ -267,6 +274,7 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShapeFactory.h" />
+    <ClInclude Include="ShipTile.h" />
     <ClInclude Include="Signal.hpp" />
     <ClInclude Include="GameSignalBus.h" />
     <ClInclude Include="Texture.h" />

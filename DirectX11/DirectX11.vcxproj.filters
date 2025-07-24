@@ -261,7 +261,28 @@
     <ClCompile Include="ITextBind.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="UIText.cpp">
+    <ClCompile Include="UIButton.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UILayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UIMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UIComponent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ShipTile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemDataBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -425,7 +446,28 @@
     <ClInclude Include="ITextBind.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="UIText.h">
+    <ClInclude Include="UIButton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UILayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComponent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ShipTile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemDataBase.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

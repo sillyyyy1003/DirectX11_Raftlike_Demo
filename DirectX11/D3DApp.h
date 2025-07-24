@@ -49,15 +49,16 @@ public:
     virtual void DrawScene() = 0;               
     virtual LRESULT MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-    ID3D11Device* GetDevice() const { return m_pd3dDevice.Get(); };
-    ID3D11DeviceContext* GetContext() const { return m_pd3dImmediateContext.Get(); };
-    IDXGISwapChain* GetSwapChain() const { return m_pSwapChain.Get(); };
-
+    ID3D11Device* GetDevice() const { return m_pd3dDevice.Get(); }
+    ID3D11DeviceContext* GetContext() const { return m_pd3dImmediateContext.Get(); }
+    IDXGISwapChain* GetSwapChain() const { return m_pSwapChain.Get(); }
+    ID2D1RenderTarget* GetD2DRenderTarget() const { return m_pd2dRenderTarget.Get(); }
+    IDWriteFactory* GetWriteFactory() const { return m_pDWriteFactory.Get(); }
 	int GetWheelMoveUnit() { return m_moveUnit; }   // ホイールによる移動量を取得
 	void SetWheelMoveUnit(int unit) { m_moveUnit = unit; } // ホイールによる移動量を設定
 
     POINT GetWindowCenterPos();
-
+    
 protected:
     /// <summary>
     /// Init Main Window

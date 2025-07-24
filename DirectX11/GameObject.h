@@ -15,28 +15,18 @@ class GameObject
 protected:
 
 	Transform m_transform;
-	std::unique_ptr<RenderComponent> m_pRenderComponent;						// Game ObjectはRenderComponentを持つ
 
-	typedef std::unordered_map<MyComponent::ComponentType, Component*> Components;
+	typedef std::unordered_map<MyComponent::ComponentType, std::shared_ptr<Component>> Components;
 	Components m_components;// 持つコンポーネントのリスト
 
 #if defined(_DEBUG) || defined(DEBUG)
-	DirectX::XMFLOAT3 m_debugCollisionScale;
+	DirectX::XMFLOAT3 m_debugCollisionScale = { 1,1,1 };
 #endif
 
 public:
 
 	GameObject();
 	virtual ~GameObject() = default;
-
-	/// @brief マテリアル配置
-	void SetMaterial(Material* mat) { m_pRenderComponent->SetMaterial(mat); };
-
-	/// @brief Render Effect配置
-	void SetEffect(IEffect* effect) { m_pRenderComponent->SetEffect(effect); };
-
-	/// @brief モデル配置
-	void SetModel(Primitive* model);;
 
 	virtual void Update(float dt);
 	virtual void Draw();
@@ -48,7 +38,7 @@ public:
 	/// @param type Component type to add
 	/// @param comp Component pointer
 	template<typename T>
-	void AddComponent(MyComponent::ComponentType type, T* comp)
+	void AddComponent(MyComponent::ComponentType type, std::shared_ptr<T> comp)
 	{
 		m_components[type] = comp;
 	}
@@ -56,14 +46,14 @@ public:
 	/// @brief Get Component from the GameObject
 	/// @tparam T Component type to retrieve
 	/// @param type Component type
-	/// @return omponent pointer of type T if found, otherwise nullptr
+	/// @return Component pointer of type T if found, otherwise nullptr
 	template<typename T>
 	T* GetComponent(MyComponent::ComponentType type)
 	{
 		auto it = m_components.find(type);
 		if (it != m_components.end())
 		{
-			return dynamic_cast<T*>(it->second);  // 类型安全地转换基类指针为子类指针
+			return dynamic_cast<T*>(it->second.get());  // 类型安全地转换基类指针为子类指针
 		}
 
 		return nullptr;

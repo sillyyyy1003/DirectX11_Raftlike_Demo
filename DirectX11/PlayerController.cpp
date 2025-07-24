@@ -36,22 +36,27 @@ void PlayerController::Update(float dt)
         SetCursorPos(m_centerPos.x, m_centerPos.y);
     }
 
+    // 前後左右移動
+	{
+	    Vec3 dir = { 0,0,0 };
 
-    Vec3 dir = { 0,0,0 };
+	    if (KInput::IsKeyPress('W'))//SetMoveDir Forward
+	        dir.SetZ(1.f);
+	    if (KInput::IsKeyPress('S'))//SetMoveDir Backward
+	        dir.SetZ(-1.f);
+	    if (KInput::IsKeyPress('A'))//SetMoveDir Left
+	        dir.SetX(-1.f);
+	    if (KInput::IsKeyPress('D'))//SetMoveDir Right
+	        dir.SetX(1.f);
 
-    if (KInput::IsKeyPress('W'))//SetMoveDir Forward
-        dir.SetZ(1.f);
-    if (KInput::IsKeyPress('S'))//SetMoveDir Backward
-        dir.SetZ(-1.f);
-    if (KInput::IsKeyPress('A'))//SetMoveDir Left
-        dir.SetX(-1.f);
-    if (KInput::IsKeyPress('D'))//SetMoveDir Right
-        dir.SetX(1.f);
+	    m_pPlayerCharacter->SetMoveDir(dir);//移動方向を設定する
+    }
 
-    m_pPlayerCharacter->SetMoveDir(dir);//移動方向を設定する
-
-    if (KInput::IsKeyTrigger(VK_SPACE)) //ジャンプ
-		m_pPlayerCharacter->Jump(); 
+    // ジャンプ
+    {
+        if (KInput::IsKeyTrigger(VK_SPACE))
+            m_pPlayerCharacter->Jump();
+    }
 
 }
 

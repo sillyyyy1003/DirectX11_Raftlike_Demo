@@ -5,7 +5,7 @@
 
 void UIFontSet::InitFontList()
 {
-	//For Title
+	/*
 	Font titleFont = { "TitleFont", L"Arial",90,true };
 	Font optionFont = { "OptionFont",L"Arial", 35,true };
 	Font messageFont = { "MessageFont",L"Arial",25,false };
@@ -13,14 +13,16 @@ void UIFontSet::InitFontList()
 	m_fontList["TitleFont"] = titleFont;
 	m_fontList["OptionFont"] = optionFont;
 	m_fontList["MessageFont"] = messageFont;
+	*/
 }
 
-void UIFontSet::LoadFontList(const char* fileName)
+bool UIFontSet::LoadFontList(const char* fileName)
 {
 	std::ifstream inFile(fileName);
 	if (!inFile)
 	{
-		throw std::runtime_error(std::string("Cannot open font json file: ") + fileName);
+		DebugLog::LogError("[FontSet] Failed to open JSON file: {}", fileName);
+		return false;
 	}
 
 	nlohmann::json j;
@@ -28,7 +30,8 @@ void UIFontSet::LoadFontList(const char* fileName)
 
 	if (!j.contains("Fonts") || !j["Fonts"].is_array())
 	{
-		throw std::runtime_error("Invalid or missing 'Fonts' array in JSON");
+		DebugLog::LogError("[FontSet] Invalid or missing 'Fonts' array in JSON!");
+		return false;
 	}
 
 	for (const auto& item : j["Fonts"])
@@ -39,8 +42,10 @@ void UIFontSet::LoadFontList(const char* fileName)
 		float size = item.value("FontSize", 12.0f);	// Load font size
 		bool isCentered = item.value("IsCentered", false);	 // Load text format
 
+		// Create font
 		m_fontList[name] = Font(name, ws, size, isCentered);
 	}
+	return true;
 }
 
 
@@ -68,7 +73,7 @@ void UIFontSet::CreateTextFormat(ID2D1RenderTarget* d2dRenderTarget, IDWriteFact
 	}
 }
 
-IDWriteTextFormat* UIFontSet::GetFont(const char* fontName)
+IDWriteTextFormat* UIFontSet::GetTextFormat(const char* fontName)
 {
 #if defined(_DEBUG) || defined(DEBUG)
 	// Check if the font exists in the list
