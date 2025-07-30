@@ -5,6 +5,7 @@
 #include <Physics/Collision/ContactListener.h>
 #include <Physics/Collision/BroadPhase/BroadPhaseLayer.h>
 
+#include "BuoyancySystem.h"
 #include "DebugLog.h"
 using namespace JPH;
 
@@ -17,17 +18,19 @@ namespace Layers
 	static constexpr ObjectLayer BOAT = 4;
 	static constexpr ObjectLayer BUILDING = 5;
 	static constexpr ObjectLayer TOOL = 6;	//Hook
+	static constexpr ObjectLayer SENSOR = 7;
 
 
 	//static constexpr ObjectLayer ISLAND = 5;
-	static constexpr ObjectLayer NUM_LAYERS = 7;
+	static constexpr ObjectLayer NUM_LAYERS = 8;
 };
 
 namespace BroadPhaseLayers
 {
 	static constexpr BroadPhaseLayer NON_MOVING(0);
 	static constexpr BroadPhaseLayer MOVING(1);
-	static constexpr uint NUM_LAYERS(2);
+	static constexpr BroadPhaseLayer SENSOR(2);
+	static constexpr uint NUM_LAYERS(3);
 };
 
 /// Class that determines if two object layers can collide
@@ -40,21 +43,27 @@ public:
 		{
 		case Layers::PLAYER:
 			return inObject2 == Layers::ENEMY || inObject2 == Layers::ITEM ||
-				inObject2 == Layers::BOAT || inObject2 == Layers::BUILDING;	// Player collides with everything except Weapon (to avoid self-collision with thrown weapons)
+				inObject2 == Layers::BOAT || inObject2 == Layers::BUILDING||inObject2==Layers::SENSOR;	// Player collides with everything except Weapon (to avoid self-collision with thrown weapons)
 		case Layers::ENEMY:
-			return inObject2 == Layers::PLAYER || inObject2 == Layers::BOAT || inObject2 == Layers::WEAPON; //Enemy collides with Boat Player, Building, Weapon, Boat
+			return inObject2 == Layers::PLAYER || inObject2 == Layers::BOAT || inObject2 == Layers::WEAPON || inObject2 == Layers::SENSOR; //Enemy collides with Boat Player, Building, Weapon, Boat
 		case Layers::WEAPON:
 			return inObject2 == Layers::ENEMY;
 		case Layers::ITEM:
-			return inObject2 == Layers::PLAYER || inObject2 == Layers::BOAT || inObject2 == Layers::BUILDING|| inObject2==Layers::TOOL;
+			return inObject2 == Layers::PLAYER || inObject2 == Layers::BOAT || inObject2 == Layers::BUILDING|| inObject2==Layers::TOOL || inObject2 == Layers::SENSOR;
 			// Item collides with Player and boat, Building, Tool
 		case Layers::BOAT:
 			return inObject2 == Layers::PLAYER || inObject2 == Layers::ENEMY ||
-				inObject2 == Layers::ITEM || inObject2 == Layers::BUILDING;// Boat collides with everything except weapon
+				inObject2 == Layers::ITEM || inObject2 == Layers::BUILDING || inObject2 == Layers::SENSOR;// Boat collides with everything except weapon
 		case Layers::BUILDING:
 			return inObject2 == Layers::PLAYER || inObject2 == Layers::BOAT||inObject2==Layers::ITEM; // Building collides with Player, Enemy, Boat
 		case Layers::TOOL:
-			return inObject2==Layers::ITEM;
+			return inObject2==Layers::ITEM || inObject2 == Layers::SENSOR;
+		case Layers::SENSOR:
+			return inObject2 == Layers::PLAYER ||
+				inObject2 == Layers::ENEMY ||
+				inObject2 == Layers::BOAT ||
+				inObject2 == Layers::ITEM ||
+				inObject2 == Layers::TOOL;
 		default:
 			JPH_ASSERT(false);
 			return false;
@@ -76,6 +85,7 @@ public:
 		m_objectToBroadPhase[Layers::ITEM] = BroadPhaseLayers::MOVING;
 		m_objectToBroadPhase[Layers::BOAT] = BroadPhaseLayers::NON_MOVING;  //船は動かないので非動的に設定
 		m_objectToBroadPhase[Layers::BUILDING] = BroadPhaseLayers::NON_MOVING; //建物も動かないので非動的に設定
+		m_objectToBroadPhase[Layers::SENSOR] = BroadPhaseLayers::SENSOR;
 	}
 
 	virtual uint					GetNumBroadPhaseLayers() const override
@@ -124,12 +134,16 @@ public:
 			return inLayer2 == BroadPhaseLayers::NON_MOVING;
 		case Layers::BUILDING:
 			return false;
+		case Layers::SENSOR:
+			return inLayer2 == BroadPhaseLayers::MOVING;
 		default:
 			JPH_ASSERT(false);
 			return false;
 		}
 	}
 };
+
+
 
 
 class ObjectContactListener : public ContactListener
@@ -216,6 +230,7 @@ protected:
 	{
 		
 	}
+
 
 };
 

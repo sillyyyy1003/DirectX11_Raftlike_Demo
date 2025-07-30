@@ -40,14 +40,14 @@ public:
 	void SetMaterial(Material* mat) override;
 
 	/// @brief シェーダーに渡すライトデータ
-	void SetDirLight()override;
+	void SetDirLightCB()override;
 
 	/// @brief カメラ
 	/// @param camera 
 	void SetCameraCB(CameraBase* camera = nullptr)override;
 
 	/// @brief シェーダーにWVPデータを渡す
-	void SetWVPMatrix(const Transform& t, CameraBase* camera = nullptr)override;
+	void SetWVPMatrixCB(const Transform& t, CameraBase* camera = nullptr)override;
 };
 
 

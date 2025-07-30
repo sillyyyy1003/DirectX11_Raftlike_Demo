@@ -8,14 +8,24 @@ class Item;
 class Inventory:
 	public Component
 {
+	using ItemPtr = std::shared_ptr<ItemInstance>;
+	using Slot = std::optional<ItemPtr>;
+
 public:
-	Inventory();
+	Inventory(int maxSlots);
 	~Inventory() override = default;
 
+	/// @brief Insert item to player's inventory
+	/// @param instance 挿入したいアイテムインスタンス
+	/// @return 挿入した数
+	int Insert(ItemPtr instance);
+
+	size_t GetUsedSlotCount() const;
+	size_t GetMaxSlots() const;
 private:
 
-	typedef std::vector<std::optional<ItemInstance>> Slots;
-	Slots m_slots;
+	std::vector<Slot> m_slots;
+
 
 };
 

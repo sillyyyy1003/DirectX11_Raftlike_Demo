@@ -170,6 +170,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BuoyancySystem.cpp" />
     <ClCompile Include="CameraBase.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Capsule.cpp" />
@@ -210,7 +211,10 @@
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="RenderState.cpp" />
     <ClCompile Include="SceneBase.cpp" />
+    <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SceneOption.cpp" />
+    <ClCompile Include="SceneTitle.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShapeFactory.cpp" />
     <ClCompile Include="GameSignalBus.cpp" />
@@ -222,8 +226,10 @@
     <ClCompile Include="UIBar.cpp" />
     <ClCompile Include="UIBasicEffect.cpp" />
     <ClCompile Include="UIButton.cpp" />
+    <ClCompile Include="UIButtonMove.cpp" />
     <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="UIFontSet.cpp" />
+    <ClCompile Include="UIGlossEffect.cpp" />
     <ClCompile Include="UILayer.cpp" />
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="UIMesh.cpp" />
@@ -231,6 +237,7 @@
     <ClCompile Include="UIComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BuoyancySystem.h" />
     <ClInclude Include="CameraBase.h" />
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="Capsule.h" />
@@ -271,7 +278,10 @@
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="RenderState.h" />
     <ClInclude Include="SceneBase.hpp" />
+    <ClInclude Include="SceneGame.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SceneOption.h" />
+    <ClInclude Include="SceneTitle.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShapeFactory.h" />
     <ClInclude Include="ShipTile.h" />
@@ -284,8 +294,10 @@
     <ClInclude Include="UIBar.h" />
     <ClInclude Include="UIBasicEffect.h" />
     <ClInclude Include="UIButton.h" />
+    <ClInclude Include="UIButtonMove.h" />
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="UIFontSet.h" />
+    <ClInclude Include="UIGlossEffect.h" />
     <ClInclude Include="UILayer.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="UIMesh.h" />

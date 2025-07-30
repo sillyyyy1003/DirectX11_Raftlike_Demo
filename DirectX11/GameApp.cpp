@@ -47,13 +47,13 @@ void GameApp::OnResize()
     assert(m_pd2dFactory);
     assert(m_pDWriteFactory);
 
-	// 释放D2D的相关资源
+    // 释放D2D的相关资源
     m_pd2dRenderTarget.Reset();
 
     D3DApp::OnResize();
 
     ComPtr<IDXGISurface> surface;
-	HR(m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface), reinterpret_cast<void**>(surface.GetAddressOf())));
+    HR(m_pSwapChain->GetBuffer(0, __uuidof(IDXGISurface), reinterpret_cast<void**>(surface.GetAddressOf())));
     D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
         D2D1_RENDER_TARGET_TYPE_DEFAULT,
         D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED));
@@ -68,7 +68,9 @@ void GameApp::OnResize()
     {
         assert(m_pd2dRenderTarget);
     }
+    m_pd2dRenderTarget->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE);
 }
+
 
 void GameApp::UpdateScene(float dt)
 {

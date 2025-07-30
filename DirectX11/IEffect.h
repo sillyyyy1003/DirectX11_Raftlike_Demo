@@ -17,8 +17,8 @@ public:
 
 	
 	virtual void SetMaterial(Material* mat){};
-	virtual void SetWVPMatrix(const Transform& t, CameraBase* camera = nullptr){};
-	virtual void SetDirLight() {}
+	virtual void SetWVPMatrixCB(const Transform& t, CameraBase* camera = nullptr){};
+	virtual void SetDirLightCB() {}
 	virtual void SetCameraCB(CameraBase* camera = nullptr) {};
 	
 
@@ -63,14 +63,14 @@ public:
 	void SetMaterial(Material* mat)override;
 
 	/// @brief シェーダーに渡すライトデータ
-	void SetDirLight()override;
+	void SetDirLightCB()override;
 
 	/// @brief カメラConstantBufferを設定する
 	/// @param camera 
 	void SetCameraCB(CameraBase* camera = nullptr) override;
 
 	/// @brief シェーダーにWVPデータを渡す
-	void SetWVPMatrix(const Transform& t, CameraBase* camera = nullptr)override;
+	void SetWVPMatrixCB(const Transform& t, CameraBase* camera = nullptr)override;
 
 	/// @brief シェーダーに渡すライトデータ
 	/// @param light  

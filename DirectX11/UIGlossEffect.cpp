@@ -1,15 +1,16 @@
-﻿#include "UIBasicEffect.h"
+﻿#include "UIGlossEffect.h"
+
 #include "GameApp.h"
 #include "RenderState.h"
 
-UIBasicEffect::UIBasicEffect():
-m_ps(nullptr),
-m_vs(nullptr),
-m_viewSize({ WIN_WIDTH,WIN_HEIGHT})
+UIGlossEffect::UIGlossEffect():
+	m_ps(nullptr),
+	m_vs(nullptr),
+	m_viewSize({ WIN_WIDTH,WIN_HEIGHT })
 {
 }
 
-void UIBasicEffect::Apply()
+void UIGlossEffect::Apply()
 {
 	assert(m_ps != nullptr);
 	assert(m_vs != nullptr);
@@ -21,48 +22,53 @@ void UIBasicEffect::Apply()
 	ApplyRenderState();
 }
 
-void UIBasicEffect::SetWVPMatrixCB(const Transform& t, CameraBase* camera)
+void UIGlossEffect::SetWVPMatrixCB(const Transform& t, CameraBase* camera)
 {
 	// WVP 計算
 	DirectX::XMFLOAT4X4 mat[3];
 	mat[0] = t.GetLocalToWorldMatrix();
 	DirectX::XMMATRIX view = DirectX::XMMatrixTranspose(DirectX::XMMatrixIdentity());
-	XMStoreFloat4x4(&mat[1],view);
+	XMStoreFloat4x4(&mat[1], view);
 	DirectX::XMMATRIX proj = DirectX::XMMatrixTranspose(DirectX::XMMatrixOrthographicLH(m_viewSize.x, m_viewSize.y, 0.1f, 3.0f));
 	XMStoreFloat4x4(&mat[2], proj);
 
 	m_vs->WriteBuffer(0, mat);
-
 }
 
-void UIBasicEffect::SetMaterial(Material* mat)
+void UIGlossEffect::SetMaterial(Material* mat)
 {
 	struct Material
 	{
 		DirectX::XMFLOAT4 ambient;
 		DirectX::XMFLOAT4 diffuse;
+		DirectX::XMFLOAT4 specular;
 		float isTexEnable;
 		float pad[3];
 	};
 
 	bool isTexEnable = mat->GetTextureEnable();
-
 	Material material = {
 		mat->GetAmbient(),
 		mat->GetDiffuse(),
+		mat->GetSpecular(),
 		(float)isTexEnable,
 		0,0,0
 	};
+
 	// Set Material to Pixel Shader
 	m_ps->WriteBuffer(0, &material);
-
 	// Textureあればシェーダーに渡す
 	if (isTexEnable)m_ps->SetTexture(0, mat->GetTexture(::Material::Albedo));
 }
 
-void UIBasicEffect::ApplyRenderState()
+void UIGlossEffect::ApplyRenderState()
 {
-	GameApp::SetBlendState(RenderStates::BSTransparent);		//AlphaBlend
+	GameApp::SetBlendState(nullptr);		//AlphaBlend
 	GameApp::SetSamplerState(RenderStates::SSLinearWrap);		//Default Sampling
 	GameApp::SetCullingMode(nullptr);	//表だけ
+}
+
+void UIGlossEffect::SetViewSize(const DirectX::XMFLOAT2& size)
+{
+	m_viewSize = size;
 }

@@ -71,6 +71,7 @@ public:
 	TempAllocator* GetTempAllocator() { return m_tempAllocator.get(); }
 	ObjectContactListener* GetContactListener() { return m_pObjectContactListener.get(); }
 	MyPlayerContactListener* GetPlayerContactListener() { return m_pPlayerContactListener.get(); }
+	
 
 private:
 	PhysicsManager() = default;
@@ -83,9 +84,11 @@ private:
 	std::unique_ptr<JobSystem> m_jobSystem;	// Job system for Jolt
 	std::shared_ptr<TempAllocator> m_tempAllocator;	// Temporary allocator for Jolt
 	std::shared_ptr<PhysicsSystem> m_pPhysicsSystem;	// Physics system
-	std::shared_ptr<ObjectContactListener> m_pObjectContactListener;	// Contact listener for collision events
-	std::shared_ptr<MyPlayerContactListener> m_pPlayerContactListener;		
 	std::shared_ptr<MyBodyActivationListener> m_pBodyActivationListener;	// Body activation listener for body state changes
+
+	std::shared_ptr<ObjectContactListener> m_pObjectContactListener;	// Contact listener for collision events
+	std::shared_ptr<MyPlayerContactListener> m_pPlayerContactListener;
+
 
 	BPLayerInterfaceImpl m_broadPhaseLayerInterface;
 	ObjectLayerPairFilterImpl m_objectVsObjectLayerFilter;

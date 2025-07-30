@@ -43,7 +43,7 @@ void PBREffect::SetMaterial(Material* mat)
 	m_ps->SetTexture(2, mat->GetTexture(::Material::Metallic_Smooth));
 }
 
-void PBREffect::SetDirLight()
+void PBREffect::SetDirLightCB()
 {
 	struct Light {
 		
@@ -96,7 +96,7 @@ void PBREffect::SetCameraCB(CameraBase* camera)
 	}
 }
 
-void PBREffect::SetWVPMatrix(const Transform& t, CameraBase* camera)
+void PBREffect::SetWVPMatrixCB(const Transform& t, CameraBase* camera)
 {
 	DirectX::XMFLOAT4X4 mat[3];
 	mat[0] = t.GetLocalToWorldMatrix();

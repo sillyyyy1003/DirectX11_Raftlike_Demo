@@ -47,7 +47,7 @@ void UIText::SetPosition(const DirectX::XMFLOAT3& pos)
 	float x, y;
 	x = pos.x + WIN_WIDTH / 2;
 	y = WIN_HEIGHT / 2 - pos.y;
-
+	
 	//text位置設定
 	AdjustTextRectPos(x, y);
 }
@@ -101,6 +101,7 @@ void UIText::DrawTextW(const std::string& str)
 	// 文字色を反映
 	m_pSolidBrush->SetColor(D2D1_COLOR_F(m_color));
 
+	pd2dRenderTarget->DrawRectangle(m_textRect, m_pSolidBrush);
 	// 文字描画
 	pd2dRenderTarget->DrawTextW(wStr.c_str(), (UINT32)wStr.size(), m_pTextFormat, m_textRect, m_pSolidBrush);
 
