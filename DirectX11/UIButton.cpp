@@ -18,14 +18,16 @@ bool UIButton::HitTest(float x, float y) const
 void UIButton::OnMouseEnter()
 {
 	m_isHovered = true;
-	SetMeshDiffuseColor({ 1,0,0,1 }); // Change color to red when hovered
-	
+	if (m_onHover)
+		m_onHover();
 }
 
 void UIButton::OnMouseExit()
 {
 	m_isHovered = false;
-	SetMeshDiffuseColor({ 0,1,0,1 }); // Change color to green when hovered
+	if (m_onExit)
+		m_onExit();
+	
 }
 
 void UIButton::OnMouseUp(float x, float y)
@@ -36,6 +38,8 @@ void UIButton::OnMouseUp(float x, float y)
 void UIButton::OnMouseDown(float x, float y)
 {
 	m_isPressed = true;
+	if (m_onPressed)
+		m_onPressed();
 }
 
 void UIButton::OnClick(float x, float y)

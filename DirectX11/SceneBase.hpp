@@ -43,11 +43,14 @@ public:
 	virtual void Update(float tick) = 0;
 	virtual void Draw() = 0;
 
+	virtual void SetCurrentScene(const char* sceneName) { m_pSceneManager->SetCurrentScene(sceneName); }
+
 private:
 	static Objects m_objects;
 protected:
 	SceneBase* m_pParent;
 	SceneBase* m_pSubScene;
+	SceneBase* m_pSceneManager;
 	Items m_items;
 };
 
@@ -62,6 +65,13 @@ template<class T> T* SceneBase::AddSubScene()
 	T* pScene = new T;
 	m_pSubScene = pScene;
 	pScene->m_pParent = this;
+
+	// Add sceneManager;
+	if (this->m_pSceneManager)
+		m_pSubScene->m_pSceneManager = this->m_pSceneManager;
+	else
+		m_pSubScene->m_pSceneManager = this;
+
 	pScene->Init();
 	return pScene;
 }

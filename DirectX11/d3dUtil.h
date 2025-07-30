@@ -183,7 +183,30 @@ HRESULT CreateShaderFromFile(
     LPCSTR shaderModel,
     ID3DBlob** ppBlobOut);
 
+inline DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
+{
+    return DirectX::XMFLOAT3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
+}
 
+inline DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
+{
+    return DirectX::XMFLOAT3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
+}
 
+inline DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& vec, float scalar)
+{
+    return DirectX::XMFLOAT3(vec.x * scalar, vec.y * scalar, vec.z * scalar);
+}
+
+inline DirectX::XMFLOAT3 operator*(float scalar, const DirectX::XMFLOAT3& vec)
+{
+    return vec * scalar;
+}
+
+inline DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& vec, float scalar)
+{
+    float inv = 1.0f / scalar;
+    return DirectX::XMFLOAT3(vec.x * inv, vec.y * inv, vec.z * inv);
+}
 
 #endif

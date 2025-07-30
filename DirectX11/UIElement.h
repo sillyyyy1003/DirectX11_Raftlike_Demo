@@ -40,7 +40,11 @@ public:
 	/// @param model 背景メッシュ
 	virtual void Init(IEffect* effect, Material* material, Primitive* model);
 
-	void SetPosition(const DirectX::XMFLOAT3& pos);
+	//void SetPosition(const DirectX::XMFLOAT3& pos);
+	/// @brief 位置設定
+	/// @param pos 背景位置
+	/// @param offset 文字ずれ
+	void SetPosition(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& offset = { 0,0 });
 	void SetPosition(float x, float y, float z = 0.1f);
 	void SetPosition(const float* pos);
 
@@ -56,9 +60,7 @@ public:
 
 	void SetTextProvider(ITextBind::TextProvider provider);
 
-	/// @brief Set Mesh diffuse color
-	/// @param color 
-	void SetMeshDiffuseColor(const DirectX::XMFLOAT4& color);
+	RenderComponent* GetUiRenderComponent()	{ return m_pUiRender->GetRenderComponent(); }
 
 	void SetCenterAlignment(bool isCenter = true);
 protected:

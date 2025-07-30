@@ -176,9 +176,12 @@ float4 main(PS_IN pin) : SV_TARGET
 	//for (int i = 0; i < 2; i++)
 	//	pointLightColor += PointLightPBR(pointLight[i], pin.worldPos.xyz, N, V);
 
-
 	//float3 color = albedoColor.rgb * (pointLightColor + pbrColor);
 	float3 color = albedoColor.rgb * (environmentColor + directionalColor);
+	//Gamma correction
+	//float outColor = float4(color, 1.0f);
+	//outColor = Gamma(outColor);
+
 	return float4(color, 1.0f);
 
 

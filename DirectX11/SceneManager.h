@@ -40,82 +40,13 @@ private:
 
 
 private:
-	
-	std::shared_ptr<Player> m_pPlayer;
 
-	// Basic shader
-	std::shared_ptr<PixelShader> m_pBasicBlinnPhongPixelShader;
-	std::shared_ptr<VertexShader> m_pBasicPosNormalTexVertexShader;
-	// PBR Shader
-	std::shared_ptr<PixelShader> m_pPBRPixelShader;
-	std::shared_ptr<VertexShader> m_pPBRVertexShader;
-
-	// UI Basic
-	std::shared_ptr<PixelShader> m_pUIElementPixelShader;
-	std::shared_ptr<VertexShader> m_pUIElementVertexShader;
-
-	// Camera
-	CameraBase* m_pCurrentCamera;
 	std::shared_ptr<LightBase> lightBase;	
-
-	// Physical Component
-	std::shared_ptr<PhysicsComponent> m_pAppleCollider1;
-	std::shared_ptr<PhysicsComponent> m_pCubeCollider;
-	std::shared_ptr<PhysicsComponent> m_pFloorCollider;
-	std::shared_ptr<PhysicsComponent> m_pPlayerCollider;
-
-	// Physical Debug Render Component
-	std::shared_ptr<RenderComponent>  m_pDebugColliderRender;
-
-
-	// Material
-	std::shared_ptr<Material> m_pBlinnPhongMaterial;
-	std::shared_ptr<Material> m_pDebugMaterial;
-	std::shared_ptr<Material> m_pPBRFoodMaterial;
-	std::shared_ptr<Material> m_pFloorMaterial;
-
-	//Ui Material 
-	std::shared_ptr<Material> m_pUIMaterial;
-	std::shared_ptr<Material> m_pUIAimMaterial;
-	std::shared_ptr<Material> m_pUiBarMaterial;
-	std::shared_ptr<Material> m_pUiBarBgMaterial;
-
-
-	// Effect
-	std::shared_ptr<BasicEffect> m_pBasicEffect;
-	std::shared_ptr<BasicEffect> m_pDebugEffect;
-	std::shared_ptr<PBREffect> m_pPBREffect;
-	std::shared_ptr<UIBasicEffect> m_pUIBasicEffect;
-
-	// Game Object
-	std::unique_ptr<GameObject> m_pCubeObject;
-	std::unique_ptr<GameObject> m_pFloor;
-
-	//Item
-	std::unique_ptr<ItemInstance> m_appleInstance;
-	std::unique_ptr<ItemInstance> m_appleInstance1;
-
-	// Ui
-	std::unique_ptr<UIElement> m_pUIElement;
-	std::unique_ptr<UIRender> m_pUiAim;
-	std::unique_ptr<UIBar> m_pUiBar;
-	std::shared_ptr<UIButton> m_pUiButton;
- 
-	// Texture
-	std::shared_ptr<Texture> albedoTex;
-	std::shared_ptr<Texture> normalTex;
-	std::shared_ptr<Texture> metallicTex;
-	std::shared_ptr<Texture> m_pUiAimTex;
-
-	// Uiに関するLib
-	std::shared_ptr<UIFontSet> m_pUiFontSet;
-	std::shared_ptr<UIBrush> m_pUiBrush;
-
 	GameSignalBus* m_pGameSignalBus;
 private:
 
 	SceneManager();
-	~SceneManager() = default;
+	~SceneManager() override = default;
 
 
 	/// @brief シーンデータ初期化
@@ -127,7 +58,6 @@ private:
 	/// @brief Fx初期化
 	bool InitEffect();
 
-	void SetCurrentCamera(CameraBase* camera);
 
 public:
 
@@ -153,6 +83,11 @@ public:
 	/// @param _signal 
 	void SetSignalBus(GameSignalBus* _signal);
 
+	void SetCurrentScene(const char* sceneName) override;
+
+	void ChangeScene();
+
 	
+
 };
 

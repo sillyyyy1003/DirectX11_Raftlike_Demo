@@ -7,10 +7,10 @@ void RenderComponent::Render(Transform& transform)
 	assert(m_pModel != nullptr);
 
 	//Set WVP
-	m_pEffect->SetWVPMatrix(transform);
+	m_pEffect->SetWVPMatrixCB(transform);
 
 	//Set Light
-	m_pEffect->SetDirLight();
+	m_pEffect->SetDirLightCB();
 
 	//Set Material
 	m_pEffect->SetMaterial(m_pMaterial);
@@ -32,7 +32,7 @@ void UIRenderComponent::Render(Transform& transform)
 	assert(m_pMaterial != nullptr);
 
 	//WVP
-	m_pEffect->SetWVPMatrix(transform);
+	m_pEffect->SetWVPMatrixCB(transform);
 
 	//Material/texture
 	m_pEffect->SetMaterial(m_pMaterial);

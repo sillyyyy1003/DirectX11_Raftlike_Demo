@@ -6,6 +6,11 @@ UILayer::UILayer()
 
 void UILayer::AddComponent(std::shared_ptr<UIComponent> component)
 {
+	//m_uiComponents.push_back(component);
+}
+
+void UILayer::AddComponent(UIComponent* component)
+{
 	m_uiComponents.push_back(component);
 }
 
@@ -39,7 +44,7 @@ bool UILayer::HandleMouseDown(float x, float y)
 		{
 			component->OnMouseDown(x, y);
 			//Record the component that handled the mouse down event
-			m_pressedComponent = component.get();
+			m_pressedComponent = component;
 			// Mouse down handled by this component
 			return true; 
 		}
@@ -68,7 +73,7 @@ void UILayer::HandleMouseMove(float x, float y)
 	{
 		if (component->IsActive() && component->HitTest(x, y))
 		{
-			hoveredComponent = component.get();
+			hoveredComponent = component;
 			break;
 		}
 	}

@@ -94,4 +94,10 @@ void UIManager::HandleMouseMove(float x, float y)
 	
 }
 
+void UIManager::ClearLayers()
+{
+	m_layers.clear();
+	m_layerNameList.clear();
+}
+
 

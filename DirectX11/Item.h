@@ -41,9 +41,28 @@ class ItemInstance :
 	public GameObject
 {
 public:
-	ItemInstance(std::shared_ptr<const Item> _proto, int _count = 1, float _durability = -1);
+	//ItemInstance(std::shared_ptr<const Item> _proto, int _count = 1, float _durability = -1);
+	ItemInstance() {}
+
+	/// @brief Item初期化
+	/// @param _proto 参照ポインター
+	/// @param _count 数
+	/// @param _durability 耐久値 
+	void InitItem(std::shared_ptr<const Item> _proto, int _count = 1, float _durability = -1);
+
 	~ItemInstance() override = default;
 	bool IsStackable() const { return m_protoPtr && m_protoPtr->GetIsStackable(); }
+	bool HasDurability() const { return m_protoPtr && m_protoPtr->HasDurability(); }
+
+	/// @brief Getter of item ptr
+	std::shared_ptr<const Item> GetProto() const { return m_protoPtr; }
+	/// @brief Getter of item count
+	int GetCount() const { return m_count; }
+	/// @brief Getter of item durability
+	float GetDurability() const { return m_durability; }
+
+	/// @brief Add count to item count
+	void AddCount(int count) { m_count += count; }
 private:
 	std::shared_ptr<const Item> m_protoPtr;
 	int m_count = 1;				// 実際のアイテム数

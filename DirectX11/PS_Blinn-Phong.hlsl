@@ -1,5 +1,7 @@
 ///@brief Blinn-Phong Lighting model with texture sampling
 
+#include "LightHelper.hlsli"
+
 struct PS_IN
 {
 	float4 pos : SV_POSITION0;
@@ -58,5 +60,7 @@ float4 main(PS_IN pin) : SV_TARGET
 
     //アルファ値をマテリアルに計算
 	litColor.a = diffuse.a;
+
+	//litColor = Gamma(litColor);
 	return litColor;
 }

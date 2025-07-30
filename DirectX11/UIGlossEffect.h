@@ -1,23 +1,12 @@
 ﻿#pragma once
 #include "IEffect.h"
 
-/// <summary>
-/// 基本のUIレンダリング
-/// </summary>
-class UIBasicEffect:
+class UIGlossEffect:
 	public IEffect
 {
-protected:
-
-	PixelShader* m_ps;
-	VertexShader* m_vs;
-
-	DirectX::XMFLOAT2 m_viewSize;	//現在ウィンドウのサイズ
-
 public:
-
-	UIBasicEffect();
-	~UIBasicEffect() override = default;
+	UIGlossEffect();
+	~UIGlossEffect() override = default;
 
 	void Apply() override;
 
@@ -37,9 +26,14 @@ public:
 
 	/// @brief 縦横の比率変更
 	/// @param size 
-	void SetViewSize(const DirectX::XMFLOAT2& size) { m_viewSize = size; };
+	void SetViewSize(const DirectX::XMFLOAT2& size);;
 
-	
+private:
+	PixelShader* m_ps;
+	VertexShader* m_vs;
+
+	DirectX::XMFLOAT2 m_viewSize;	//現在ウィンドウのサイズ
+
 
 };
 

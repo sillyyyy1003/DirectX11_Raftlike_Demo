@@ -38,7 +38,6 @@ void UIElement::Init(IEffect* effect, Material* material, Primitive* model)
 void UIElement::Draw()
 {
 	//===========背景描画
-	if (m_pUiRender == nullptr)return;
 	m_pUiRender->Draw();
 
 	//===========文字描画
@@ -56,10 +55,6 @@ void UIElement::SetTextProvider(ITextBind::TextProvider provider)
 	m_pUiText->SetTextProvider(provider);
 }
 
-void UIElement::SetMeshDiffuseColor(const DirectX::XMFLOAT4& color)
-{
-	m_pUiRender->GetRenderComponent()->GetMaterial()->SetDiffuse(color);
-}
 
 void UIElement::SetCenterAlignment(bool isCenter)
 {
@@ -68,18 +63,32 @@ void UIElement::SetCenterAlignment(bool isCenter)
 
 void UIElement::UpdateScale()
 {
-	if(m_pUiRender)
-		m_pUiRender->SetViewSize(m_pUiScaler->GetScale());
+	m_pUiRender->SetViewSize(m_pUiScaler->GetScale());
 }
 
+/*
 void UIElement::SetPosition(const DirectX::XMFLOAT3& pos)
 {
 	//mesh位置設定
-	if (m_pUiRender)	//if mesh is not null
-		m_pUiRender->GetTransform().SetPosition(pos);
+	m_pUiRender->GetTransform().SetPosition(pos);
 
 	//text位置設定
 	m_pUiText->SetPosition(pos);
+}
+*/
+
+void UIElement::SetPosition(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& offset)
+{
+	//mesh位置設定
+	m_pUiRender->GetTransform().SetPosition(pos);
+
+	//text位置設定
+	DirectX::XMFLOAT3 textPos = {
+		pos.x + offset.x,
+		pos.y + offset.y,
+		pos.z 
+	};
+	m_pUiText->SetPosition(textPos);
 }
 
 void UIElement::SetPosition(float x, float y, float z)
@@ -94,10 +103,8 @@ void UIElement::SetPosition(const float* pos)
 
 void UIElement::SetScale(const DirectX::XMFLOAT3& scale)
 {
-
 	//Mesh Size 設定
-	if (m_pUiRender)	//if mesh is not null
-		m_pUiRender->GetTransform().SetScale(scale);
+	m_pUiRender->GetTransform().SetScale(scale);
 
 	//Text Rect Size設定
 	m_pUiText->SetScale(scale);

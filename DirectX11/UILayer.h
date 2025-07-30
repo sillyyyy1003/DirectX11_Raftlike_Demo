@@ -8,6 +8,8 @@ public:
 	~UILayer() = default;
 
 	void AddComponent(std::shared_ptr<UIComponent> component);
+	void AddComponent(UIComponent* component);
+
 
 	void Update(float deltaTime);
 	void Draw();
@@ -21,7 +23,8 @@ public:
 	void HandleMouseMove(float x, float y);
 
 private:
-	std::vector<std::shared_ptr<UIComponent>> m_uiComponents;
+
+	std::vector<UIComponent*> m_uiComponents;
 	bool m_isEnable = true;
 
 	UIComponent* m_hoveredComponent = nullptr;

@@ -35,6 +35,9 @@ public:
 	bool HandleMouseUp(float x, float y);
 	void HandleMouseMove(float x, float y);
 
+	/// @brief Clean all layers for another scene
+	void ClearLayers();
+
 private:
 
 	typedef std::map<Priority, std::shared_ptr<UILayer>> Layers;

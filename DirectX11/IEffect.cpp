@@ -86,7 +86,7 @@ void BasicEffect::SetDirLight(DirLight* light)
 	m_ps->WriteBuffer(0, &l);
 }
 
-void BasicEffect::SetDirLight()
+void BasicEffect::SetDirLightCB()
 {
 	struct Light {
 		DirectX::XMFLOAT4 ambient;
@@ -144,7 +144,7 @@ void BasicEffect::SetCameraCB(CameraBase* camera)
 
 
 
-void BasicEffect::SetWVPMatrix(const Transform& t, CameraBase* camera)
+void BasicEffect::SetWVPMatrixCB(const Transform& t, CameraBase* camera)
 {
 	DirectX::XMFLOAT4X4 mat[3];
 	mat[0] = t.GetLocalToWorldMatrix();

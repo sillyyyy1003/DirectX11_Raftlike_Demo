@@ -232,3 +232,8 @@ float3 NormalSampleToWorldSpace(float3 normalMapSample,
 
 	return bumpedNormalW;
 }
+
+float4 Gamma(float4 color)
+{
+	return pow(color, 1.f / 2.2f);
+}
