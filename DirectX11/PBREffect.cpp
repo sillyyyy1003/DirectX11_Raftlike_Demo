@@ -16,7 +16,7 @@ void PBREffect::ApplyRenderState()
 {
 	GameApp::SetBlendState(RenderStates::BSTransparent);		//AlphaBlend
 	GameApp::SetSamplerState(RenderStates::SSLinearWrap);		//Default Sampling
-	GameApp::SetCullingMode(RenderStates::RSNoCull);	//表だけ
+	GameApp::SetCullingMode(RenderStates::RSNoCull);			//表だけ
 }
 
 void PBREffect::Apply()

@@ -303,6 +303,12 @@
     <ClCompile Include="BuoyancySystem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="SkyboxEffect.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMin.h">
@@ -506,6 +512,12 @@
     <ClInclude Include="BuoyancySystem.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SkyboxEffect.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Triangle.hlsli">
@@ -538,6 +550,12 @@
       <Filter>资源文件\PixelShader</Filter>
     </FxCompile>
     <FxCompile Include="VS_UIElement.hlsl">
+      <Filter>资源文件\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_Skybox.hlsl">
+      <Filter>资源文件\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_Skybox.hlsl">
       <Filter>资源文件\VertexShader</Filter>
     </FxCompile>
   </ItemGroup>

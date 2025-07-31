@@ -145,6 +145,7 @@ public:
     /// @param _rsState 
     static void SetCullingMode(ComPtr<ID3D11RasterizerState> _rsState);
 
+    static void SetDepthStencilState(ComPtr<ID3D11DepthStencilState> _depthStencilState);
 };
 
 extern D3DApp* gD3D;

@@ -112,3 +112,70 @@ void Cube::Draw()
 		it->mesh->Draw();
 	}
 }
+
+
+//=============Skybox
+SkyBoxCube::SkyBoxCube()
+{
+}
+
+void SkyBoxCube::Init()
+{
+	struct Vertex
+	{
+		DirectX::XMFLOAT3 position;
+	};
+
+	std::vector<Vertex> vertices = {
+		// +X
+		{{1, 1, -1}}, {{1, -1, -1}}, {{1, -1, 1}},
+		{{1, -1, 1}}, {{1, 1, 1}}, {{1, 1, -1}},
+
+		// -X
+		{{-1, 1, 1}}, {{-1, -1, 1}}, {{-1, -1, -1}},
+		{{-1, -1, -1}}, {{-1, 1, -1}}, {{-1, 1, 1}},
+
+		// +Y
+		{{-1, 1, 1}}, {{-1, 1, -1}}, {{1, 1, -1}},
+		{{1, 1, -1}}, {{1, 1, 1}}, {{-1, 1, 1}},
+
+		// -Y
+		{{-1, -1, -1}}, {{-1, -1, 1}}, {{1, -1, 1}},
+		{{1, -1, 1}}, {{1, -1, -1}}, {{-1, -1, -1}},
+
+		// +Z
+		{{1, 1, 1}}, {{1, -1, 1}}, {{-1, -1, 1}},
+		{{-1, -1, 1}}, {{-1, 1, 1}}, {{1, 1, 1}},
+
+		// -Z
+		{{-1, 1, -1}}, {{-1, -1, -1}}, {{1, -1, -1}},
+		{{1, -1, -1}}, {{1, 1, -1}}, {{-1, 1, -1}},
+	};
+
+	//One mesh for sky box
+	m_pMeshes.clear();
+	m_pMeshes.resize(1);
+
+	std::vector<DWORD> indices(vertices.size());
+	for (DWORD i = 0; i < indices.size(); ++i)
+		indices[i] = i;
+
+	MeshBuffer::MeshData desc = {};
+	desc.pVertex = vertices.data();
+	desc.vertexSize = sizeof(Vertex);
+	desc.vertexCount = static_cast<UINT>(vertices.size());
+	desc.pIndex = indices.data();
+	desc.indexSize = sizeof(DWORD);
+	desc.indexCount = static_cast<UINT>(indices.size());
+	desc.topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	m_pMeshes[0].mesh = std::make_unique<MeshBuffer>(desc);
+}
+
+void SkyBoxCube::Draw()
+{
+	for (auto it = m_pMeshes.begin(); it != m_pMeshes.end(); ++it)
+	{
+		it->mesh->Draw();
+	}
+}

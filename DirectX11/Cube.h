@@ -23,3 +23,20 @@ public:
 
 };
 
+/// @brief Used for rendering skybox as a cube
+class SkyBoxCube :
+	public Primitive
+{
+public:
+	SkyBoxCube();
+	~SkyBoxCube() override = default;
+	void Init();
+	void Draw() override;
+private:
+	struct MeshData
+	{
+		std::unique_ptr<MeshBuffer> mesh;
+	};
+	using Meshes = std::vector<MeshData>;
+	Meshes m_pMeshes;
+};

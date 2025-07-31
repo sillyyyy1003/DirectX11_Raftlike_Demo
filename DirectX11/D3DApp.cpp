@@ -614,3 +614,8 @@ void D3DApp::SetCullingMode(ComPtr<ID3D11RasterizerState> _rsState)
     gD3D->GetContext()->RSSetState(_rsState.Get());
 }
 
+void D3DApp::SetDepthStencilState(ComPtr<ID3D11DepthStencilState> _depthStencilState)
+{
+	gD3D->GetContext()->OMSetDepthStencilState(_depthStencilState.Get(), 0);
+}
+

@@ -5,6 +5,10 @@
       "file": "Assets/Model/Apple.fbx"
     },
     {
+      "name": "Food_Banana",
+      "file": "Assets/Model/Banana.fbx"
+    },
+    {
       "name": "Building_Grill",
       "file": "Assets/Model/Grill1.fbx"
     },
