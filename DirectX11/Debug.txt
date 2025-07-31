@@ -5,6 +5,9 @@ Loading model finished
 [ModelManager] Loaded model: Food_Apple
 Start model loading
 Loading model finished
+[ModelManager] Loaded model: Food_Banana
+Start model loading
+Loading model finished
 [ModelManager] Loaded model: Building_Grill
 Start model loading
 Loading model finished
@@ -14,4 +17,89 @@ Loading model finished
 [ModelManager] Loaded model: Square
 [ModelManager] Loaded model: Capsule
 [SceneManager] Current Scene: Scene title!
-[SceneManager] Current Scene: Scene option!
+[ItemDataBase] Apple is registered!
+[SceneManager] Current Scene: Scene game!
+[BuoyancySystem] : Add object to water!
+[Physics] A character contact was added.
+[Physics] A character contact was added.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was move.
+[BuoyancySystem] : Add object to water!
+[Physics] A character contact was added.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.
+[Physics] A character contact was added.
+[Physics] A character contact was move.

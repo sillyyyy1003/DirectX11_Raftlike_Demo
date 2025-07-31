@@ -22,16 +22,6 @@ m_pGameSignalBus(nullptr)
 
 void SceneManager::InitD2DResource()
 {
-    /*
-    m_pUiFontSet = std::make_shared<UIFontSet>();
-    m_pUiBrush = std::make_shared<UIBrush>();
-
-    //m_pUiFontSet->InitFontList();   // Textデータ設定
-    m_pUiFontSet->LoadFontList("Assets/ConfigFile/Font.json");
-    m_pUiFontSet->CreateTextFormat(gD3D->GetD2DRenderTarget(), gD3D->GetWriteFactory());   //Textフォーマット設定
-
-    m_pUiBrush->InitBrush(gD3D->GetD2DRenderTarget());
-	*/
     UIFontSet* uiFonts = CreateObj<UIFontSet>("UIFontSet");
     uiFonts->InitFontList();
     uiFonts->LoadFontList("Assets/ConfigFile/Font.json");
@@ -167,6 +157,8 @@ bool SceneManager::InitEffect()
 	PixelShader* uiElementPS = CreateObj<PixelShader>("UIElementPS");
     VertexShader* uiElementVS = CreateObj<VertexShader>("UIElementVS");
     PixelShader* uiGlossPS = CreateObj<PixelShader>("UIGlossPS");
+    VertexShader* skyboxVS = CreateObj<VertexShader>("SkyboxVS");
+    PixelShader* skyboxPS = CreateObj<PixelShader>("SkyboxPS");
 
 
 	//=======Load shader
@@ -177,6 +169,8 @@ bool SceneManager::InitEffect()
     uiElementPS->Load("Assets/Shader/PS_UIElement.cso");
     uiElementVS->Load("Assets/Shader/VS_UIElement.cso");
     uiGlossPS->Load("Assets/Shader/PS_UIGloss.cso");
+	skyboxVS->Load("Assets/Shader/VS_Skybox.cso");
+	skyboxPS->Load("Assets/Shader/PS_Skybox.cso");
 
 	return true;
 	

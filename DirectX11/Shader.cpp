@@ -72,6 +72,7 @@ void Shader::WriteBuffer(UINT slot, void* pData)
 		gD3D->GetContext()->UpdateSubresource(m_pBuffers[slot].Get(), 0, nullptr, pData, 0, 0);
 	assert(m_pBuffers[slot] != nullptr);
 }
+
 void Shader::SetTexture(UINT slot, Texture* tex)
 {
 	if (slot >= m_pTextures.size()) { return; }

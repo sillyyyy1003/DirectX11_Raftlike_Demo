@@ -106,6 +106,7 @@ public:
 		{
 		case (BroadPhaseLayer::Type)BroadPhaseLayers::NON_MOVING:	return "NON_MOVING";
 		case (BroadPhaseLayer::Type)BroadPhaseLayers::MOVING:		return "MOVING";
+		case (BroadPhaseLayer::Type)BroadPhaseLayers::SENSOR:		return "SENSOR";
 		default:													JPH_ASSERT(false); return "INVALID";
 		}
 	}
@@ -130,6 +131,7 @@ public:
 		case Layers::BOAT:
 			return true;
 		case Layers::ITEM:
+			return true;
 		case Layers::TOOL:
 			return inLayer2 == BroadPhaseLayers::NON_MOVING;
 		case Layers::BUILDING:
