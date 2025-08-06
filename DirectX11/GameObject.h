@@ -1,9 +1,8 @@
 ﻿#pragma once
+#include "Component.hpp"
 #include "IEffect.h"
 #include "Material.h"
 #include "Model.h"
-#include "PhysicsComponent.h"
-#include "RenderComponent.h"
 #include "Transform.h"
 
 
@@ -19,10 +18,12 @@ protected:
 	typedef std::unordered_map<MyComponent::ComponentType, std::shared_ptr<Component>> Components;
 	Components m_components;// 持つコンポーネントのリスト
 
+	bool m_isActive;
+
 #if defined(_DEBUG) || defined(DEBUG)
 	DirectX::XMFLOAT3 m_debugCollisionScale = { 1,1,1 };
 #endif
-
+	
 public:
 
 	GameObject();
@@ -41,6 +42,8 @@ public:
 	void AddComponent(MyComponent::ComponentType type, std::shared_ptr<T> comp)
 	{
 		m_components[type] = comp;
+		// Componentの所属を設定
+		m_components[type]->SetGameObject(this);
 	}
 
 	/// @brief Get Component from the GameObject
@@ -69,6 +72,8 @@ public:
 	const DirectX::XMFLOAT3& GetDebugCollisionScale() const { return m_debugCollisionScale; };
 #endif
 
+	void Activate() { m_isActive = true; }
+	void DeActivate() { m_isActive = false; }
 
 };
 

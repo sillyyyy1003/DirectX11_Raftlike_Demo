@@ -19,6 +19,7 @@ public:
 
 	void SetTextureCB();
 	void SetCameraCB(CameraBase* camera = nullptr) override;
+	void SetDirLightCB(const DirectX::XMFLOAT3& light);
 
 private:
 	Texture* m_skyboxTex;

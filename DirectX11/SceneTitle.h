@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <DirectXMath.h>
 #include "SceneBase.hpp"
 
 class CameraBase;
@@ -17,5 +18,7 @@ public:
 
 private:
 	CameraBase* m_pCurrentCamera;
+
+	DirectX::XMFLOAT3 m_cameraRotation = { 0,0,0 };
 };
 

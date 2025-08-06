@@ -4,7 +4,6 @@
 #include <Physics/Character/CharacterVirtual.h>
 #include <Physics/Collision/ContactListener.h>
 #include <Physics/Collision/BroadPhase/BroadPhaseLayer.h>
-
 #include "BuoyancySystem.h"
 #include "DebugLog.h"
 using namespace JPH;
@@ -202,6 +201,21 @@ public:
 		//========ここでOnCollisionExitのロジックを追加する
 	}
 };
+
+class ExcludeLayerFilter : public ObjectLayerFilter
+{
+public:
+	explicit ExcludeLayerFilter()
+	{
+	}
+
+	virtual bool ShouldCollide(ObjectLayer inLayer) const override
+	{
+		return inLayer != Layers::PLAYER;
+	}
+
+};
+
 
 
 class MyPlayerContactListener:

@@ -1,6 +1,9 @@
 ﻿#include "Player.h"
 #include <memory>
 
+#include "GameApp.h"
+#include "RenderState.h"
+
 namespace
 {
 	constexpr float MoveSpeed = 5.f;
@@ -34,6 +37,7 @@ void Player::Init()
 	m_pHungerComponent = std::make_shared<HungerComponent>(HungerInitialValue);
 	m_pHungerComponent->SetStarveSpeed(HungerStarveSpeed); //空腹度の減少速度を設定（1秒あたり1ポイント減少）
 	AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent);		// HungerComponentをPlayerに追加
+
 
 }
 
@@ -80,6 +84,9 @@ void Player::Update(float dt)
 
 	//=======Status Update
 	m_pHungerComponent->Update(dt);	//空腹度
+
+
+
 }
 
 void Player::Draw()
@@ -109,12 +116,12 @@ void Player::Draw()
 			position
 		};
 
+		//Set Transparent draw
+		GameApp::SetDepthStencilState(RenderStates::DSSNoDepthWrite);
 		debugRender->Render(t);
 	}
 #endif
 
-	//Ui Draw
-	m_pHungerComponent->Draw();	//Hunger UI
 
 }
 

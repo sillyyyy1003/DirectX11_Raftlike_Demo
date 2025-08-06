@@ -1,4 +1,5 @@
 ﻿#include "Inventory.h"
+#include "DebugLog.h"
 
 Inventory::Inventory(int maxSlots):
 	m_slots(maxSlots)

@@ -20,6 +20,7 @@ private:
 	typedef std::vector<std::shared_ptr<MeshBuffer>> Meshes;
 	Meshes m_meshes;
 
+	DirectX::XMFLOAT3 m_modelSize = {};
 public:
 
 	Model();
@@ -32,6 +33,8 @@ public:
 	void Init(const char* filePath);
 
 	void Draw() override;
+
+	DirectX::XMFLOAT3 GetModelSize() const override { return m_modelSize; }
 
 };
 

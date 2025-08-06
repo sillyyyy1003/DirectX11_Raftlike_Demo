@@ -209,4 +209,44 @@ inline DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& vec, float scalar)
     return DirectX::XMFLOAT3(vec.x * inv, vec.y * inv, vec.z * inv);
 }
 
+inline DirectX::XMFLOAT3 Lerp(const DirectX::XMFLOAT3& a, const DirectX::XMFLOAT3& b, float t)
+{
+	DirectX::XMVECTOR va = XMLoadFloat3(&a);
+	DirectX::XMVECTOR vb = XMLoadFloat3(&b);
+	DirectX::XMVECTOR vr = DirectX::XMVectorLerp(va, vb, t);
+	DirectX::XMFLOAT3 result;
+    XMStoreFloat3(&result, vr);
+    return result;
+}
+
+inline DirectX::XMFLOAT3 EaseOutCubic(const DirectX::XMFLOAT3& a, const DirectX::XMFLOAT3& b, float t)
+{
+    using namespace DirectX;
+
+    float easedT = 1.0f - powf(1.0f - t, 3.0f);
+
+    XMVECTOR va = XMLoadFloat3(&a);
+    XMVECTOR vb = XMLoadFloat3(&b);
+
+    XMVECTOR vResult = XMVectorLerp(va, vb, easedT);
+
+    XMFLOAT3 result;
+    XMStoreFloat3(&result, vResult);
+    return result;
+}
+
+inline DirectX::XMFLOAT4 Lerp(const DirectX::XMFLOAT4& a, const DirectX::XMFLOAT4& b, float t)
+{
+    return {
+        a.x + (b.x - a.x) * t,
+        a.y + (b.y - a.y) * t,
+        a.z + (b.z - a.z) * t,
+        a.w + (b.w - a.w) * t
+    };
+}
+
+inline float EaseInOut(float t)
+{
+    return t < 0.5f ? 4.0f * t * t * t : 1.0f - powf(-2.0f * t + 2.0f, 3.0f) / 2.0f;
+}
 #endif

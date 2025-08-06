@@ -79,6 +79,7 @@ void PlayerCharacter::Init()
 	settings->mInnerBodyShape = CreateInnerBody ? m_innerStandingShape : nullptr;
 	settings->mInnerBodyLayer = Layers::PLAYER;
 
+
 	//Init character
 	m_pCharacter = new CharacterVirtual(settings, RVec3::sZero(), Quat::sIdentity(), 0, PhysicsManager::Instance().GetPhysicsSystem());
 	m_pCharacter->SetCharacterVsCharacterCollision(&m_characterVsCharacterCollision);//プレイヤー間の衝突を有効化
@@ -88,6 +89,7 @@ void PlayerCharacter::Init()
 	for (CharacterVirtual* character : m_characterVsCharacterCollision.mCharacters)
 		character->SetListener(PhysicsManager::Instance().GetPlayerContactListener());
 
+	
 }
 
 void PlayerCharacter::Update(float deltaTime)
@@ -199,12 +201,6 @@ void PlayerCharacter::SetMoveDir(Vec3Arg& moveDir)
 {
 	Quat rotation = m_pCharacter->GetRotation();	//Local Rotationを獲得
 	m_moveDirection = rotation * moveDir;			//進行方向を計算
-	//Vec3 moveStep = m_moveSpeed * m_moveDirection;	//移動量計算
-
-	//moveStep.SetY(0);								//Y軸を０にする
-	//m_pCharacter->SetLinearVelocity(moveStep);
-
-	//m_desiredVelocity = moveStep;					//移動量を保存
 }
 
 DirectX::XMFLOAT3 PlayerCharacter::GetPosition()

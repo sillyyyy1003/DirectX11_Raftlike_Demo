@@ -141,6 +141,26 @@ void PhysicsManager::SetBodyCreationMass(float _mass, BodyCreationSettings& sett
 	settings.mOverrideMassProperties = EOverrideMassProperties::CalculateInertia;
 }
 
+void PhysicsManager::AddPhysicsComponent(BodyID id, PhysicsComponent* component)
+{
+	m_physicsComponentMap.emplace(id, component);
+}
+
+PhysicsComponent* PhysicsManager::GetPhysicsComponent(BodyID id)
+{
+	auto it = m_physicsComponentMap.find(id);
+	if (it != m_physicsComponentMap.end())
+	{
+		return it->second;
+	}
+	else
+	{
+		DebugLog::LogWarning("[PhysicsManager] Didn't find the physics component!");
+		return nullptr;
+	}
+
+}
+
 
 
 

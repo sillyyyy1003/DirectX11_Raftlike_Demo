@@ -5,13 +5,14 @@
 #include <Physics/Body/BodyCreationSettings.h>
 #include <Physics/Body/BodyID.h>
 #include "Component.hpp"
+#include "GameObject.h"
 #include "Layers.h"
 #include "Transform.h"
 
 /// @brief 物理コンポーネント
 ///	Now Only box collider
 ///	todo: SphereCollider, CapsuleCollider, MeshCollider, etc.
-class PhysicsComponent:public Component
+class PhysicsComponent :public Component
 {
 public:
 	enum class Type :uint8_t
@@ -25,15 +26,15 @@ private:
 
 	JPH::BodyID m_bodyID;
 	float m_mass;		//Dynamic Objectの質量
-
+	GameObject* m_gameObject;
 
 public:
 
 	PhysicsComponent();
-	~PhysicsComponent();
+	~PhysicsComponent() override;
 
 	void Init(const BodyCreationSettings& settings,EActivation activation);
-	void init(BodyID id);
+	void Init(BodyID id);
 
 	/// @brief 位置設定
 	/// @param pos 位置
@@ -76,5 +77,9 @@ public:
 
 	EMotionType GetEmotionType();
 
+	/// @brief 所属しているGameObjectを設定
+	/// @param gameObject 
+	void SetGameObject(GameObject* gameObject) override { m_gameObject = gameObject; }
+	GameObject* GetGameObjectByComponent() const  { return m_gameObject; }
 };
 

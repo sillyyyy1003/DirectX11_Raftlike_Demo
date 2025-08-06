@@ -15,7 +15,7 @@ public:
 	///	@param stacks  シリンダー垂直分割数
 	void Init(UINT levels, UINT slices,UINT stacks);
 	void Draw() override;
-
+	DirectX::XMFLOAT3 GetModelSize() const override { return { 1,0.5f,1 }; }
 	
 private:
 	std::unique_ptr<MeshBuffer> m_Mesh;

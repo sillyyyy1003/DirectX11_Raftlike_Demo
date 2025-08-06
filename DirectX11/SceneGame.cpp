@@ -1,6 +1,9 @@
 ﻿#include "SceneGame.h"
-#include <DirectXMath.h>
 
+#include <DirectXMath.h>
+#include "d3dUtil.h"
+#include "DayLight.h"
+#include "GameApp.h"
 #include "Geometry.h"
 #include "HungerComponent.h"
 #include "ItemDataBase.h"
@@ -9,6 +12,7 @@
 #include "PBREffect.h"
 #include "PhysicsManager.h"
 #include "Player.h"
+#include "RenderState.h"
 #include "ShapeFactory.h"
 #include "SkyboxEffect.h"
 #include "UIBasicEffect.h"
@@ -16,66 +20,51 @@
 #include "UIManager.h"
 #include "Skybox.h"
 
+
 namespace
 {
-	static constexpr DirectX::XMFLOAT4 DefaultLightColor = { 0.5f, 0.5f, 0.5f, 1.0f }; // Ambient light color
+	static constexpr DirectX::XMFLOAT4 DefaultLightColor = { 1.0f, 1.0f, 1.0, 1.0f }; // Ambient light color
 	static constexpr float WaterWidth = 50.f;
-	static constexpr float waterHeight = 50.f;
+	static constexpr float waterHeight = 1.f;
+
+	//Collider Setting
+	static constexpr DirectX::XMFLOAT3 HalfUnitScale = { 0.5f,0.5f,0.5f };	//Default Cube Size (length,height,width={1,1,1})
+	static constexpr DirectX::XMFLOAT3 HalfFloorScale = { 5,0.2f,5 };
+
+	static constexpr DirectX::XMFLOAT3 DefaultCameraPos = { 0,10,-10 };	//Default Camera Position
+	static constexpr DirectX::XMFLOAT3 DefaultCameraTarget = { 0,0,0 };	//Default Camera Target Position
+
+	static constexpr DirectX::XMFLOAT3 DefaultLightPosition = { 0,10,0 };	//Default Light Position
+
+
+	static constexpr DirectX::XMFLOAT3 UIAimSize = { 32,32,1.f };
 }
 void SceneGame::Init()
 {
 	//============Init Player
 	Player* player = CreateObj<Player>("Player");
 	player->Init();
-	player->GetCameraController()->GetCamera()->SetPos({ 0,10,-10 });
-	player->GetCameraController()->GetCamera()->SetTarget({ 0,0,0 });
+	player->GetCameraController()->GetCamera()->SetPos(DefaultCameraPos);
+	player->GetCameraController()->GetCamera()->SetTarget(DefaultCameraTarget);
 	m_pCurrentCamera = player->GetCameraController()->GetCamera();
 
 	//============ Init light
-	DirLight* light = CreateObj<DirLight>("DirLight");
-	light->SetPosition({ 0, 10, 0 });
+	DirLight* light = CreateObj<DayLight>("DayLight");
+	light->SetPosition(DefaultLightPosition);
 	light->SetAmbient(DefaultLightColor);
-	light->SetDiffuse(DefaultLightColor);
-	light->SetIntensity(10.f);
+	light->SetDiffuse({0.5,0.5,0.5,1});
 
 	//===========Init Texture
 	Texture* albedoTex = CreateObj<Texture>("AlbedoTex");
 	Texture* normalTex = CreateObj<Texture>("NormalTex");
 	Texture* metallicTex = CreateObj<Texture>("MetallicTex");
 	Texture* uiAimTex = CreateObj<Texture>("UiAimTex");
-	//Texture* skyboxTex = CreateObj<Texture>("SkyboxTex");
 
 	albedoTex->Create("Assets/Texture/Foods_DefaultMaterial_AlbedoTransparency.png");
 	normalTex->Create("Assets/Texture/Foods_DefaultMaterial_Normal.png");
 	metallicTex->Create("Assets/Texture/Foods_DefaultMaterial_MetallicSmoothness.png");
 	uiAimTex->Create("Assets/Texture/UI/UI_Aim_128x128.png");
-	//skyboxTex->Create("Assets/Texture/Skybox/Daylight_box.dds");
-
-	//Skyboxのテクスチャを作成
-	Texture* dayLight0 = CreateObj<Texture>("DayLight0");
-	Texture* dayLight1 = CreateObj<Texture>("DayLight1");
-	Texture* dayLight2 = CreateObj<Texture>("DayLight2");
-	Texture* dayLight3 = CreateObj<Texture>("DayLight3");
-	Texture* dayLight4 = CreateObj<Texture>("DayLight4");
-	Texture* dayLight5 = CreateObj<Texture>("DayLight5");
-	dayLight0->Create("Assets/Texture/Skybox/daylight0.png");
-	dayLight1->Create("Assets/Texture/Skybox/daylight1.png");
-	dayLight2->Create("Assets/Texture/Skybox/daylight2.png");
-	dayLight3->Create("Assets/Texture/Skybox/daylight3.png");
-	dayLight4->Create("Assets/Texture/Skybox/daylight4.png");
-	dayLight5->Create("Assets/Texture/Skybox/daylight5.png");
-	std::vector<Texture*> textures;	
-	textures.push_back(dayLight0);
-	textures.push_back(dayLight1);
-	textures.push_back(dayLight2);
-	textures.push_back(dayLight3);
-	textures.push_back(dayLight4);
-	textures.push_back(dayLight5);
-
-	TextureCube* textureCube = CreateObj<TextureCube>("TextureCube");
-	textureCube->CreateTextureCube(1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
-	textureCube->CopyTextures(textures);
-
+	
 
 	//============Get Shader
 	VertexShader* basicPosNormalTexVS = GetObj<VertexShader>("BasicPosNormalTexVS");
@@ -84,8 +73,7 @@ void SceneGame::Init()
 	VertexShader* pbrVS = GetObj<VertexShader>("PBRVS");
 	PixelShader* uiElementPS = GetObj<PixelShader>("UIElementPS");
 	VertexShader* uiElementVS = GetObj<VertexShader>("UIElementVS");
-	VertexShader* skyboxVS = GetObj<VertexShader>("SkyboxVS");
-	PixelShader* skyboxPS = GetObj<PixelShader>("SkyboxPS");
+
 
 	//===========Init Effect
 	BasicEffect* basicEffect = CreateObj<BasicEffect>("BasicEffect");
@@ -110,11 +98,7 @@ void SceneGame::Init()
 	debugEffect->InitCamera(player->GetCameraController()->GetCamera());
 	debugEffect->InitEffectDirLight(light);
 
-	SkyboxEffect* skyboxEffect = CreateObj<SkyboxEffect>("SkyboxEffect");
-	skyboxEffect->InitPixelShader(skyboxPS);
-	skyboxEffect->InitVertexShader(skyboxVS);
-	skyboxEffect->InitCamera(player->GetCameraController()->GetCamera());
-	skyboxEffect->InitTexture(textureCube);
+
 
 	//===========Init Material
 	Material* blinnPhongMat = CreateObj<Material>("BlinnPhongMaterial");
@@ -131,7 +115,7 @@ void SceneGame::Init()
 	debugMaterial->SetDiffuse({ 0,1,0,0.2f });
 
 	Material* floorMaterial = CreateObj<Material>("FloorMaterial");
-	floorMaterial->SetDiffuse({ 0.2f,0.2f,0.6f,0.4f });
+	floorMaterial->SetDiffuse({ 0.2f,0.2f,0.6f,1.f });
 
 	Material* uiAimMaterial = CreateObj<Material>("UIAimMaterial");
 	uiAimMaterial->SetTexture(Material::Albedo, uiAimTex);
@@ -148,25 +132,25 @@ void SceneGame::Init()
 	appleRenderComponent->SetMaterial(foodMaterial);
 	appleRenderComponent->SetEffect(pbrEffect);
 
+	std::shared_ptr<RenderComponent> bananaRenderComponent = std::make_shared<RenderComponent>();
+	bananaRenderComponent->SetModel(ModelManager::Instance().GetModel("Food_Banana"));
+	bananaRenderComponent->SetMaterial(foodMaterial);
+	bananaRenderComponent->SetEffect(pbrEffect);
+
 	//===========Register food data
 	std::shared_ptr<Food> apple = std::make_shared<Food>(20.f);
 	ItemDataBase::Instance().RegisterItem("Apple", apple);
+	std::shared_ptr<Food> banana = std::make_shared<Food>(10.f);
+	ItemDataBase::Instance().RegisterItem("Banana", banana);
 
 	//===========Init item
 	ItemInstance* appleInstance = CreateObj<ItemInstance>("AppleInstance");
 	appleInstance->InitItem(ItemDataBase::Instance().GetItem("Apple"), 5);
 	appleInstance->AddComponent(MyComponent::ComponentType::Render, appleRenderComponent);
 
-	ItemInstance* appleInstance1 = CreateObj<ItemInstance>("AppleInstance1");
-	appleInstance1->InitItem(ItemDataBase::Instance().GetItem("Apple"), 2);
-	appleInstance1->AddComponent(MyComponent::ComponentType::Render, appleRenderComponent);
-
-	GameObject* cubeObject = CreateObj<GameObject>("CubeObject");
-	std::shared_ptr<RenderComponent> cubeRenderComponent = std::make_shared<RenderComponent>();
-	cubeObject->AddComponent(MyComponent::ComponentType::Render, cubeRenderComponent);
-	cubeRenderComponent->SetModel(ModelManager::Instance().GetModel("Cube"));
-	cubeRenderComponent->SetMaterial(blinnPhongMat);
-	cubeRenderComponent->SetEffect(basicEffect);
+	ItemInstance* bananaInstance = CreateObj<ItemInstance>("BananaInstance");
+	bananaInstance->InitItem(ItemDataBase::Instance().GetItem("Banana"), 2);
+	bananaInstance->AddComponent(MyComponent::ComponentType::Render, bananaRenderComponent);
 
 	GameObject* floor = CreateObj<GameObject>("Floor");
 	std::shared_ptr<RenderComponent> floorRenderComponent = std::make_shared<RenderComponent>();
@@ -180,7 +164,7 @@ void SceneGame::Init()
 	uiAim->SetMaterial(uiAimMaterial);
 	uiAim->SetModel(ModelManager::Instance().GetModel("Square"));
 	uiAim->GetTransform().SetPosition({ 0,0,0.1f });
-	uiAim->GetTransform().SetScale({ 32,32,1.f });
+	uiAim->GetTransform().SetScale(UIAimSize);
 
 	UIBar* uiBar = CreateObj<UIBar>("UiBar");
 	uiBar->Init({ -500.f,-200.f,0.1f },
@@ -190,15 +174,13 @@ void SceneGame::Init()
 		uiBasicEffect,
 		uiBasicEffect);
 
-	UIButton* uiButton = CreateObj<UIButton>("UiButton");
-	uiButton->Init(uiBasicEffect, uiMaterial, ModelManager::Instance().GetModel("Square"), GetObj<UIFontSet>("UIFontSet"), "OptionFont", GetObj<UIBrush>("UiBrush"));
-	uiButton->SetButton({ -300,0,0.5f }, 100.f, 30.f);
-	uiButton->SetStaticText("Button1");
-	uiButton->SetCenterAlignment();
 
-	UIManager::GetInstance().AddUiLayer("Button", 1);
-	UIManager::GetInstance().GetUILayer("Button")->AddComponent(uiButton);
+	UIManager::GetInstance().ClearLayers();
+	UIManager::GetInstance().AddUiLayer("HungerBar", 2);
+	UIManager::GetInstance().GetUILayer("HungerBar")->AddComponent(uiBar);
 
+	UIManager::GetInstance().AddUiLayer("Aim", 3);
+	UIManager::GetInstance().GetUILayer("Aim")->AddComponent(uiAim);
 	//=====物理の初期化
 
 	// Create the settings for the collision volume (the shape).
@@ -209,41 +191,40 @@ void SceneGame::Init()
 
 	// Create the actual rigid body
 
-	RefConst<Shape> defaultBoxSettings = ShapeFactory::Instance().GetOrCreateBox(RVec3(0.5f, 0.5f, 0.5f));
-	BodyCreationSettings cubeBoxSettings(defaultBoxSettings, { 0,0,0 }, Quat::sIdentity(), EMotionType::Kinematic, Layers::ITEM);
+	RefConst<Shape> defaultBoxSettings = ShapeFactory::Instance().GetOrCreateBox(RVec3(HalfUnitScale.x,HalfUnitScale.y,HalfUnitScale.z));
+	
 
-	std::shared_ptr<PhysicsComponent> cubeCollider = make_shared<PhysicsComponent>();
-	cubeCollider->Init(cubeBoxSettings, EActivation::Activate);  //Create& Add
-	cubeObject->AddComponent(MyComponent::ComponentType::Physics, cubeCollider);
-	cubeObject->GetTransform().SetScale(1, 1, 1);
-	cubeObject->GetTransform().SetPosition({ -3, 0.5f, 0 });
-
-	BodyCreationSettings appleBoxSettings(new BoxShape(RVec3(0.25f, 0.25f, 0.25f)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM);
-	PhysicsManager::Instance().SetBodyCreationMass(1.f, appleBoxSettings);// Set the mass properties for the apple box
 	std::shared_ptr<PhysicsComponent> appleCollider = make_shared<PhysicsComponent>();
-	appleCollider->Init(appleBoxSettings, EActivation::Activate);  //Create& Add
 	appleInstance->AddComponent(MyComponent::ComponentType::Physics, appleCollider);
-	appleInstance->GetTransform().SetScale(0.1f, 0.1f, 0.1f);
+	float appleScale = 0.1f;
+	DirectX::XMFLOAT3 appleColliderSize = ModelManager::Instance().GetModel("Food_Apple")->GetModelSize();
+	BodyCreationSettings appleBoxSettings(new BoxShape(RVec3(appleColliderSize.x * 0.5f * appleScale, appleColliderSize.y * 0.5f * appleScale, appleColliderSize.z * 0.5f * appleScale)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM); //Init apple cube
+	PhysicsManager::Instance().SetBodyCreationMass(1.f, appleBoxSettings);// Set the mass properties for the apple box
+	appleCollider->Init(appleBoxSettings, EActivation::Activate);  //Create& Add
+	appleInstance->GetTransform().SetScale(appleScale, appleScale, appleScale);
 	appleInstance->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->SetPosition(0, 3, 3);
 
-	std::shared_ptr<PhysicsComponent> appleCollider1 = make_shared<PhysicsComponent>();
-	appleCollider1->Init(appleBoxSettings, EActivation::Activate);  //Create& Add
-	appleInstance1->AddComponent(MyComponent::ComponentType::Physics, appleCollider1);
-	appleInstance1->GetTransform().SetScale(0.1f, 0.1f, 0.1f);
-	appleInstance1->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->SetPosition(0, 3, 0);
+	std::shared_ptr<PhysicsComponent> bananaCollider = make_shared<PhysicsComponent>();
+	bananaInstance->AddComponent(MyComponent::ComponentType::Physics, bananaCollider);
+	float bananaScale = 0.1f;
+	DirectX::XMFLOAT3 bananaColliderSize = ModelManager::Instance().GetModel("Food_Apple")->GetModelSize();
+	BodyCreationSettings bananaBoxSettings(new BoxShape(RVec3(bananaColliderSize.x*0.5f*bananaScale, bananaColliderSize.y * 0.5f * bananaScale, bananaColliderSize.z * 0.5f * bananaScale)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM); //Init apple cube
+	PhysicsManager::Instance().SetBodyCreationMass(1.f, bananaBoxSettings);// Set the mass properties for the apple box
+	bananaCollider->Init(bananaBoxSettings, EActivation::Activate);  //Create& Add
+	bananaInstance->GetTransform().SetScale(bananaScale,bananaScale,bananaScale);
+	bananaInstance->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->SetPosition(-3, 3, 0);
 
 
-	BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(5.f, 0.05f, 5.f)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::BOAT);
+	BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(HalfFloorScale.x,HalfFloorScale.y,HalfFloorScale.z)), RVec3().sZero(), Quat::sIdentity(), EMotionType::Dynamic, Layers::BOAT);
 	std::shared_ptr<PhysicsComponent> floorCollider = make_shared<PhysicsComponent>();
 	floorCollider->Init(floorBoxSettings, EActivation::Activate);
 	floor->AddComponent(MyComponent::ComponentType::Physics, floorCollider);
-	floor->GetTransform().SetScale(10.f, .1f, 10.f);
-	floor->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->SetPosition(0, 0, 0);
+	floor->GetTransform().SetScale(HalfFloorScale * 2.f);
+
 
 	// Init Buoyancy system
 	BuoyancySystem* buoyancySystem = CreateObj<BuoyancySystem>("BuoyancySystem");
-	buoyancySystem->Init(20.f, 2.f);
-
+	buoyancySystem->Init(WaterWidth,waterHeight);
 
 
 	//Collider Debug Render Component配置
@@ -252,16 +233,14 @@ void SceneGame::Init()
 	debugColliderRender->SetMaterial(debugMaterial);
 	debugColliderRender->SetModel(ModelManager::Instance().GetModel("Capsule"));
 
+
 	//Debug Collider Render ComponentをPlayerに追加
 	player->AddComponent(MyComponent::ComponentType::DebugRender, debugColliderRender);
 	//Set Ui Component to hunger component
 	player->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->SetUIComponent(uiBar);
-	// m_pUIElement->SetProvider(m_pPlayer.get(), UIFormat::FormatHunger);
 
-
-	//============Init Skybox
-	Skybox* skybox = CreateObj<Skybox>("Skybox");
-	skybox->Init(skyboxEffect);
+	//===========Set skybox camera
+	GetObj<Skybox>("Skybox")->GetSkyboxEffect()->InitCamera(m_pCurrentCamera);
 
 }
 
@@ -272,20 +251,20 @@ void SceneGame::UnInit()
 void SceneGame::Update(float tick)
 {
 	//===============Handle Input
+	GetObj<Skybox>("Skybox")->Update(tick);
 
 	//===============Physics Update
 	GetObj<BuoyancySystem>("BuoyancySystem")->PreUpdate(tick);
 	PhysicsManager::Instance().Update(tick); // 物理システムの更新
 
 	//===============Light Update
-	GetObj<DirLight>("DirLight")->Update(tick);
+	GetObj<DayLight>("DayLight")->Update(tick);
 
-
-	GetObj<GameObject>("CubeObject")->Update(tick);
+	//===============Object Update
 	GetObj<GameObject>("Floor")->Update(tick);
 
 	GetObj<ItemInstance>("AppleInstance")->Update(tick);
-	GetObj<ItemInstance>("AppleInstance1")->Update(tick);
+	GetObj<ItemInstance>("BananaInstance")->Update(tick);
 
 	GetObj<Player>("Player")->Update(tick);
 	UIManager::GetInstance().Update(tick);
@@ -293,7 +272,9 @@ void SceneGame::Update(float tick)
 
 void SceneGame::Draw()
 {
+	GetObj<Skybox>("Skybox")->Draw();
 
+	GameApp::SetDepthStencilState(RenderStates::DSSLessEqual);
 #if defined(_DEBUG) || defined(DEBUG)
 	//Geometry
 	DirectX::XMFLOAT4X4 fmat;
@@ -322,20 +303,13 @@ void SceneGame::Draw()
 	Geometry::DrawLines();
 #endif
 
-	GetObj<Skybox>("Skybox")->Draw();
-
-	GetObj<GameObject>("CubeObject")->Draw();
 	GetObj<GameObject>("Floor")->Draw();
-	GetObj<Player>("Player")->Draw();
 	GetObj<ItemInstance>("AppleInstance")->Draw();
-	GetObj<ItemInstance>("AppleInstance1")->Draw();
+	GetObj<ItemInstance>("BananaInstance")->Draw();
+
+	GetObj<Player>("Player")->Draw();
 
 	//Ui描画
-	UIRender* uiAim = GetObj<UIRender>("UiAim");
-	uiAim->Draw();
-	UIBar* uiBar = GetObj <UIBar>("UiBar");
-	uiBar->Draw();
-
-	//m_pUIElement->Draw();
+	GameApp::SetDepthStencilState(RenderStates::DSSNoDepthTest);
 	UIManager::GetInstance().Draw();
 }

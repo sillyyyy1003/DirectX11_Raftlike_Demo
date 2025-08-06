@@ -21,7 +21,6 @@ public:
 
 	void PreUpdate(float dt);
 
-
 private:
 
 	Mutex m_bodiesInWaterMutex;
@@ -29,6 +28,5 @@ private:
 	BodyID m_waterSensor;
 
 	
-
 };
 

@@ -25,9 +25,13 @@ void BuoyancySystem::Init(float waterWidth, float waterHeight)
 	PhysicsManager::Instance().GetPhysicsSystem()->SetContactListener(this);
 
 	// Create water sensor. We use this to detect which bodies entered the water
-	BodyCreationSettings waterSensor(new BoxShape(Vec3(waterWidth,waterHeight,waterWidth)), RVec3::sZero(), Quat::sIdentity(), EMotionType::Static, Layers::SENSOR);
+	// aware that box shape use half extent
+	// aware that water sensor pos should be under the horizon which is -0.5*height
+	BodyCreationSettings waterSensor(new BoxShape(Vec3(waterWidth / 2.f, waterHeight / 2.f, waterWidth / 2.f)), Vec3(0, -waterHeight / 2.f, 0), Quat::sIdentity(), EMotionType::Static, Layers::SENSOR);
 	waterSensor.mIsSensor = true;
+	// waterSensor doesn't have a rigid body so no need to add to physics bodies container
 	m_waterSensor = PhysicsManager::Instance().GetBodyInterface().CreateAndAddBody(waterSensor, EActivation::Activate);
+
 }
 
 void BuoyancySystem::OnContactAdded(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold,
@@ -56,9 +60,16 @@ void BuoyancySystem::OnContactRemoved(const SubShapeIDPair& inSubShapePair)
 {
 	lock_guard<Mutex> lock(m_bodiesInWaterMutex);
 	if (inSubShapePair.GetBody1ID() == m_waterSensor)
+	{
+		DebugLog::Log("[BuoyancySystem] : Remove object from water! There are {} objects in water.",m_bodiesInWater.size());
 		m_bodiesInWater.erase(std::find(m_bodiesInWater.begin(), m_bodiesInWater.end(), inSubShapePair.GetBody2ID()));
+	}
 	else if(inSubShapePair.GetBody1ID()==m_waterSensor)
+	{
+		DebugLog::Log("[BuoyancySystem] : Remove object from water! There are {} objects in water.", m_bodiesInWater.size());
 		m_bodiesInWater.erase(std::find(m_bodiesInWater.begin(), m_bodiesInWater.end(), inSubShapePair.GetBody1ID()));
+	}
+		
 }
 
 void BuoyancySystem::PreUpdate(float dt)
@@ -72,10 +83,10 @@ void BuoyancySystem::PreUpdate(float dt)
 		Body& body = body_lock.GetBody();
 		if(body.IsActive())
 		{
-			// Assume water y height=0
+			// Assume water y height=0& the surface is flat
+			// todo : make the surface move!
 			RVec3 surface_position = body.GetCenterOfMassPosition();
-			surface_position.SetY(0.f);
-			// Assume water normal ={0,1,0)
+			surface_position.SetY(-0.5f);
 			Vec3 surface_normal = { 0,1,0 };
 
 			float buoyancy, linear_drag, angular_drag;

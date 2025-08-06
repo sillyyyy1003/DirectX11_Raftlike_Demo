@@ -5,8 +5,12 @@
 #include "UIGlossEffect.h"
 #include "UIManager.h"
 #include "d3dUtil.h"
+#include "FirstPersonCamera.h"
+#include "GameApp.h"
 #include "KInput.h"
-
+#include "RenderState.h"
+#include "Skybox.h"
+#include "SkyboxEffect.h"
 namespace 
 {
 	static constexpr DirectX::XMFLOAT3 StartButtonPosition = { 450,-50,0.5f };
@@ -19,6 +23,8 @@ namespace
 	static constexpr float ButtonMoveSpeed = 3.f;
 	static constexpr float ButtonScale = 0.8f;
 	static constexpr float TitleScale =1.8f;
+
+	static constexpr float RotateSpeed = 0.02f;
 
 }
 
@@ -67,8 +73,6 @@ void SceneTitle::Init()
 	optionButton->SetButton(OptionButtonPosition, ButtonSize.x * ButtonScale, ButtonSize.y * ButtonScale);  // Set button size & position
 	optionButton->InitMoveParam(ButtonMoveSpeed, ButtonAmplitude);// set button interactive param
 
-
-
 	UIButtonMove* exitButton = CreateObj<UIButtonMove>("exitButton");
 	exitButton->Init(uiBasicEffect, exitMat, ModelManager::Instance().GetModel("Square"));
 	exitButton->SetButton(ExitButtonPosition, ButtonSize.x * ButtonScale, ButtonSize.y * ButtonScale);  // Set button size & position
@@ -82,10 +86,14 @@ void SceneTitle::Init()
 	titleLogo->GetTransform().SetScale(LogoSize * TitleScale);
 
 	//===========Register button to ui manager
+	UIManager::GetInstance().ClearLayers();
 	UIManager::GetInstance().AddUiLayer("Button", 1);
 	UIManager::GetInstance().GetUILayer("Button")->AddComponent(startButton);
 	UIManager::GetInstance().GetUILayer("Button")->AddComponent(optionButton);
 	UIManager::GetInstance().GetUILayer("Button")->AddComponent(exitButton);
+
+	UIManager::GetInstance().AddUiLayer("TitleLogo", 2);
+	UIManager::GetInstance().GetUILayer("TitleLogo")->AddComponent(titleLogo);
 
 	//===========Set Button Event
 	startButton->SetOnClick([this]()
@@ -130,7 +138,13 @@ void SceneTitle::Init()
 		});
 
 	startButton->ActiveMove();
-	
+
+	//=======Init Camera
+	FirstPersonCamera* camera = CreateObj<FirstPersonCamera>("Camera");
+	camera->SetPosition({ 0,0,-5 });
+	camera->SetTarget({ 0,0,0 });
+	GetObj<Skybox>("Skybox")->GetSkyboxEffect()->InitCamera(camera);
+	m_pCurrentCamera = camera;
 }
 
 void SceneTitle::UnInit()
@@ -139,6 +153,7 @@ void SceneTitle::UnInit()
 
 void SceneTitle::Update(float tick)
 {
+
 	// Handle Input
 	if(KInput::IsKeyTrigger(VK_ESCAPE))
 	{
@@ -146,17 +161,24 @@ void SceneTitle::Update(float tick)
 		return;
 	}
 
-	// Button Update
-	UIManager::GetInstance().Update(tick);
+
+	// Camera Update
+	m_pCurrentCamera->m_transform.Rotate({ 0,tick * RotateSpeed,0 });
 
 	// todo: Get another floating boat in sky box as background
+	GetObj<Skybox>("Skybox")->Update(tick);
+
+
+	// Button Update
+	UIManager::GetInstance().Update(tick);
 
 }
 
 void SceneTitle::Draw()
 {
-	// Draw Title
-	GetObj<UIRender>("TitleLogo")->Draw();
+	GetObj<Skybox>("Skybox")->Draw();
+
 	// Draw Buttons
+	GameApp::SetDepthStencilState(RenderStates::DSSNoDepthTest);
 	UIManager::GetInstance().Draw();
 }

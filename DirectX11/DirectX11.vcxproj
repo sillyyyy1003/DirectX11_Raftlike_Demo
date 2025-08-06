@@ -178,6 +178,7 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="D3DApp.cpp" />
     <ClCompile Include="d3dUtil.cpp" />
+    <ClCompile Include="DayLight.cpp" />
     <ClCompile Include="DebugLog.cpp" />
     <ClCompile Include="DirLight.cpp" />
     <ClCompile Include="DXTrace.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="D3DApp.h" />
     <ClInclude Include="d3dUtil.h" />
+    <ClInclude Include="DayLight.h" />
     <ClInclude Include="DebugLog.h" />
     <ClInclude Include="DirLight.h" />
     <ClInclude Include="DXTrace.h" />

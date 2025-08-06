@@ -32,6 +32,7 @@ public:
 	void SetPosition(const DirectX::XMFLOAT3& pos);
 	void Jump();
 
+	CharacterVirtual* GetCharacterVirtual() { return m_pCharacter; }
 private:
 
 	Ref<CharacterVirtual> m_pCharacter;
@@ -52,6 +53,8 @@ private:
 
 	// List of active characters in the scene so they can collide
 	CharacterVsCharacterCollisionSimple m_characterVsCharacterCollision;
+
+
 
 #ifdef _DEBUG
 	float m_debugDrawRadius = 0.f;

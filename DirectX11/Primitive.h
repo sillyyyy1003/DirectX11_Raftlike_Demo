@@ -12,6 +12,8 @@ public:
 	virtual ~Primitive() = default;
 
 	virtual void Draw() = 0; // pure virtual function to draw the primitive
+	virtual DirectX::XMFLOAT3 GetModelSize() const = 0;
+
 };
 
 /// <summary>
@@ -29,5 +31,6 @@ public:
 
 	void Init();
 	void Draw() override;
+	DirectX::XMFLOAT3 GetModelSize() const override { return { 1,1,0.1f }; }
 };
 

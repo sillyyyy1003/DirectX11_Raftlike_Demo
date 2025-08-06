@@ -1,7 +1,5 @@
 ﻿#include "PhysicsComponent.h"
 #include <Physics/Body/Body.h>
-
-#include "PhysicsManager.h"
 #include "PhysicsManager.h"
 
 PhysicsComponent::PhysicsComponent()
@@ -14,12 +12,14 @@ PhysicsComponent::~PhysicsComponent()
 
 void PhysicsComponent::Init(const BodyCreationSettings& settings, EActivation activation)
 {
-	m_bodyID = PhysicsManager::Instance().GetBodyInterface().CreateAndAddBody(settings, activation);
+	m_bodyID = PhysicsManager::Instance().CreateRigidBody(settings, activation);
+	PhysicsManager::Instance().AddPhysicsComponent(m_bodyID, this);
 }
 
-void PhysicsComponent::init(BodyID id)
+void PhysicsComponent::Init(BodyID id)
 {
 	m_bodyID = id;
+	PhysicsManager::Instance().AddPhysicsComponent(m_bodyID, this);
 }
 
 
@@ -58,6 +58,7 @@ void PhysicsComponent::SyncPhysicsToTransform(Transform& transform)
 {
 	transform.SetPosition(GetPosition());	//Sync Position
 	transform.SetRotation(GetRotation());	//Sync Rotation
+
 }
 
 void PhysicsComponent::SyncTransformToPhysics(const Transform& transform)
