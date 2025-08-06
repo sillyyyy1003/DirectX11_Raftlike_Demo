@@ -21,7 +21,7 @@ class SceneBase
 {
 private:
 	using Objects = std::map<std::string, std::shared_ptr<Component>>;
-	using Items = std::list<std::string >;
+	using Items = std::list<std::string>;
 public:
 	SceneBase();
 	virtual ~SceneBase();

@@ -4,12 +4,13 @@
 #include "DebugLog.h"
 #include "FirstPersonCamera.h"
 #include "KInput.h"
+#include "PlayerCharacter.h"
 #include "ThirdPersonCamera.h"
 
 CameraController::CameraController() :
 	m_mode(CameraMode::Free),
 	m_state(CameraKind::CamNone),
-	m_cameraOffset({0,2.f,0}),
+	m_cameraOffset(PlayerParam::PlayerEyeHeight),
 	m_oldPos(0, 0),
 	m_moveSpeed(5.f),
 	m_pCurrentCamera(nullptr),

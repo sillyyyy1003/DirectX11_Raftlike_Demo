@@ -21,13 +21,6 @@ Loading model finished
 [ItemDataBase] Banana is registered!
 [SceneManager] Current Scene: Scene game!
 [BuoyancySystem] : Add object to water!
-[Physics] A character contact was added.
-[Physics] A character contact was added.
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
 [BuoyancySystem] : Add object to water!
-[BuoyancySystem] : Add object to water!
-[Physics] A character contact was move.
-[Physics] A character contact was added.
-[Physics] A character contact was move.
-[Physics] A character contact was added.
-[Physics] A character contact was move.
-[Physics] A character contact was added.

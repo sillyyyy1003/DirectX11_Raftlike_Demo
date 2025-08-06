@@ -21,12 +21,11 @@ public:
 
 	void PreUpdate(float dt);
 
+
 private:
 
 	Mutex m_bodiesInWaterMutex;
 	BodyIDVector m_bodiesInWater;
 	BodyID m_waterSensor;
-
-	
 };
 

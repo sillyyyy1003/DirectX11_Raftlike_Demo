@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <cstdint>
 #include <memory>
-
 #include "Windows.h"
 #include "CameraBase.h"
 #include "Transform.h"

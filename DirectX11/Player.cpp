@@ -38,9 +38,12 @@ void Player::Init()
 	m_pHungerComponent->SetStarveSpeed(HungerStarveSpeed); //空腹度の減少速度を設定（1秒あたり1ポイント減少）
 	AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent);		// HungerComponentをPlayerに追加
 
-
+	m_pInventory = std::make_shared<Inventory>(20);		// assume max slot
 }
 
+void Player::Init(const char* filePath)
+{
+}
 
 
 void Player::Update(float dt)
@@ -65,6 +68,7 @@ void Player::Update(float dt)
 		ImGui::InputFloat3("Rotation(Degree)", rot);
 		m_transform.SetRotation(DirectX::XMConvertToRadians(rot[0]), DirectX::XMConvertToRadians(rot[1]), DirectX::XMConvertToRadians(rot[2]));
 
+
 	}
 
 	ImGui::End();
@@ -86,7 +90,8 @@ void Player::Update(float dt)
 	m_pHungerComponent->Update(dt);	//空腹度
 
 
-
+	//=======Inventory Update
+	m_pInventory->Update(dt);
 }
 
 void Player::Draw()

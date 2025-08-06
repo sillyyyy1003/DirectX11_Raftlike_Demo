@@ -17,10 +17,9 @@ void ItemDataBase::RegisterItem(const char* name, std::shared_ptr<Item> item)
 		return;
 	}
 
-	m_items[std::string(name)] = item;
+	m_items[std::string(name)] = item;				// Mapに登録
+	m_items[std::string(name)]->SetName(name);		// 名前を設定する
 	DebugLog::Log("[ItemDataBase] {} is registered!", name);
-
-
 }
 
 std::shared_ptr<const Item> ItemDataBase::GetItem(const char* name)

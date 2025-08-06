@@ -56,7 +56,7 @@ public:
 		auto it = m_components.find(type);
 		if (it != m_components.end())
 		{
-			return dynamic_cast<T*>(it->second.get());  // 类型安全地转换基类指针为子类指针
+			return dynamic_cast<T*>(it->second.get()); 
 		}
 
 		return nullptr;
@@ -74,6 +74,7 @@ public:
 
 	void Activate() { m_isActive = true; }
 	void DeActivate() { m_isActive = false; }
+	bool GetActive() const { return m_isActive; };
 
 };
 

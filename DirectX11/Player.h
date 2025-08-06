@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "GameObject.h"
 #include "HungerComponent.h"
+#include "Inventory.h"
 #include "PlayerController.h"
 
 /// <summary>
@@ -15,6 +16,10 @@ public:
 	Player();
 
 	void Init();
+
+	/// @brief Using Json file to read player settings
+	/// @param filePath 
+	void Init(const char* filePath);	
 
 	void Update(float dt)override;
 	void Draw() override;
@@ -41,8 +46,8 @@ public:
 	void RotateY(float dt);
 
 
-	CameraController* GetCameraController() { return m_pCameraController.get(); }
-
+	CameraController* GetCameraController() const { return m_pCameraController.get(); }
+	Inventory* GetInventory() const { return m_pInventory.get(); }
 
 private:
 	// Playerの動きを扱う
@@ -56,6 +61,9 @@ private:
 
 	// 物理挙動を扱う
 	std::shared_ptr<PlayerCharacter> m_pPlayerCharacter;
+
+	// Bag
+	std::shared_ptr<Inventory> m_pInventory;
 
 	float m_speed;
 

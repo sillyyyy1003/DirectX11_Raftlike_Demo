@@ -29,7 +29,7 @@ namespace
 
 	//Collider Setting
 	static constexpr DirectX::XMFLOAT3 HalfUnitScale = { 0.5f,0.5f,0.5f };	//Default Cube Size (length,height,width={1,1,1})
-	static constexpr DirectX::XMFLOAT3 HalfFloorScale = { 5,0.2f,5 };
+	static constexpr DirectX::XMFLOAT3 HalfFloorScale = { 5,0.1f,5 };
 
 	static constexpr DirectX::XMFLOAT3 DefaultCameraPos = { 0,10,-10 };	//Default Camera Position
 	static constexpr DirectX::XMFLOAT3 DefaultCameraTarget = { 0,0,0 };	//Default Camera Target Position
@@ -126,31 +126,38 @@ void SceneGame::Init()
 	Material* uiBarBgMaterial = CreateObj<Material>("UiBarBgMaterial");
 	uiBarBgMaterial->SetDiffuse({ 0,0,1.f,1.f });
 
-	//=====GameObjectの初期化
-	std::shared_ptr<RenderComponent> appleRenderComponent = std::make_shared<RenderComponent>();
-	appleRenderComponent->SetModel(ModelManager::Instance().GetModel("Food_Apple"));
-	appleRenderComponent->SetMaterial(foodMaterial);
-	appleRenderComponent->SetEffect(pbrEffect);
-
-	std::shared_ptr<RenderComponent> bananaRenderComponent = std::make_shared<RenderComponent>();
-	bananaRenderComponent->SetModel(ModelManager::Instance().GetModel("Food_Banana"));
-	bananaRenderComponent->SetMaterial(foodMaterial);
-	bananaRenderComponent->SetEffect(pbrEffect);
-
 	//===========Register food data
 	std::shared_ptr<Food> apple = std::make_shared<Food>(20.f);
 	ItemDataBase::Instance().RegisterItem("Apple", apple);
 	std::shared_ptr<Food> banana = std::make_shared<Food>(10.f);
 	ItemDataBase::Instance().RegisterItem("Banana", banana);
 
+
+	//=====GameObjectの初期化
+	std::shared_ptr<RenderComponent> appleRenderComponent = std::make_shared<RenderComponent>();
+	appleRenderComponent->SetModel(ModelManager::Instance().GetModel("Food_Apple"));
+	appleRenderComponent->SetMaterial(foodMaterial);
+	appleRenderComponent->SetEffect(pbrEffect);
+	
+
+	std::shared_ptr<RenderComponent> bananaRenderComponent = std::make_shared<RenderComponent>();
+	bananaRenderComponent->SetModel(ModelManager::Instance().GetModel("Food_Banana"));
+	bananaRenderComponent->SetMaterial(foodMaterial);
+	bananaRenderComponent->SetEffect(pbrEffect);
+
 	//===========Init item
-	ItemInstance* appleInstance = CreateObj<ItemInstance>("AppleInstance");
+	std::shared_ptr<ItemInstance> appleInstance = make_shared<ItemInstance>();
+	RegisterSceneObject(appleInstance);
 	appleInstance->InitItem(ItemDataBase::Instance().GetItem("Apple"), 5);
 	appleInstance->AddComponent(MyComponent::ComponentType::Render, appleRenderComponent);
 
-	ItemInstance* bananaInstance = CreateObj<ItemInstance>("BananaInstance");
+
+	std::shared_ptr <ItemInstance> bananaInstance = make_shared<ItemInstance>();
+	RegisterSceneObject(bananaInstance);
 	bananaInstance->InitItem(ItemDataBase::Instance().GetItem("Banana"), 2);
 	bananaInstance->AddComponent(MyComponent::ComponentType::Render, bananaRenderComponent);
+	
+
 
 	GameObject* floor = CreateObj<GameObject>("Floor");
 	std::shared_ptr<RenderComponent> floorRenderComponent = std::make_shared<RenderComponent>();
@@ -159,6 +166,7 @@ void SceneGame::Init()
 	floorRenderComponent->SetMaterial(floorMaterial);
 	floorRenderComponent->SetEffect(basicEffect);
 
+	//===========UI初期化
 	UIRender* uiAim = CreateObj<UIRender>("UiAim");
 	uiAim->SetEffect(uiBasicEffect);
 	uiAim->SetMaterial(uiAimMaterial);
@@ -196,7 +204,7 @@ void SceneGame::Init()
 
 	std::shared_ptr<PhysicsComponent> appleCollider = make_shared<PhysicsComponent>();
 	appleInstance->AddComponent(MyComponent::ComponentType::Physics, appleCollider);
-	float appleScale = 0.1f;
+	float appleScale = 0.05f;
 	DirectX::XMFLOAT3 appleColliderSize = ModelManager::Instance().GetModel("Food_Apple")->GetModelSize();
 	BodyCreationSettings appleBoxSettings(new BoxShape(RVec3(appleColliderSize.x * 0.5f * appleScale, appleColliderSize.y * 0.5f * appleScale, appleColliderSize.z * 0.5f * appleScale)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM); //Init apple cube
 	PhysicsManager::Instance().SetBodyCreationMass(1.f, appleBoxSettings);// Set the mass properties for the apple box
@@ -206,21 +214,20 @@ void SceneGame::Init()
 
 	std::shared_ptr<PhysicsComponent> bananaCollider = make_shared<PhysicsComponent>();
 	bananaInstance->AddComponent(MyComponent::ComponentType::Physics, bananaCollider);
-	float bananaScale = 0.1f;
+	float bananaScale = 0.05f;
 	DirectX::XMFLOAT3 bananaColliderSize = ModelManager::Instance().GetModel("Food_Apple")->GetModelSize();
-	BodyCreationSettings bananaBoxSettings(new BoxShape(RVec3(bananaColliderSize.x*0.5f*bananaScale, bananaColliderSize.y * 0.5f * bananaScale, bananaColliderSize.z * 0.5f * bananaScale)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM); //Init apple cube
+	BodyCreationSettings bananaBoxSettings(new BoxShape(RVec3(bananaColliderSize.x * 0.5f * bananaScale, bananaColliderSize.y * 0.5f * bananaScale, bananaColliderSize.z * 0.5f * bananaScale)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM); //Init apple cube
 	PhysicsManager::Instance().SetBodyCreationMass(1.f, bananaBoxSettings);// Set the mass properties for the apple box
 	bananaCollider->Init(bananaBoxSettings, EActivation::Activate);  //Create& Add
 	bananaInstance->GetTransform().SetScale(bananaScale,bananaScale,bananaScale);
 	bananaInstance->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->SetPosition(-3, 3, 0);
 
 
-	BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(HalfFloorScale.x,HalfFloorScale.y,HalfFloorScale.z)), RVec3().sZero(), Quat::sIdentity(), EMotionType::Dynamic, Layers::BOAT);
+	BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(HalfFloorScale.x,HalfFloorScale.y,HalfFloorScale.z)), Vec3().sZero(), Quat::sIdentity(), EMotionType::Dynamic, Layers::BOAT);
 	std::shared_ptr<PhysicsComponent> floorCollider = make_shared<PhysicsComponent>();
 	floorCollider->Init(floorBoxSettings, EActivation::Activate);
 	floor->AddComponent(MyComponent::ComponentType::Physics, floorCollider);
 	floor->GetTransform().SetScale(HalfFloorScale * 2.f);
-
 
 	// Init Buoyancy system
 	BuoyancySystem* buoyancySystem = CreateObj<BuoyancySystem>("BuoyancySystem");
@@ -263,11 +270,19 @@ void SceneGame::Update(float tick)
 	//===============Object Update
 	GetObj<GameObject>("Floor")->Update(tick);
 
-	GetObj<ItemInstance>("AppleInstance")->Update(tick);
-	GetObj<ItemInstance>("BananaInstance")->Update(tick);
+	for(const auto& object:m_sceneObjects)
+	{
+		object->Update(tick);
+	}
 
+	//===============Player Update
 	GetObj<Player>("Player")->Update(tick);
+
+	//===============UI Update
 	UIManager::GetInstance().Update(tick);
+
+	//===============Clear all inactive game objects
+	DeleteInactiveSceneObject();
 }
 
 void SceneGame::Draw()
@@ -304,12 +319,36 @@ void SceneGame::Draw()
 #endif
 
 	GetObj<GameObject>("Floor")->Draw();
-	GetObj<ItemInstance>("AppleInstance")->Draw();
-	GetObj<ItemInstance>("BananaInstance")->Draw();
+
+	for (const auto& object : m_sceneObjects)
+	{
+		object->Draw();
+	}
 
 	GetObj<Player>("Player")->Draw();
 
 	//Ui描画
 	GameApp::SetDepthStencilState(RenderStates::DSSNoDepthTest);
 	UIManager::GetInstance().Draw();
+
+}
+
+void SceneGame::RegisterSceneObject(std::shared_ptr<GameObject> object)
+{
+	m_sceneObjects.push_back(object);
+}
+
+void SceneGame::DeleteInactiveSceneObject()
+{
+	for (auto it = m_sceneObjects.begin(); it != m_sceneObjects.end(); )
+	{
+		if (!(*it)->GetActive())
+		{
+			it = m_sceneObjects.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
 }

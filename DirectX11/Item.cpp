@@ -14,14 +14,6 @@ Item::Item(ItemType _type, bool stackable, int maxStack, float maxDurability):
 }
 
 //=======Item Instance
-/*
-ItemInstance::ItemInstance(std::shared_ptr<const Item> _proto, int _count, float _durability) :m_protoPtr(_proto), m_count(_count)
-{
-	if (_proto && _proto->HasDurability())
-		m_durability = (_durability == -1) ? m_protoPtr->GetMaxDurability() : _durability;
-}
-*/
-
 void ItemInstance::InitItem(std::shared_ptr<const Item> _proto, int _count, float _durability)
 {
 	m_protoPtr = _proto;

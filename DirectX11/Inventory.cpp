@@ -1,12 +1,13 @@
 ﻿#include "Inventory.h"
 #include "DebugLog.h"
+#include "KInput.h"
 
 Inventory::Inventory(int maxSlots):
 	m_slots(maxSlots)
 {
 }
 
-int Inventory::Insert(std::shared_ptr<ItemInstance> instance)
+int Inventory::Insert(ItemInstance* instance)
 {
 	// error check if instance is void or has count <0 
 	if (!instance || instance->GetCount() <= 0 || !instance->GetProto())
@@ -46,7 +47,6 @@ int Inventory::Insert(std::shared_ptr<ItemInstance> instance)
 			int toInsert = std::min(remaining, maxStack);
 			ItemPtr newInstance = std::make_shared<ItemInstance>();
 			newInstance->InitItem(instance->GetProto(), toInsert, instance->GetDurability());
-			//newInstance->SetPresence(ScenePresence::InInventory);
 			slot = newInstance;
 
 			remaining -= toInsert;
@@ -77,6 +77,23 @@ size_t Inventory::GetUsedSlotCount() const
 size_t  Inventory::GetMaxSlots() const
 {
 	return m_slots.size();
+}
+
+void Inventory::Update(float tick)
+{
+	// Output all objects in inventory
+	if(KInput::IsKeyTrigger(VK_F11))
+	{
+		DebugLog::Log("[Inventory] Used slots : {}", GetUsedSlotCount());
+		for (size_t i = 0; i < GetUsedSlotCount(); i++)
+		{
+
+			ItemPtr item = m_slots[i].value();
+			int index = i;
+			std::string name = item->GetName();
+			DebugLog::Log("[Inventory] Slot {}: Name: {}, Number: {}.", i, name, item->GetCount());
+		}
+	}
 }
 
 
