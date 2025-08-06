@@ -43,6 +43,7 @@ public:
 
 	CameraController* GetCameraController() { return m_pCameraController.get(); }
 
+
 private:
 	// Playerの動きを扱う
 	std::unique_ptr<PlayerController> m_pPlayerController;
@@ -59,6 +60,7 @@ private:
 	float m_speed;
 
 	bool m_isInNegativeState = false;	/// true>>if player is in negative state, like hunger, thirst, etc.
+
 
 	
 

@@ -2,6 +2,15 @@
 #include "KInput.h"
 #include "Player.h"
 
+#include <Jolt/Jolt.h>
+#include <Jolt/Physics/PhysicsSystem.h>
+#include <Jolt/Physics/Collision/RayCast.h>
+#include <Jolt/Physics/Collision/ShapeCast.h>
+#include <Jolt/Physics/Collision/CastResult.h>
+#include <Jolt/Physics/Collision/CollisionCollector.h>
+#include "PhysicsManager.h"
+#include "GameObject.h"
+
 
 PlayerController::PlayerController(Player* player, PlayerCharacter* playerCharacter):
     m_pPlayer(player),
@@ -58,6 +67,48 @@ void PlayerController::Update(float dt)
             m_pPlayerCharacter->Jump();
     }
 
+    // Ray cast collider
+    {
+        //F key to Get the object
+        if(KInput::IsKeyTrigger('F'))
+        {
+	        //Get Camera pos & forward vector;
+            CameraBase* camera = m_pPlayer->GetCameraController()->GetCamera();
+            DirectX::XMFLOAT3 originPos = camera->GetPos();
+            DirectX::XMFLOAT3 forwardVec = camera->m_transform.GetForwardAxis();
+          
+            float distance = 10.f;
+
+            RVec3 origin = {
+                originPos.x,
+                originPos.y,
+                originPos.z
+            };
+
+            RVec3 direction = {
+	            forwardVec.x,
+	            forwardVec.y,
+	            forwardVec.z
+            };
+
+            DebugLog::Log("{},{},{}", origin.GetX(), origin.GetY(), origin.GetZ());
+            DebugLog::Log("{},{},{}", direction.GetX(), direction.GetY(), direction.GetZ());
+            JPH::RRayCast rayCast(origin, direction * distance);
+            JPH::RayCastResult result;
+            ExcludeLayerFilter layerFilter;
+            if (PhysicsManager::Instance().GetPhysicsSystem()->GetNarrowPhaseQuery().CastRay(rayCast, result, {}, layerFilter,{}))
+            {
+                PhysicsComponent* component = PhysicsManager::Instance().GetPhysicsComponent(result.mBodyID);
+                if (component!=nullptr)
+                {
+                    GameObject* object = component->GetGameObjectByComponent();
+                    if(object)object->DeActivate();
+                }
+            }
+
+        }
+
+    }
 }
 
 void PlayerController::UpdateWindowSize(DirectX::XMFLOAT2 windowSize)

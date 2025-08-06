@@ -1,6 +1,7 @@
 //Direction Light
 
 static const float F0_NON_METAL = 0.04;
+static const float PI = 3.14159265358979323846f;
 struct DirectionLight
 {
 	float4 ambient;

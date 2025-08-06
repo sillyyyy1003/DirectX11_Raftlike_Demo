@@ -309,6 +309,9 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="DayLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMin.h">
@@ -516,6 +519,9 @@
       <Filter>头文件\Render</Filter>
     </ClInclude>
     <ClInclude Include="Skybox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DayLight.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

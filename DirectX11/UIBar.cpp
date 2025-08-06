@@ -64,8 +64,7 @@ void UIBar::UpdateUI(float volume)
 
 void UIBar::Draw()
 {
-	m_barMesh->Draw();
 	m_backgroundMesh->Draw();
-	
+	m_barMesh->Draw();
 }
 

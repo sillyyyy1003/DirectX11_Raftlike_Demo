@@ -21,6 +21,7 @@ public:
 	void Init();
 	void Draw() override;
 
+	DirectX::XMFLOAT3 GetModelSize() const override { return { 1,1,1 }; }
 };
 
 /// @brief Used for rendering skybox as a cube
@@ -32,6 +33,8 @@ public:
 	~SkyBoxCube() override = default;
 	void Init();
 	void Draw() override;
+
+	DirectX::XMFLOAT3 GetModelSize() const override { return { 1,1,1 }; }
 private:
 	struct MeshData
 	{

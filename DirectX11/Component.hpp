@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+class GameObject;
+
 namespace MyComponent
 {
 	enum class ComponentType :uint16_t
@@ -21,5 +23,6 @@ class Component
 {
 public:
 	virtual ~Component() = default;
+	virtual void SetGameObject(GameObject* gameObject) {}
 };
 

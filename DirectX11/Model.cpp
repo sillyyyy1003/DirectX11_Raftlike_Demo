@@ -8,7 +8,8 @@
 #pragma comment(lib, "assimp-vc143-mt.lib")
 #endif
 
-Model::Model()
+Model::Model() :
+	m_meshes(0)
 {
 	importer = std::make_unique<Assimp::Importer>();
 }
@@ -50,6 +51,9 @@ bool Model::Load(const char* file, bool flip, bool simpleMode)
 		// 頂点の作成
 		std::vector <MeshBuffer::VtxPosNormalTexTangent> vtx;
 		vtx.resize(m_scene->mMeshes[i]->mNumVertices);
+
+		DirectX::XMFLOAT3 min = { FLT_MAX, FLT_MAX, FLT_MAX };
+		DirectX::XMFLOAT3 max = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
 		for (unsigned int j = 0; j < vtx.size(); ++j)
 		{
 			// 値の吸出し
@@ -67,9 +71,22 @@ bool Model::Load(const char* file, bool flip, bool simpleMode)
 				DirectX::XMFLOAT2(uv.x, 1 - uv.y),
 				DirectX::XMFLOAT3(tangent.x,tangent.y,tangent.z),
 			};
+
+			// コライダーの大きさを計算する
+			min.x = std::min(min.x, pos.x);
+			min.y = std::min(min.y, pos.y);
+			min.z = std::min(min.z, pos.z);
+
+			max.x = max(max.x, pos.x);
+			max.y = max(max.y, pos.y);
+			max.z = max(max.z, pos.z);
 		}
-
-
+		// コライダーの大きさを設定
+		m_modelSize = {
+			max.x - min.x,
+			max.y - min.y,
+			max.z - min.z
+		};
 		// インデックスの作成
 		std::vector<unsigned int> idx;
 		idx.resize(m_scene->mMeshes[i]->mNumFaces * 3); // faceはポリゴンの数を表す(１ポリゴンで3インデックス

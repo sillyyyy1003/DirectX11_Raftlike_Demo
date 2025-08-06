@@ -10,7 +10,14 @@
 #include "SceneOption.h"
 #include "SceneTitle.h"
 #include "ShapeFactory.h"
+#include "Skybox.h"
 #include "UIManager.h"
+#include "SkyboxEffect.h"
+
+namespace
+{
+    static constexpr UINT TextureCubeSize = 1024;
+}
 
 
 SceneManager::SceneManager():
@@ -138,6 +145,50 @@ bool SceneManager::InitResource()
     std::shared_ptr<Capsule> capsule = std::make_shared<Capsule>();
 	capsule->Init(16, 16,16);
 	ModelManager::Instance().LoadModel("Capsule", capsule); //Add Model to Model Manager as an instance
+
+	//====Textureの読み込み
+	//Skyboxのテクスチャを作成
+    Texture* dayLight0 = CreateObj<Texture>("DayLight0");
+    Texture* dayLight1 = CreateObj<Texture>("DayLight1");
+    Texture* dayLight2 = CreateObj<Texture>("DayLight2");
+    Texture* dayLight3 = CreateObj<Texture>("DayLight3");
+    Texture* dayLight4 = CreateObj<Texture>("DayLight4");
+    Texture* dayLight5 = CreateObj<Texture>("DayLight5");
+    dayLight0->Create("Assets/Texture/Skybox/daylight0.png");
+    dayLight1->Create("Assets/Texture/Skybox/daylight1.png");
+    dayLight2->Create("Assets/Texture/Skybox/daylight2.png");
+    dayLight3->Create("Assets/Texture/Skybox/daylight3.png");
+    dayLight4->Create("Assets/Texture/Skybox/daylight4.png");
+    dayLight5->Create("Assets/Texture/Skybox/daylight5.png");
+    std::vector<Texture*> textures;
+    textures.push_back(dayLight0);
+    textures.push_back(dayLight1);
+    textures.push_back(dayLight2);
+    textures.push_back(dayLight3);
+    textures.push_back(dayLight4);
+    textures.push_back(dayLight5);
+
+	//Skyboxのテクスチャキューブを作成
+    TextureCube* textureCube = CreateObj<TextureCube>("TextureCube");
+    textureCube->CreateTextureCube(TextureCubeSize, TextureCubeSize, DXGI_FORMAT_R8G8B8A8_UNORM, 1);
+    textureCube->CopyTextures(textures);
+
+
+
+    //=====Skyboxの初期化
+	// SkyboxEffectの初期化
+    VertexShader* skyboxVS = GetObj<VertexShader>("SkyboxVS");
+    PixelShader* skyboxPS = GetObj<PixelShader>("SkyboxPS");
+    SkyboxEffect* skyboxEffect = CreateObj<SkyboxEffect>("SkyboxEffect");
+    skyboxEffect->InitPixelShader(skyboxPS);
+    skyboxEffect->InitVertexShader(skyboxVS);
+    skyboxEffect->InitTexture(textureCube);
+
+    //skyboxEffect->InitCamera(player->GetCameraController()->GetCamera());
+	// Init Skybox
+    Skybox* skybox = CreateObj<Skybox>("Skybox");
+    skybox->Init(skyboxEffect);
+
 
 	//=====Geometryの初期化
 	Geometry::Init();

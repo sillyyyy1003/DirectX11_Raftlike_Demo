@@ -1,12 +1,17 @@
 ﻿#include "GameObject.h"
+#include "RenderComponent.h"
+#include "PhysicsComponent.h"
 
 GameObject::GameObject() :
-	m_transform(Transform())
+	m_transform(Transform()),
+	m_isActive(true)
 {
 }
 
 void GameObject::Update(float dt)
 {
+	if (!m_isActive)return;
+
 	//==========Update Physics
 	if(GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)!=nullptr)
 	{
@@ -36,6 +41,7 @@ void GameObject::Update(float dt)
 
 void GameObject::Draw()
 {
+	if (!m_isActive)return;
 	if (GetComponent<RenderComponent>(MyComponent::ComponentType::Render) != nullptr)
 		GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->Render(m_transform);
 

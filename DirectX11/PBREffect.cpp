@@ -1,5 +1,5 @@
 ﻿#include "PBREffect.h"
-
+#include "d3dUtil.h"
 #include "DebugLog.h"
 #include "GameApp.h"
 #include "RenderState.h"
@@ -14,9 +14,9 @@ m_pDirLight(nullptr)
 
 void PBREffect::ApplyRenderState()
 {
-	GameApp::SetBlendState(RenderStates::BSTransparent);		//AlphaBlend
-	GameApp::SetSamplerState(RenderStates::SSLinearWrap);		//Default Sampling
-	GameApp::SetCullingMode(RenderStates::RSNoCull);			//表だけ
+	GameApp::SetBlendState(RenderStates::BSTransparent);			// AlphaBlend
+	GameApp::SetSamplerState(RenderStates::SSLinearWrap);			// Default Sampling
+	GameApp::SetCullingMode(nullptr);						// 表だけ
 }
 
 void PBREffect::Apply()
@@ -46,18 +46,18 @@ void PBREffect::SetMaterial(Material* mat)
 void PBREffect::SetDirLightCB()
 {
 	struct Light {
-		
+		DirectX::XMFLOAT4 ambient;
 		DirectX::XMFLOAT4 diffuse;
-		DirectX::XMFLOAT3 lightPos;
+		DirectX::XMFLOAT3 lightDir;
 		float lightIntensity;			//光の強さ
-
 	};
+	DirectX::XMFLOAT3 lightDir = (m_pDirLight->GetPosition()) * -1;
 
 	Light light = {
+		m_pDirLight->GetAmbient(),
 	   m_pDirLight->GetDiffuse(),
-	   {m_pDirLight->GetPosition().x,m_pDirLight->GetPosition().y,m_pDirLight->GetPosition().z},
+	   lightDir,
 		m_pDirLight->GetIntensity()
-
 	};
 
 	//cbuffer DirLight:register(b1)

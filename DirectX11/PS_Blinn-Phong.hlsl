@@ -46,9 +46,9 @@ float4 main(PS_IN pin) : SV_TARGET
 	float4 ambientColor = ambient * lightAmbient;
 	float3 lightVec = normalize(lightPos.xyz);
 
-    //Lambert DiffuseŒvŽZ ->half lambert
-	float diffuseFactor = saturate(dot(lightVec, N)) * 0.5f + 0.5f;
-	float4 diffuseColor = diffuseFactor * lightDiffuse * diffuse;
+    //Lambert DiffuseŒvŽZ 
+	float diffuseFactor = saturate(dot(lightVec, N));
+	float4 diffuseColor = (diffuseFactor / PI) * lightDiffuse * diffuse;
 
 	// specular ŒvŽZ
 	float3 R = reflect(-lightVec, N); // ”½ŽËŒü—Ê

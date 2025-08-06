@@ -39,12 +39,13 @@ protected:
 /// <summary>
 /// UI図形の基底クラス
 /// </summary>
-class UIRender
+class UIRender:
+	public UIComponent
 {
 public:
 	UIRender();
 	void SetViewSize(const DirectX::XMFLOAT2& _viewSize);
-	void Draw();
+	void Draw() override;
 
 	void SetMaterial(Material* mat) { m_pRenderComponent->SetMaterial(mat); }
 	void SetEffect(IEffect* iEffect) { m_pRenderComponent->SetEffect(iEffect); }

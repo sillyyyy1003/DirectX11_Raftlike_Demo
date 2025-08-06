@@ -12,6 +12,7 @@
 #include <Physics/Body/BodyCreationSettings.h>
 #include <Physics/Body/BodyActivationListener.h>
 #include "Layers.h"
+#include "PhysicsComponent.h"
 
 #pragma comment(lib, "Jolt.lib")
 
@@ -71,8 +72,10 @@ public:
 	TempAllocator* GetTempAllocator() { return m_tempAllocator.get(); }
 	ObjectContactListener* GetContactListener() { return m_pObjectContactListener.get(); }
 	MyPlayerContactListener* GetPlayerContactListener() { return m_pPlayerContactListener.get(); }
-	
 
+	void AddPhysicsComponent(BodyID id, PhysicsComponent* component);
+	PhysicsComponent* GetPhysicsComponent(BodyID id);
+	
 private:
 	PhysicsManager() = default;
 	~PhysicsManager() = default;
@@ -96,7 +99,7 @@ private:
 	PhysicsSettings m_physicsSettings;	// Physics settings
 
 	std::vector<BodyID> m_bodies;		// List of bodies in the physics system
-
+	std::unordered_map<BodyID, PhysicsComponent*> m_physicsComponentMap;
 
 };
 

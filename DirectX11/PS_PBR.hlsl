@@ -1,5 +1,4 @@
 #include "LightHelper.hlsli"
-static const float PI = 3.1415926f; // ƒÎ
 struct PS_IN
 {
 	float4 pos : SV_POSITION0;
@@ -16,10 +15,11 @@ cbuffer Camera : register(b0)
 }
 
 //SunLight
-cbuffer DirLight:register(b1)
+cbuffer DayLight:register(b1)
 {
+	float4 lightAmbient;
 	float4 lightDiffuse;
-	float3 lightPos;
+	float3 lightDir;
 	float lightIntensity;
 }
 
@@ -120,7 +120,7 @@ float3 DirectionLightPBR(float lightIntensity, float3 lightColor, float3 toLight
 	float3 diffuseBRDF = LambertDiffuse(kS, albedo, metallic);
 
 	float NdotL = max(dot(normal, toLight), 0.0);
-	return (diffuseBRDF + specularBRDF) * lightIntensity * lightColor.rgb * shadowAmount;
+	return (diffuseBRDF + specularBRDF) * lightIntensity * lightColor.rgb * shadowAmount * NdotL;
 }
 
 float3 PointLightPBR(PointLight pointLight, float3 pos, float3 normal, float3 toEyeW_Unit)
@@ -162,27 +162,15 @@ float4 main(PS_IN pin) : SV_TARGET
 	float3 normalMapSample = normalMap.Sample(mySampler, pin.tex).xyz;
 	float3 N = NormalSampleToWorldSpace(normalMapSample, normalW, tangentW);
 	float3 V = normalize(eyePos - pin.worldPos).xyz;
-	float3 L = normalize(lightPos.xyz - pin.worldPos.xyz);
+	float3 L = normalize(-lightDir); //Directional light direction
 
-	//Environment Light
-	//float3  environmentColor = EnvironmentPBR(lightIntensity, lightDiffuse.rgb, L, N, V, roughness, metallic, albedoColor.xyz, 1.0f);
-	float3 environmentColor = { 0, 0, 0 };
+	float3 ambient = albedoColor.rgb * lightAmbient.rgb * lerp(0.2, 0.05, metallic) * min(lightIntensity, 4.); // ambient contribution & avoid too much light intensity
 
 	//Dir Light
 	float3 directionalColor = DirectionLightPBR(lightIntensity, lightDiffuse.rgb, L, N, V, roughness, metallic, albedoColor.xyz, 1.0f);
+	float3 pbrColor = 0;
+	pbrColor += directionalColor;
 
-	//PointLight process
-	//float3 pointLightColor = float3(0, 0, 0);
-	//for (int i = 0; i < 2; i++)
-	//	pointLightColor += PointLightPBR(pointLight[i], pin.worldPos.xyz, N, V);
-
-	//float3 color = albedoColor.rgb * (pointLightColor + pbrColor);
-	float3 color = albedoColor.rgb * (environmentColor + directionalColor);
-	//Gamma correction
-	//float outColor = float4(color, 1.0f);
-	//outColor = Gamma(outColor);
-
-	return float4(color, 1.0f);
-
-
+	float3 totalColor = pbrColor + ambient;
+	return float4(totalColor, 1.0f);
 }

@@ -9,7 +9,7 @@
 CameraController::CameraController() :
 	m_mode(CameraMode::Free),
 	m_state(CameraKind::CamNone),
-	m_cameraOffset({0,1.5f,0}),
+	m_cameraOffset({0,2.f,0}),
 	m_oldPos(0, 0),
 	m_moveSpeed(5.f),
 	m_pCurrentCamera(nullptr),
@@ -61,7 +61,7 @@ void CameraController::Update(float dt)
 	{
 	case CameraMode::Free: UpdateFreeCamera(dt); break;
 	case CameraMode::ThirdPerson:UpdateThirdPerson(dt); break;
-	case CameraMode::FirstPerson:break;
+	case CameraMode::FirstPerson: UpdateFreeCamera(dt); break;
 	default:return;
 	}
 	
@@ -82,6 +82,8 @@ void CameraController::UpdateCameraTransform(const Transform& transform)
 
 	m_pFirstPersonCamera->SetPos(cameraPos);	//位置更新
 	m_pFirstPersonCamera->m_transform.SetRotation(transform.GetRotation());		//回転更新
+
+
 }
 
 bool CameraController::GetFirstPersonCamera()
