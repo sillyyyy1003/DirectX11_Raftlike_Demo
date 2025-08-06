@@ -19,20 +19,26 @@ public:
 	virtual ~Item() = default;
 
 	Item(ItemType _type, bool stackable = true, int maxStack = 20, float maxDurability = 0);
+	/// @brief アイテム名を設定する
+	void SetName(const char* name) { m_itemName = std::string(name); }
 
 	ItemType GetItemType() const { return m_itemType; }
 	bool GetIsStackable() const { return m_isStackable; }
 	int GetMaxStack() const { return m_maxStack; }
 	float GetMaxDurability() const { return m_maxDurability; }
 	bool HasDurability() const { return m_maxDurability > 0; }
+	std::string GetName() const { return m_itemName; }
 
 	//virtual void OnUse(Player* player) = 0;
 	//virtual void OnHold(Player* player, float deltaTime) {}
 private:
 	ItemType m_itemType;
+
 	bool m_isStackable;			// スタック可能か？
 	int m_maxStack;				// 最大スタック数
 	float m_maxDurability;		// 最大耐久値
+
+	std::string m_itemName;		// アイテム名
 };
 
 
@@ -41,7 +47,6 @@ class ItemInstance :
 	public GameObject
 {
 public:
-	//ItemInstance(std::shared_ptr<const Item> _proto, int _count = 1, float _durability = -1);
 	ItemInstance() {}
 
 	/// @brief Item初期化
@@ -63,6 +68,7 @@ public:
 
 	/// @brief Add count to item count
 	void AddCount(int count) { m_count += count; }
+	std::string GetName() const { return m_protoPtr->GetName(); };
 private:
 	std::shared_ptr<const Item> m_protoPtr;
 	int m_count = 1;				// 実際のアイテム数

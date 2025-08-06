@@ -78,7 +78,7 @@ void PlayerCharacter::Init()
 	settings->mEnhancedInternalEdgeRemoval = EnhancedInternalEdgeRemoval;
 	settings->mInnerBodyShape = CreateInnerBody ? m_innerStandingShape : nullptr;
 	settings->mInnerBodyLayer = Layers::PLAYER;
-
+	
 
 	//Init character
 	m_pCharacter = new CharacterVirtual(settings, RVec3::sZero(), Quat::sIdentity(), 0, PhysicsManager::Instance().GetPhysicsSystem());
@@ -88,7 +88,6 @@ void PlayerCharacter::Init()
 	//プレイヤーのCollisionListenerを設定
 	for (CharacterVirtual* character : m_characterVsCharacterCollision.mCharacters)
 		character->SetListener(PhysicsManager::Instance().GetPlayerContactListener());
-
 	
 }
 
@@ -96,6 +95,11 @@ void PlayerCharacter::Update(float deltaTime)
 {
 	PhysicsSystem* system = PhysicsManager::Instance().GetPhysicsSystem();
 	TempAllocator* tempAllocator = PhysicsManager::Instance().GetTempAllocator();
+	CharacterVirtual::ExtendedUpdateSettings update_settings;
+	//bool isInWater = dynamic_cast<MyPlayerContactListener*>(m_pCharacter->GetListener())->GetInWater();
+
+	// Basic physics when on the ground
+	{
 	bool playerControlsHorizontalVelocity = m_ControlMovementDuringJump || m_pCharacter->IsSupported();
 	if (playerControlsHorizontalVelocity)
 	{
@@ -116,7 +120,6 @@ void PlayerCharacter::Update(float deltaTime)
 	m_pCharacter->SetUp(character_up_rotation.RotateAxisY());
 	m_pCharacter->SetRotation(character_up_rotation);
 
-
 	// A cheaper way to update the character's ground velocity,
 	// the platforms that the character is standing on may have changed velocity
 	m_pCharacter->UpdateGroundVelocity();
@@ -126,6 +129,7 @@ void PlayerCharacter::Update(float deltaTime)
 	Vec3 ground_velocity = m_pCharacter->GetGroundVelocity();
 	Vec3 new_velocity;
 	bool moving_towards_ground = (current_vertical_velocity.GetY() - ground_velocity.GetY()) < 0.1f;
+
 	if (m_pCharacter->GetGroundState() == CharacterVirtual::EGroundState::OnGround	// If on ground
 		&& (m_enableCharacterInertia ?
 			moving_towards_ground													// Inertia enabled: And not moving away from ground
@@ -140,7 +144,7 @@ void PlayerCharacter::Update(float deltaTime)
 			new_velocity += m_jumpSpeed * m_pCharacter->GetUp();
 			m_wantToJump = false;	// Reset jump request
 		}
-			
+
 	}
 	else
 		new_velocity = current_vertical_velocity;
@@ -165,10 +169,7 @@ void PlayerCharacter::Update(float deltaTime)
 
 	//todo:if switch stance
 
-
-
 	// Settings for our update function
-	CharacterVirtual::ExtendedUpdateSettings update_settings;
 	if (!EnableStickToFloor)
 		update_settings.mStickToFloorStepDown = Vec3::sZero();
 	else
@@ -177,8 +178,7 @@ void PlayerCharacter::Update(float deltaTime)
 		update_settings.mWalkStairsStepUp = Vec3::sZero();
 	else
 		update_settings.mWalkStairsStepUp = m_pCharacter->GetUp() * update_settings.mWalkStairsStepUp.Length();
-
-
+	}
 
 	m_pCharacter->ExtendedUpdate(deltaTime,
 		-m_pCharacter->GetUp() * system->GetGravity().Length(),
@@ -189,6 +189,7 @@ void PlayerCharacter::Update(float deltaTime)
 		{ },
 		*tempAllocator);
 
+	
 }
 
 void PlayerCharacter::SetRotation(const DirectX::XMFLOAT3& rot)
@@ -234,7 +235,24 @@ void PlayerCharacter::SetPosition(const DirectX::XMFLOAT3& pos)
 
 void PlayerCharacter::Jump()
 {
-	m_wantToJump = true;
+	// Check player is in water or on Ground;
+	bool isInWater = dynamic_cast<MyPlayerContactListener*>(m_pCharacter->GetListener())->GetInWater();
+	if(!isInWater)
+	{
+		m_wantToJump = true;
+		return;
+	}
+
+	//Check player dive in water or not
+	float waterLevel = 0.f;	// todo : Get water level from buoyancy system
+	if (this->GetPosition().y + PlayerParam::PlayerEyeHeight.y > waterLevel)
+	{
+		//Head is out of water -> Give Player a push to get back to the boat
+	}else
+	{
+		//Give Player a constant push to float up
+	}
+
 }
 
 

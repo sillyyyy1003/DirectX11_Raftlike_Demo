@@ -222,11 +222,10 @@ class MyPlayerContactListener:
 	public CharacterContactListener
 {
 public:
+	bool GetInWater()const { return m_isInWater; }
+
 	// Called whenever the character collides with a body.
-	virtual void			OnContactAdded(const CharacterVirtual* inCharacter, const BodyID& inBodyID2, const SubShapeID& inSubShapeID2, RVec3Arg inContactPosition, Vec3Arg inContactNormal, CharacterContactSettings& ioSettings) override
-	{
-		DebugLog::Log("[Physics] A character contact was added.");
-	}
+	virtual void			OnContactAdded(const CharacterVirtual* inCharacter, const BodyID& inBodyID2, const SubShapeID& inSubShapeID2, RVec3Arg inContactPosition, Vec3Arg inContactNormal, CharacterContactSettings& ioSettings) override;
 
 	// Called whenever the character persists colliding with a body.
 	virtual void			OnContactPersisted(const CharacterVirtual* inCharacter, const BodyID& inBodyID2, const SubShapeID& inSubShapeID2, RVec3Arg inContactPosition, Vec3Arg inContactNormal, CharacterContactSettings& ioSettings) override
@@ -235,17 +234,17 @@ public:
 	}
 
 	// Called whenever the character loses contact with a body.
-	virtual void			OnContactRemoved(const CharacterVirtual* inCharacter, const BodyID& inBodyID2, const SubShapeID& inSubShapeID2) override
-	{
-		DebugLog::Log("[Physics] A character contact was move.");
-		
-	}
+	virtual void			OnContactRemoved(const CharacterVirtual* inCharacter, const BodyID& inBodyID2, const SubShapeID& inSubShapeID2) override;
+
 protected:
 	// Common function to be called when contacts are added/persisted
 	void					OnContactCommon(const CharacterVirtual* inCharacter, const BodyID& inBodyID2, const SubShapeID& inSubShapeID2, RVec3Arg inContactPosition, Vec3Arg inContactNormal, CharacterContactSettings& ioSettings)
 	{
 		
 	}
+
+private:
+	bool m_isInWater = false;
 
 
 };

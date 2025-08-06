@@ -8,6 +8,11 @@
 
 using namespace JPH;
 
+namespace PlayerParam
+{
+	static constexpr DirectX::XMFLOAT3 PlayerEyeHeight = {0,2,0};	//
+}
+
 /// @brief this class represents a player character in the game
 ///	using jolt physics
 class PlayerCharacter

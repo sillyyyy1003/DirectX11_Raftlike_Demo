@@ -11,6 +11,11 @@
 #include "PhysicsManager.h"
 #include "GameObject.h"
 
+namespace
+{
+    static constexpr float RayDistance = 3.f;
+}
+
 
 PlayerController::PlayerController(Player* player, PlayerCharacter* playerCharacter):
     m_pPlayer(player),
@@ -77,7 +82,7 @@ void PlayerController::Update(float dt)
             DirectX::XMFLOAT3 originPos = camera->GetPos();
             DirectX::XMFLOAT3 forwardVec = camera->m_transform.GetForwardAxis();
           
-            float distance = 10.f;
+            float distance = RayDistance;
 
             RVec3 origin = {
                 originPos.x,
@@ -91,8 +96,6 @@ void PlayerController::Update(float dt)
 	            forwardVec.z
             };
 
-            DebugLog::Log("{},{},{}", origin.GetX(), origin.GetY(), origin.GetZ());
-            DebugLog::Log("{},{},{}", direction.GetX(), direction.GetY(), direction.GetZ());
             JPH::RRayCast rayCast(origin, direction * distance);
             JPH::RayCastResult result;
             ExcludeLayerFilter layerFilter;
@@ -102,6 +105,12 @@ void PlayerController::Update(float dt)
                 if (component!=nullptr)
                 {
                     GameObject* object = component->GetGameObjectByComponent();
+                    std::string name = dynamic_cast<ItemInstance*>(object)->GetName();
+                    // Add object to  inventory
+                    DebugLog::Log("Insert {} {}",m_pPlayer->GetInventory()->Insert(dynamic_cast<ItemInstance*>(object)), name);
+                    // Give ui system message
+
+                    // Delete object from scene
                     if(object)object->DeActivate();
                 }
             }

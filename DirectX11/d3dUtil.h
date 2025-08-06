@@ -245,8 +245,8 @@ inline DirectX::XMFLOAT4 Lerp(const DirectX::XMFLOAT4& a, const DirectX::XMFLOAT
     };
 }
 
-inline float EaseInOut(float t)
+inline float EaseOutCubic(float t)
 {
-    return t < 0.5f ? 4.0f * t * t * t : 1.0f - powf(-2.0f * t + 2.0f, 3.0f) / 2.0f;
+    return 1.0f - powf(1.0f - t, 3.0f);
 }
 #endif

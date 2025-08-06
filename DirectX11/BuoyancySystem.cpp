@@ -9,9 +9,10 @@
 
 namespace 
 {
-	static constexpr float		cBarrelBuoyancy = 1.5f;
-	static constexpr float		cBarrelLinearDrag = 0.5f;
-	static constexpr float		cBarrelAngularDrag = 0.1f;
+	static constexpr float		ObjectBuoyancy = 2.5f;
+	static constexpr float		ObjectLinearDrag = 0.5f;
+	static constexpr float		ObjectAngularDrag = 0.1f;
+	static constexpr float		WaterLevel = 0.f;
 	
 }
 
@@ -86,13 +87,13 @@ void BuoyancySystem::PreUpdate(float dt)
 			// Assume water y height=0& the surface is flat
 			// todo : make the surface move!
 			RVec3 surface_position = body.GetCenterOfMassPosition();
-			surface_position.SetY(-0.5f);
+			surface_position.SetY(WaterLevel);
 			Vec3 surface_normal = { 0,1,0 };
 
 			float buoyancy, linear_drag, angular_drag;
-			buoyancy = cBarrelBuoyancy;
-			linear_drag = cBarrelLinearDrag;
-			angular_drag = cBarrelAngularDrag;
+			buoyancy = ObjectBuoyancy;
+			linear_drag = ObjectLinearDrag;
+			angular_drag = ObjectAngularDrag;
 
 			body.ApplyBuoyancyImpulse(
 				surface_position,
