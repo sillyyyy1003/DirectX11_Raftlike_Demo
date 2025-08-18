@@ -5,6 +5,8 @@
 #include "CameraBase.h"
 #include "Transform.h"
 
+class Player;
+
 /// @brief カメラの制御を行うクラス
 class CameraController
 {
@@ -41,7 +43,8 @@ private:
 	//todo:can be removed
 	DirectX::XMFLOAT2 m_windowSize;            //Window Size
 	float m_moveSpeed;                         //移動速度
-
+	bool m_isShake = false;
+	float m_time;
 
 public:
 	CameraController();
@@ -57,13 +60,19 @@ public:
 	void UpdateCameraTransform(const Transform& transform);
 
 	bool GetFirstPersonCamera();
+	void SetCameraOffset(const DirectX::XMFLOAT3& offset) { m_cameraOffset = offset; }
 
+	void OnHungryStateChanged(bool isHungry);
+	
+	
 
 protected:
 
 	void UpdateThirdPerson(float dt);
 	void UpdateFreeCamera(float dt);
-
+	void UpdateFirstCamera(float dt);
+	void StartShake();
+	void EndShake();
 
 
 };

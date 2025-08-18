@@ -29,7 +29,7 @@ public:
 	bool HasDurability() const { return m_maxDurability > 0; }
 	std::string GetName() const { return m_itemName; }
 
-	//virtual void OnUse(Player* player) = 0;
+	virtual void OnUse(Player* player) const = 0;
 	//virtual void OnHold(Player* player, float deltaTime) {}
 private:
 	ItemType m_itemType;
@@ -69,6 +69,8 @@ public:
 	/// @brief Add count to item count
 	void AddCount(int count) { m_count += count; }
 	std::string GetName() const { return m_protoPtr->GetName(); };
+	void DecreaseCount(int count);
+
 private:
 	std::shared_ptr<const Item> m_protoPtr;
 	int m_count = 1;				// 実際のアイテム数
@@ -83,7 +85,7 @@ class Builder:
 public:
 	Builder();
 	~Builder() override = default;
-	//void OnUse(Player* player) override;
+	void OnUse(Player* player) const override;
 	//void OnHold(Player* player, float deltaTime) override;
 
 };
@@ -95,6 +97,7 @@ class Food:
 public:
 	Food(float _foodValue);
 	~Food() override = default;
+	void OnUse(Player* player) const  override;
 
 private:
 	float m_foodValue;	// 回復値

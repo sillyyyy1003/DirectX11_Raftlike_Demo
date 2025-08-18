@@ -47,6 +47,7 @@ public:
 	void SetViewSize(const DirectX::XMFLOAT2& _viewSize);
 	void Draw() override;
 
+	void Init(Material* mat, IEffect* effect, Primitive* model);
 	void SetMaterial(Material* mat) { m_pRenderComponent->SetMaterial(mat); }
 	void SetEffect(IEffect* iEffect) { m_pRenderComponent->SetEffect(iEffect); }
 	void SetModel(Primitive* p) { m_pRenderComponent->SetModel(p); }
@@ -67,6 +68,19 @@ class UIText :
 	public UIComponent, public ITextBind
 {
 public:
+	enum class TextAlign : uint8_t
+	{
+		Left,
+		Center,
+		Right
+	};
+
+	enum class ParagraphAlign : uint8_t
+	{
+		Top,
+		Middle,
+		Bottom
+	};
 
 	UIText();
 	~UIText() override = default;
@@ -81,8 +95,13 @@ public:
 	void SetStaticText(const std::string& text) override;
 	void SetTextProvider(TextProvider provider) override;
 
-	/// @brief 文字揃い設定
-	void SetCenterAlignment(bool isCenterAlignment);
+	/// @brief 文字揃い設定(水平方向)
+	///	@param textAlign Left: 左揃え, Center: 中央揃え, Right: 右揃え
+	void SetTextAlignment(TextAlign textAlign);
+	/// @brief 文字揃い設定(垂直方向)
+	///	@param paragraphAlign Top: 上揃え, Middle: 中央揃え, Bottom: 下揃え
+	void SetParagraphAlignment(ParagraphAlign paragraphAlign);
+
 protected:
 
 	void DrawTextW(const std::string& str);
@@ -107,6 +126,6 @@ private:
 	TextProvider m_textProvider;
 
 	D2D1_COLOR_F m_color;								// 文字色
-	bool m_isCenterAlignment = false;					// true>>中央揃え
+	
 };
 

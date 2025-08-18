@@ -14,6 +14,10 @@ private:
     DirectX::XMFLOAT3 m_defaultPosition;       //初期位置
     DirectX::XMFLOAT2 m_windowSize;            //Window Size
 
+	bool m_isShake = false;                    //カメラ揺れ
+    float m_time;                              //カメラ揺れ時間
+
+
 public:
 
     enum CameraKind
@@ -84,6 +88,8 @@ public:
     /// @brief WindowSizeを変更する
     /// @param windowSize 
     void SetWindowSize(DirectX::XMFLOAT2 windowSize) { m_windowSize = windowSize; };
+
+	void SetCameraShake(bool isShake) { m_isShake = isShake; };
 
 private:
     void UpdateState();

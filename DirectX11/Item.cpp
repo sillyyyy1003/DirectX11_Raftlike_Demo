@@ -1,5 +1,7 @@
 ﻿#include "Item.h"
 
+#include "Player.h"
+
 namespace 
 {
 	static constexpr int FoodMaxStack = 20;
@@ -23,9 +25,21 @@ void ItemInstance::InitItem(std::shared_ptr<const Item> _proto, int _count, floa
 
 }
 
+void ItemInstance::DecreaseCount(int count)
+{
+	if (count <= 0) return;
+	m_count -= count;
+	if (m_count < 0) m_count = 0; // Ensure count does not go below zero
+}
+
 //========BuildTool===========
 Builder::Builder():
 	Item(ItemType::Builder,false,0,0)
+{
+}
+
+
+void Builder::OnUse(Player* player) const
 {
 }
 
@@ -37,4 +51,11 @@ Food::Food(float _foodValue) :
 {
 	m_foodValue = _foodValue;
 }
+
+void Food::OnUse(Player* player) const
+{
+	player->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->RestoreHunger(m_foodValue);
+}
+
+
 

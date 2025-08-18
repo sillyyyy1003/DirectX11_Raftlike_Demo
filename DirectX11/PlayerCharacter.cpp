@@ -243,6 +243,7 @@ void PlayerCharacter::Jump()
 		return;
 	}
 
+	/*
 	//Check player dive in water or not
 	float waterLevel = 0.f;	// todo : Get water level from buoyancy system
 	if (this->GetPosition().y + PlayerParam::PlayerEyeHeight.y > waterLevel)
@@ -252,7 +253,7 @@ void PlayerCharacter::Jump()
 	{
 		//Give Player a constant push to float up
 	}
-
+	*/
 }
 
 

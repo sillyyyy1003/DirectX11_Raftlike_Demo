@@ -23,6 +23,12 @@
       "FontFamily": "Arial",
       "FontSize":25,
       "IsCentered":false
+    },
+    {
+      "Name": "InventoryFont",
+      "FontFamily": "Arial",
+      "FontSize":24,
+      "IsCentered":false
     }
   ],
   "BrushColor":

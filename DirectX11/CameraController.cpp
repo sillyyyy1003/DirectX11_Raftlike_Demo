@@ -1,6 +1,6 @@
 ﻿#include "CameraController.h"
 #include <memory>
-#include "Cube.h"
+#include "Player.h"
 #include "DebugLog.h"
 #include "FirstPersonCamera.h"
 #include "KInput.h"
@@ -10,12 +10,13 @@
 CameraController::CameraController() :
 	m_mode(CameraMode::Free),
 	m_state(CameraKind::CamNone),
-	m_cameraOffset(PlayerParam::PlayerEyeHeight),
+	m_cameraOffset(),
 	m_oldPos(0, 0),
 	m_moveSpeed(5.f),
 	m_pCurrentCamera(nullptr),
 	m_windowSize(WIN_WIDTH, WIN_HEIGHT)
 {
+	
 	m_pFirstPersonCamera = std::make_shared<FirstPersonCamera>();
 	m_pThirdPersonCamera = std::make_shared<ThirdPersonCamera>();
 	m_pCurrentCamera = m_pFirstPersonCamera.get();
@@ -45,27 +46,28 @@ void CameraController::Update(float dt)
 		m_pCurrentCamera = m_pFirstPersonCamera.get();
 		//Hide cursor
 		ShowCursor(FALSE);
+		
 		DebugLog::Log("[Camera]:First Camera Camera");
 	}
 	/*if (KInput::IsKeyTrigger(VK_F3))
 	{
-	
+
 		m_mode = CameraMode::ThirdPerson;
 		// 今使っているカメラのをFirstPersonCameraに切り替え
 		m_pCurrentCamera = m_pThirdPersonCamera.get();
 	}
 	*/
-	
+
 
 #endif
 	switch (m_mode)
 	{
 	case CameraMode::Free: UpdateFreeCamera(dt); break;
 	case CameraMode::ThirdPerson:UpdateThirdPerson(dt); break;
-	case CameraMode::FirstPerson: UpdateFreeCamera(dt); break;
+	case CameraMode::FirstPerson:UpdateFirstCamera(dt); break; 
 	default:return;
 	}
-	
+
 }
 
 
@@ -90,6 +92,12 @@ void CameraController::UpdateCameraTransform(const Transform& transform)
 bool CameraController::GetFirstPersonCamera()
 {
 	return m_mode == CameraMode::FirstPerson;
+}
+
+void CameraController::OnHungryStateChanged(bool isHungry)
+{
+	if (isHungry) StartShake();
+	else EndShake();
 }
 
 void CameraController::UpdateThirdPerson(float dt)
@@ -134,4 +142,28 @@ void CameraController::UpdateThirdPerson(float dt)
 void CameraController::UpdateFreeCamera(float dt)
 {
 	m_pFirstPersonCamera->Update(dt);
+}
+
+void CameraController::UpdateFirstCamera(float dt)
+{
+	if(m_isShake)
+	{
+		//Camera Shake
+		m_time += dt;
+		DirectX::XMFLOAT3 pos = m_pCurrentCamera->GetPos();
+		float offset = sin(m_time * 10.0f) * 0.01f; // 振動の強さを調整
+		pos.x += offset;
+		m_pCurrentCamera->SetPos(pos);
+	}
+}
+
+void CameraController::StartShake()
+{
+	m_time = 0;
+	m_isShake = true;
+}
+
+void CameraController::EndShake()
+{
+	m_isShake = false;
 }

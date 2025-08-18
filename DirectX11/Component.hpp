@@ -13,6 +13,7 @@ namespace MyComponent
 		Physics = 1 << 2,			// Physics Component
 		Hunger = 1 << 3,			// Hunger Component
 		Thirst = 1 << 4,			// Thirst Component
+		LivingEntity = 1 << 5,		// Living Entity Component
 	};
 
 }

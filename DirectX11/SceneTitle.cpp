@@ -86,14 +86,14 @@ void SceneTitle::Init()
 	titleLogo->GetTransform().SetScale(LogoSize * TitleScale);
 
 	//===========Register button to ui manager
-	UIManager::GetInstance().ClearLayers();
-	UIManager::GetInstance().AddUiLayer("Button", 1);
-	UIManager::GetInstance().GetUILayer("Button")->AddComponent(startButton);
-	UIManager::GetInstance().GetUILayer("Button")->AddComponent(optionButton);
-	UIManager::GetInstance().GetUILayer("Button")->AddComponent(exitButton);
+	UIManager::Instance().ClearLayers();
+	UIManager::Instance().AddUiLayer("Button", 1);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(startButton);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(optionButton);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(exitButton);
 
-	UIManager::GetInstance().AddUiLayer("TitleLogo", 2);
-	UIManager::GetInstance().GetUILayer("TitleLogo")->AddComponent(titleLogo);
+	UIManager::Instance().AddUiLayer("TitleLogo", 2);
+	UIManager::Instance().GetUILayer("TitleLogo")->AddComponent(titleLogo);
 
 	//===========Set Button Event
 	startButton->SetOnClick([this]()
@@ -170,7 +170,7 @@ void SceneTitle::Update(float tick)
 
 
 	// Button Update
-	UIManager::GetInstance().Update(tick);
+	UIManager::Instance().Update(tick);
 
 }
 
@@ -180,5 +180,5 @@ void SceneTitle::Draw()
 
 	// Draw Buttons
 	GameApp::SetDepthStencilState(RenderStates::DSSNoDepthTest);
-	UIManager::GetInstance().Draw();
+	UIManager::Instance().Draw();
 }

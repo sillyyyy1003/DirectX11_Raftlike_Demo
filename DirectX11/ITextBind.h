@@ -21,15 +21,28 @@ public:
 			});
 	}
 
+	template<typename T, typename GetterFunc, typename... Args>
+	void SetProvider(T* obj, GetterFunc getterFunc, Args... args)
+	{
+		SetTextProvider([obj, getterFunc, args...]()
+			{
+				return getterFunc(obj, args...);
+			});
+	}
+
 	virtual ~ITextBind() = default;
 };
 
 
 class Player; // Forward declaration for Player class
+class Inventory; // Forward declaration for Inventory class
 namespace UIFormat
 {
-	// Helper function to create a text provider from a static string
+	/// @brief 現在のプレイヤーの飢餓値をフォーマットして返す
 	std::string FormatHunger(Player* player);
+
+	/// @brief 該当するスロットのアイテム数をフォーマットして返す
+	std::string FormatItemNumber(Inventory* inventory, int slotIndex);
 	
 }
 

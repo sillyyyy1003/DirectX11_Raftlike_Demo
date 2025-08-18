@@ -223,6 +223,7 @@
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SkyboxEffect.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="ThirdPersonCamera.cpp" />
     <ClCompile Include="ThirstComponent.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -233,11 +234,13 @@
     <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="UIFontSet.cpp" />
     <ClCompile Include="UIGlossEffect.cpp" />
+    <ClCompile Include="UIInventorySlot.cpp" />
     <ClCompile Include="UILayer.cpp" />
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="UIMesh.cpp" />
     <ClCompile Include="UIScaler.cpp" />
     <ClCompile Include="UIComponent.cpp" />
+    <ClCompile Include="UIPlayerStatus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BuoyancySystem.h" />
@@ -294,6 +297,7 @@
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="SkyboxEffect.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="ThirdPersonCamera.h" />
     <ClInclude Include="ThirstComponent.h" />
     <ClInclude Include="Transform.h" />
@@ -304,11 +308,13 @@
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="UIFontSet.h" />
     <ClInclude Include="UIGlossEffect.h" />
+    <ClInclude Include="UIInventorySlot.h" />
     <ClInclude Include="UILayer.h" />
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="UIMesh.h" />
     <ClInclude Include="UIScaler.h" />
     <ClInclude Include="UIComponent.h" />
+    <ClInclude Include="UIPlayerStatus.h" />
     <ClInclude Include="WinMin.h" />
   </ItemGroup>
   <ItemGroup>

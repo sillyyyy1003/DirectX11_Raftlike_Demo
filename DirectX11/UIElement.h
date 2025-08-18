@@ -40,7 +40,6 @@ public:
 	/// @param model 背景メッシュ
 	virtual void Init(IEffect* effect, Material* material, Primitive* model);
 
-	//void SetPosition(const DirectX::XMFLOAT3& pos);
 	/// @brief 位置設定
 	/// @param pos 背景位置
 	/// @param offset 文字ずれ
@@ -60,7 +59,8 @@ public:
 
 	void SetTextProvider(ITextBind::TextProvider provider);
 
-	RenderComponent* GetUiRenderComponent()	{ return m_pUiRender->GetRenderComponent(); }
+	RenderComponent* GetUiRenderComponent() const	{ return m_pUiRender->GetRenderComponent(); }
+	UIText* GetUiText() const { return m_pUiText.get(); }
 
 	void SetCenterAlignment(bool isCenter = true);
 protected:

@@ -18,6 +18,13 @@ public:
 	RenderComponent() : m_pMaterial(nullptr), m_pEffect(nullptr), m_pModel(nullptr) {}
 	virtual ~RenderComponent() override = default;
 
+	void Init(Material* mat, IEffect* effect, Primitive* model)
+	{
+		m_pMaterial = mat;
+		m_pEffect = effect;
+		m_pModel = model;
+	}
+
 	/// @brief マテリアル配置
 	void SetMaterial(Material* mat) { m_pMaterial = mat; };
 

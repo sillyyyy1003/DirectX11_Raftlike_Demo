@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "HungerComponent.h"
 #include "Inventory.h"
+#include "LivingEntity.h"
 #include "PlayerController.h"
 
 /// <summary>
@@ -14,12 +15,13 @@ public:
 	
 
 	Player();
+	~Player() override;
 
-	void Init();
+	//void Init();
 
 	/// @brief Using Json file to read player settings
 	/// @param filePath 
-	void Init(const char* filePath);	
+	bool Init(const char* filePath = nullptr);
 
 	void Update(float dt)override;
 	void Draw() override;
@@ -49,7 +51,14 @@ public:
 	CameraController* GetCameraController() const { return m_pCameraController.get(); }
 	Inventory* GetInventory() const { return m_pInventory.get(); }
 
+	void OnStarveStateChanged(bool isStarve);
+	void OnHungryStateChanged(bool isHungry);
+
 private:
+
+	//PlayerのHPを扱う
+	std::shared_ptr<PlayerEntity> m_pPlayerEntity;
+
 	// Playerの動きを扱う
 	std::unique_ptr<PlayerController> m_pPlayerController;
 
@@ -65,12 +74,12 @@ private:
 	// Bag
 	std::shared_ptr<Inventory> m_pInventory;
 
-	float m_speed;
 
 	bool m_isInNegativeState = false;	/// true>>if player is in negative state, like hunger, thirst, etc.
 
 
-	
-
+	float m_moveSpeed;				// Player default move speed;
+	float m_jumpSpeed;
+	float m_negativeStatusScale;	// マイナス状態の影響を受けるスケール（空腹、渇きなど）
 };
 
