@@ -81,6 +81,8 @@ size_t  Inventory::GetMaxSlots() const
 
 void Inventory::Update(float tick)
 {
+
+#ifdef _DEBUG
 	// Output all objects in inventory
 	if(KInput::IsKeyTrigger(VK_F11))
 	{
@@ -89,10 +91,28 @@ void Inventory::Update(float tick)
 		{
 
 			ItemPtr item = m_slots[i].value();
-			int index = i;
+			size_t index = i;
+
 			std::string name = item->GetName();
 			DebugLog::Log("[Inventory] Slot {}: Name: {}, Number: {}.", i, name, item->GetCount());
 		}
+	}
+#endif
+}
+
+void Inventory::UseItem(int index, Player* player)
+{
+	if (!m_slots[index].has_value())return;
+
+	m_slots[index].value()->GetProto()->OnUse(player);	// Call OnUse function of item
+
+	// if item is stackable, decrease count
+	m_slots[index].value()->DecreaseCount(1);	// Decrease count by 1
+
+	// if count is 0, remove item from slot
+	if (m_slots[index].value()->GetCount() <= 0)
+	{
+		m_slots[index].reset();	// Remove item from slot
 	}
 }
 

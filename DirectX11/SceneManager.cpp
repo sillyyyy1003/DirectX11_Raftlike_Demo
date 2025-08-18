@@ -113,7 +113,7 @@ void SceneManager::SetCurrentScene(const char* sceneName)
 void SceneManager::ChangeScene()
 {
     //clear all layers for next scene
-    UIManager::GetInstance().ClearLayers();
+    UIManager::Instance().ClearLayers();
 
     switch(m_currentSceneIndex)
     {

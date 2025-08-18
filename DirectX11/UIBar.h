@@ -19,8 +19,11 @@ public:
 	/// @param barMaterial 
 	/// @param bgEffect 
 	/// @param barEffect 
-	void Init(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& scale, Material* bgMaterial, Material* barMaterial,IEffect* bgEffect, IEffect* barEffect);
+	void Init(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& scale, Material* bgMaterial, Material* barMaterial, IEffect* bgEffect, IEffect* barEffect);
+	void Init(Material* bgMaterial, Material* barMaterial, IEffect* bgEffect, IEffect* barEffect);
 
+	void SetScale(const DirectX::XMFLOAT2& scale);
+	void SetPosition(const DirectX::XMFLOAT3& pos);
 
 	/// @brief Update bar render status
 	/// @param volume current percentage (0~1)

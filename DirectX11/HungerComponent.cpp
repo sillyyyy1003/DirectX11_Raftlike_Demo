@@ -5,8 +5,27 @@ HungerComponent::HungerComponent(float initialValue) :
 	m_initialHungerValue(initialValue),
 	m_currentHungerValue(initialValue),
 	m_starveSpeed(0.f),
-	m_pUiComponent(nullptr)
+	m_starveThreshold(90)
 {
+}
+
+HungerComponent::~HungerComponent()
+{
+	m_hungryListeners.clear();
+	m_starveListeners.clear();
+}
+
+
+void HungerComponent::Init(float starveSpeed, float starveThreshold)
+{
+	SetStarveSpeed(starveSpeed);
+	SetStarveThreshold(starveThreshold);
+
+}
+
+void HungerComponent::UnInit()
+{
+
 }
 
 void HungerComponent::Update(float dt)
@@ -16,14 +35,23 @@ void HungerComponent::Update(float dt)
 	// Update hunger value
 	m_currentHungerValue -= m_starveSpeed * dt;
 
-	// 空腹度ゼロ以下の場合
-	if (m_currentHungerValue <= 0)m_isStarve = true;
+	// 空腹度限界にこえたら
+	bool hungerState = (m_currentHungerValue <= m_starveThreshold);
+	if (hungerState != m_isHungry)
+	{
+		m_isHungry = hungerState;
+		// Notify listeners about the change in hunger state
+		NotifyHungryListeners(m_isHungry);
+	}
 
-	
-	//check if ui is set
-	assert(m_pUiComponent != nullptr);
-	//Ui更新(percentage)
-	m_pUiComponent->UpdateUI(m_currentHungerValue / m_initialHungerValue);
+	bool starveState = (m_currentHungerValue <= 0.f);
+	if (starveState != m_isStarve)
+	{
+		m_isStarve = starveState;
+		// Notify listeners about the change in starve state
+		NotifyStarveListener(m_isStarve);
+	}
+
 
 }
 
@@ -45,13 +73,8 @@ void HungerComponent::RestoreHunger(float foodValue)
 	m_isStarve = false;
 }
 
-void HungerComponent::SetUIComponent(UIBar* pUi)
-{
-	m_pUiComponent = pUi;
-}
 
-void HungerComponent::Draw()
+float HungerComponent::GetCurrentHungerPercentage() const
 {
-	assert(m_pUiComponent != nullptr);
-	m_pUiComponent->Draw();
+	return m_currentHungerValue / m_initialHungerValue;
 }

@@ -56,26 +56,11 @@ void UIElement::SetTextProvider(ITextBind::TextProvider provider)
 }
 
 
-void UIElement::SetCenterAlignment(bool isCenter)
-{
-	m_pUiText->SetCenterAlignment(isCenter);
-}
-
 void UIElement::UpdateScale()
 {
 	m_pUiRender->SetViewSize(m_pUiScaler->GetScale());
 }
 
-/*
-void UIElement::SetPosition(const DirectX::XMFLOAT3& pos)
-{
-	//mesh位置設定
-	m_pUiRender->GetTransform().SetPosition(pos);
-
-	//text位置設定
-	m_pUiText->SetPosition(pos);
-}
-*/
 
 void UIElement::SetPosition(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& offset)
 {

@@ -12,7 +12,7 @@ private:
 public:
 	typedef int Priority;	//Priority is used to determine the rendering order of UI components
 
-	static UIManager& GetInstance()
+	static UIManager& Instance()
 	{
 		static UIManager instance;
 		return instance;

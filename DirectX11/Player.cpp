@@ -1,49 +1,210 @@
 ﻿#include "Player.h"
 #include <memory>
+#include "DebugLog.h"
+#include <nlohmann/json.hpp>
 
+using json = nlohmann::json;
 #include "GameApp.h"
 #include "RenderState.h"
 
 namespace
 {
-	constexpr float MoveSpeed = 5.f;
-	constexpr float RotateLimit = DirectX::XM_PI * 7 / 18;	// 70度, 限制玩家上下视角旋转范围
-	constexpr float HungerInitialValue = 200.f;	// 初期の空腹度
-	constexpr float HungerStarveSpeed = 1.f;	// 空腹度の減少速度（1秒あたり1ポイント減少）
-	constexpr float ThirstInitialValue = 200.f;	// 初期の渇き度
-	
+	static constexpr float MoveSpeed = 5.f;
+	static constexpr float RotateLimit = DirectX::XM_PI * 7 / 18;	// 70度, 限制玩家上下视角旋转范围
+	static constexpr float HungerInitialValue = 200.f;	// 初期の空腹度
+	static constexpr float HungerStarveSpeed = 1.f;	// 空腹度の減少速度（1秒あたり1ポイント減少）
+	static constexpr float HungerThreshold = 50.f;	// 空腹度のしきい値（50以下で空腹状態になる）
+	static constexpr float ThirstInitialValue = 200.f;	// 初期の渇き度
+
+	static constexpr int PlayerInventorySize = 12;
+	static constexpr float PlayerDefaultHealth = 100.f;
+
+	static constexpr float PlayerJumpSpeed = 4.f;
+	static constexpr float PlayerMoveSpeed = 4.f;
+
+	static constexpr DirectX::XMFLOAT3 DefaultCameraPos = { 0,10,-10 };	// Default Camera Position
+	static constexpr DirectX::XMFLOAT3 DefaultCameraTarget = { 0,0,0 };	// Default Camera Target Position
+	static constexpr DirectX::XMFLOAT3 PlayerEyeHeight = { 0,2,0 };		// Default eye pos
+	static constexpr float NegativeSpeedEffector = 0.5f;	// 負のステータスの影響を受ける速度の倍率（0.5倍）
+
 }
 
 Player::Player():
 	m_pPlayerController(nullptr),
 	m_pCameraController(nullptr),
-	m_speed(MoveSpeed)
+	m_moveSpeed(MoveSpeed)
 {
 }
 
-void Player::Init()
+Player::~Player()
 {
-	//Player Character (Physics Init)
-	m_pPlayerCharacter = std::make_shared<PlayerCharacter>();
-	m_pPlayerCharacter->Init();
+	if (m_pPlayerController)
+	{
+		m_pPlayerController.reset();
+	}
+	if (m_pCameraController)
+	{
+		m_pCameraController.reset();
+	}
+	if (m_pPlayerCharacter)
+	{
+		m_pPlayerCharacter.reset();
+	}
+	if (m_pPlayerEntity)
+	{
+		m_pPlayerEntity.reset();
+	}
+	if (m_pHungerComponent)
+	{
+		m_pHungerComponent.reset();
+	}
+	if (m_pInventory)
+	{
+		m_pInventory.reset();
+	}
+}
+
+
+bool Player::Init(const char* filePath)
+{
+	if(filePath == nullptr)
+	{
+		m_pPlayerEntity = std::make_shared<PlayerEntity>(PlayerDefaultHealth);
+		AddComponent(MyComponent::ComponentType::LivingEntity, m_pPlayerEntity);
+
+		//Player Character (Physics Init)
+		m_pPlayerCharacter = std::make_shared<PlayerCharacter>();
+		m_pPlayerCharacter->Init();
+
+		//PlayerController初期化
+		m_pPlayerController = std::make_unique<PlayerController>(this, m_pPlayerCharacter.get());
+
+		//CameraController初期化
+		m_pCameraController = std::make_shared<CameraController>();
+
+		//hunger component初期化→初期値
+		m_pHungerComponent = std::make_shared<HungerComponent>(HungerInitialValue);
+		m_pHungerComponent->SetStarveSpeed(HungerStarveSpeed); //空腹度の減少速度を設定（1秒あたり1ポイント減少）
+		AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent);		// HungerComponentをPlayerに追加
+
+		m_pInventory = std::make_shared<Inventory>(PlayerInventorySize);		// assume max slot
+		return true; // No JSON file provided, using default values
+	}
+
+
+	std::ifstream ifs(filePath);
+	if (!ifs.is_open())
+	{
+		DebugLog::LogError("[Player] Failed to open JSON file: {}", filePath);
+		return false;
+	}
+
+	json j;
+	try
+	{
+		ifs >> j;
+	}
+	catch (const std::exception& e)
+	{
+		DebugLog::LogError("[Player] Failed to parse JSON: {}", e.what());
+		return false;
+	}
+
+	// Player Entity
+	{
+		float health = j.contains("PlayerEntity")
+		   ? j["PlayerEntity"].value("Health", PlayerDefaultHealth)
+		   : PlayerDefaultHealth;
+		m_pPlayerEntity = std::make_shared<PlayerEntity>(health);
+		AddComponent(MyComponent::ComponentType::LivingEntity, m_pPlayerEntity);
+	}
+
+	// Player Character
+	{
+		m_pPlayerCharacter = std::make_shared<PlayerCharacter>();
+		m_pPlayerCharacter->Init();
+		m_jumpSpeed= j.contains("PlayerCharacter")?j["PlayerCharacter"].value("JumpSpeed", PlayerJumpSpeed) : PlayerJumpSpeed;
+		m_pPlayerCharacter->SetJumpSpeed(m_jumpSpeed);
+		float m_moveSpeed = j.contains("PlayerCharacter") ? j["PlayerCharacter"].value("MoveSpeed", PlayerMoveSpeed) : PlayerMoveSpeed;
+		m_pPlayerCharacter->SetMoveSpeed(m_moveSpeed);
+		m_negativeStatusScale = j.contains("PlayerCharacter") ? j["PlayerCharacter"].value("NegativeStatusScale", NegativeSpeedEffector) : NegativeSpeedEffector;
+	}
 
 	//PlayerController初期化
 	m_pPlayerController = std::make_unique<PlayerController>(this, m_pPlayerCharacter.get());
 
 	//CameraController初期化
-	m_pCameraController = std::make_shared<CameraController>();
+	{
+		m_pCameraController = std::make_shared<CameraController>();
+		DirectX::XMFLOAT3 camPos = DefaultCameraPos;
+		DirectX::XMFLOAT3 camTarget = DefaultCameraTarget;
+		DirectX::XMFLOAT3 camOffset = PlayerEyeHeight; // Default camera offset
 
-	//hunger component初期化→初期値
-	m_pHungerComponent = std::make_shared<HungerComponent>(HungerInitialValue);
-	m_pHungerComponent->SetStarveSpeed(HungerStarveSpeed); //空腹度の減少速度を設定（1秒あたり1ポイント減少）
-	AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent);		// HungerComponentをPlayerに追加
+		if (j.contains("CameraController"))
+		{
+			auto& jc = j["CameraController"];
+			if (jc.contains("CameraPos") && jc["CameraPos"].is_array() && jc["CameraPos"].size() == 3)
+			{
+				camPos.x = jc["CameraPos"][0].get<float>();
+				camPos.y = jc["CameraPos"][1].get<float>();
+				camPos.z = jc["CameraPos"][2].get<float>();
+			}
+			if (jc.contains("CameraTarget") && jc["CameraTarget"].is_array() && jc["CameraTarget"].size() == 3)
+			{
+				camTarget.x = jc["CameraTarget"][0].get<float>();
+				camTarget.y = jc["CameraTarget"][1].get<float>();
+				camTarget.z = jc["CameraTarget"][2].get<float>();
+			}
+			if (jc.contains("CameraOffset") && jc["CameraOffset"].is_array() && jc["CameraTarget"].size() == 3)
+			{
+				camOffset.x = jc["CameraOffset"][0].get<float>();
+				camOffset.y = jc["CameraOffset"][1].get<float>();
+				camOffset.z = jc["CameraOffset"][2].get<float>();
+			}
+		}
 
-	m_pInventory = std::make_shared<Inventory>(20);		// assume max slot
+		m_pCameraController->GetCamera()->SetPos(camPos);
+		m_pCameraController->GetCamera()->SetTarget(camTarget);
+		m_pCameraController->SetCameraOffset(camOffset);
+	}
+
+	// hunger component初期化→初期値
+	{
+		float hungerInit = j.contains("HungerComponent")
+			? j["HungerComponent"].value("InitialValue", HungerInitialValue)
+			: HungerInitialValue;
+
+		float hungerSpeed = j.contains("HungerComponent")
+			? j["HungerComponent"].value("StarveSpeed", HungerStarveSpeed)
+			: HungerStarveSpeed;
+
+		float hungerThreshold =j.contains("HungerComponent")
+			? j["HungerComponent"].value("StarveThreshHold", HungerThreshold)
+			: HungerThreshold;
+
+		m_pHungerComponent = std::make_shared<HungerComponent>(hungerInit);
+		m_pHungerComponent->Init(hungerSpeed, hungerThreshold);
+		AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent);
+
+		// Add callback event to listener hungry
+		m_pHungerComponent->AddHungryListener([this](bool isHungry) { m_pCameraController->OnHungryStateChanged(isHungry); }); //Camera shake
+		m_pHungerComponent->AddHungryListener([this](bool isHungry) { OnHungryStateChanged(isHungry); });	// slow down move speed
+
+		// Add callback event to listener starve
+		m_pHungerComponent->AddStarveListener([this](bool isStarve) { OnStarveStateChanged(isStarve); });	// get tick damage per sec
+
+	}
+
+	// Inventory
+	{
+		int inventorySize = j.contains("Inventory")
+			? j["Inventory"].value("Size", PlayerInventorySize)
+			: PlayerInventorySize;
+		m_pInventory = std::make_shared<Inventory>(inventorySize);
+	}
+	return true;
 }
 
-void Player::Init(const char* filePath)
-{
-}
 
 
 void Player::Update(float dt)
@@ -68,6 +229,7 @@ void Player::Update(float dt)
 		ImGui::InputFloat3("Rotation(Degree)", rot);
 		m_transform.SetRotation(DirectX::XMConvertToRadians(rot[0]), DirectX::XMConvertToRadians(rot[1]), DirectX::XMConvertToRadians(rot[2]));
 
+		ImGui::Text("MoveSpeed:%f", m_pPlayerCharacter->GetMoveSpeed());
 
 	}
 
@@ -79,8 +241,8 @@ void Player::Update(float dt)
 	m_pPlayerCharacter->SyncPlayerWorldPosition(m_transform);	//Transformを更新
 
 	//=======Camera Update
-	m_pCameraController->Update(dt);
 	m_pCameraController->UpdateCameraTransform(m_transform);		//playerのTransformをCameraControllerに反映
+	m_pCameraController->Update(dt);
 
 	//=======Input
 	m_pPlayerController->m_isControllable = m_pCameraController->GetFirstPersonCamera();	//カメラがFirstPersonCameraなら操作可能
@@ -89,9 +251,11 @@ void Player::Update(float dt)
 	//=======Status Update
 	m_pHungerComponent->Update(dt);	//空腹度
 
-
 	//=======Inventory Update
 	m_pInventory->Update(dt);
+
+	//=======PlayerEntity Update
+	m_pPlayerEntity->Update(dt);	//PlayerのHPを更新
 }
 
 void Player::Draw()
@@ -132,13 +296,13 @@ void Player::Draw()
 
 void Player::Strafe(float dt)
 {
-	float distance = dt * m_speed;
+	float distance = dt * m_moveSpeed;
 	m_transform.Translate(m_transform.GetRightAxis(), distance);
 }
 
 void Player::Walk(float dt)
 {
-	float distance = dt * m_speed;
+	float distance = dt * m_moveSpeed;
 	DirectX::XMFLOAT3 rightAxis = m_transform.GetRightAxis();
 	DirectX::XMVECTOR rightVec = XMLoadFloat3(&rightAxis);
 	DirectX::XMVECTOR frontVec = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(rightVec, DirectX::g_XMIdentityR1));
@@ -149,13 +313,13 @@ void Player::Walk(float dt)
 
 void Player::MoveForward(float dt)
 {
-	float distance = dt * m_speed;
+	float distance = dt * m_moveSpeed;
 	m_transform.Translate(m_transform.GetForwardAxis(), distance);
 }
 
 void Player::Pitch(float dt)
 {
-	float rad = m_speed * dt;
+	float rad = m_moveSpeed * dt;
 	DirectX::XMFLOAT3 rotation = m_transform.GetRotation();
 
 	rotation.x += rad;
@@ -169,9 +333,23 @@ void Player::Pitch(float dt)
 
 void Player::RotateY(float dt)
 {
-	float rad = m_speed * dt;
+	float rad = m_moveSpeed * dt;
 	DirectX::XMFLOAT3 rotation = m_transform.GetRotation();
 	rotation.y = DirectX::XMScalarModAngle(rotation.y + rad);
 	m_transform.SetRotation(rotation);
+}
+
+void Player::OnStarveStateChanged(bool isStarve)
+{
+	m_pPlayerEntity->OnStateStarveChanged(isStarve);
+}
+
+void Player::OnHungryStateChanged(bool isHungry)
+{
+	float moveEffector = isHungry ?
+		m_negativeStatusScale : 1.f;	// 空腹状態なら速度減衰係数を適用
+
+	m_pPlayerCharacter->SetMoveSpeed(m_moveSpeed * moveEffector);	// PlayerCharacterに速度を設定
+	m_pPlayerCharacter->SetJumpSpeed(m_jumpSpeed * moveEffector);	// PlayerCharacterにジャンプ速度を設定
 }
 

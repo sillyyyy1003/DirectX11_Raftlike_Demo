@@ -25,6 +25,13 @@ void UIRender::Draw()
 	m_pRenderComponent->Render(m_transform);
 }
 
+void UIRender::Init(Material* mat, IEffect* effect, Primitive* model)
+{
+	m_pRenderComponent->SetMaterial(mat);
+	m_pRenderComponent->SetEffect(effect);
+	m_pRenderComponent->SetModel(model);
+}
+
 UIText::UIText():
 	m_pTextFormat(nullptr),
 	m_pSolidBrush(nullptr),
@@ -77,11 +84,44 @@ void UIText::SetTextProvider(TextProvider provider)
 	m_textProvider = provider;
 }
 
-void UIText::SetCenterAlignment(bool isCenterAlignment)
+
+
+void UIText::SetTextAlignment(TextAlign textAlign)
 {
-	m_isCenterAlignment = isCenterAlignment;
+	
+	switch(textAlign)
+	{
+		case TextAlign::Left:
+			m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+			break;
+		case TextAlign::Center:
+			m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+			break;
+		case TextAlign::Right:
+			m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
+			break;
+		default:
+			m_pTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+			break;
+		
+	}
 }
 
+void UIText::SetParagraphAlignment(ParagraphAlign paragraphAlign)
+{
+	switch (paragraphAlign)
+	{
+	case ParagraphAlign::Top:
+		m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+		break;
+	case ParagraphAlign::Middle:
+		m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+		break;
+	case ParagraphAlign::Bottom:
+		m_pTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		break;
+	}
+}
 
 
 void UIText::DrawTextW(const std::string& str)
@@ -100,8 +140,6 @@ void UIText::DrawTextW(const std::string& str)
 
 	// 文字色を反映
 	m_pSolidBrush->SetColor(D2D1_COLOR_F(m_color));
-
-	pd2dRenderTarget->DrawRectangle(m_textRect, m_pSolidBrush);
 	// 文字描画
 	pd2dRenderTarget->DrawTextW(wStr.c_str(), (UINT32)wStr.size(), m_pTextFormat, m_textRect, m_pSolidBrush);
 

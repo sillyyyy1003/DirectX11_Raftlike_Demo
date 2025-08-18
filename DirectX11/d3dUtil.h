@@ -16,6 +16,9 @@
 #include <d3dcompiler.h>
 #include <vector>
 #include <string>
+#include <nlohmann/json.hpp>
+
+#include "DebugLog.h"
 
 //
 // 宏相关
@@ -183,26 +186,31 @@ HRESULT CreateShaderFromFile(
     LPCSTR shaderModel,
     ID3DBlob** ppBlobOut);
 
+/// @brief inline operator+ overloads for DirectX::XMFLOAT3
 inline DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
 {
     return DirectX::XMFLOAT3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
 }
 
+/// @brief inline operator- overloads for DirectX::XMFLOAT3
 inline DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& lhs, const DirectX::XMFLOAT3& rhs)
 {
     return DirectX::XMFLOAT3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
 }
 
+/// @brief inline operator* with float overloads for DirectX::XMFLOAT3
 inline DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& vec, float scalar)
 {
     return DirectX::XMFLOAT3(vec.x * scalar, vec.y * scalar, vec.z * scalar);
 }
 
+/// @brief inline operator* with float overloads for DirectX::XMFLOAT3
 inline DirectX::XMFLOAT3 operator*(float scalar, const DirectX::XMFLOAT3& vec)
 {
     return vec * scalar;
 }
 
+/// @brief inline operator/ overloads for DirectX::XMFLOAT3
 inline DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& vec, float scalar)
 {
     float inv = 1.0f / scalar;
@@ -249,4 +257,23 @@ inline float EaseOutCubic(float t)
 {
     return 1.0f - powf(1.0f - t, 3.0f);
 }
+
+/// @brief Convert json array to xmfloat3
+inline DirectX::XMFLOAT3 JsonToXMFLOAT3(const nlohmann::json& arr)
+{
+    return DirectX::XMFLOAT3(
+        arr[0].get<float>(),
+        arr[1].get<float>(),
+        arr[2].get<float>()
+    );
+}
+/// @brief Convert json array to xmfloat2
+inline DirectX::XMFLOAT2 JsonToXMFLOAT2(const nlohmann::json& arr)
+{
+    return DirectX::XMFLOAT2(
+        arr[0].get<float>(),
+        arr[1].get<float>()
+    );
+}
+
 #endif

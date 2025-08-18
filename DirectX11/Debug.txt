@@ -17,6 +17,16 @@ Loading model finished
 [ModelManager] Loaded model: Square
 [ModelManager] Loaded model: Capsule
 [SceneManager] Current Scene: Scene title!
+[TextureManager] Registered texture: Food_Albedo
+[TextureManager] Registered texture: Food_Normal
+[TextureManager] Registered texture: Food_Metallic
+[TextureManager] Registered texture: UI_Aim
+[TextureManager] Registered texture: Apple_Icon
+[TextureManager] Registered texture: Banana_Icon
+[TextureManager] Registered texture: UI_InventorySlotBg
+[TextureManager] Registered texture: UI_InventoryChosenSlot
+[TextureManager] Registered texture: UI_HpIcon
+[TextureManager] Registered texture: UI_HungerIcon
 [ItemDataBase] Apple is registered!
 [ItemDataBase] Banana is registered!
 [SceneManager] Current Scene: Scene game!
@@ -24,3 +34,6 @@ Loading model finished
 [PlayerContactListener] Character is in water now
 [PlayerContactListener] Character gets out of water now
 [BuoyancySystem] : Add object to water!
+[Camera]:First Camera Camera
+Insert 5 Apple
+[SceneManager] Current Scene: Scene title!

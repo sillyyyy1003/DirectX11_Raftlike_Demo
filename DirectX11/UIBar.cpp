@@ -28,7 +28,7 @@ void UIBar::Init(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& scale, M
 	m_backgroundMesh->SetMaterial(bgMaterial);
 	m_backgroundMesh->SetEffect(bgEffect);
 
-
+	/*
 	// Set Scale
 	m_barMesh->GetTransform().SetScale(m_scale);
 	// object実際の位置を計算（anchor Pos + scale/2）
@@ -36,11 +36,48 @@ void UIBar::Init(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& scale, M
 	m_barMesh->GetTransform().SetPosition(currPos);
 
 
-
 	// 背景ちょっと大きい
 	DirectX::XMFLOAT3 bgScale = { m_scale.x + 10.f,m_scale.y + 10.f ,m_scale.z };
 	m_backgroundMesh->GetTransform().SetScale(bgScale);
 
+	// 位置を真ん中+ Layerずらす
+	currPos.z += 0.1f;
+	m_backgroundMesh->GetTransform().SetPosition(currPos);
+	*/
+
+}
+
+void UIBar::Init(Material* bgMaterial, Material* barMaterial, IEffect* bgEffect, IEffect* barEffect)
+{
+	m_barMesh = std::make_unique<UIRender>();
+	m_backgroundMesh = std::make_unique<UIRender>();
+
+	m_barMesh->SetModel(ModelManager::Instance().GetModel("Square"));
+	m_barMesh->SetMaterial(barMaterial);
+	m_barMesh->SetEffect(barEffect);
+
+	m_backgroundMesh->SetModel(ModelManager::Instance().GetModel("Square"));
+	m_backgroundMesh->SetMaterial(bgMaterial);
+	m_backgroundMesh->SetEffect(bgEffect);
+}
+
+void UIBar::SetScale(const DirectX::XMFLOAT2& scale)
+{
+	m_scale = { scale.x,scale.y,1.0f };
+	// Set Scale
+	m_barMesh->GetTransform().SetScale(m_scale);
+	// 背景ちょっと大きい
+	DirectX::XMFLOAT3 bgScale = { m_scale.x + 10.f,m_scale.y + 10.f ,m_scale.z };
+	m_backgroundMesh->GetTransform().SetScale(bgScale);
+
+}
+
+void UIBar::SetPosition(const DirectX::XMFLOAT3& pos)
+{
+	m_position = pos;
+	// object実際の位置を計算（anchor Pos + scale/2）
+	DirectX::XMFLOAT3 currPos = { m_position.x + m_scale.x / 2.f,m_position.y,m_position.z };
+	m_barMesh->GetTransform().SetPosition(currPos);
 	// 位置を真ん中+ Layerずらす
 	currPos.z += 0.1f;
 	m_backgroundMesh->GetTransform().SetPosition(currPos);
@@ -58,6 +95,7 @@ void UIBar::UpdateUI(float volume)
 	DirectX::XMFLOAT3 currPos = m_barMesh->GetTransform().GetPosition();
 	currScale.x = width;
 	currPos.x = desPos;
+
 	m_barMesh->GetTransform().SetScale(currScale);
 	m_barMesh->GetTransform().SetPosition(currPos);
 }

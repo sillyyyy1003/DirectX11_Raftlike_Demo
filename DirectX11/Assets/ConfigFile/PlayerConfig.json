@@ -1,0 +1,27 @@
+{
+    "PlayerEntity": {
+    "Health": 100.0
+  },
+  "PlayerCharacter": {
+    "MoveSpeed": 4.0,
+    "JumpSpeed": 4.0,
+    "NegativeStatusScale":0.2
+  },
+  "PlayerController": {
+    
+  },
+  "CameraController": {
+    "CameraPos":[0.0,10.0,-10.0],
+    "CameraTarget":[0.0, 0.0, 0.0],
+    "CameraOffset":[0.0,2.0,0.0]
+  },
+  "HungerComponent": {
+    "InitialValue": 100.0,
+    "StarveSpeed": 1.0,
+    "StarveThreshHold":30
+  },
+  "Inventory": {
+    "Size": 12
+  }
+  
+}

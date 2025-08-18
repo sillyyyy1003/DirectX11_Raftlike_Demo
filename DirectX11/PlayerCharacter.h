@@ -8,10 +8,6 @@
 
 using namespace JPH;
 
-namespace PlayerParam
-{
-	static constexpr DirectX::XMFLOAT3 PlayerEyeHeight = {0,2,0};	//
-}
 
 /// @brief this class represents a player character in the game
 ///	using jolt physics
@@ -38,6 +34,10 @@ public:
 	void Jump();
 
 	CharacterVirtual* GetCharacterVirtual() { return m_pCharacter; }
+	void SetMoveSpeed(float moveSpeed) { m_moveSpeed = moveSpeed; }
+	void SetJumpSpeed(float jumpSpeed) { m_jumpSpeed = jumpSpeed; }
+
+	float GetMoveSpeed() const { return m_moveSpeed; }
 private:
 
 	Ref<CharacterVirtual> m_pCharacter;
@@ -58,7 +58,6 @@ private:
 
 	// List of active characters in the scene so they can collide
 	CharacterVsCharacterCollisionSimple m_characterVsCharacterCollision;
-
 
 
 #ifdef _DEBUG

@@ -3,7 +3,6 @@
 #include <vector>
 #include "Item.h"
 
-class Item;
 /// @brief プレイヤーの持ち物を管理するクラス 
 class Inventory:
 	public Component
@@ -22,12 +21,13 @@ public:
 
 	size_t GetUsedSlotCount() const;
 	size_t GetMaxSlots() const;
+	std::vector<Slot>& GetSlots() { return m_slots; }
 
 	void Update(float tick);
+	void UseItem(int index, Player* player);
+
 private:
 
 	std::vector<Slot> m_slots;
-
-
 };
 

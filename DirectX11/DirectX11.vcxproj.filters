@@ -106,6 +106,12 @@
     <Filter Include="头文件\Player">
       <UniqueIdentifier>{17e01991-c984-45bf-a530-1ee2423301f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Item">
+      <UniqueIdentifier>{d6034a1e-3441-4ce9-a5bd-782f18e6116d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Item">
+      <UniqueIdentifier>{88d7ffe0-96a4-4fb6-991b-c190d5b162dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -255,19 +261,7 @@
     <ClCompile Include="ThirstComponent.cpp">
       <Filter>源文件\Player</Filter>
     </ClCompile>
-    <ClCompile Include="ITextBind.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="ShipTile.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Item.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Inventory.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="ItemDataBase.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SceneTitle.cpp">
@@ -300,16 +294,37 @@
     <ClCompile Include="SceneOption.cpp">
       <Filter>源文件\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="BuoyancySystem.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="SkyboxEffect.cpp">
       <Filter>源文件\Render</Filter>
     </ClCompile>
+    <ClCompile Include="BuoyancySystem.cpp">
+      <Filter>源文件\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ITextBind.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIInventorySlot.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Skybox.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>源文件\Model</Filter>
     </ClCompile>
     <ClCompile Include="DayLight.cpp">
+      <Filter>源文件\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>源文件\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>源文件\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemDataBase.cpp">
+      <Filter>源文件\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="UIPlayerStatus.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -467,19 +482,7 @@
     <ClInclude Include="ThirstComponent.h">
       <Filter>头文件\Player</Filter>
     </ClInclude>
-    <ClInclude Include="ITextBind.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ShipTile.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Inventory.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ItemDataBase.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SceneTitle.h">
@@ -512,16 +515,37 @@
     <ClInclude Include="SceneOption.h">
       <Filter>头文件\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="BuoyancySystem.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="SkyboxEffect.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Skybox.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="BuoyancySystem.h">
+      <Filter>头文件\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ITextBind.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>头文件\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>头文件\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory.h">
+      <Filter>头文件\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemDataBase.h">
+      <Filter>头文件\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="UIInventorySlot.h">
+      <Filter>头文件\UI</Filter>
     </ClInclude>
     <ClInclude Include="DayLight.h">
+      <Filter>头文件\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="UIPlayerStatus.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
