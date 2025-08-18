@@ -38,30 +38,13 @@ Player::Player():
 
 Player::~Player()
 {
-	if (m_pPlayerController)
-	{
-		m_pPlayerController.reset();
-	}
-	if (m_pCameraController)
-	{
-		m_pCameraController.reset();
-	}
-	if (m_pPlayerCharacter)
-	{
-		m_pPlayerCharacter.reset();
-	}
-	if (m_pPlayerEntity)
-	{
-		m_pPlayerEntity.reset();
-	}
-	if (m_pHungerComponent)
-	{
-		m_pHungerComponent.reset();
-	}
-	if (m_pInventory)
-	{
-		m_pInventory.reset();
-	}
+	if (m_pPlayerController)m_pPlayerController.reset();
+	if (m_pCameraController)m_pCameraController.reset();
+	if (m_pPlayerCharacter)m_pPlayerCharacter.reset();
+	if (m_pPlayerEntity)m_pPlayerEntity.reset();
+	if (m_pHungerComponent)m_pHungerComponent.reset();
+	if (m_pInventory)m_pInventory.reset();
+	
 }
 
 
