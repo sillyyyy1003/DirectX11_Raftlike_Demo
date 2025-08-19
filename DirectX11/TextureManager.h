@@ -20,6 +20,8 @@ public:
 		return instance;
 	}
 
+	void LoadTextures(const char* jsonFilePath);
+
 	/// @brief 指定のテクスチャを登録する
 	void Register(const char* name, const char* filePath);
 

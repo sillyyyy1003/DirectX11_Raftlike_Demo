@@ -99,19 +99,36 @@ void PlayerController::Update(float dt)
             JPH::RRayCast rayCast(origin, direction * distance);
             JPH::RayCastResult result;
             ExcludeLayerFilter layerFilter;
-            if (PhysicsManager::Instance().GetPhysicsSystem()->GetNarrowPhaseQuery().CastRay(rayCast, result, {}, layerFilter,{}))
+
+            if (PhysicsManager::Instance().GetPhysicsSystem()->GetNarrowPhaseQuery().CastRay(rayCast, result, {}, layerFilter,{}))  //Hit check
             {
                 PhysicsComponent* component = PhysicsManager::Instance().GetPhysicsComponent(result.mBodyID);
-                if (component!=nullptr)
+				if (component != nullptr)// If the component is valid
                 {
                     GameObject* object = component->GetGameObjectByComponent();
-                    std::string name = dynamic_cast<ItemInstance*>(object)->GetName();
-                    // Add object to  inventory
-                    DebugLog::Log("Insert {} {}",m_pPlayer->GetInventory()->Insert(dynamic_cast<ItemInstance*>(object)), name);
-                    // Give ui system message
 
-                    // Delete object from scene
-                    if(object)object->DeActivate();
+					// 当たったのがアイテムなら、インヴェントリーに追加
+                    if (object->GetGameObjectType() == GameObject::GameObjectType::Item)
+                    {
+                        std::string name = dynamic_cast<ItemInstance*>(object)->GetName();
+                        int count = dynamic_cast<ItemInstance*>(object)->GetCount();
+                        int insertNum = m_pPlayer->GetInventory()->Insert(dynamic_cast<ItemInstance*>(object));
+                        // アイテム全部挿入したら、しーんから消す
+                        if (count == insertNum)
+                        {
+                            object->DeActivate();
+                        }
+#ifdef _DEBUG
+                    	DebugLog::Log("Insert {} {}", insertNum, name);
+#endif
+                    	
+                    }
+					else// If the hit object is not an item
+                    {
+#ifdef _DEBUG
+                        DebugLog::Log("Hit object is not an item.");
+#endif
+                    }
                 }
             }
 

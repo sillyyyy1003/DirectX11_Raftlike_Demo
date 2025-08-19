@@ -9,7 +9,6 @@ using json = nlohmann::json;
 
 namespace
 {
-	static constexpr float MoveSpeed = 5.f;
 	static constexpr float RotateLimit = DirectX::XM_PI * 7 / 18;	// 70度, 限制玩家上下视角旋转范围
 	static constexpr float HungerInitialValue = 200.f;	// 初期の空腹度
 	static constexpr float HungerStarveSpeed = 1.f;	// 空腹度の減少速度（1秒あたり1ポイント減少）
@@ -30,9 +29,12 @@ namespace
 }
 
 Player::Player():
+	GameObject(GameObjectType::Player),
 	m_pPlayerController(nullptr),
 	m_pCameraController(nullptr),
-	m_moveSpeed(MoveSpeed)
+	m_moveSpeed(PlayerMoveSpeed),
+	m_jumpSpeed(PlayerJumpSpeed),
+	m_negativeStatusScale(NegativeSpeedEffector)
 {
 }
 

@@ -136,7 +136,7 @@ void FirstPersonCamera::MoveUpward(float d)
 void FirstPersonCamera::Shake(float dt)
 {
     m_time += dt;
-	float offset = sin(m_time * 10.0f) * 0.1f; // 振動の強さを調整
+	float offset = (float)sin(m_time * 10.0f) * 0.1f; // 振動の強さを調整
 	XMFLOAT3 pos = m_transform.GetPosition();
     pos.x += offset;
     m_transform.SetPosition(pos);

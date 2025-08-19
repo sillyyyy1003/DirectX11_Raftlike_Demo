@@ -80,9 +80,13 @@ void SceneManager::UnInit()
 {
     Geometry::Uninit(); //Geometryの終了処理
 
+    ItemDataBase::Instance().UnInit(); // アイテムデータベースの終了処理
+
 	ModelManager::Instance().UnInit(); // モデルマネージャーの終了処理
 
 	PhysicsManager::Instance().UnInit(); // 物理システムの終了処理
+
+
 }
 
 void SceneManager::Update(float dt)

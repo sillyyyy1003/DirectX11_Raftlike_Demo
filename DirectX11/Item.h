@@ -10,7 +10,7 @@ public:
 	enum class ItemType :uint8_t
 	{
 		Weapon = 0,		// 武器
-		Builder = 1,	// 建築ツール
+		Utility = 1,	// 建築ツール
 		Food = 2,		// 食品
 		Water = 3,		// 飲み物
 		BaseMaterial = 4// 建築材料	
@@ -31,6 +31,15 @@ public:
 
 	virtual void OnUse(Player* player) const = 0;
 	//virtual void OnHold(Player* player, float deltaTime) {}
+
+	void SetItemId(uint32_t itemId) { m_itemId = itemId; }
+	void SetModelId(uint32_t modelId) { m_modelId = modelId; }
+	void SetMaterialId(uint32_t materialId) { m_materialID = materialId; }
+
+
+	uint32_t GetItemId() const { return m_itemId; }
+	uint32_t GetModelId() const { return m_modelId; }
+	uint32_t GetMaterialId() const { return m_materialID; }
 private:
 	ItemType m_itemType;
 
@@ -39,6 +48,9 @@ private:
 	float m_maxDurability;		// 最大耐久値
 
 	std::string m_itemName;		// アイテム名
+	uint32_t m_itemId = -1;		// アイテムID, -1は未設定
+	uint32_t m_modelId = -1;
+	uint32_t m_materialID = -1;
 };
 
 
@@ -47,7 +59,7 @@ class ItemInstance :
 	public GameObject
 {
 public:
-	ItemInstance() {}
+	ItemInstance();
 
 	/// @brief Item初期化
 	/// @param _proto 参照ポインター
@@ -71,6 +83,9 @@ public:
 	std::string GetName() const { return m_protoPtr->GetName(); };
 	void DecreaseCount(int count);
 
+	uint32_t GetItemId() const { return m_protoPtr ? m_protoPtr->GetItemId() : -1; }
+	uint32_t GetModelId() const { return m_protoPtr ? m_protoPtr->GetModelId() : -1; }
+	uint32_t GetMaterialId() const { return m_protoPtr ? m_protoPtr->GetMaterialId() : -1; }
 private:
 	std::shared_ptr<const Item> m_protoPtr;
 	int m_count = 1;				// 実際のアイテム数
@@ -79,12 +94,12 @@ private:
 
 
 //========BuildTool===========
-class Builder:
+class Utility:
 	public Item
 {
 public:
-	Builder();
-	~Builder() override = default;
+	Utility();
+	~Utility() override = default;
 	void OnUse(Player* player) const override;
 	//void OnHold(Player* player, float deltaTime) override;
 
@@ -103,3 +118,12 @@ private:
 	float m_foodValue;	// 回復値
 };
 
+class BaseMaterial :
+	public Item
+{
+
+public:
+	BaseMaterial();
+	~BaseMaterial() override = default;
+
+};

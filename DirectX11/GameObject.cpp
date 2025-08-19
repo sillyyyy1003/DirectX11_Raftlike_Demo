@@ -2,9 +2,10 @@
 #include "RenderComponent.h"
 #include "PhysicsComponent.h"
 
-GameObject::GameObject() :
+GameObject::GameObject(GameObjectType type) :
 	m_transform(Transform()),
-	m_isActive(true)
+	m_isActive(true),
+	m_objectType(type)
 {
 }
 
@@ -58,3 +59,19 @@ void GameObject::Draw()
 
 }
 
+void GameObject::SetPosition(const DirectX::XMFLOAT3& pos)
+{
+	// Dynamic physics のみ物理で位置変更
+	if (GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics) != nullptr)
+	{
+		PhysicsComponent* physics = GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics);
+		if (physics->GetEmotionType() == EMotionType::Dynamic)
+		{
+			physics->SetPosition(pos);
+			return;
+		}
+	}
+
+	m_transform.SetPosition(pos);
+
+}

@@ -276,4 +276,14 @@ inline DirectX::XMFLOAT2 JsonToXMFLOAT2(const nlohmann::json& arr)
     );
 }
 
+inline DirectX::XMFLOAT4 JsonToXMFLOAT4(const nlohmann::json& arr)
+{
+    return DirectX::XMFLOAT4(
+        arr[0].get<float>(),
+        arr[1].get<float>(),
+        arr[2].get<float>(),
+        arr[3].get<float>()
+    );
+}
+
 #endif

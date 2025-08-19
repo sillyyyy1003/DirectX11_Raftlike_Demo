@@ -4,7 +4,8 @@
 
 namespace 
 {
-	static constexpr int FoodMaxStack = 20;
+	static constexpr int FoodMaxStack = 10;
+	static constexpr int BasicMaterialMaxStack = 20; //ツールはスタックしない
 	
 }
 Item::Item(ItemType _type, bool stackable, int maxStack, float maxDurability):
@@ -12,6 +13,11 @@ Item::Item(ItemType _type, bool stackable, int maxStack, float maxDurability):
 	m_isStackable(stackable),
 	m_maxStack(maxStack),
 	m_maxDurability(maxDurability)
+{
+}
+
+ItemInstance::ItemInstance():
+	GameObject(GameObjectType::Item)
 {
 }
 
@@ -33,13 +39,13 @@ void ItemInstance::DecreaseCount(int count)
 }
 
 //========BuildTool===========
-Builder::Builder():
-	Item(ItemType::Builder,false,0,0)
+Utility::Utility():
+	Item(ItemType::Utility,false,0,0)
 {
 }
 
 
-void Builder::OnUse(Player* player) const
+void Utility::OnUse(Player* player) const
 {
 }
 

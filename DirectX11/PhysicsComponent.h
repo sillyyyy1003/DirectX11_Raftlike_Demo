@@ -25,8 +25,9 @@ public:
 private:
 
 	JPH::BodyID m_bodyID;
-	float m_mass;		//Dynamic Objectの質量
-	GameObject* m_gameObject;
+	float m_mass;				// Dynamic Objectの質量
+	GameObject* m_gameObject;	// 所属しているGameObjectを設定
+	bool m_isEnable = true;
 
 public:
 

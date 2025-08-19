@@ -1,0 +1,22 @@
+{
+  "foods": [
+    {
+      "name": "Apple",
+      "nutrition": 20.0,
+      "model": "Food_Apple",
+      "material": "FoodMaterial"
+    },
+    {
+      "name": "Banana",
+      "nutrition": 10.0,
+      "model": "Food_Banana",
+      "material": "FoodMaterial"
+    },
+    {
+      "name": "Coconut",
+      "nutrition": 5.0,
+      "model": "Food_Coconut",
+      "material": "FoodMaterial"
+    }
+  ]
+}

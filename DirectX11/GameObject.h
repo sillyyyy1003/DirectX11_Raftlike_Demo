@@ -11,22 +11,19 @@
 /// </summary>
 class GameObject
 {
-protected:
 
-	Transform m_transform;
 
-	typedef std::unordered_map<MyComponent::ComponentType, std::shared_ptr<Component>> Components;
-	Components m_components;// 持つコンポーネントのリスト
-
-	bool m_isActive;
-
-#if defined(_DEBUG) || defined(DEBUG)
-	DirectX::XMFLOAT3 m_debugCollisionScale = { 1,1,1 };
-#endif
-	
 public:
+	enum class GameObjectType : uint8_t
+	{
+		Default,
+		Item,
+		Player,
+		Environment,
 
-	GameObject();
+	};
+
+	GameObject(GameObjectType type = GameObjectType::Default);
 	virtual ~GameObject() = default;
 
 	virtual void Update(float dt);
@@ -75,6 +72,22 @@ public:
 	void Activate() { m_isActive = true; }
 	void DeActivate() { m_isActive = false; }
 	bool GetActive() const { return m_isActive; };
+
+	GameObjectType GetGameObjectType()const { return m_objectType; }
+	void SetPosition(const DirectX::XMFLOAT3& pos);
+protected:
+
+	Transform m_transform;
+
+	typedef std::unordered_map<MyComponent::ComponentType, std::shared_ptr<Component>> Components;
+	Components m_components;// 持つコンポーネントのリスト
+
+	bool m_isActive;
+	GameObjectType m_objectType;
+#if defined(_DEBUG) || defined(DEBUG)
+	DirectX::XMFLOAT3 m_debugCollisionScale = { 1,1,1 };
+#endif
+
 
 };
 
