@@ -17,8 +17,16 @@
       "file": "Assets/Model/Grill1.fbx"
     },
     {
-      "name": "Building_WoodFloor",
-      "file": "Assets/Model/WoodFloor1.fbx"
+      "name": "BaseMaterial_Wood",
+      "file": "Assets/Model/Board.fbx"
+    },
+    {
+      "name": "BaseMaterial_Wire",
+      "file": "Assets/Model/Wire.fbx"
+    },
+      {
+      "name": "BaseMaterial_PlasticBottle",
+      "file": "Assets/Model/PlasticBottle.fbx"
     }
   ],
   "materials":[
@@ -41,6 +49,26 @@
       "albedoTex": "Food_Albedo",
       "normalTex": "Food_Normal",
       "metallicTex": "Food_Metallic"
+    },
+    {
+      "name": "BaseObjectMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "BaseMaterial_Albedo",
+      "normalTex": "BaseMaterial_Normal",
+      "metallicTex": "BaseMaterial_Metallic"
+    },
+        {
+      "name": "BaseObjectMaterial1",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "BaseMaterial1_Albedo",
+      "normalTex": "BaseMaterial1_Normal",
+      "metallicTex": "BaseMaterial1_Metallic"
     },
     {
       "name": "UiMaterial",
@@ -215,6 +243,34 @@
     {
       "name": "Food_Metallic",
       "file": "Assets/Texture/Foods_DefaultMaterial_MetallicSmoothness.png"
+    },
+    {
+      "name": "BaseMaterial_Albedo",
+      "file": "Assets/Texture/LargePlatform 1_DefaultMaterial_AlbedoTransparency.png"
+    },
+    {
+      "name": "BaseMaterial_Normal",
+      "file": "Assets/Texture/LargePlatform 1_DefaultMaterial_MetallicSmoothness.png"
+    },
+    {
+      "name": "BaseMaterial_Metallic",
+      "file": "Assets/Texture/LargePlatform 1_DefaultMaterial_Normal.png"
+    },
+    {
+      "name": "BaseMaterial1_Albedo",
+      "file": "Assets/Texture/Battery-wire-circuit board_DefaultMaterial_AlbedoTransparency.png"
+    },
+    {
+      "name": "BaseMaterial1_Normal",
+      "file": "Assets/Texture/Battery-wire-circuit board_DefaultMaterial_Normal.png"
+    },
+    {
+      "name": "BaseMaterial1_Metallic",
+      "file": "Assets/Texture/Battery-wire-circuit board_DefaultMaterial_MetallicSmoothness.png"
+    },
+    {
+      "name": "UI_HungerIcon",
+      "file": "Assets/Texture/UI/UI_Hp_Bar_Food_128x128.png"
     },
     {
       "name": "UI_Aim",

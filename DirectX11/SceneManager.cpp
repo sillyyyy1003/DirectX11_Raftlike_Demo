@@ -4,6 +4,7 @@
 #include "Geometry.h"
 #include "ItemDataBase.h"
 #include "KInput.h"
+#include "MaterialManager.h"
 #include "ModelManager.h"
 #include "PhysicsManager.h"
 #include "SceneGame.h"
@@ -13,6 +14,7 @@
 #include "Skybox.h"
 #include "UIManager.h"
 #include "SkyboxEffect.h"
+#include "TextureManager.h"
 
 namespace
 {
@@ -79,11 +81,10 @@ void SceneManager::Init()
 void SceneManager::UnInit()
 {
     Geometry::Uninit(); //Geometryの終了処理
-
-    ItemDataBase::Instance().UnInit(); // アイテムデータベースの終了処理
-
+    ItemDataBase::Instance().UnInit();
+    MaterialManager::Instance().UnInit(); // マテリアルマネージャーの終了処理
 	ModelManager::Instance().UnInit(); // モデルマネージャーの終了処理
-
+	TextureManager::Instance().UnInit(); // テクスチャマネージャーの終了処理
 	PhysicsManager::Instance().UnInit(); // 物理システムの終了処理
 
 

@@ -134,3 +134,7 @@ void ModelManager::UnInit()
     m_modelList.clear();
     m_nextId = 0;
 }
+
+ModelManager::~ModelManager()
+{
+}

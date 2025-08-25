@@ -330,6 +330,12 @@
     <ClCompile Include="MaterialManager.cpp">
       <Filter>源文件\Render</Filter>
     </ClCompile>
+    <ClCompile Include="DriftManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMin.h">
@@ -553,6 +559,12 @@
     </ClInclude>
     <ClInclude Include="MaterialManager.h">
       <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="DriftManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomManager.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

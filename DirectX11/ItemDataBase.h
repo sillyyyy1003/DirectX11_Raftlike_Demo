@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include "Item.h"
+#include "Layers.h"
 
 /// @brief Item Instance Manager
 class ItemDataBase
@@ -20,6 +21,9 @@ public:
 
 	std::shared_ptr<ItemInstance> CreateItemInstance(const char* itemName, int count = 1, float durability = -1);
 
+	std::shared_ptr<ItemInstance> CreateItemInstance(const char* itemName, int count, float durability, ObjectLayer layer);
+
+
 	void LoadItemDataFromJsonFile(const char* jsonFilePath);
 private:
 	ItemDataBase() = default;
@@ -28,6 +32,8 @@ private:
 private:
 	typedef std::unordered_map<std::string, std::shared_ptr<Item>> Items;
 	Items m_items;
+	typedef std::unordered_map<std::string, DirectX::XMFLOAT3> ItemSizes;
+	ItemSizes m_itemSizes;
 
 	uint32_t m_nextID;
 };

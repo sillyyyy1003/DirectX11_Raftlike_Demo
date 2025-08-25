@@ -181,6 +181,7 @@
     <ClCompile Include="DayLight.cpp" />
     <ClCompile Include="DebugLog.cpp" />
     <ClCompile Include="DirLight.cpp" />
+    <ClCompile Include="DriftManager.cpp" />
     <ClCompile Include="DXTrace.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="HungerComponent.cpp" />
@@ -210,6 +211,7 @@
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Primitive.cpp" />
+    <ClCompile Include="RandomManager.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="RenderState.cpp" />
     <ClCompile Include="SceneBase.cpp" />
@@ -256,6 +258,7 @@
     <ClInclude Include="DayLight.h" />
     <ClInclude Include="DebugLog.h" />
     <ClInclude Include="DirLight.h" />
+    <ClInclude Include="DriftManager.h" />
     <ClInclude Include="DXTrace.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="HungerComponent.h" />
@@ -284,6 +287,7 @@
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Primitive.h" />
+    <ClInclude Include="RandomManager.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="RenderState.h" />
     <ClInclude Include="SceneBase.hpp" />

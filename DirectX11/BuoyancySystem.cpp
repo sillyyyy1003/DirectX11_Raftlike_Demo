@@ -28,7 +28,7 @@ void BuoyancySystem::Init(float waterWidth, float waterHeight)
 	// Create water sensor. We use this to detect which bodies entered the water
 	// aware that box shape use half extent
 	// aware that water sensor pos should be under the horizon which is -0.5*height
-	BodyCreationSettings waterSensor(new BoxShape(Vec3(waterWidth / 2.f, waterHeight / 2.f, waterWidth / 2.f)), Vec3(0, -waterHeight / 2.f, 0), Quat::sIdentity(), EMotionType::Static, Layers::SENSOR);
+	BodyCreationSettings waterSensor(new BoxShape(Vec3(waterWidth / 2.f, waterHeight / 2.f, waterWidth / 2.f)), Vec3(0, -waterHeight / 2.f, 0), Quat::sIdentity(), EMotionType::Static, Layers::WATER_SENSOR);
 	waterSensor.mIsSensor = true;
 	// waterSensor doesn't have a rigid body so no need to add to physics bodies container
 	m_waterSensor = PhysicsManager::Instance().GetBodyInterface().CreateAndAddBody(waterSensor, EActivation::Activate);

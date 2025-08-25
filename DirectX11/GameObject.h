@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "Component.hpp"
-#include "IEffect.h"
 #include "Material.h"
 #include "Model.h"
 #include "Transform.h"
@@ -11,7 +10,6 @@
 /// </summary>
 class GameObject
 {
-
 
 public:
 	enum class GameObjectType : uint8_t
@@ -24,7 +22,7 @@ public:
 	};
 
 	GameObject(GameObjectType type = GameObjectType::Default);
-	virtual ~GameObject() = default;
+	virtual ~GameObject();
 
 	virtual void Update(float dt);
 	virtual void Draw();
@@ -39,8 +37,6 @@ public:
 	void AddComponent(MyComponent::ComponentType type, std::shared_ptr<T> comp)
 	{
 		m_components[type] = comp;
-		// Componentの所属を設定
-		m_components[type]->SetGameObject(this);
 	}
 
 	/// @brief Get Component from the GameObject

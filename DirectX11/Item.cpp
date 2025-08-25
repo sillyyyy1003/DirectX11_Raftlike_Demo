@@ -38,6 +38,18 @@ void ItemInstance::DecreaseCount(int count)
 	if (m_count < 0) m_count = 0; // Ensure count does not go below zero
 }
 
+void ItemInstance::Update(float dt)
+{
+	// Set Item object
+	switch (m_itemState)
+	{
+	case Active:break;
+	case InActive: DeActivate(); break;
+	case Collected: DeActivate(); break;
+	}
+	GameObject::Update(dt);
+}
+
 //========BuildTool===========
 Utility::Utility():
 	Item(ItemType::Utility,false,0,0)
@@ -49,6 +61,8 @@ void Utility::OnUse(Player* player) const
 {
 }
 
+
+//========Food===========
 Food::Food(float _foodValue) :
 	Item(ItemType::Food, 
 		true,
@@ -61,6 +75,17 @@ Food::Food(float _foodValue) :
 void Food::OnUse(Player* player) const
 {
 	player->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->RestoreHunger(m_foodValue);
+}
+
+//=========BaseMaterial============
+BaseMaterial::BaseMaterial():
+	Item(ItemType::BaseMaterial)
+{
+}
+
+void BaseMaterial::OnUse(Player* player) const
+{
+	/* No action on use */
 }
 
 

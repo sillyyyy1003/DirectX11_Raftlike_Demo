@@ -13,7 +13,7 @@
 
 namespace
 {
-    static constexpr float RayDistance = 3.f;
+    static constexpr float RayDistance = 4.f;
 }
 
 
@@ -105,7 +105,7 @@ void PlayerController::Update(float dt)
                 PhysicsComponent* component = PhysicsManager::Instance().GetPhysicsComponent(result.mBodyID);
 				if (component != nullptr)// If the component is valid
                 {
-                    GameObject* object = component->GetGameObjectByComponent();
+                    GameObject* object = component->GetGameObject();
 
 					// 当たったのがアイテムなら、インヴェントリーに追加
                     if (object->GetGameObjectType() == GameObject::GameObjectType::Item)
@@ -116,7 +116,7 @@ void PlayerController::Update(float dt)
                         // アイテム全部挿入したら、しーんから消す
                         if (count == insertNum)
                         {
-                            object->DeActivate();
+                            dynamic_cast<ItemInstance*>(object)->SetState(ItemInstance::Collected);
                         }
 #ifdef _DEBUG
                     	DebugLog::Log("Insert {} {}", insertNum, name);

@@ -59,6 +59,12 @@ class ItemInstance :
 	public GameObject
 {
 public:
+	enum ItemState
+	{
+		Active,		// Default
+		InActive,	// Far away from player
+		Collected	// プレイヤーにひろわれた
+	};
 	ItemInstance();
 
 	/// @brief Item初期化
@@ -86,10 +92,18 @@ public:
 	uint32_t GetItemId() const { return m_protoPtr ? m_protoPtr->GetItemId() : -1; }
 	uint32_t GetModelId() const { return m_protoPtr ? m_protoPtr->GetModelId() : -1; }
 	uint32_t GetMaterialId() const { return m_protoPtr ? m_protoPtr->GetMaterialId() : -1; }
+
+	void SetState(ItemState state) { m_itemState = state; }
+	ItemState GetState() const { return m_itemState; }
+
+	void Update(float dt) override;
+	
 private:
 	std::shared_ptr<const Item> m_protoPtr;
 	int m_count = 1;				// 実際のアイテム数
 	float m_durability = -1;		// 現在の耐久値 >>-1 耐久無し
+
+	ItemState m_itemState = ItemState::Active;
 };
 
 
@@ -118,6 +132,7 @@ private:
 	float m_foodValue;	// 回復値
 };
 
+
 class BaseMaterial :
 	public Item
 {
@@ -126,4 +141,5 @@ public:
 	BaseMaterial();
 	~BaseMaterial() override = default;
 
+	void OnUse(Player* player) const override;
 };

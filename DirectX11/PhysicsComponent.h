@@ -9,6 +9,8 @@
 #include "Layers.h"
 #include "Transform.h"
 
+class ItemInstance;
+
 /// @brief 物理コンポーネント
 ///	Now Only box collider
 ///	todo: SphereCollider, CapsuleCollider, MeshCollider, etc.
@@ -26,8 +28,7 @@ private:
 
 	JPH::BodyID m_bodyID;
 	float m_mass;				// Dynamic Objectの質量
-	GameObject* m_gameObject;	// 所属しているGameObjectを設定
-	bool m_isEnable = true;
+	GameObject* m_pGameObject;	// 所属しているGameObjectを設定
 
 public:
 
@@ -36,6 +37,7 @@ public:
 
 	void Init(const BodyCreationSettings& settings,EActivation activation);
 	void Init(BodyID id);
+	void Init(const BodyCreationSettings& settings, EActivation activation, GameObject* obj);
 
 	/// @brief 位置設定
 	/// @param pos 位置
@@ -76,11 +78,12 @@ public:
 
 	float GetMass()const;
 
+	void SetGameObject(GameObject* obj) { m_pGameObject = obj; }
+	GameObject* GetGameObject() const { return m_pGameObject; }
+
 	EMotionType GetEmotionType();
 
-	/// @brief 所属しているGameObjectを設定
-	/// @param gameObject 
-	void SetGameObject(GameObject* gameObject) override { m_gameObject = gameObject; }
-	GameObject* GetGameObjectByComponent() const  { return m_gameObject; }
+	void ActivatePhysics();
+	void DeActivePhysics();
 };
 

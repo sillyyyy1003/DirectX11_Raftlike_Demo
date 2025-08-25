@@ -20,13 +20,11 @@ public:
 
 	void RegisterMaterial(const char* materialName, const std::shared_ptr<Material>& material);
 	void RegisterMaterials(const char* jsonFilePath);
+	void UnInit();
 
 private:
 	MaterialManager() = default;
 	~MaterialManager() = default;
-	// Disable copy constructor and assignment operator
-	MaterialManager(const MaterialManager&) = delete;
-	MaterialManager& operator=(const MaterialManager&) = delete;
 
 
 	typedef std::unordered_map<std::string, MaterialID> MaterialMap; ///< マテリアルのIDと名前のマップ

@@ -68,16 +68,8 @@ void PhysicsManager::Init()
 
 void PhysicsManager::UnInit()
 {
-	BodyInterface& bodyInterface = GetBodyInterface();
+	//RemoveAllBodies();
 
-	//======全てのボディを削除してから、PhysicsSystemを破棄する必要があります。========
-	{
-		for (auto id : m_bodies)
-		{
-			bodyInterface.RemoveBody(id);	//Remove
-			bodyInterface.DestroyBody(id);	//Destroy
-		}
-	}
 	//=======Unregisters all types with the factory and cleans up the default material
 	UnregisterTypes();
 
@@ -160,6 +152,17 @@ PhysicsComponent* PhysicsManager::GetPhysicsComponent(BodyID id)
 	}
 
 }
+
+void PhysicsManager::RemoveAllBodies()
+{
+	BodyInterface& bodyInterface = GetBodyInterface();
+	for (auto id : m_bodies)
+	{
+		bodyInterface.RemoveBody(id);	//Remove
+		bodyInterface.DestroyBody(id);	//Destroy
+	}
+}
+
 
 
 

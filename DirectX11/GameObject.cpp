@@ -1,12 +1,23 @@
 ﻿#include "GameObject.h"
 #include "RenderComponent.h"
 #include "PhysicsComponent.h"
+#include "PhysicsManager.h"
 
 GameObject::GameObject(GameObjectType type) :
 	m_transform(Transform()),
 	m_isActive(true),
 	m_objectType(type)
 {
+}
+
+GameObject::~GameObject()
+{
+	// clear all components reference
+	for (auto& [type, comp] : m_components)
+	{
+		comp.reset(); // 释放每个 Component
+	}
+	m_components.clear(); // Clear all components
 }
 
 void GameObject::Update(float dt)

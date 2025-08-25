@@ -2,6 +2,7 @@
 #include <DirectXMath.h>
 #include "d3dUtil.h"
 #include "DayLight.h"
+#include "DriftManager.h"
 #include "GameApp.h"
 #include "Geometry.h"
 #include "ItemDataBase.h"
@@ -97,19 +98,19 @@ void SceneGame::Init()
 	ItemDataBase::Instance().LoadItemDataFromJsonFile("Assets/ConfigFile/ItemDataBase.json");
 
 	//===========Init item
-	std::shared_ptr<ItemInstance> appleInstance = ItemDataBase::Instance().CreateItemInstance("Apple",3);
+	std::shared_ptr<ItemInstance> appleInstance(ItemDataBase::Instance().CreateItemInstance("Apple",3));
 	appleInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
 	appleInstance->SetPosition({ -3, 3, 0 });
 	RegisterSceneObject(appleInstance);
 
 
-	std::shared_ptr<ItemInstance> bananaInstance = ItemDataBase::Instance().CreateItemInstance("Banana",10);
+	std::shared_ptr<ItemInstance> bananaInstance(ItemDataBase::Instance().CreateItemInstance("Banana",10));
 	bananaInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
 	bananaInstance->SetPosition({ 3, 3, 3 });
 	RegisterSceneObject(bananaInstance);
 
 
-	std::shared_ptr<ItemInstance> coconutInstance = ItemDataBase::Instance().CreateItemInstance("Coconut");
+	std::shared_ptr<ItemInstance> coconutInstance (ItemDataBase::Instance().CreateItemInstance("Coconut"));
 	coconutInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
 	coconutInstance->SetPosition({3, 3, 0});
 	RegisterSceneObject(coconutInstance);
@@ -118,7 +119,11 @@ void SceneGame::Init()
 	std::shared_ptr<RenderComponent> floorRenderComponent = std::make_shared<RenderComponent>();
 	floorRenderComponent->Init(MaterialManager::Instance().GetMaterial("FloorMaterial"), basicEffect, ModelManager::Instance().GetModel("Cube"));
 	floor->AddComponent(MyComponent::ComponentType::Render, floorRenderComponent);
-	
+
+	// Drift Manager
+	DriftManager* driftManager = CreateObj<DriftManager>("DriftManager");
+	driftManager->Init(pbrEffect,player); // Initialize drift manager with PBR effect and player
+
 
 	//===========UI初期化
 	UIRender* uiAim = CreateObj<UIRender>("UiAim");
@@ -178,13 +183,11 @@ void SceneGame::Init()
 	// Create the settings for the body itself. Note that here you can also set other properties like the restitution / friction.
 
 	// Create the actual rigid body
-
-	RefConst<Shape> defaultBoxSettings = ShapeFactory::Instance().GetOrCreateBox(RVec3(HalfUnitScale.x,HalfUnitScale.y,HalfUnitScale.z));
-
 	BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(HalfFloorScale.x,HalfFloorScale.y,HalfFloorScale.z)), Vec3().sZero(), Quat::sIdentity(), EMotionType::Dynamic, Layers::BOAT);
 	std::shared_ptr<PhysicsComponent> floorCollider = make_shared<PhysicsComponent>();
-	floorCollider->Init(floorBoxSettings, EActivation::Activate);
+	floorCollider->Init(floorBoxSettings, EActivation::Activate,floor);
 	floor->AddComponent(MyComponent::ComponentType::Physics, floorCollider);
+	floorCollider->SetGameObject(floor); // Set the GameObject for the PhysicsComponent
 	floor->GetTransform().SetScale(HalfFloorScale * 2.f);
 
 	// Init Buoyancy system
@@ -195,10 +198,7 @@ void SceneGame::Init()
 	//Collider Debug Render Component配置
 	Material* debugMaterial = MaterialManager::Instance().GetMaterial("DebugMaterial");
 	std::shared_ptr<RenderComponent> debugColliderRender = std::make_shared<RenderComponent>();
-	debugColliderRender->SetEffect(debugEffect);
-	debugColliderRender->SetMaterial(debugMaterial);
-	debugColliderRender->SetModel(ModelManager::Instance().GetModel("Capsule"));
-
+	debugColliderRender->Init(debugMaterial, debugEffect, ModelManager::Instance().GetModel("Capsule"));
 
 	//Debug Collider Render ComponentをPlayerに追加
 	player->AddComponent(MyComponent::ComponentType::DebugRender, debugColliderRender);
@@ -212,9 +212,9 @@ void SceneGame::Init()
 void SceneGame::UnInit()
 {
 	m_sceneObjects.clear(); // Clear all scene objects
-
-	ItemDataBase::Instance().UnInit();
-
+	GetObj<DriftManager>("DriftManager")->UnInit(); 
+	
+	PhysicsManager::Instance().RemoveAllBodies(); 
 }
 
 void SceneGame::Update(float tick)
@@ -242,13 +242,20 @@ void SceneGame::Update(float tick)
 	//===============Object Update
 	GetObj<GameObject>("Floor")->Update(tick);
 
+
+	//===============Player Update
+	GetObj<Player>("Player")->Update(tick);
+
+
+	//===============Scene objects Update
 	for(const auto& object:m_sceneObjects)
 	{
 		object->Update(tick);
 	}
 
-	//===============Player Update
-	GetObj<Player>("Player")->Update(tick);
+	//===============DriftManager Update
+	GetObj<DriftManager>("DriftManager")->Update(tick); // Update drift manager
+
 
 	//===============UI Update
 	UIManager::Instance().Update(tick);
@@ -290,6 +297,7 @@ void SceneGame::Draw()
 	Geometry::DrawLines();
 #endif
 
+
 	GetObj<GameObject>("Floor")->Draw();
 
 	for (const auto& object : m_sceneObjects)
@@ -297,9 +305,12 @@ void SceneGame::Draw()
 		object->Draw();
 	}
 
+	GetObj<DriftManager>("DriftManager")->Draw(); // Draw drift manager items
+
+	// Transparent Draw
 	GetObj<Player>("Player")->Draw();
 
-	//Ui描画
+	// Ui描画
 	GameApp::SetDepthStencilState(RenderStates::DSSNoDepthTest);
 	UIManager::Instance().Draw();
 

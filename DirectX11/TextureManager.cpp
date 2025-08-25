@@ -56,3 +56,15 @@ void TextureManager::Register(const char* name, const char* filePath)
 #endif
 
 }
+
+void TextureManager::UnInit()
+{
+    for(auto& texture : m_textures)
+    {
+        if (texture.second)
+        {
+            texture.second.reset();
+        }
+	}
+	m_textures.clear(); // Clear the map
+}

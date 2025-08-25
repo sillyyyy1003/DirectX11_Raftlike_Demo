@@ -75,6 +75,9 @@ public:
 
 	void AddPhysicsComponent(BodyID id, PhysicsComponent* component);
 	PhysicsComponent* GetPhysicsComponent(BodyID id);
+
+	void RemoveAllBodies();
+
 	
 private:
 	PhysicsManager() = default;

@@ -145,3 +145,14 @@ void MaterialManager::RegisterMaterials(const char* jsonFilePath)
 
 	DebugLog::Log("[MaterialManager] Materials loaded from JSON: {}", jsonFilePath);
 }
+
+void MaterialManager::UnInit()
+{
+	for(auto& material : m_materials)
+	{
+		material.second.reset(); // マテリアルをリセット
+	}
+	m_materials.clear(); // マテリアルのマップをクリア
+	m_materialList.clear(); // マテリアルIDのマップをクリア
+
+}

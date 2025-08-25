@@ -8,6 +8,7 @@ PhysicsComponent::PhysicsComponent()
 
 PhysicsComponent::~PhysicsComponent()
 {
+
 }
 
 void PhysicsComponent::Init(const BodyCreationSettings& settings, EActivation activation)
@@ -20,6 +21,12 @@ void PhysicsComponent::Init(BodyID id)
 {
 	m_bodyID = id;
 	PhysicsManager::Instance().AddPhysicsComponent(m_bodyID, this);
+}
+
+void PhysicsComponent::Init(const BodyCreationSettings& settings, EActivation activation, GameObject* obj)
+{
+	Init(settings, activation);
+	SetGameObject(obj);
 }
 
 
@@ -119,7 +126,7 @@ void PhysicsComponent::SetVelocity(const DirectX::XMFLOAT3& vec3)
 {
 	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
 	bi.SetLinearVelocity(m_bodyID, RVec3(vec3.x, vec3.y, vec3.z));
-	DebugLog::Log("This object velocity is {},{},{}", bi.GetLinearVelocity(m_bodyID).GetX(), bi.GetLinearVelocity(m_bodyID).GetY(), bi.GetLinearVelocity(m_bodyID).GetZ());
+
 }
 
 void PhysicsComponent::SetVelocity(float x, float y, float z)
@@ -143,5 +150,18 @@ EMotionType PhysicsComponent::GetEmotionType()
 {
 	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
 	return bi.GetMotionType(m_bodyID);
+}
+
+
+void PhysicsComponent::ActivatePhysics()
+{
+	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
+	bi.ActivateBody(this->m_bodyID);
+}
+
+void PhysicsComponent::DeActivePhysics()
+{
+	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
+	bi.DeactivateBody(this->m_bodyID);
 }
 
