@@ -7,40 +7,49 @@
 class ModelManager
 {
 public:
+	typedef uint32_t ModelID; ///< モデルのID
+
 	static ModelManager& Instance();
-	Primitive* GetModel(const char* modelName);
 
-	/// @brief モデルをロードする
-	///	@param modelName モデルの名前
-	/// @param filePath モデルのファイルパス
-	void LoadModel(const char* modelName, const char* filePath);
+    /// @brief 名前からモデルを取得
+    Primitive* GetModel(const char* modelName);
+	/// @brief IDからモデルを取得
+    Primitive* GetModel(ModelID id);
 
-	/// @brief Json Fileからモデルをロードする
-	/// @param jsonFilePath 
-	/// @return true: 成功, false: 失敗 
-	bool LoadModels(const char* jsonFilePath);
+    /// @brief 名前からIDを取得（存在しなければ InvalidId）
+    ModelID GetModelId(const std::string& name) const;
 
-	/// @brief Load Model from Program
-	/// @param modelName Model name
-	/// @param model shared pointer to Model
-	void LoadModel(const char* modelName, const std::shared_ptr<Primitive>& model);
+    /// @brief 名前からIDを取得（存在しなければ作成）
+    ModelID GetOrCreateModelId(const std::string& name);
 
-	void UnInit();
+    /// @brief モデルをロードする（ファイルから）
+    void LoadModel(const char* modelName, const char* filePath);
+
+    /// @brief モデルをロードする（外部生成済み）
+    void LoadModel(const char* modelName, const std::shared_ptr<Primitive>& model);
+
+    /// @brief Json Fileからモデルをロードする
+    bool LoadModels(const char* jsonFilePath);
+
+    /// @brief リソース解放
+    void UnInit();
+
+    static constexpr ModelID InvalidId = -1;
+
 private:
+
 	ModelManager()=default;
-	~ModelManager() = default;
+	~ModelManager();
 
 private:
 
-	struct ModelData
-	{
-		std::shared_ptr<Primitive> model;
-		std::string name;		// model name as map key
-		std::string filePath;	// Load path for the model file
-	};
+	using Models = std::unordered_map<ModelID, std::shared_ptr<Primitive>>;
+	using ModelList = std::unordered_map<std::string, ModelID>;
 
-	using Models = std::unordered_map<std::string, ModelData>;
-	Models m_models; ///< モデルの名前とモデルデータのマップ
+	ModelList m_modelList;	///< モデルの名前とIDのマップ
+	Models m_models;		///< モデルのIDとモデルデータのマップ
+
+	ModelID m_nextId = 0; ///< 次に割り当てるモデルID
 
 };
 

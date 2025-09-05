@@ -1,4 +1,5 @@
 ﻿#include "D3DApp.h"
+#include <memory>
 #include "d3dUtil.h"
 #include "DXTrace.h"
 #include "Texture.h"
@@ -42,7 +43,7 @@ D3DApp::D3DApp(HINSTANCE hInstance, const std::wstring& windowName)
     m_Minimized(false),
     m_Maximized(false),
     m_Resizing(false),
-    m_Enable4xMsaa(true),
+    m_Enable4xMsaa(false),
     m_4xMsaaQuality(0),
     m_pd3dDevice(nullptr),
     m_pd3dImmediateContext(nullptr),
@@ -55,6 +56,9 @@ D3DApp::D3DApp(HINSTANCE hInstance, const std::wstring& windowName)
     ZeroMemory(&m_ScreenViewport, sizeof(D3D11_VIEWPORT));
 
     gD3D = this;
+    m_pDefRenderTarget = std::make_shared<RenderTarget>();
+	m_pDefDepthStencil = std::make_shared<DepthStencil>();
+    
 
 }
 
@@ -156,57 +160,65 @@ void D3DApp::OnResize()
     m_pDepthStencilBuffer.Reset();
 
 
-    ComPtr<ID3D11Texture2D> backBuffer;
-    HR(m_pSwapChain->ResizeBuffers(1, m_ClientWidth, m_ClientHeight, DXGI_FORMAT_B8G8R8A8_UNORM, 0));	
-    HR(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf())));
-    HR(m_pd3dDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, m_pRenderTargetView.GetAddressOf()));
+    /*
+	//ComPtr<ID3D11Texture2D> backBuffer;
+	//HR(m_pSwapChain->ResizeBuffers(1, m_ClientWidth, m_ClientHeight, DXGI_FORMAT_B8G8R8A8_UNORM, 0));	
+	//HR(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf())));
+	//HR(m_pd3dDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, m_pRenderTargetView.GetAddressOf()));
 
-	D3D11SetDebugObjectName(backBuffer.Get(), "BackBuffer[0]");
+	//D3D11SetDebugObjectName(backBuffer.Get(), "BackBuffer[0]");
 
-    backBuffer.Reset();
-
-
-    D3D11_TEXTURE2D_DESC depthStencilDesc;
-
-    depthStencilDesc.Width = m_ClientWidth;
-    depthStencilDesc.Height = m_ClientHeight;
-    depthStencilDesc.MipLevels = 1;
-    depthStencilDesc.ArraySize = 1;
-    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-    // 4X MSAA使うかどうか？
-    if (m_Enable4xMsaa)
-    {
-        depthStencilDesc.SampleDesc.Count = 4;
-        depthStencilDesc.SampleDesc.Quality = m_4xMsaaQuality - 1;
-    }
-    else
-    {
-        depthStencilDesc.SampleDesc.Count = 1;
-        depthStencilDesc.SampleDesc.Quality = 0;
-    }
-
-    depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthStencilDesc.CPUAccessFlags = 0;
-    depthStencilDesc.MiscFlags = 0;
+	//backBuffer.Reset();
 
 
-    // create depthstencil buffer & render targets
-    HR(m_pd3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, m_pDepthStencilBuffer.GetAddressOf()));
-    HR(m_pd3dDevice->CreateDepthStencilView(m_pDepthStencilBuffer.Get(), nullptr, m_pDepthStencilView.GetAddressOf()));
+    //D3D11_TEXTURE2D_DESC depthStencilDesc;
+
+    //depthStencilDesc.Width = m_ClientWidth;
+    //depthStencilDesc.Height = m_ClientHeight;
+    //depthStencilDesc.MipLevels = 1;
+    //depthStencilDesc.ArraySize = 1;
+    //depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+    //// 4X MSAA使うかどうか？
+    //if (m_Enable4xMsaa)
+    //{
+    //    depthStencilDesc.SampleDesc.Count = 4;
+    //    depthStencilDesc.SampleDesc.Quality = m_4xMsaaQuality - 1;
+    //}
+    //else
+    //{
+    //    depthStencilDesc.SampleDesc.Count = 1;
+    //    depthStencilDesc.SampleDesc.Quality = 0;
+    //}
+
+    //depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+    //depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    //depthStencilDesc.CPUAccessFlags = 0;
+    //depthStencilDesc.MiscFlags = 0;
 
 
-    m_pd3dImmediateContext->OMSetRenderTargets(1, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());
+    //// create depthstencil buffer & render targets
+   
+    //HR(m_pd3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, m_pDepthStencilBuffer.GetAddressOf()));
+    //HR(m_pd3dDevice->CreateDepthStencilView(m_pDepthStencilBuffer.Get(), nullptr, m_pDepthStencilView.GetAddressOf()));
 
-    m_ScreenViewport.TopLeftX = 0;
-    m_ScreenViewport.TopLeftY = 0;
-    m_ScreenViewport.Width = static_cast<float>(m_ClientWidth);
-    m_ScreenViewport.Height = static_cast<float>(m_ClientHeight);
-    m_ScreenViewport.MinDepth = 0.0f;
-    m_ScreenViewport.MaxDepth = 1.0f;
 
-    m_pd3dImmediateContext->RSSetViewports(1, &m_ScreenViewport);
+ //   m_pd3dImmediateContext->OMSetRenderTargets(1, m_pRenderTargetView.GetAddressOf(), m_pDepthStencilView.Get());
+
+ //   m_ScreenViewport.TopLeftX = 0;
+ //   m_ScreenViewport.TopLeftY = 0;
+ //   m_ScreenViewport.Width = static_cast<float>(m_ClientWidth);
+ //   m_ScreenViewport.Height = static_cast<float>(m_ClientHeight);
+ //   m_ScreenViewport.MinDepth = 0.0f;
+ //   m_ScreenViewport.MaxDepth = 1.0f;
+
+ //   m_pd3dImmediateContext->RSSetViewports(1, &m_ScreenViewport);	
+   */
+
+    m_pDefRenderTarget->CreateFromScreen();
+    m_pDefDepthStencil->Create(m_ClientWidth, m_ClientHeight);
+    SetRenderTargets(1,&m_pDefRenderTarget, m_pDefDepthStencil.get());
+
 }
 
 LRESULT D3DApp::MsgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -617,5 +629,54 @@ void D3DApp::SetCullingMode(ComPtr<ID3D11RasterizerState> _rsState)
 void D3DApp::SetDepthStencilState(ComPtr<ID3D11DepthStencilState> _depthStencilState)
 {
 	gD3D->GetContext()->OMSetDepthStencilState(_depthStencilState.Get(), 0);
+}
+
+void D3DApp::SetRenderTargets(UINT num, std::shared_ptr<RenderTarget>* ppViews, DepthStencil* pView)
+{
+    static ID3D11RenderTargetView* rtvs[4];
+
+    if (num > 4) num = 4;
+    for (UINT i = 0; i < num; ++i)
+        rtvs[i] = ppViews[i]->GetView();
+    gD3D->GetContext()->OMSetRenderTargets(num, rtvs, pView ? pView->GetView() : nullptr);
+
+    gD3D->m_ScreenViewport.TopLeftX = 0.0f;
+	gD3D->m_ScreenViewport.TopLeftY = 0.0f;
+	gD3D->m_ScreenViewport.Width = (float)ppViews[0]->GetWidth();
+	gD3D->m_ScreenViewport.Height = (float)ppViews[0]->GetHeight();
+	gD3D->m_ScreenViewport.MinDepth = 0.0f;
+	gD3D->m_ScreenViewport.MaxDepth = 1.0f;
+
+    gD3D->GetContext()->RSSetViewports(1, & gD3D->m_ScreenViewport);
+}
+
+void D3DApp::SetDefRenderTarget()
+{
+    SetRenderTargets(1, &gD3D->m_pDefRenderTarget, gD3D->m_pDefDepthStencil.get());
+}
+
+int D3DApp::GetClientWidth()
+{
+    return gD3D->m_ClientWidth;
+}
+
+int D3DApp::GetClientHeight()
+{
+    return gD3D->m_ClientHeight;
+}
+
+bool D3DApp::GetEnable4xMsaa()
+{
+	return gD3D->m_Enable4xMsaa;
+}
+
+int D3DApp::Get4xMsaaQuality()
+{
+    return gD3D->m_4xMsaaQuality;
+}
+
+DepthStencil* D3DApp::GetDefDepthStencil()
+{
+    return gD3D->m_pDefDepthStencil.get();
 }
 

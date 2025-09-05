@@ -9,12 +9,350 @@
       "file": "Assets/Model/Banana.fbx"
     },
     {
+      "name": "Food_Coconut",
+      "file":"Assets/Model/Coconut.fbx"
+    },
+    {
       "name": "Building_Grill",
       "file": "Assets/Model/Grill1.fbx"
     },
     {
-      "name": "Building_WoodFloor",
-      "file": "Assets/Model/WoodFloor1.fbx"
+      "name": "BaseMaterial_Wood",
+      "file": "Assets/Model/Board.fbx"
+    },
+    {
+      "name": "BaseMaterial_Wire",
+      "file": "Assets/Model/Wire.fbx"
+    },
+      {
+      "name": "BaseMaterial_PlasticBottle",
+      "file": "Assets/Model/PlasticBottle.fbx"
+    }
+  ],
+  "materials":[
+    {
+      "name": "BlinnPhongMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "FoodMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "Food_Albedo",
+      "normalTex": "Food_Normal",
+      "metallicTex": "Food_Metallic"
+    },
+    {
+      "name": "BaseObjectMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "BaseMaterial_Albedo",
+      "normalTex": "BaseMaterial_Normal",
+      "metallicTex": "BaseMaterial_Metallic"
+    },
+    {
+      "name": "BaseObjectMaterial1",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "BaseMaterial1_Albedo",
+      "normalTex": "BaseMaterial1_Normal",
+      "metallicTex": "BaseMaterial1_Metallic"
+    },
+    {
+      "name": "UiMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.0, 0.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "DebugMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.0, 1.0, 0.0, 0.2],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "FloorMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.2, 0.2, 0.6, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UIAimMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_Aim",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiBarMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 0.0, 0.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiBarBgMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.0, 0.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiInventoryBgMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.41, 0.16, 0.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiInventorySlotBgMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_InventorySlotBg",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+      {
+      "name": "UiInventorySlotMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiInventoryChosenSlotMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_InventoryChosenSlot",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "HpIconMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_HpIcon",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "HpBarBgMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.2, 0.2, 0.2, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "HpBarMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 0.0, 0.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "HungerIconMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_HungerIcon",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "HungerBarBgMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.2, 0.2, 0.2, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "HungerBarMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 0.5, 0.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "WaterMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.1, 0.3, 0.5, 1.0],
+      "specular": [0.8, 0.9, 1.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiReviveButton",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_ReviveButton",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiBackToTitleButton",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_BackToTitleButton",
+      "normalTex": "",
+      "metallicTex": ""
+    }
+  ],
+  "textures": [
+    {
+      "name": "Food_Albedo",
+      "file": "Assets/Texture/Foods_DefaultMaterial_AlbedoTransparency.png"
+    },
+    {
+      "name": "Food_Normal",
+      "file": "Assets/Texture/Foods_DefaultMaterial_Normal.png"
+    },
+    {
+      "name": "Food_Metallic",
+      "file": "Assets/Texture/Foods_DefaultMaterial_MetallicSmoothness.png"
+    },
+    {
+      "name": "BaseMaterial_Albedo",
+      "file": "Assets/Texture/LargePlatform 1_DefaultMaterial_AlbedoTransparency.png"
+    },
+    {
+      "name": "BaseMaterial_Normal",
+      "file": "Assets/Texture/LargePlatform 1_DefaultMaterial_MetallicSmoothness.png"
+    },
+    {
+      "name": "BaseMaterial_Metallic",
+      "file": "Assets/Texture/LargePlatform 1_DefaultMaterial_Normal.png"
+    },
+    {
+      "name": "BaseMaterial1_Albedo",
+      "file": "Assets/Texture/Battery-wire-circuit board_DefaultMaterial_AlbedoTransparency.png"
+    },
+    {
+      "name": "BaseMaterial1_Normal",
+      "file": "Assets/Texture/Battery-wire-circuit board_DefaultMaterial_Normal.png"
+    },
+    {
+      "name": "BaseMaterial1_Metallic",
+      "file": "Assets/Texture/Battery-wire-circuit board_DefaultMaterial_MetallicSmoothness.png"
+    },
+    {
+      "name": "UI_HungerIcon",
+      "file": "Assets/Texture/UI/UI_Hp_Bar_Food_128x128.png"
+    },
+    {
+      "name": "UI_Aim",
+      "file": "Assets/Texture/UI/UI_Aim_128x128.png"
+    },
+    {
+      "name": "Apple_Icon",
+      "file": "Assets/Texture/ObjectIcon/apple.png"
+    },
+    {
+      "name": "Banana_Icon",
+      "file": "Assets/Texture/ObjectIcon/banana.png"
+    },
+    {
+      "name": "Coconut_Icon",
+      "file": "Assets/Texture/ObjectIcon/coconut.png"
+    },
+    {
+      "name": "Wood_Icon",
+      "file": "Assets/Texture/ObjectIcon/wood.png"
+    },
+    {
+      "name": "Plastic_Icon",
+      "file": "Assets/Texture/ObjectIcon/water-bottle.png"
+    },
+    {
+      "name": "Wire_Icon",
+      "file": "Assets/Texture/ObjectIcon/cable.png"
+    },
+    {
+      "name": "UI_InventorySlotBg",
+      "file": "Assets/Texture/UI/UI_Inventory_Block_256x256.png"
+    },
+    {
+      "name": "UI_InventoryChosenSlot",
+      "file": "Assets/Texture/UI/UI_Inventory_Chose_256x256.png"
+    },
+    {
+      "name": "UI_HpIcon",
+      "file": "Assets/Texture/UI/UI_Hp_Bar_Icon_128x128.png"
+    },
+    {
+      "name": "UI_HungerIcon",
+      "file": "Assets/Texture/UI/UI_Hp_Bar_Food_128x128.png"
+    },
+    {
+      "name": "UI_ReviveButton",
+      "file": "Assets/Texture/UI/UI_Button_Revive_300x109.png"
+    },
+    {
+      "name": "UI_BackToTitleButton",
+      "file": "Assets/Texture/UI/UI_Button_BackToTitle_300x109.png"
     }
   ]
 }

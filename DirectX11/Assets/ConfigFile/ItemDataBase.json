@@ -1,0 +1,52 @@
+{
+  "foods":{
+    "size": [0.05, 0.05, 0.05],
+    "items": [
+      {
+        "name": "Apple",
+        "nutrition": 20.0,
+        "model": "Food_Apple",
+        "material": "FoodMaterial",
+        "size":[0.05,0.05,0.05]
+      },
+      {
+        "name": "Banana",
+        "nutrition": 10.0,
+        "model": "Food_Banana",
+        "material": "FoodMaterial",
+        "size":[0.05,0.05,0.05]
+        
+      },
+      {
+        "name": "Coconut",
+        "nutrition": 5.0,
+        "model": "Food_Coconut",
+        "material": "FoodMaterial",
+        "size":[0.05,0.05,0.05]
+      }
+    ]
+  },
+  "baseMaterial":{
+      "size": [0.01, 0.03, 0.01],
+      "items": [
+      {
+        "name": "Wood",
+        "model": "BaseMaterial_Wood",
+        "material": "BaseObjectMaterial",
+        "size":[0.01,0.05,0.01]
+      },
+      {
+        "name": "Wire",
+        "model": "BaseMaterial_Wire",
+        "material": "BaseObjectMaterial1",
+        "size":[0.05,0.05,0.05]
+      },
+      {
+        "name": "Plastic",
+        "model": "BaseMaterial_PlasticBottle",
+        "material": "BaseObjectMaterial",
+        "size":[0.02,0.02,0.02]
+      }
+    ]
+  }
+}

@@ -11,6 +11,7 @@ HungerComponent::HungerComponent(float initialValue) :
 
 HungerComponent::~HungerComponent()
 {
+	// メモリリークを防ぐためにリスナーをクリア
 	m_hungryListeners.clear();
 	m_starveListeners.clear();
 }

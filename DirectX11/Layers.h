@@ -10,26 +10,27 @@ using namespace JPH;
 
 namespace Layers
 {
-	static constexpr ObjectLayer PLAYER = 0;
-	static constexpr ObjectLayer ENEMY = 1;
-	static constexpr ObjectLayer WEAPON = 2;
-	static constexpr ObjectLayer ITEM = 3;
-	static constexpr ObjectLayer BOAT = 4;
-	static constexpr ObjectLayer BUILDING = 5;
-	static constexpr ObjectLayer TOOL = 6;	//Hook
-	static constexpr ObjectLayer SENSOR = 7;
-
-
-	//static constexpr ObjectLayer ISLAND = 5;
-	static constexpr ObjectLayer NUM_LAYERS = 8;
+	static constexpr ObjectLayer BOAT = 0;  // 船
+	static constexpr ObjectLayer ENEMY = 1;  // 敵
+	static constexpr ObjectLayer PLAYER = 2;  // プレイヤー
+	static constexpr ObjectLayer BUILDING = 3;  // 建物
+	static constexpr ObjectLayer DRIFT = 4;  // 漂流物
+	static constexpr ObjectLayer ITEM = 5;  // Drop
+	static constexpr ObjectLayer TOOL = 6;  // ツール
+	static constexpr ObjectLayer WEAPON = 7;  // 武器
+	static constexpr ObjectLayer WATER_SENSOR = 8;  // 水センサー
+	static constexpr ObjectLayer NUM_LAYERS = 9;
 };
 
 namespace BroadPhaseLayers
 {
-	static constexpr BroadPhaseLayer NON_MOVING(0);
-	static constexpr BroadPhaseLayer MOVING(1);
-	static constexpr BroadPhaseLayer SENSOR(2);
-	static constexpr uint NUM_LAYERS(3);
+	static constexpr BroadPhaseLayer STATIC(0);     // 建築
+	static constexpr BroadPhaseLayer ACTOR(1);      // プレイヤー・敵
+	static constexpr BroadPhaseLayer BOAT(2);       // 船
+	static constexpr BroadPhaseLayer DYNAMIC(3);    // Drop・漂流物/ツール
+	static constexpr BroadPhaseLayer PROJECTILE(4); // 武器
+	static constexpr BroadPhaseLayer SENSOR(5);     // 水
+	static constexpr uint NUM_LAYERS(6);
 };
 
 /// Class that determines if two object layers can collide
@@ -41,28 +42,51 @@ public:
 		switch (inObject1)
 		{
 		case Layers::PLAYER:
-			return inObject2 == Layers::ENEMY || inObject2 == Layers::ITEM ||
-				inObject2 == Layers::BOAT || inObject2 == Layers::BUILDING||inObject2==Layers::SENSOR;	// Player collides with everything except Weapon (to avoid self-collision with thrown weapons)
+			return inObject2 == Layers::ENEMY ||
+				inObject2 == Layers::BOAT ||
+				inObject2 == Layers::BUILDING ||
+				inObject2 == Layers::WATER_SENSOR;
+
 		case Layers::ENEMY:
-			return inObject2 == Layers::PLAYER || inObject2 == Layers::BOAT || inObject2 == Layers::WEAPON || inObject2 == Layers::SENSOR; //Enemy collides with Boat Player, Building, Weapon, Boat
-		case Layers::WEAPON:
-			return inObject2 == Layers::ENEMY;
-		case Layers::ITEM:
-			return inObject2 == Layers::PLAYER || inObject2 == Layers::BOAT || inObject2 == Layers::BUILDING|| inObject2==Layers::TOOL || inObject2 == Layers::SENSOR;
-			// Item collides with Player and boat, Building, Tool
+			return inObject2 == Layers::PLAYER ||
+				inObject2 == Layers::BOAT ||
+				inObject2 == Layers::WATER_SENSOR;
+
 		case Layers::BOAT:
-			return inObject2 == Layers::PLAYER || inObject2 == Layers::ENEMY ||
-				inObject2 == Layers::ITEM || inObject2 == Layers::BUILDING || inObject2 == Layers::SENSOR;// Boat collides with everything except weapon
+			return inObject2 == Layers::PLAYER ||
+				inObject2 == Layers::ENEMY ||
+				inObject2 == Layers::TOOL ||
+				inObject2 == Layers::WATER_SENSOR;
+
 		case Layers::BUILDING:
-			return inObject2 == Layers::PLAYER || inObject2 == Layers::BOAT||inObject2==Layers::ITEM; // Building collides with Player, Enemy, Boat
+			return inObject2 == Layers::PLAYER ||
+				inObject2 == Layers::TOOL;
+
+		case Layers::DRIFT:
+			return inObject2 == Layers::WATER_SENSOR ||
+				inObject2 == Layers::TOOL;
+
+		case Layers::ITEM:
+			return inObject2 == Layers::BOAT ||
+				inObject2 == Layers::WATER_SENSOR;
+
 		case Layers::TOOL:
-			return inObject2==Layers::ITEM || inObject2 == Layers::SENSOR;
-		case Layers::SENSOR:
+			return inObject2 == Layers::DRIFT ||
+				inObject2 == Layers::BOAT ||
+				inObject2 == Layers::BUILDING ||
+				inObject2 == Layers::WATER_SENSOR;
+
+		case Layers::WATER_SENSOR:
 			return inObject2 == Layers::PLAYER ||
 				inObject2 == Layers::ENEMY ||
 				inObject2 == Layers::BOAT ||
+				inObject2 == Layers::DRIFT ||
 				inObject2 == Layers::ITEM ||
 				inObject2 == Layers::TOOL;
+
+		case Layers::WEAPON:
+			return inObject2 == Layers::ENEMY;
+
 		default:
 			JPH_ASSERT(false);
 			return false;
@@ -78,13 +102,15 @@ public:
 	BPLayerInterfaceImpl()
 	{
 		// Create a mapping table from object to broad phase layer
-		m_objectToBroadPhase[Layers::PLAYER] = BroadPhaseLayers::MOVING;
-		m_objectToBroadPhase[Layers::ENEMY] = BroadPhaseLayers::MOVING;
-		m_objectToBroadPhase[Layers::WEAPON] = BroadPhaseLayers::MOVING;
-		m_objectToBroadPhase[Layers::ITEM] = BroadPhaseLayers::MOVING;
-		m_objectToBroadPhase[Layers::BOAT] = BroadPhaseLayers::NON_MOVING;  //船は動かないので非動的に設定
-		m_objectToBroadPhase[Layers::BUILDING] = BroadPhaseLayers::NON_MOVING; //建物も動かないので非動的に設定
-		m_objectToBroadPhase[Layers::SENSOR] = BroadPhaseLayers::SENSOR;
+		m_objectToBroadPhase[Layers::PLAYER] = BroadPhaseLayers::ACTOR;
+		m_objectToBroadPhase[Layers::ENEMY] = BroadPhaseLayers::ACTOR;
+		m_objectToBroadPhase[Layers::BOAT] = BroadPhaseLayers::BOAT;
+		m_objectToBroadPhase[Layers::BUILDING] = BroadPhaseLayers::STATIC;
+		m_objectToBroadPhase[Layers::DRIFT] = BroadPhaseLayers::DYNAMIC;
+		m_objectToBroadPhase[Layers::ITEM] = BroadPhaseLayers::DYNAMIC;
+		m_objectToBroadPhase[Layers::TOOL] = BroadPhaseLayers::DYNAMIC;
+		m_objectToBroadPhase[Layers::WATER_SENSOR] = BroadPhaseLayers::SENSOR;
+		m_objectToBroadPhase[Layers::WEAPON] = BroadPhaseLayers::PROJECTILE;
 	}
 
 	virtual uint					GetNumBroadPhaseLayers() const override
@@ -103,10 +129,13 @@ public:
 	{
 		switch ((BroadPhaseLayer::Type)inLayer)
 		{
-		case (BroadPhaseLayer::Type)BroadPhaseLayers::NON_MOVING:	return "NON_MOVING";
-		case (BroadPhaseLayer::Type)BroadPhaseLayers::MOVING:		return "MOVING";
-		case (BroadPhaseLayer::Type)BroadPhaseLayers::SENSOR:		return "SENSOR";
-		default:													JPH_ASSERT(false); return "INVALID";
+		case (BroadPhaseLayer::Type)BroadPhaseLayers::STATIC:      return "STATIC";
+		case (BroadPhaseLayer::Type)BroadPhaseLayers::ACTOR:       return "ACTOR";
+		case (BroadPhaseLayer::Type)BroadPhaseLayers::BOAT:        return "BOAT";
+		case (BroadPhaseLayer::Type)BroadPhaseLayers::DYNAMIC:     return "DYNAMIC";
+		case (BroadPhaseLayer::Type)BroadPhaseLayers::PROJECTILE:  return "PROJECTILE";
+		case (BroadPhaseLayer::Type)BroadPhaseLayers::SENSOR:      return "SENSOR";
+		default: JPH_ASSERT(false); return "INVALID";
 		}
 	}
 #endif // JPH_EXTERNAL_PROFILE || JPH_PROFILE_ENABLED
@@ -123,24 +152,53 @@ public:
 	virtual bool				ShouldCollide(ObjectLayer inLayer1, BroadPhaseLayer inLayer2) const override
 	{
 		switch (inLayer1)
-		{
+        {
 		case Layers::PLAYER:
+			return inLayer2 == BroadPhaseLayers::ACTOR ||
+				inLayer2 == BroadPhaseLayers::BOAT ||
+				inLayer2 == BroadPhaseLayers::STATIC ||
+				inLayer2 == BroadPhaseLayers::SENSOR;
+
 		case Layers::ENEMY:
-		case Layers::WEAPON:
+			return inLayer2 == BroadPhaseLayers::ACTOR ||
+				inLayer2 == BroadPhaseLayers::BOAT ||
+				inLayer2 == BroadPhaseLayers::SENSOR;
+
 		case Layers::BOAT:
-			return true;
-		case Layers::ITEM:
-			return true;
-		case Layers::TOOL:
-			return inLayer2 == BroadPhaseLayers::NON_MOVING;
+			return inLayer2 == BroadPhaseLayers::ACTOR ||
+				inLayer2 == BroadPhaseLayers::DYNAMIC ||
+				inLayer2 == BroadPhaseLayers::SENSOR;
+
 		case Layers::BUILDING:
-			return false;
-		case Layers::SENSOR:
-			return inLayer2 == BroadPhaseLayers::MOVING;
+			return inLayer2 == BroadPhaseLayers::ACTOR ||
+				inLayer2 == BroadPhaseLayers::DYNAMIC;
+
+		case Layers::DRIFT:
+			return inLayer2 == BroadPhaseLayers::SENSOR ||
+				inLayer2 == BroadPhaseLayers::DYNAMIC;
+
+		case Layers::ITEM:
+			return inLayer2 == BroadPhaseLayers::BOAT ||
+				inLayer2 == BroadPhaseLayers::SENSOR;
+
+		case Layers::TOOL:
+			return inLayer2 == BroadPhaseLayers::DYNAMIC ||
+				inLayer2 == BroadPhaseLayers::STATIC ||
+				inLayer2 == BroadPhaseLayers::BOAT ||
+				inLayer2 == BroadPhaseLayers::SENSOR;
+
+		case Layers::WATER_SENSOR:
+			return inLayer2 == BroadPhaseLayers::ACTOR ||
+				inLayer2 == BroadPhaseLayers::BOAT ||
+				inLayer2 == BroadPhaseLayers::DYNAMIC;
+
+		case Layers::WEAPON:
+			return inLayer2 == BroadPhaseLayers::ACTOR;
+
 		default:
 			JPH_ASSERT(false);
 			return false;
-		}
+        }
 	}
 };
 

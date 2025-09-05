@@ -1,11 +1,23 @@
 ﻿#include "GameObject.h"
 #include "RenderComponent.h"
 #include "PhysicsComponent.h"
+#include "PhysicsManager.h"
 
-GameObject::GameObject() :
+GameObject::GameObject(GameObjectType type) :
 	m_transform(Transform()),
-	m_isActive(true)
+	m_isActive(true),
+	m_objectType(type)
 {
+}
+
+GameObject::~GameObject()
+{
+	// clear all components reference
+	for (auto& [type, comp] : m_components)
+	{
+		comp.reset(); // 释放每个 Component
+	}
+	m_components.clear(); // Clear all components
 }
 
 void GameObject::Update(float dt)
@@ -58,3 +70,17 @@ void GameObject::Draw()
 
 }
 
+void GameObject::SetPosition(const DirectX::XMFLOAT3& pos)
+{
+	// Dynamic physics のみ物理で位置変更
+	if (GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics) != nullptr)
+	{
+		PhysicsComponent* physics = GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics);
+		if (physics->GetEmotionType() == EMotionType::Dynamic)
+		{
+			physics->SetPosition(pos);
+			return;
+		}
+	}
+	m_transform.SetPosition(pos);
+}

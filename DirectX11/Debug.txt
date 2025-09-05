@@ -1,39 +1,124 @@
 Game Init Completed
-[ModelManager] Loading models from JSON file: Assets/ConfigFile/Config.json
+[ModelManager] Loading models from JSON: Assets/ConfigFile/Config.json
 Start model loading
 Loading model finished
-[ModelManager] Loaded model: Food_Apple
+[ModelManager] Loaded model: Food_Apple (ID=0)
 Start model loading
 Loading model finished
-[ModelManager] Loaded model: Food_Banana
+[ModelManager] Loaded model: Food_Banana (ID=1)
 Start model loading
 Loading model finished
-[ModelManager] Loaded model: Building_Grill
+[ModelManager] Loaded model: Food_Coconut (ID=2)
 Start model loading
 Loading model finished
-[ModelManager] Loaded model: Building_WoodFloor
-[ModelManager] Finish Loading model!
-[ModelManager] Loaded model: Cube
-[ModelManager] Loaded model: Square
-[ModelManager] Loaded model: Capsule
+[ModelManager] Loaded model: Building_Grill (ID=3)
+Start model loading
+Loading model finished
+[ModelManager] Loaded model: BaseMaterial_Wood (ID=4)
+Start model loading
+Loading model finished
+[ModelManager] Loaded model: BaseMaterial_Wire (ID=5)
+Start model loading
+Loading model finished
+[ModelManager] Loaded model: BaseMaterial_PlasticBottle (ID=6)
+[ModelManager] Finished loading models.
+[ModelManager] Loaded model: Cube (ID=7)
+[ModelManager] Loaded model: Square (ID=8)
+[ModelManager] Loaded model: Capsule (ID=9)
 [SceneManager] Current Scene: Scene title!
+[TextureManager] Loading textures from JSON: Assets/ConfigFile/Config.json
 [TextureManager] Registered texture: Food_Albedo
 [TextureManager] Registered texture: Food_Normal
 [TextureManager] Registered texture: Food_Metallic
+[TextureManager] Registered texture: BaseMaterial_Albedo
+[TextureManager] Registered texture: BaseMaterial_Normal
+[TextureManager] Registered texture: BaseMaterial_Metallic
+[TextureManager] Registered texture: BaseMaterial1_Albedo
+[TextureManager] Registered texture: BaseMaterial1_Normal
+[TextureManager] Registered texture: BaseMaterial1_Metallic
+[TextureManager] Registered texture: UI_HungerIcon
 [TextureManager] Registered texture: UI_Aim
 [TextureManager] Registered texture: Apple_Icon
 [TextureManager] Registered texture: Banana_Icon
+[TextureManager] Registered texture: Coconut_Icon
+[TextureManager] Registered texture: Wood_Icon
+[TextureManager] Registered texture: Plastic_Icon
+[TextureManager] Registered texture: Wire_Icon
 [TextureManager] Registered texture: UI_InventorySlotBg
 [TextureManager] Registered texture: UI_InventoryChosenSlot
 [TextureManager] Registered texture: UI_HpIcon
 [TextureManager] Registered texture: UI_HungerIcon
+[TextureManager] Registered texture: UI_ReviveButton
+[TextureManager] Registered texture: UI_BackToTitleButton
+[MaterialManager] Loading models from JSON: Assets/ConfigFile/Config.json
+[MaterialManager] Load Material BlinnPhongMaterial
+[MaterialManager] Load Material FoodMaterial
+[MaterialManager] Load Material BaseObjectMaterial
+[MaterialManager] Load Material BaseObjectMaterial1
+[MaterialManager] Load Material UiMaterial
+[MaterialManager] Load Material DebugMaterial
+[MaterialManager] Load Material FloorMaterial
+[MaterialManager] Load Material UIAimMaterial
+[MaterialManager] Load Material UiBarMaterial
+[MaterialManager] Load Material UiBarBgMaterial
+[MaterialManager] Load Material UiInventoryBgMaterial
+[MaterialManager] Load Material UiInventorySlotBgMaterial
+[MaterialManager] Load Material UiInventorySlotMaterial
+[MaterialManager] Load Material UiInventoryChosenSlotMaterial
+[MaterialManager] Load Material HpIconMaterial
+[MaterialManager] Load Material HpBarBgMaterial
+[MaterialManager] Load Material HpBarMaterial
+[MaterialManager] Load Material HungerIconMaterial
+[MaterialManager] Load Material HungerBarBgMaterial
+[MaterialManager] Load Material HungerBarMaterial
+[MaterialManager] Load Material WaterMaterial
+[MaterialManager] Load Material UiReviveButton
+[MaterialManager] Load Material UiBackToTitleButton
+[MaterialManager] Materials loaded from JSON: Assets/ConfigFile/Config.json
 [ItemDataBase] Apple is registered!
 [ItemDataBase] Banana is registered!
+[ItemDataBase] Coconut is registered!
+[ItemDataBase] Wood is registered!
+[ItemDataBase] Wire is registered!
+[ItemDataBase] Plastic is registered!
+AppleInstance : bodyIndex:0
 [SceneManager] Current Scene: Scene game!
-[BuoyancySystem] : Add object to water!
+[BuoyancySystem] : Add object to water! Object num is 0. BodyId is 33
+[PlayerContactListener] Character is in water now
+[BuoyancySystem] : Add object to water! Object num is 1. BodyId is 0
+[BuoyancySystem] : Add object to water! Object num is 2. BodyId is 1
+[BuoyancySystem] : Add object to water! Object num is 3. BodyId is 2
+[Camera]:First Camera Camera
+[PlayerContactListener] Character gets out of water now
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 33.
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 33.
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
 [PlayerContactListener] Character is in water now
 [PlayerContactListener] Character gets out of water now
-[BuoyancySystem] : Add object to water!
-[Camera]:First Camera Camera
-Insert 5 Apple
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
+[PlayerContactListener] Character is in water now
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 0.
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 2.
+[PlayerContactListener] Character gets out of water now
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 2.
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 0.
+[PlayerContactListener] Character is in water now
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
+[PlayerContactListener] Character gets out of water now
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
+[PlayerContactListener] Character is in water now
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 0.
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 2.
+[PlayerContactListener] Character gets out of water now
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
+[DriftManager] : Recycle near item at -4.134922, 0, 15.154883
+[BuoyancySystem] : Add object to water! Object num is 4. BodyId is 23
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
 [SceneManager] Current Scene: Scene title!

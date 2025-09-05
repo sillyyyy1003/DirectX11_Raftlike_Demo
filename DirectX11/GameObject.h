@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "Component.hpp"
-#include "IEffect.h"
 #include "Material.h"
 #include "Model.h"
 #include "Transform.h"
@@ -11,23 +10,19 @@
 /// </summary>
 class GameObject
 {
-protected:
 
-	Transform m_transform;
-
-	typedef std::unordered_map<MyComponent::ComponentType, std::shared_ptr<Component>> Components;
-	Components m_components;// 持つコンポーネントのリスト
-
-	bool m_isActive;
-
-#if defined(_DEBUG) || defined(DEBUG)
-	DirectX::XMFLOAT3 m_debugCollisionScale = { 1,1,1 };
-#endif
-	
 public:
+	enum class GameObjectType : uint8_t
+	{
+		Default,
+		Item,
+		Player,
+		Environment,
 
-	GameObject();
-	virtual ~GameObject() = default;
+	};
+
+	GameObject(GameObjectType type = GameObjectType::Default);
+	virtual ~GameObject();
 
 	virtual void Update(float dt);
 	virtual void Draw();
@@ -42,8 +37,6 @@ public:
 	void AddComponent(MyComponent::ComponentType type, std::shared_ptr<T> comp)
 	{
 		m_components[type] = comp;
-		// Componentの所属を設定
-		m_components[type]->SetGameObject(this);
 	}
 
 	/// @brief Get Component from the GameObject
@@ -75,6 +68,22 @@ public:
 	void Activate() { m_isActive = true; }
 	void DeActivate() { m_isActive = false; }
 	bool GetActive() const { return m_isActive; };
+
+	GameObjectType GetGameObjectType()const { return m_objectType; }
+	void SetPosition(const DirectX::XMFLOAT3& pos);
+protected:
+
+	Transform m_transform;
+
+	typedef std::unordered_map<MyComponent::ComponentType, std::shared_ptr<Component>> Components;
+	Components m_components;// 持つコンポーネントのリスト
+
+	bool m_isActive;
+	GameObjectType m_objectType;
+#if defined(_DEBUG) || defined(DEBUG)
+	DirectX::XMFLOAT3 m_debugCollisionScale = { 1,1,1 };
+#endif
+
 
 };
 

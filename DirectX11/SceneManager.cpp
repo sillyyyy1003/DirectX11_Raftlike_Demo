@@ -1,11 +1,14 @@
 ﻿#include "SceneManager.h"
 #include "Capsule.h"
 #include "DirLight.h"
+#include "GameApp.h"
 #include "Geometry.h"
 #include "ItemDataBase.h"
 #include "KInput.h"
+#include "MaterialManager.h"
 #include "ModelManager.h"
 #include "PhysicsManager.h"
+#include "RenderState.h"
 #include "SceneGame.h"
 #include "SceneOption.h"
 #include "SceneTitle.h"
@@ -13,6 +16,7 @@
 #include "Skybox.h"
 #include "UIManager.h"
 #include "SkyboxEffect.h"
+#include "TextureManager.h"
 
 namespace
 {
@@ -79,10 +83,13 @@ void SceneManager::Init()
 void SceneManager::UnInit()
 {
     Geometry::Uninit(); //Geometryの終了処理
-
+    ItemDataBase::Instance().UnInit();
+    MaterialManager::Instance().UnInit(); // マテリアルマネージャーの終了処理
 	ModelManager::Instance().UnInit(); // モデルマネージャーの終了処理
-
+	TextureManager::Instance().UnInit(); // テクスチャマネージャーの終了処理
 	PhysicsManager::Instance().UnInit(); // 物理システムの終了処理
+
+
 }
 
 void SceneManager::Update(float dt)
@@ -93,7 +100,37 @@ void SceneManager::Update(float dt)
 
 void SceneManager::Draw()
 {
+    if (m_currentSceneIndex==SceneConfig::SCENE_GAME){
+        GameApp::SetDepthStencilState(RenderStates::DSSLessEqual);
+#if defined(_DEBUG) || defined(DEBUG)
+        //Geometry
+        DirectX::XMFLOAT4X4 fmat;
+        DirectX::XMStoreFloat4x4(&fmat, DirectX::XMMatrixIdentity());
+        Geometry::SetWorld(fmat);
+        Geometry::SetView(m_pCurrentCamera->GetViewXMF());
+        Geometry::SetProjection(m_pCurrentCamera->GetProjXMF());
+        const int GridSize = 10;
+        Geometry::SetColor(DirectX::XMFLOAT4(0.3f, 0.3f, 0.3f, 0.5f));
+        for (int i = 1; i <= GridSize; ++i)
+        {
+            float g = (float)i;
+            Geometry::AddLine(DirectX::XMFLOAT3(g, 0.0f, -GridSize), DirectX::XMFLOAT3(g, 0.0f, GridSize));
+            Geometry::AddLine(DirectX::XMFLOAT3(-g, 0.0f, -GridSize), DirectX::XMFLOAT3(-g, 0.0f, GridSize));
+            Geometry::AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, g), DirectX::XMFLOAT3(GridSize, 0.0f, g));
+            Geometry::AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, -g), DirectX::XMFLOAT3(GridSize, 0.0f, -g));
+        }
+        // 軸描画
+        Geometry::SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+        Geometry::AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, 0.0f), DirectX::XMFLOAT3(GridSize, 0.0f, 0.0f));
+        Geometry::SetColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
+        Geometry::AddLine(DirectX::XMFLOAT3(0.0f, -GridSize, 0.0f), DirectX::XMFLOAT3(0.0f, GridSize, 0.0f));
+        Geometry::SetColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
+        Geometry::AddLine(DirectX::XMFLOAT3(0.0f, 0.0f, -GridSize), DirectX::XMFLOAT3(0.0f, 0.0f, GridSize));
 
+        Geometry::DrawLines();
+#endif
+    }
+    
 }
 
 void SceneManager::SetSignalBus(GameSignalBus* _signal)

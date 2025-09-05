@@ -8,6 +8,7 @@
 #include "Geometry.h"
 #include "RenderState.h"
 #include "SceneManager.h"
+#include "Sprite.h"
 
 using namespace DirectX;
 
@@ -18,9 +19,12 @@ GameApp::GameApp(HINSTANCE hInstance, const std::wstring& windowName)
 
 GameApp::~GameApp()
 {
-    //UnInit game contents
+
+    // UnInit game contents
     SceneManager::Get()->UnInit();
-   
+
+    // UnInit Sprite
+    Sprite::Uninit();
 }
 
 bool GameApp::Init()
@@ -86,11 +90,11 @@ void GameApp::DrawScene()
     assert(m_pSwapChain);
 
     static float color[4] = { 0.4f, 0.4f, 0.8f, 1.0f };	// RGBA = (0,0,0,255)
-    m_pd3dImmediateContext->ClearRenderTargetView(m_pRenderTargetView.Get(), reinterpret_cast<const float*>(&color));
-    m_pd3dImmediateContext->ClearDepthStencilView(m_pDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+    m_pDefRenderTarget->Clear(color);
+    m_pDefDepthStencil->Clear();
 
     //GameRender=================================================
-
     SceneManager::Get()->_draw();
 
     //GameRender=================================================
@@ -118,7 +122,9 @@ bool GameApp::InitResource()
 	SceneManager::Get()->InitD2DResource(); // D2Dの初期化
     
     SceneManager::Get()->Init();    // Material/Effect/GameObjectの初期化
-    
+
+    // ======Init Sprite
+    Sprite::Init();
 
     // ======events subscription
     m_pGameSignalBus = std::make_shared<GameSignalBus>();

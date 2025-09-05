@@ -112,6 +112,12 @@
     <Filter Include="头文件\Item">
       <UniqueIdentifier>{88d7ffe0-96a4-4fb6-991b-c190d5b162dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Render\Effect">
+      <UniqueIdentifier>{80ecf635-b6c0-485c-b4b4-ace02d18abb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Render\Effect">
+      <UniqueIdentifier>{304c2d8a-b2dd-432c-a422-413951c6c486}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -174,9 +180,6 @@
     <ClCompile Include="MeshBuffer.cpp">
       <Filter>源文件\Render</Filter>
     </ClCompile>
-    <ClCompile Include="IEffect.cpp">
-      <Filter>源文件\Render</Filter>
-    </ClCompile>
     <ClCompile Include="UIElement.cpp">
       <Filter>源文件\UI</Filter>
     </ClCompile>
@@ -201,14 +204,8 @@
     <ClCompile Include="Geometry.cpp">
       <Filter>源文件\System</Filter>
     </ClCompile>
-    <ClCompile Include="PBREffect.cpp">
-      <Filter>源文件\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Primitive.cpp">
       <Filter>源文件\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="UIBasicEffect.cpp">
-      <Filter>源文件\Render</Filter>
     </ClCompile>
     <ClCompile Include="CameraController.cpp">
       <Filter>源文件\Controller</Filter>
@@ -285,17 +282,11 @@
     <ClCompile Include="UIMesh.cpp">
       <Filter>源文件\UI</Filter>
     </ClCompile>
-    <ClCompile Include="UIGlossEffect.cpp">
-      <Filter>源文件\Render</Filter>
-    </ClCompile>
     <ClCompile Include="UIButtonMove.cpp">
       <Filter>源文件\UI</Filter>
     </ClCompile>
     <ClCompile Include="SceneOption.cpp">
       <Filter>源文件\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="SkyboxEffect.cpp">
-      <Filter>源文件\Render</Filter>
     </ClCompile>
     <ClCompile Include="BuoyancySystem.cpp">
       <Filter>源文件\Physics</Filter>
@@ -325,7 +316,37 @@
       <Filter>源文件\Item</Filter>
     </ClCompile>
     <ClCompile Include="UIPlayerStatus.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialManager.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="DriftManager.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="IEffect.cpp">
+      <Filter>源文件\Render\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="PBREffect.cpp">
+      <Filter>源文件\Render\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyboxEffect.cpp">
+      <Filter>源文件\Render\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="UIBasicEffect.cpp">
+      <Filter>源文件\Render\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="UIGlossEffect.cpp">
+      <Filter>源文件\Render\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcessMonochromeEffect.cpp">
+      <Filter>源文件\Render\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomManager.cpp">
+      <Filter>源文件\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -389,9 +410,6 @@
     <ClInclude Include="UIElement.h">
       <Filter>头文件\UI</Filter>
     </ClInclude>
-    <ClInclude Include="IEffect.h">
-      <Filter>头文件\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Material.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
@@ -416,17 +434,11 @@
     <ClInclude Include="Geometry.h">
       <Filter>头文件\System</Filter>
     </ClInclude>
-    <ClInclude Include="PBREffect.h">
-      <Filter>头文件\Render</Filter>
-    </ClInclude>
     <ClInclude Include="MeshBuffer.h">
       <Filter>头文件\Render</Filter>
     </ClInclude>
     <ClInclude Include="Primitive.h">
       <Filter>头文件\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="UIBasicEffect.h">
-      <Filter>头文件\Render</Filter>
     </ClInclude>
     <ClInclude Include="CameraController.h">
       <Filter>头文件\Controller</Filter>
@@ -506,17 +518,11 @@
     <ClInclude Include="UIMesh.h">
       <Filter>头文件\UI</Filter>
     </ClInclude>
-    <ClInclude Include="UIGlossEffect.h">
-      <Filter>头文件\Render</Filter>
-    </ClInclude>
     <ClInclude Include="UIButtonMove.h">
       <Filter>头文件\UI</Filter>
     </ClInclude>
     <ClInclude Include="SceneOption.h">
       <Filter>头文件\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="SkyboxEffect.h">
-      <Filter>头文件\Render</Filter>
     </ClInclude>
     <ClInclude Include="BuoyancySystem.h">
       <Filter>头文件\Physics</Filter>
@@ -546,7 +552,37 @@
       <Filter>头文件\System</Filter>
     </ClInclude>
     <ClInclude Include="UIPlayerStatus.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialManager.h">
+      <Filter>头文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="DriftManager.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="IEffect.h">
+      <Filter>头文件\Render\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="PBREffect.h">
+      <Filter>头文件\Render\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyboxEffect.h">
+      <Filter>头文件\Render\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="UIBasicEffect.h">
+      <Filter>头文件\Render\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="UIGlossEffect.h">
+      <Filter>头文件\Render\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessMonochromeEffect.h">
+      <Filter>头文件\Render\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomManager.h">
+      <Filter>头文件\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -587,6 +623,9 @@
     </FxCompile>
     <FxCompile Include="VS_Skybox.hlsl">
       <Filter>资源文件\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_Monochrome.hlsl">
+      <Filter>资源文件\PixelShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

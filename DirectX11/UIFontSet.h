@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <unordered_map>
-#include <nlohmann/json_fwd.hpp>
-
+#include <nlohmann/json.hpp>
 #include "D3DApp.h"
 
 /// @brief Fontを管理するクラス

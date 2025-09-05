@@ -24,11 +24,17 @@ class PlayerEntity: public LivingEntity
 {
 
 public:
+
+	typedef std::function<void(bool)> Callback;
+
+
 	PlayerEntity(float _startLife = 100.f);
 	~PlayerEntity() override = default;
 
 	void OnDamage(float _damage) override;
 	void Dead() override;
+
+	void Revive();
 
 	float GetCurrentHealthPercentage() const { return m_life / m_startLife; }
 
@@ -46,6 +52,15 @@ public:
 		else SetTickDamaged(false);
 	}
 
+	void AddDeathListener(Callback cb);
+
 protected:
 	bool m_isTickDamaged = false;
+	std::vector<Callback> m_deathListeners;
+
+private:
+	/// <summary>
+	/// Trigger all function registered
+	/// </summary>
+	void NotifyDeathListeners(bool state);
 };

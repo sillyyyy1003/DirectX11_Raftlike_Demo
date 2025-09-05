@@ -2,30 +2,36 @@
 #include <DirectXMath.h>
 #include "d3dUtil.h"
 #include "DayLight.h"
+#include "DriftManager.h"
 #include "GameApp.h"
 #include "Geometry.h"
 #include "ItemDataBase.h"
 #include "KInput.h"
+#include "MaterialManager.h"
 #include "ModelManager.h"
 #include "PBREffect.h"
 #include "PhysicsManager.h"
 #include "Player.h"
+#include "PostProcessMonochromeEffect.h"
 #include "RenderState.h"
+#include "SceneManager.h"
 #include "ShapeFactory.h"
 #include "SkyboxEffect.h"
 #include "UIBasicEffect.h"
 #include "UIManager.h"
 #include "Skybox.h"
 #include "TextureManager.h"
+#include "UIButtonMove.h"
 #include "UIInventorySlot.h"
 #include "UIPlayerStatus.h"
 
 
 namespace
 {
+	static constexpr DirectX::XMFLOAT4 DefaultLightDiffuse = { 0.5f,0.5f,0.5f,1.f }; // Default light diffuse color
 	static constexpr DirectX::XMFLOAT4 DefaultLightColor = { 1.0f, 1.0f, 1.0, 1.0f }; // Ambient light color
-	static constexpr float WaterWidth = 50.f;
-	static constexpr float waterHeight = 1.f;
+	static constexpr float WaterWidth = 200.f;
+	static constexpr float waterHeight = 20.f;
 
 	//Collider Setting
 	static constexpr DirectX::XMFLOAT3 HalfUnitScale = { 0.5f,0.5f,0.5f };	//Default Cube Size (length,height,width={1,1,1})
@@ -33,9 +39,12 @@ namespace
 
 	static constexpr DirectX::XMFLOAT3 DefaultLightPosition = { 0,10,0 };	//Default Light Position
 
-
 	static constexpr DirectX::XMFLOAT3 UIAimSize = { 32,32,1.f };
-	static constexpr DirectX::XMFLOAT3 UiInventorySlotSize = { 64,64,1 };
+	static constexpr DirectX::XMFLOAT2 ButtonSize = { 300,109 };
+	static constexpr float ButtonAmplitude = 8.f;
+	static constexpr float ButtonMoveSpeed = 3.f;
+	static constexpr DirectX::XMFLOAT3 ReviveButtonPosition = { 0,-100,0.5f };
+	static constexpr DirectX::XMFLOAT3 BackToTitleButtonPosition = { 0,-240,0.5f };
 
 	static constexpr float DefaultObjectScale = 0.05f;
 }
@@ -45,6 +54,9 @@ void SceneGame::Init()
 	Player* player = CreateObj<Player>("Player");
 	player->Init("Assets/ConfigFile/PlayerConfig.json");	//json fileから読み込み
 	m_pCurrentCamera = player->GetCameraController()->GetCamera();
+	player->SetPosition({ 0,1,0 });
+	dynamic_cast<SceneManager*>(m_pSceneManager)->SetCurrentCamera(m_pCurrentCamera);
+
 
 	//============ Init light
 	DirLight* light = CreateObj<DayLight>("DayLight");
@@ -53,24 +65,7 @@ void SceneGame::Init()
 	light->SetDiffuse({0.5,0.5,0.5,1});
 
 	//===========Init Texture
-	Texture* albedoTex = TextureManager::Instance().RegisterTexture("Food_Albedo","Assets/Texture/Foods_DefaultMaterial_AlbedoTransparency.png");
-	Texture* normalTex = TextureManager::Instance().RegisterTexture("Food_Normal", "Assets/Texture/Foods_DefaultMaterial_Normal.png");
-	Texture* metallicTex = TextureManager::Instance().RegisterTexture("Food_Metallic", "Assets/Texture/Foods_DefaultMaterial_MetallicSmoothness.png");
-	Texture* uiAimTex = TextureManager::Instance().RegisterTexture("UI_Aim", "Assets/Texture/UI/UI_Aim_128x128.png");
-
-	//Icon Texture
-	TextureManager::Instance().RegisterTexture("Apple_Icon", "Assets/Texture/ObjectIcon/coca-leaves.png");
-	TextureManager::Instance().RegisterTexture("Banana_Icon", "Assets/Texture/ObjectIcon/wood.png");
-	// Inventory 背景読み込み
-	Texture* uiInventorySlotBgTex = TextureManager::Instance().RegisterTexture("UI_InventorySlotBg", "Assets/Texture/UI/UI_Inventory_Block_256x256.png");
-	// Inventory Cursor読み込み
-	Texture* uiInventoryChosenTex = TextureManager::Instance().RegisterTexture("UI_InventoryChosenSlot", "Assets/Texture/UI/UI_Inventory_Chose_256x256.png");
-
-	//Player status icon
-	Texture* hpIconTex = TextureManager::Instance().RegisterTexture("UI_HpIcon", "Assets/Texture/UI/UI_Hp_Bar_Icon_128x128.png");
-	Texture* hungerIconTex = TextureManager::Instance().RegisterTexture("UI_HungerIcon", "Assets/Texture/UI/UI_Hp_Bar_Food_128x128.png");
-
-
+	TextureManager::Instance().LoadTextures("Assets/ConfigFile/Config.json");
 
 	//============Get Shader
 	VertexShader* basicPosNormalTexVS = GetObj<VertexShader>("BasicPosNormalTexVS");
@@ -79,6 +74,19 @@ void SceneGame::Init()
 	VertexShader* pbrVS = GetObj<VertexShader>("PBRVS");
 	PixelShader* uiElementPS = GetObj<PixelShader>("UIElementPS");
 	VertexShader* uiElementVS = GetObj<VertexShader>("UIElementVS");
+
+	PixelShader* monoChromePS = CreateObj<PixelShader>("MonoChromePS");
+	monoChromePS->Load("Assets/Shader/PS_Monochrome.cso");
+
+	MonoChrome* monoChrome = CreateObj<MonoChrome>("MonoChrome");
+	monoChrome->Init(monoChromePS);
+
+	// register monochrome effect on player dead
+	player->AddDeathListener([monoChrome](bool isDead)
+		{
+			monoChrome->SetActive(isDead);
+		}
+	);
 
 
 	//===========Init Effect
@@ -107,127 +115,188 @@ void SceneGame::Init()
 
 
 	//===========Init Material
-	Material* blinnPhongMat = CreateObj<Material>("BlinnPhongMaterial");
-
-	Material* foodMaterial = CreateObj<Material>("FoodMaterial");
-	foodMaterial->SetTexture(Material::Albedo, albedoTex);
-	foodMaterial->SetTexture(Material::Normal, normalTex);
-	foodMaterial->SetTexture(Material::Metallic_Smooth, metallicTex);
-
-	Material* uiMaterial = CreateObj<Material>("UiMaterial");
-	uiMaterial->SetDiffuse({ 0,0,1,1 });
-
-	Material* debugMaterial = CreateObj<Material>("DebugMaterial");
-	debugMaterial->SetDiffuse({ 0,1,0,0.2f });
-
-	Material* floorMaterial = CreateObj<Material>("FloorMaterial");
-	floorMaterial->SetDiffuse({ 0.2f,0.2f,0.6f,1.f });
-
-	// UI Aim Material
-	Material* uiAimMaterial = CreateObj<Material>("UIAimMaterial");
-	uiAimMaterial->SetTexture(Material::Albedo, uiAimTex);
-
-	// UI Bar Material
-	Material* uiBarMaterial = CreateObj<Material>("UiBarMaterial");
-	uiBarMaterial->SetDiffuse({1,0,0,1});
-
-	Material* uiBarBgMaterial = CreateObj<Material>("UiBarBgMaterial");
-	uiBarBgMaterial->SetDiffuse({ 0,0,1.f,1.f });
-
-	// UI Inventory Material
-	Material* uiInventoryBgMaterial = CreateObj<Material>("UiInventoryBgMaterial");
-	uiInventoryBgMaterial->SetDiffuse({ 105.f / 255,42.f / 255,0,1.f });	// Brown color for inventory background
-
-	// 共通の背景Material
-	Material* uiInventorySlotBgMaterial = CreateObj<Material>("UiInventorySlotBgMaterial");
-	uiInventorySlotBgMaterial->SetTexture(Material::Albedo, uiInventorySlotBgTex);
-	// UI Inventory Slot Material(Textureは切り替えて)
-	Material* uiInventorySlotMaterial = CreateObj<Material>("UiInventorySlotMaterial");
-	// Inventory cursor material
-	Material* uiInventoryChosenSLotMaterial = CreateObj<Material>("UIInventoryChosenSlotMaterial");
-	uiInventoryChosenSLotMaterial->SetTexture(Material::Albedo, uiInventoryChosenTex);
-
-	// Player Status Material
-	UIPlayerStatus::MaterialList hpMaterials(3);
-	hpMaterials[UIPlayerStatus::MaterialType::Icon] = CreateObj<Material>("HpIconMaterial");
-	hpMaterials[UIPlayerStatus::MaterialType::Icon]->SetTexture(Material::Albedo, hpIconTex);
-	hpMaterials[UIPlayerStatus::MaterialType::Background] = CreateObj<Material>("HpBarBgMaterial");
-	hpMaterials[UIPlayerStatus::MaterialType::Background]->SetDiffuse({ 0.2f,0.2f,0.2f,1.f });	// Dark gray for health bar background
-	hpMaterials[UIPlayerStatus::MaterialType::Bar] = CreateObj<Material>("HpBarMaterial");
-	hpMaterials[UIPlayerStatus::MaterialType::Bar]->SetDiffuse({ 1.f,0.f,0.f,1.f });	// Red for health bar
-
-
-	UIPlayerStatus::MaterialList hungerMaterials(3);
-	hungerMaterials[UIPlayerStatus::MaterialType::Icon] = CreateObj<Material>("HungerIconMaterial");
-	hungerMaterials[UIPlayerStatus::MaterialType::Icon]->SetTexture(Material::Albedo, hungerIconTex);
-	hungerMaterials[UIPlayerStatus::MaterialType::Background] = CreateObj<Material>("HungerBarBgMaterial");
-	hungerMaterials[UIPlayerStatus::MaterialType::Background]->SetDiffuse({ 0.2f,0.2f,0.2f,1.f });	// Dark gray for hunger bar background
-	hungerMaterials[UIPlayerStatus::MaterialType::Bar] = CreateObj<Material>("HungerBarMaterial");
-	hungerMaterials[UIPlayerStatus::MaterialType::Bar]->SetDiffuse({ 1.f,0.5f,0.f,1.f });	// Orange for hunger bar
-
+	MaterialManager::Instance().RegisterMaterials("Assets/ConfigFile/Config.json");
 
 
 	//===========Register food data
-	std::shared_ptr<Food> apple = std::make_shared<Food>(20.f);
-	ItemDataBase::Instance().RegisterItem("Apple", apple);
-	std::shared_ptr<Food> banana = std::make_shared<Food>(10.f);
-	ItemDataBase::Instance().RegisterItem("Banana", banana);
+	ItemDataBase::Instance().LoadItemDataFromJsonFile("Assets/ConfigFile/ItemDataBase.json");
 
 
 	//===========Init item
+	std::shared_ptr<ItemInstance> appleInstance(ItemDataBase::Instance().CreateItemInstance("Apple",3));
+	appleInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
+	appleInstance->SetPosition({ -3, 0.5, 0 });
+	RegisterSceneObject(appleInstance);
+	DebugLog::Log("AppleInstance : bodyIndex:{}",appleInstance->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->GetBodyID().GetIndex());
 
-	std::shared_ptr<ItemInstance> appleInstance = make_shared<ItemInstance>();
-	appleInstance->InitItem(ItemDataBase::Instance().GetItem("Apple"), 5);	 //Set apple item data
-	std::shared_ptr<RenderComponent> appleRenderComponent = std::make_shared<RenderComponent>();	// Create apple render component
-	appleRenderComponent->Init(foodMaterial, pbrEffect, ModelManager::Instance().GetModel("Food_Apple"));	  // Init apple render component
-	appleInstance->AddComponent(MyComponent::ComponentType::Render, appleRenderComponent);	// Add apple render component to apple instance
-	RegisterSceneObject(appleInstance);	// シーンに登録
 
-	std::shared_ptr <ItemInstance> bananaInstance = make_shared<ItemInstance>();
-	bananaInstance->InitItem(ItemDataBase::Instance().GetItem("Banana"), 2);	   //Set banana item data
-	std::shared_ptr<RenderComponent> bananaRenderComponent = std::make_shared<RenderComponent>();   // Create banana render component
-	bananaRenderComponent->Init(foodMaterial, pbrEffect, ModelManager::Instance().GetModel("Food_Banana")); // Init render component
-	bananaInstance->AddComponent(MyComponent::ComponentType::Render, bananaRenderComponent);	   // Add banana render component to banana instance
-	RegisterSceneObject(bananaInstance);	// シーンに登録
+	std::shared_ptr<ItemInstance> bananaInstance(ItemDataBase::Instance().CreateItemInstance("Banana",10));
+	bananaInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
+	bananaInstance->SetPosition({ 3, 0.5, 3 });
+	RegisterSceneObject(bananaInstance);
 
+
+	std::shared_ptr<ItemInstance> coconutInstance (ItemDataBase::Instance().CreateItemInstance("Coconut"));
+	coconutInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
+	coconutInstance->SetPosition({3, 0.5, 0});
+	RegisterSceneObject(coconutInstance);
 
 	GameObject* floor = CreateObj<GameObject>("Floor");
 	std::shared_ptr<RenderComponent> floorRenderComponent = std::make_shared<RenderComponent>();
-	floorRenderComponent->Init(floorMaterial, basicEffect, ModelManager::Instance().GetModel("Cube"));
+	floorRenderComponent->Init(MaterialManager::Instance().GetMaterial("FloorMaterial"), basicEffect, ModelManager::Instance().GetModel("Cube"));
 	floor->AddComponent(MyComponent::ComponentType::Render, floorRenderComponent);
-	
+
+	// Drift Manager
+	DriftManager* driftManager = CreateObj<DriftManager>("DriftManager");
+	driftManager->Init(pbrEffect,player); // Initialize drift manager with PBR effect and player
+
 
 	//===========UI初期化
 	UIRender* uiAim = CreateObj<UIRender>("UiAim");
-	uiAim->Init(uiAimMaterial, uiBasicEffect, ModelManager::Instance().GetModel("Square"));
+	uiAim->Init(MaterialManager::Instance().GetMaterial("UIAimMaterial"), uiBasicEffect, ModelManager::Instance().GetModel("Square"));
 	uiAim->GetTransform().SetPosition({ 0,0,0.1f });
 	uiAim->GetTransform().SetScale(UIAimSize);
+	// death text only activate when player is dead
+	player->AddDeathListener([uiAim](bool isDead)
+		{
+			uiAim->SetActive(!isDead);	//if player revive, isDead=false
+		}
+	);
 
 	// Create UI Inventory
 	UIFontSet* uiFontSet=GetObj<UIFontSet>("UIFontSet");
 	UIBrush* uiBrush = GetObj<UIBrush>("UiBrush");
 	UIInventory* uiInventory = CreateObj<UIInventory>("UiInventory");
+	Material* uiInventoryBgMaterial = MaterialManager::Instance().GetMaterial("UiInventoryBgMaterial");
+	Material* uiInventorySlotBgMaterial = MaterialManager::Instance().GetMaterial("UiInventorySlotBgMaterial");
+	Material* uiInventorySlotMaterial = MaterialManager::Instance().GetMaterial("UiInventorySlotMaterial");
+	Material* uiInventoryChosenSLotMaterial = MaterialManager::Instance().GetMaterial("UiInventoryChosenSlotMaterial");
+
 	uiInventory->Init(player->GetInventory(), uiBasicEffect, uiInventoryBgMaterial, uiInventorySlotBgMaterial,uiInventorySlotMaterial, uiInventoryChosenSLotMaterial,ModelManager::Instance().GetModel("Square"),
 		uiFontSet, "InventoryFont", uiBrush);
 	uiInventory->LoadSizeAndPos("Assets/ConfigFile/UIConfig.json"); // Load position and size from config file
 	uiInventory->SetPlayer(player); // Set player to inventory
+	// Hide inventory when player is dead
+	player->AddDeathListener([uiInventory](bool isDead)
+		{
+			uiInventory->SetActive(!isDead);
+		}
+	);
+
 
 	// Create UI Player Status
+	UIPlayerStatus::MaterialList hpMaterials(3);
+	hpMaterials[UIPlayerStatus::MaterialType::Icon] = MaterialManager::Instance().GetMaterial("HpIconMaterial");
+	hpMaterials[UIPlayerStatus::MaterialType::Background] = MaterialManager::Instance().GetMaterial("HpBarBgMaterial");
+	hpMaterials[UIPlayerStatus::MaterialType::Bar] = MaterialManager::Instance().GetMaterial("HpBarMaterial");
+	UIPlayerStatus::MaterialList hungerMaterials(3);
+	hungerMaterials[UIPlayerStatus::MaterialType::Icon] = MaterialManager::Instance().GetMaterial("HungerIconMaterial");
+	hungerMaterials[UIPlayerStatus::MaterialType::Background] = MaterialManager::Instance().GetMaterial("HungerBarBgMaterial");
+	hungerMaterials[UIPlayerStatus::MaterialType::Bar] = MaterialManager::Instance().GetMaterial("HungerBarMaterial");
+
 	UIPlayerStatus* uiPlayerStatus = CreateObj<UIPlayerStatus>("UiPlayerStatus");
 	uiPlayerStatus->Init(hpMaterials, hungerMaterials, uiBasicEffect, ModelManager::Instance().GetModel("Square"));
 	uiPlayerStatus->LoadPositionAndSize("Assets/ConfigFile/UIConfig.json"); // Load position and size from config file
 	uiPlayerStatus->SetPlayer(player); // Set player to UI Player Status
 
+	// Hide PlayerStatus when player is dead
+	player->AddDeathListener([uiPlayerStatus](bool isDead)
+		{
+			uiPlayerStatus->SetActive(!isDead);
+		}
+	);
+
+
+	// Create Death UI
+	UIText* deathText = CreateObj<UIText>("DeathText");
+	deathText->Init(uiFontSet, "DeathFont", uiBrush);
+	deathText->SetPosition({ 0,100,1.0 });
+	deathText->SetScale({800,100,1});
+	deathText->SetStaticText("You Are Incapacitated!");
+	deathText->SetActive(false);
+	// death text only activate when player is dead
+	player->AddDeathListener([deathText](bool isDead)
+		{
+			deathText->SetActive(isDead);
+		}
+	);
+
+	// Create Death Button
+
+	UIButtonMove* backToTitleButton = CreateObj<UIButtonMove>("backToTitleButton");
+	Material* backToTitleMat = MaterialManager::Instance().GetMaterial("UiBackToTitleButton");
+	backToTitleButton->Init(uiBasicEffect, backToTitleMat, ModelManager::Instance().GetModel("Square"));
+	backToTitleButton->SetButton(BackToTitleButtonPosition, ButtonSize.x, ButtonSize.y);  // Set button size & position
+	backToTitleButton->InitMoveParam(ButtonMoveSpeed, ButtonAmplitude);	 // set button interactive param
+	player->AddDeathListener([backToTitleButton](bool isDead)
+		{
+			backToTitleButton->SetActive(isDead);
+		}
+	);
+	backToTitleButton->SetActive(false);
+
+	UIButtonMove* reviveButton = CreateObj<UIButtonMove>("reviveButton");
+	Material* reviveButtonMat = MaterialManager::Instance().GetMaterial("UiReviveButton");
+	reviveButton->Init(uiBasicEffect, reviveButtonMat, ModelManager::Instance().GetModel("Square"));
+	reviveButton->SetButton(ReviveButtonPosition, ButtonSize.x, ButtonSize.y);  // Set button size & position
+	reviveButton->InitMoveParam(ButtonMoveSpeed, ButtonAmplitude);	 // set button interactive param
+	player->AddDeathListener([reviveButton](bool isDead)
+		{
+			reviveButton->SetActive(isDead);
+			if (isDead)reviveButton->ActiveMove();	//if is active, make revive button move
+		}
+	);
+	reviveButton->SetActive(false);
 	UIManager::Instance().ClearLayers();	// Clear existing UI layers
 
-	UIManager::Instance().AddUiLayer("Aim", 3);
+	UIManager::Instance().AddUiLayer("Aim", 1);
 	UIManager::Instance().GetUILayer("Aim")->AddComponent(uiAim);
 
-	UIManager::Instance().AddUiLayer("Inventory", 4);
-	UIManager::Instance().GetUILayer("Inventory")->AddComponent(uiInventory);
+	UIManager::Instance().AddUiLayer("Button", 2);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(uiInventory);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(backToTitleButton);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(reviveButton);
 
-	UIManager::Instance().AddUiLayer("PlayerStatus", 5);
+	UIManager::Instance().AddUiLayer("PlayerStatus", 3);
 	UIManager::Instance().GetUILayer("PlayerStatus")->AddComponent(uiPlayerStatus);
+
+	UIManager::Instance().AddUiLayer("Message", 4);
+	UIManager::Instance().GetUILayer("Message")->AddComponent(deathText);
+
+
+
+
+	//=====Set Button event
+
+	backToTitleButton->SetOnClick([this]()
+		{
+			SetCurrentScene("Title");	//if clicked back to title scene
+		});
+	backToTitleButton->SetOnHover([backToTitleButton, reviveButton]()
+		{
+			backToTitleButton->ActiveMove();
+			reviveButton->DeActiveMove();
+		});
+	backToTitleButton->SetOnExit([backToTitleButton]()
+		{
+			backToTitleButton->DeActiveMove();
+		});
+
+
+	reviveButton->SetOnClick([player]()
+		{
+			player->Revive();//if clicked player revive
+		});
+	reviveButton->SetOnHover([backToTitleButton, reviveButton]()
+		{
+			reviveButton->ActiveMove();
+			backToTitleButton->DeActiveMove();
+		});
+	reviveButton->SetOnExit([reviveButton]()
+		{
+			reviveButton->DeActiveMove();
+		});
+
 
 	//=====物理の初期化
 
@@ -238,73 +307,67 @@ void SceneGame::Init()
 	// Create the settings for the body itself. Note that here you can also set other properties like the restitution / friction.
 
 	// Create the actual rigid body
-
-	RefConst<Shape> defaultBoxSettings = ShapeFactory::Instance().GetOrCreateBox(RVec3(HalfUnitScale.x,HalfUnitScale.y,HalfUnitScale.z));
-	
-
-	std::shared_ptr<PhysicsComponent> appleCollider = make_shared<PhysicsComponent>();
-	appleInstance->AddComponent(MyComponent::ComponentType::Physics, appleCollider);
-	DirectX::XMFLOAT3 appleColliderSize = ModelManager::Instance().GetModel("Food_Apple")->GetModelSize();
-	BodyCreationSettings appleBoxSettings(new BoxShape(RVec3(appleColliderSize.x * 0.5f * DefaultObjectScale, appleColliderSize.y * 0.5f * DefaultObjectScale, appleColliderSize.z * 0.5f * DefaultObjectScale)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM); //Init apple cube
-	PhysicsManager::Instance().SetBodyCreationMass(1.f, appleBoxSettings);// Set the mass properties for the apple box
-	appleCollider->Init(appleBoxSettings, EActivation::Activate);  //Create& Add
-	appleInstance->GetTransform().SetScale(DefaultObjectScale, DefaultObjectScale, DefaultObjectScale);
-	appleInstance->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->SetPosition(0, 3, 3);
-
-	std::shared_ptr<PhysicsComponent> bananaCollider = make_shared<PhysicsComponent>();
-	bananaInstance->AddComponent(MyComponent::ComponentType::Physics, bananaCollider);
-	DirectX::XMFLOAT3 bananaColliderSize = ModelManager::Instance().GetModel("Food_Apple")->GetModelSize();
-	BodyCreationSettings bananaBoxSettings(new BoxShape(RVec3(bananaColliderSize.x * 0.5f * DefaultObjectScale, bananaColliderSize.y * 0.5f * DefaultObjectScale, bananaColliderSize.z * 0.5f * DefaultObjectScale)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM); //Init apple cube
-	PhysicsManager::Instance().SetBodyCreationMass(1.f, bananaBoxSettings);// Set the mass properties for the apple box
-	bananaCollider->Init(bananaBoxSettings, EActivation::Activate);  //Create& Add
-	bananaInstance->GetTransform().SetScale(DefaultObjectScale,DefaultObjectScale,DefaultObjectScale);
-	bananaInstance->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->SetPosition(-3, 3, 0);
-
-
 	BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(HalfFloorScale.x,HalfFloorScale.y,HalfFloorScale.z)), Vec3().sZero(), Quat::sIdentity(), EMotionType::Dynamic, Layers::BOAT);
 	std::shared_ptr<PhysicsComponent> floorCollider = make_shared<PhysicsComponent>();
-	floorCollider->Init(floorBoxSettings, EActivation::Activate);
+	floorCollider->Init(floorBoxSettings, EActivation::Activate,floor);
 	floor->AddComponent(MyComponent::ComponentType::Physics, floorCollider);
+	floorCollider->SetGameObject(floor); // Set the GameObject for the PhysicsComponent
 	floor->GetTransform().SetScale(HalfFloorScale * 2.f);
+
 
 	// Init Buoyancy system
 	BuoyancySystem* buoyancySystem = CreateObj<BuoyancySystem>("BuoyancySystem");
-	buoyancySystem->Init(WaterWidth,waterHeight);
-
+	Material* waterMaterial = MaterialManager::Instance().GetMaterial("WaterMaterial");
+	buoyancySystem->Init(WaterWidth, waterHeight, waterMaterial, basicEffect);
 
 	//Collider Debug Render Component配置
+	Material* debugMaterial = MaterialManager::Instance().GetMaterial("DebugMaterial");
 	std::shared_ptr<RenderComponent> debugColliderRender = std::make_shared<RenderComponent>();
-	debugColliderRender->SetEffect(debugEffect);
-	debugColliderRender->SetMaterial(debugMaterial);
-	debugColliderRender->SetModel(ModelManager::Instance().GetModel("Capsule"));
-
+	debugColliderRender->Init(debugMaterial, debugEffect, ModelManager::Instance().GetModel("Capsule"));
 
 	//Debug Collider Render ComponentをPlayerに追加
 	player->AddComponent(MyComponent::ComponentType::DebugRender, debugColliderRender);
 
-
 	//===========Set skybox camera
 	GetObj<Skybox>("Skybox")->GetSkyboxEffect()->InitCamera(m_pCurrentCamera);
+
+	//===========Hide cursor
+#ifdef NDEBUG
+	ShowCursor(FALSE);
+#endif
+
 
 }
 
 void SceneGame::UnInit()
 {
 	m_sceneObjects.clear(); // Clear all scene objects
-
+	GetObj<DriftManager>("DriftManager")->UnInit(); 
+	
+	PhysicsManager::Instance().RemoveAllBodies();
+	ShowCursor(TRUE);
 }
 
 void SceneGame::Update(float tick)
 {
+	if(m_isChangeScene)
+	{
+		SceneBase::SetCurrentScene(m_sceneName.c_str());
+		return;
+	}
+
+
 	//===============Camera Update
 
 
 	//===============Handle Input
-	if(KInput::IsKeyTrigger(VK_ESCAPE))
+
+	if(KInput::IsKeyTrigger('K'))
 	{
-		m_pSceneManager->SetCurrentScene("Title");
-		return;
+		GetObj<Player>("Player")->Kill();
 	}
+
+
 
 	//===============Skybox Update
 	
@@ -313,22 +376,31 @@ void SceneGame::Update(float tick)
 	GetObj<BuoyancySystem>("BuoyancySystem")->PreUpdate(tick);
 	PhysicsManager::Instance().Update(tick); // 物理システムの更新
 
+
 	//===============Light Update
 	GetObj<DayLight>("DayLight")->Update(tick);
+
+	//===============Player Update
+	GetObj<Player>("Player")->Update(tick);
 
 	//===============Object Update
 	GetObj<GameObject>("Floor")->Update(tick);
 
+	//===============Scene objects Update
 	for(const auto& object:m_sceneObjects)
 	{
 		object->Update(tick);
 	}
 
-	//===============Player Update
-	GetObj<Player>("Player")->Update(tick);
+	//===============DriftManager Update
+	GetObj<DriftManager>("DriftManager")->Update(tick); // Update drift manager
+
+	//===============PostProcess Update
+	GetObj<MonoChrome>("MonoChrome")->Update(tick);
 
 	//===============UI Update
 	UIManager::Instance().Update(tick);
+
 
 	//===============Clear all inactive game objects
 	DeleteInactiveSceneObject();
@@ -336,37 +408,12 @@ void SceneGame::Update(float tick)
 
 void SceneGame::Draw()
 {
+	GetObj<MonoChrome>("MonoChrome")->PreDraw();
+
 	GetObj<Skybox>("Skybox")->Draw();
 
+	//============Draw GameObjects
 	GameApp::SetDepthStencilState(RenderStates::DSSLessEqual);
-#if defined(_DEBUG) || defined(DEBUG)
-	//Geometry
-	DirectX::XMFLOAT4X4 fmat;
-	DirectX::XMStoreFloat4x4(&fmat, DirectX::XMMatrixIdentity());
-	Geometry::SetWorld(fmat);
-	Geometry::SetView(m_pCurrentCamera->GetViewXMF());
-	Geometry::SetProjection(m_pCurrentCamera->GetProjXMF());
-	const int GridSize = 10;
-	Geometry::SetColor(DirectX::XMFLOAT4(0.3f, 0.3f, 0.3f, 0.5f));
-	for (int i = 1; i <= GridSize; ++i)
-	{
-		float g = (float)i;
-		Geometry::AddLine(DirectX::XMFLOAT3(g, 0.0f, -GridSize), DirectX::XMFLOAT3(g, 0.0f, GridSize));
-		Geometry::AddLine(DirectX::XMFLOAT3(-g, 0.0f, -GridSize), DirectX::XMFLOAT3(-g, 0.0f, GridSize));
-		Geometry::AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, g), DirectX::XMFLOAT3(GridSize, 0.0f, g));
-		Geometry::AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, -g), DirectX::XMFLOAT3(GridSize, 0.0f, -g));
-	}
-	// 軸描画
-	Geometry::SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
-	Geometry::AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, 0.0f), DirectX::XMFLOAT3(GridSize, 0.0f, 0.0f));
-	Geometry::SetColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
-	Geometry::AddLine(DirectX::XMFLOAT3(0.0f, -GridSize, 0.0f), DirectX::XMFLOAT3(0.0f, GridSize, 0.0f));
-	Geometry::SetColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
-	Geometry::AddLine(DirectX::XMFLOAT3(0.0f, 0.0f, -GridSize), DirectX::XMFLOAT3(0.0f, 0.0f, GridSize));
-
-	Geometry::DrawLines();
-#endif
-
 	GetObj<GameObject>("Floor")->Draw();
 
 	for (const auto& object : m_sceneObjects)
@@ -374,9 +421,16 @@ void SceneGame::Draw()
 		object->Draw();
 	}
 
+	GetObj<DriftManager>("DriftManager")->Draw(); // Draw drift manager items
+
+	// Transparent Draw
+	GetObj<BuoyancySystem>("BuoyancySystem")->Draw();
 	GetObj<Player>("Player")->Draw();
 
-	//Ui描画
+	GetObj<MonoChrome>("MonoChrome")->DrawRenderTarget();
+	
+
+	// Ui描画
 	GameApp::SetDepthStencilState(RenderStates::DSSNoDepthTest);
 	UIManager::Instance().Draw();
 
@@ -400,4 +454,10 @@ void SceneGame::DeleteInactiveSceneObject()
 			++it;
 		}
 	}
+}
+
+void SceneGame::SetCurrentScene(const char* sceneName)
+{
+	m_isChangeScene = true;
+	m_sceneName = sceneName;
 }

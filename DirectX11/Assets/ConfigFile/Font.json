@@ -29,6 +29,12 @@
       "FontFamily": "Arial",
       "FontSize":24,
       "IsCentered":false
+    },
+    {
+      "Name": "DeathFont",
+      "FontFamily": "Berlin Sans FB",
+      "FontSize":75,
+      "IsCentered":true
     }
   ],
   "BrushColor":

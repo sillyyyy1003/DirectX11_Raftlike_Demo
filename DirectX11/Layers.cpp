@@ -7,7 +7,7 @@ void MyPlayerContactListener::OnContactAdded(const CharacterVirtual* inCharacter
                                              CharacterContactSettings& ioSettings)
 {
 	// もし水中に
-	if (PhysicsManager::Instance().GetBodyInterface().GetObjectLayer(inBodyID2) == Layers::SENSOR)
+	if (PhysicsManager::Instance().GetBodyInterface().GetObjectLayer(inBodyID2) == Layers::WATER_SENSOR)
 	{
 		m_isInWater = true;
 		DebugLog::Log("[PlayerContactListener] Character is in water now");
@@ -21,13 +21,11 @@ void MyPlayerContactListener::OnContactRemoved(const CharacterVirtual* inCharact
 {
 
 	// もし水中に
-	if (PhysicsManager::Instance().GetBodyInterface().GetObjectLayer(inBodyID2) == Layers::SENSOR)
+	if (PhysicsManager::Instance().GetBodyInterface().GetObjectLayer(inBodyID2) == Layers::WATER_SENSOR)
 	{
 		m_isInWater = false;
 		DebugLog::Log("[PlayerContactListener] Character gets out of water now");
 		return;
 	}
-
-
 		
 }

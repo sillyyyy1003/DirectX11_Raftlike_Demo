@@ -13,7 +13,14 @@
 
 namespace
 {
-    static constexpr float RayDistance = 3.f;
+    enum ItemState :int
+    {
+        Active = 0,         // Spawned and waiting to be picked up
+        InActive = 1,       // Can be spawned
+        WaitToRecycle = 2,  // Marked for recycling
+    
+    };
+    static constexpr float RayDistance = 4.f;
 }
 
 
@@ -28,7 +35,9 @@ PlayerController::PlayerController(Player* player, PlayerCharacter* playerCharac
 
 void PlayerController::Update(float dt)
 {
+    if (!m_isActive)return;
     if (!m_isControllable)return;
+
     //Cursor SetMoveDir
     {
         POINT cursorPos;
@@ -99,19 +108,37 @@ void PlayerController::Update(float dt)
             JPH::RRayCast rayCast(origin, direction * distance);
             JPH::RayCastResult result;
             ExcludeLayerFilter layerFilter;
-            if (PhysicsManager::Instance().GetPhysicsSystem()->GetNarrowPhaseQuery().CastRay(rayCast, result, {}, layerFilter,{}))
+
+            if (PhysicsManager::Instance().GetPhysicsSystem()->GetNarrowPhaseQuery().CastRay(rayCast, result, {}, layerFilter,{}))  //Hit check
             {
                 PhysicsComponent* component = PhysicsManager::Instance().GetPhysicsComponent(result.mBodyID);
-                if (component!=nullptr)
+				if (component != nullptr)// If the component is valid
                 {
-                    GameObject* object = component->GetGameObjectByComponent();
-                    std::string name = dynamic_cast<ItemInstance*>(object)->GetName();
-                    // Add object to  inventory
-                    DebugLog::Log("Insert {} {}",m_pPlayer->GetInventory()->Insert(dynamic_cast<ItemInstance*>(object)), name);
-                    // Give ui system message
+                    GameObject* object = component->GetGameObject();
 
-                    // Delete object from scene
-                    if(object)object->DeActivate();
+					// 当たったのがアイテムなら、インヴェントリーに追加
+                    if (object->GetGameObjectType() == GameObject::GameObjectType::Item)
+                    {
+                        std::string name = dynamic_cast<ItemInstance*>(object)->GetName();
+                        int count = dynamic_cast<ItemInstance*>(object)->GetCount();
+                        int insertNum = m_pPlayer->GetInventory()->Insert(dynamic_cast<ItemInstance*>(object));
+                        // アイテム全部挿入したら、しーんから消す
+                        if (count == insertNum)
+                        {
+                            dynamic_cast<ItemInstance*>(object)->SetState(ItemState::WaitToRecycle);    // Mark for recycling in DriftManager
+                            dynamic_cast<ItemInstance*>(object)->DeActivate();
+                        }
+#ifdef _DEBUG
+                    	DebugLog::Log("Insert {} {}", insertNum, name);
+#endif
+                    	
+                    }
+					else// If the hit object is not an item
+                    {
+#ifdef _DEBUG
+                        DebugLog::Log("Hit object is not an item.");
+#endif
+                    }
                 }
             }
 
@@ -128,4 +155,14 @@ void PlayerController::UpdateWindowSize(DirectX::XMFLOAT2 windowSize)
 void PlayerController::UpdateWindowCenter(POINT center)
 {
     m_centerPos = center;
+}
+
+void PlayerController::SetControllable(bool isControllable)
+{
+	m_isControllable = isControllable;
+}
+
+void PlayerController::SetActive(bool isActive)
+{
+	m_isActive=isActive;
 }

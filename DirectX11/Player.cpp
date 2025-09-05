@@ -9,7 +9,6 @@ using json = nlohmann::json;
 
 namespace
 {
-	static constexpr float MoveSpeed = 5.f;
 	static constexpr float RotateLimit = DirectX::XM_PI * 7 / 18;	// 70度, 限制玩家上下视角旋转范围
 	static constexpr float HungerInitialValue = 200.f;	// 初期の空腹度
 	static constexpr float HungerStarveSpeed = 1.f;	// 空腹度の減少速度（1秒あたり1ポイント減少）
@@ -30,38 +29,24 @@ namespace
 }
 
 Player::Player():
+	GameObject(GameObjectType::Player),
 	m_pPlayerController(nullptr),
 	m_pCameraController(nullptr),
-	m_moveSpeed(MoveSpeed)
+	m_moveSpeed(PlayerMoveSpeed),
+	m_jumpSpeed(PlayerJumpSpeed),
+	m_negativeStatusScale(NegativeSpeedEffector)
 {
 }
 
 Player::~Player()
 {
-	if (m_pPlayerController)
-	{
-		m_pPlayerController.reset();
-	}
-	if (m_pCameraController)
-	{
-		m_pCameraController.reset();
-	}
-	if (m_pPlayerCharacter)
-	{
-		m_pPlayerCharacter.reset();
-	}
-	if (m_pPlayerEntity)
-	{
-		m_pPlayerEntity.reset();
-	}
-	if (m_pHungerComponent)
-	{
-		m_pHungerComponent.reset();
-	}
-	if (m_pInventory)
-	{
-		m_pInventory.reset();
-	}
+	if (m_pPlayerController)m_pPlayerController.reset();
+	if (m_pCameraController)m_pCameraController.reset();
+	if (m_pPlayerCharacter)m_pPlayerCharacter.reset();
+	if (m_pPlayerEntity)m_pPlayerEntity.reset();
+	if (m_pHungerComponent)m_pHungerComponent.reset();
+	if (m_pInventory)m_pInventory.reset();
+	
 }
 
 
@@ -132,6 +117,7 @@ bool Player::Init(const char* filePath)
 
 	//PlayerController初期化
 	m_pPlayerController = std::make_unique<PlayerController>(this, m_pPlayerCharacter.get());
+	PlayerController* controller = m_pPlayerController.get();
 
 	//CameraController初期化
 	{
@@ -166,6 +152,7 @@ bool Player::Init(const char* filePath)
 		m_pCameraController->GetCamera()->SetPos(camPos);
 		m_pCameraController->GetCamera()->SetTarget(camTarget);
 		m_pCameraController->SetCameraOffset(camOffset);
+		
 	}
 
 	// hunger component初期化→初期値
@@ -202,6 +189,20 @@ bool Player::Init(const char* filePath)
 			: PlayerInventorySize;
 		m_pInventory = std::make_shared<Inventory>(inventorySize);
 	}
+
+
+	AddDeathListener([controller](bool isDead)
+		{
+			controller->SetActive(!isDead); //if player dies, can't control player move
+		}
+	);
+
+	AddDeathListener([](bool isDead)
+	{
+			if (isDead)ShowCursor(TRUE);
+			else ShowCursor(FALSE);
+	});
+
 	return true;
 }
 
@@ -245,7 +246,7 @@ void Player::Update(float dt)
 	m_pCameraController->Update(dt);
 
 	//=======Input
-	m_pPlayerController->m_isControllable = m_pCameraController->GetFirstPersonCamera();	//カメラがFirstPersonCameraなら操作可能
+	m_pPlayerController->SetControllable(m_pCameraController->GetFirstPersonCamera());	//カメラがFirstPersonCameraなら操作可能
 	m_pPlayerController->Update(dt);
 
 	//=======Status Update
@@ -351,5 +352,10 @@ void Player::OnHungryStateChanged(bool isHungry)
 
 	m_pPlayerCharacter->SetMoveSpeed(m_moveSpeed * moveEffector);	// PlayerCharacterに速度を設定
 	m_pPlayerCharacter->SetJumpSpeed(m_jumpSpeed * moveEffector);	// PlayerCharacterにジャンプ速度を設定
+}
+
+void Player::AddDeathListener(const PlayerEntity::Callback& cb)
+{
+	m_pPlayerEntity->AddDeathListener(cb);
 }
 

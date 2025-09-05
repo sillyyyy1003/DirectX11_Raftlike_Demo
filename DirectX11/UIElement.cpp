@@ -37,6 +37,7 @@ void UIElement::Init(IEffect* effect, Material* material, Primitive* model)
 
 void UIElement::Draw()
 {
+	if (!m_isActive)return;
 	//===========背景描画
 	m_pUiRender->Draw();
 
@@ -55,6 +56,10 @@ void UIElement::SetTextProvider(ITextBind::TextProvider provider)
 	m_pUiText->SetTextProvider(provider);
 }
 
+
+void UIElement::SetCenterAlignment(bool isCenter)
+{
+}
 
 void UIElement::UpdateScale()
 {

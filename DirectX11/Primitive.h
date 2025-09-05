@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <memory>
+#include <vector>
 
 #include "MeshBuffer.h"
 
@@ -34,3 +35,28 @@ public:
 	DirectX::XMFLOAT3 GetModelSize() const override { return { 1,1,0.1f }; }
 };
 
+
+class PlaneMesh :
+	public Primitive
+{
+private:
+	std::unique_ptr<MeshBuffer> m_pMeshBuffer;
+public:
+	PlaneMesh() = default;
+
+	/// @brief メッシュ初期化
+	/// @param slices Mesh slicesメッシュ分割
+	/// @param size メッシュサイズ
+	void Init(UINT slices, float size = 1);
+
+	void Draw() override;
+
+	MeshBuffer* GetMeshBuffer() const
+	{
+		return m_pMeshBuffer.get();
+	}
+
+	void Init(UINT slices, float size, std::vector<MeshBuffer::Vertex>& vertices);
+
+	DirectX::XMFLOAT3 GetModelSize() const override { return { 1,1,0.1f }; }
+};

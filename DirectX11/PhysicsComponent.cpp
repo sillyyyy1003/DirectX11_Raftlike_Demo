@@ -8,6 +8,7 @@ PhysicsComponent::PhysicsComponent()
 
 PhysicsComponent::~PhysicsComponent()
 {
+
 }
 
 void PhysicsComponent::Init(const BodyCreationSettings& settings, EActivation activation)
@@ -22,6 +23,11 @@ void PhysicsComponent::Init(BodyID id)
 	PhysicsManager::Instance().AddPhysicsComponent(m_bodyID, this);
 }
 
+void PhysicsComponent::Init(const BodyCreationSettings& settings, EActivation activation, GameObject* obj)
+{
+	Init(settings, activation);
+	SetGameObject(obj);
+}
 
 void PhysicsComponent::SetPosition(const DirectX::XMFLOAT3& pos, JPH::EActivation eActivation)
 {
@@ -119,7 +125,7 @@ void PhysicsComponent::SetVelocity(const DirectX::XMFLOAT3& vec3)
 {
 	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
 	bi.SetLinearVelocity(m_bodyID, RVec3(vec3.x, vec3.y, vec3.z));
-	DebugLog::Log("This object velocity is {},{},{}", bi.GetLinearVelocity(m_bodyID).GetX(), bi.GetLinearVelocity(m_bodyID).GetY(), bi.GetLinearVelocity(m_bodyID).GetZ());
+
 }
 
 void PhysicsComponent::SetVelocity(float x, float y, float z)
@@ -133,15 +139,37 @@ void PhysicsComponent::SetVelocity(float* vec3)
 	SetVelocity(DirectX::XMFLOAT3(vec3[0], vec3[1], vec3[2]));
 }
 
-float PhysicsComponent::GetMass() const
-{
-	return m_mass;
-
-}
-
 EMotionType PhysicsComponent::GetEmotionType()
 {
 	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
 	return bi.GetMotionType(m_bodyID);
+}
+
+
+void PhysicsComponent::ActivatePhysics()
+{
+	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
+	bi.ActivateBody(this->m_bodyID);
+	
+}
+
+void PhysicsComponent::DeActivePhysics()
+{
+	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
+	bi.DeactivateBody(this->m_bodyID);
+
+}
+
+void PhysicsComponent::RemoveBody()
+{
+	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
+	bi.RemoveBody(this->m_bodyID);
+}
+
+void PhysicsComponent::AddBody()
+{
+	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
+	bi.AddBody(this->m_bodyID,EActivation::Activate);
+
 }
 

@@ -20,6 +20,8 @@ public:
 		return instance;
 	}
 
+	void LoadTextures(const char* jsonFilePath);
+
 	/// @brief 指定のテクスチャを登録する
 	void Register(const char* name, const char* filePath);
 
@@ -43,6 +45,8 @@ public:
 #endif
 
 	}
+
+	void UnInit();
 private:
 	std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures; // テクスチャのマップ
 };
