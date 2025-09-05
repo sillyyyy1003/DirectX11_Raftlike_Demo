@@ -41,7 +41,16 @@ void PlayerEntity::OnDamage(float _damage)
 
 void PlayerEntity::Dead()
 {
+	if (m_isDead) return;
+	m_isDead = true;
+	NotifyDeathListeners(m_isDead);
+}
 
+void PlayerEntity::Revive()
+{
+	if (!m_isDead)return;
+	m_isDead = false;
+	NotifyDeathListeners(m_isDead);	//Notify every thing to resume
 }
 
 void PlayerEntity::Update(float dt)
@@ -50,4 +59,19 @@ void PlayerEntity::Update(float dt)
 	{
 		OnDamage(dt * TickDamage);
 	}
+
+	if (m_life <= 0.0f && !m_isDead)
+	{
+		Dead();
+	}
+}
+
+void PlayerEntity::AddDeathListener(Callback cb)
+{
+	m_deathListeners.push_back(cb);
+}
+
+void PlayerEntity::NotifyDeathListeners(bool state)
+{
+	for (auto& cb : m_deathListeners) cb(state);
 }

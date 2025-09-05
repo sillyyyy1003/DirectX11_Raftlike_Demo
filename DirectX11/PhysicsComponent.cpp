@@ -29,7 +29,6 @@ void PhysicsComponent::Init(const BodyCreationSettings& settings, EActivation ac
 	SetGameObject(obj);
 }
 
-
 void PhysicsComponent::SetPosition(const DirectX::XMFLOAT3& pos, JPH::EActivation eActivation)
 {
 	PhysicsManager::Instance().GetBodyInterface().SetPosition(m_bodyID, RVec3(pos.x, pos.y, pos.z),eActivation);
@@ -140,12 +139,6 @@ void PhysicsComponent::SetVelocity(float* vec3)
 	SetVelocity(DirectX::XMFLOAT3(vec3[0], vec3[1], vec3[2]));
 }
 
-float PhysicsComponent::GetMass() const
-{
-	return m_mass;
-
-}
-
 EMotionType PhysicsComponent::GetEmotionType()
 {
 	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
@@ -157,11 +150,26 @@ void PhysicsComponent::ActivatePhysics()
 {
 	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
 	bi.ActivateBody(this->m_bodyID);
+	
 }
 
 void PhysicsComponent::DeActivePhysics()
 {
 	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
 	bi.DeactivateBody(this->m_bodyID);
+
+}
+
+void PhysicsComponent::RemoveBody()
+{
+	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
+	bi.RemoveBody(this->m_bodyID);
+}
+
+void PhysicsComponent::AddBody()
+{
+	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
+	bi.AddBody(this->m_bodyID,EActivation::Activate);
+
 }
 

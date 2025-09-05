@@ -9,8 +9,6 @@
 #include "Layers.h"
 #include "Transform.h"
 
-class ItemInstance;
-
 /// @brief 物理コンポーネント
 ///	Now Only box collider
 ///	todo: SphereCollider, CapsuleCollider, MeshCollider, etc.
@@ -27,7 +25,6 @@ public:
 private:
 
 	JPH::BodyID m_bodyID;
-	float m_mass;				// Dynamic Objectの質量
 	GameObject* m_pGameObject;	// 所属しているGameObjectを設定
 
 public:
@@ -38,6 +35,8 @@ public:
 	void Init(const BodyCreationSettings& settings,EActivation activation);
 	void Init(BodyID id);
 	void Init(const BodyCreationSettings& settings, EActivation activation, GameObject* obj);
+
+	BodyID GetBodyID()const { return m_bodyID; }
 
 	/// @brief 位置設定
 	/// @param pos 位置
@@ -76,8 +75,6 @@ public:
 	void SetVelocity(float x, float y, float z);
 	void SetVelocity(float* vec3);
 
-	float GetMass()const;
-
 	void SetGameObject(GameObject* obj) { m_pGameObject = obj; }
 	GameObject* GetGameObject() const { return m_pGameObject; }
 
@@ -85,5 +82,8 @@ public:
 
 	void ActivatePhysics();
 	void DeActivePhysics();
+
+	void RemoveBody();
+	void AddBody();
 };
 

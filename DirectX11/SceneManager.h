@@ -43,6 +43,8 @@ private:
 
 	std::shared_ptr<LightBase> lightBase;	
 	GameSignalBus* m_pGameSignalBus;
+	CameraBase* m_pCurrentCamera;
+
 private:
 
 	SceneManager();
@@ -87,7 +89,7 @@ public:
 
 	void ChangeScene();
 
-	
+	void SetCurrentCamera(CameraBase* pCamera) { m_pCurrentCamera = pCamera; }
 
 };
 

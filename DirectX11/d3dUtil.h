@@ -217,6 +217,11 @@ inline DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& vec, float scalar)
     return DirectX::XMFLOAT3(vec.x * inv, vec.y * inv, vec.z * inv);
 }
 
+inline float Lerp(const float& a, const float&b,float t)
+{
+    return a + (b - a) * t;
+}
+
 inline DirectX::XMFLOAT3 Lerp(const DirectX::XMFLOAT3& a, const DirectX::XMFLOAT3& b, float t)
 {
 	DirectX::XMVECTOR va = XMLoadFloat3(&a);

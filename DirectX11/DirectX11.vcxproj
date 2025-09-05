@@ -150,13 +150,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>
-      $(ProjectDir)Assets\Lib\imgui\Include;
-      $(ProjectDir)Assets\Lib\Assimp\include;
-      $(ProjectDir)Assets\Lib\DirectXTex;
-      $(ProjectDir)Assets\Lib\JoltPhysics\Include\Jolt;
-      %(AdditionalIncludeDirectories)
-      </AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Assets\Lib\imgui\Include;$(ProjectDir)Assets\Lib\Assimp\include;$(ProjectDir)Assets\Lib\DirectXTex;$(ProjectDir)Assets\Lib\nolmann;$(ProjectDir)Assets\Lib\JoltPhysics\Include\Jolt;$(ProjectDir)Assets\Lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -210,6 +204,7 @@
     <ClCompile Include="PlayerCharacter.cpp" />
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="PostProcessMonochromeEffect.cpp" />
     <ClCompile Include="Primitive.cpp" />
     <ClCompile Include="RandomManager.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
@@ -225,6 +220,7 @@
     <ClCompile Include="ShipTile.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SkyboxEffect.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="ThirdPersonCamera.cpp" />
@@ -286,6 +282,7 @@
     <ClInclude Include="PlayerCharacter.h" />
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="PostProcessMonochromeEffect.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="RandomManager.h" />
     <ClInclude Include="RenderComponent.h" />
@@ -302,6 +299,7 @@
     <ClInclude Include="GameSignalBus.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="SkyboxEffect.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="ThirdPersonCamera.h" />
@@ -333,6 +331,13 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="PS_Monochrome.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="PS_PBR.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

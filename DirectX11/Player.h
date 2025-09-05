@@ -54,6 +54,13 @@ public:
 	void OnStarveStateChanged(bool isStarve);
 	void OnHungryStateChanged(bool isHungry);
 
+	/// @brief Register Event to death listener
+	/// @param cb 
+	void AddDeathListener(const PlayerEntity::Callback& cb);
+
+	void Kill() { m_pPlayerEntity->Dead(); }
+	void Revive() { m_pPlayerEntity->Revive(); }
+
 private:
 
 	//PlayerのHPを扱う
@@ -82,4 +89,5 @@ private:
 	float m_jumpSpeed;
 	float m_negativeStatusScale;	// マイナス状態の影響を受けるスケール（空腹、渇きなど）
 };
+
 

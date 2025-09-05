@@ -93,6 +93,7 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(const char* itemN
 	PhysicsManager::Instance().SetBodyCreationMass(1.f, boxSettings);	// Set the mass properties for the apple box
 	std::shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
 	physicsComponent->Init(boxSettings, EActivation::Activate);
+
 	itemInstance->AddComponent(MyComponent::ComponentType::Physics, physicsComponent);
 	physicsComponent->SetGameObject(itemInstance.get()); // Set the GameObject for the PhysicsComponent
 

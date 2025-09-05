@@ -12,13 +12,16 @@
 #include "PBREffect.h"
 #include "PhysicsManager.h"
 #include "Player.h"
+#include "PostProcessMonochromeEffect.h"
 #include "RenderState.h"
+#include "SceneManager.h"
 #include "ShapeFactory.h"
 #include "SkyboxEffect.h"
 #include "UIBasicEffect.h"
 #include "UIManager.h"
 #include "Skybox.h"
 #include "TextureManager.h"
+#include "UIButtonMove.h"
 #include "UIInventorySlot.h"
 #include "UIPlayerStatus.h"
 
@@ -27,8 +30,8 @@ namespace
 {
 	static constexpr DirectX::XMFLOAT4 DefaultLightDiffuse = { 0.5f,0.5f,0.5f,1.f }; // Default light diffuse color
 	static constexpr DirectX::XMFLOAT4 DefaultLightColor = { 1.0f, 1.0f, 1.0, 1.0f }; // Ambient light color
-	static constexpr float WaterWidth = 50.f;
-	static constexpr float waterHeight = 1.f;
+	static constexpr float WaterWidth = 200.f;
+	static constexpr float waterHeight = 20.f;
 
 	//Collider Setting
 	static constexpr DirectX::XMFLOAT3 HalfUnitScale = { 0.5f,0.5f,0.5f };	//Default Cube Size (length,height,width={1,1,1})
@@ -37,6 +40,11 @@ namespace
 	static constexpr DirectX::XMFLOAT3 DefaultLightPosition = { 0,10,0 };	//Default Light Position
 
 	static constexpr DirectX::XMFLOAT3 UIAimSize = { 32,32,1.f };
+	static constexpr DirectX::XMFLOAT2 ButtonSize = { 300,109 };
+	static constexpr float ButtonAmplitude = 8.f;
+	static constexpr float ButtonMoveSpeed = 3.f;
+	static constexpr DirectX::XMFLOAT3 ReviveButtonPosition = { 0,-100,0.5f };
+	static constexpr DirectX::XMFLOAT3 BackToTitleButtonPosition = { 0,-240,0.5f };
 
 	static constexpr float DefaultObjectScale = 0.05f;
 }
@@ -46,6 +54,9 @@ void SceneGame::Init()
 	Player* player = CreateObj<Player>("Player");
 	player->Init("Assets/ConfigFile/PlayerConfig.json");	//json fileから読み込み
 	m_pCurrentCamera = player->GetCameraController()->GetCamera();
+	player->SetPosition({ 0,1,0 });
+	dynamic_cast<SceneManager*>(m_pSceneManager)->SetCurrentCamera(m_pCurrentCamera);
+
 
 	//============ Init light
 	DirLight* light = CreateObj<DayLight>("DayLight");
@@ -63,6 +74,19 @@ void SceneGame::Init()
 	VertexShader* pbrVS = GetObj<VertexShader>("PBRVS");
 	PixelShader* uiElementPS = GetObj<PixelShader>("UIElementPS");
 	VertexShader* uiElementVS = GetObj<VertexShader>("UIElementVS");
+
+	PixelShader* monoChromePS = CreateObj<PixelShader>("MonoChromePS");
+	monoChromePS->Load("Assets/Shader/PS_Monochrome.cso");
+
+	MonoChrome* monoChrome = CreateObj<MonoChrome>("MonoChrome");
+	monoChrome->Init(monoChromePS);
+
+	// register monochrome effect on player dead
+	player->AddDeathListener([monoChrome](bool isDead)
+		{
+			monoChrome->SetActive(isDead);
+		}
+	);
 
 
 	//===========Init Effect
@@ -97,22 +121,24 @@ void SceneGame::Init()
 	//===========Register food data
 	ItemDataBase::Instance().LoadItemDataFromJsonFile("Assets/ConfigFile/ItemDataBase.json");
 
+
 	//===========Init item
 	std::shared_ptr<ItemInstance> appleInstance(ItemDataBase::Instance().CreateItemInstance("Apple",3));
 	appleInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
-	appleInstance->SetPosition({ -3, 3, 0 });
+	appleInstance->SetPosition({ -3, 0.5, 0 });
 	RegisterSceneObject(appleInstance);
+	DebugLog::Log("AppleInstance : bodyIndex:{}",appleInstance->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->GetBodyID().GetIndex());
 
 
 	std::shared_ptr<ItemInstance> bananaInstance(ItemDataBase::Instance().CreateItemInstance("Banana",10));
 	bananaInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
-	bananaInstance->SetPosition({ 3, 3, 3 });
+	bananaInstance->SetPosition({ 3, 0.5, 3 });
 	RegisterSceneObject(bananaInstance);
 
 
 	std::shared_ptr<ItemInstance> coconutInstance (ItemDataBase::Instance().CreateItemInstance("Coconut"));
 	coconutInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
-	coconutInstance->SetPosition({3, 3, 0});
+	coconutInstance->SetPosition({3, 0.5, 0});
 	RegisterSceneObject(coconutInstance);
 
 	GameObject* floor = CreateObj<GameObject>("Floor");
@@ -130,6 +156,12 @@ void SceneGame::Init()
 	uiAim->Init(MaterialManager::Instance().GetMaterial("UIAimMaterial"), uiBasicEffect, ModelManager::Instance().GetModel("Square"));
 	uiAim->GetTransform().SetPosition({ 0,0,0.1f });
 	uiAim->GetTransform().SetScale(UIAimSize);
+	// death text only activate when player is dead
+	player->AddDeathListener([uiAim](bool isDead)
+		{
+			uiAim->SetActive(!isDead);	//if player revive, isDead=false
+		}
+	);
 
 	// Create UI Inventory
 	UIFontSet* uiFontSet=GetObj<UIFontSet>("UIFontSet");
@@ -140,13 +172,17 @@ void SceneGame::Init()
 	Material* uiInventorySlotMaterial = MaterialManager::Instance().GetMaterial("UiInventorySlotMaterial");
 	Material* uiInventoryChosenSLotMaterial = MaterialManager::Instance().GetMaterial("UiInventoryChosenSlotMaterial");
 
-
-
-
 	uiInventory->Init(player->GetInventory(), uiBasicEffect, uiInventoryBgMaterial, uiInventorySlotBgMaterial,uiInventorySlotMaterial, uiInventoryChosenSLotMaterial,ModelManager::Instance().GetModel("Square"),
 		uiFontSet, "InventoryFont", uiBrush);
 	uiInventory->LoadSizeAndPos("Assets/ConfigFile/UIConfig.json"); // Load position and size from config file
 	uiInventory->SetPlayer(player); // Set player to inventory
+	// Hide inventory when player is dead
+	player->AddDeathListener([uiInventory](bool isDead)
+		{
+			uiInventory->SetActive(!isDead);
+		}
+	);
+
 
 	// Create UI Player Status
 	UIPlayerStatus::MaterialList hpMaterials(3);
@@ -163,16 +199,104 @@ void SceneGame::Init()
 	uiPlayerStatus->LoadPositionAndSize("Assets/ConfigFile/UIConfig.json"); // Load position and size from config file
 	uiPlayerStatus->SetPlayer(player); // Set player to UI Player Status
 
+	// Hide PlayerStatus when player is dead
+	player->AddDeathListener([uiPlayerStatus](bool isDead)
+		{
+			uiPlayerStatus->SetActive(!isDead);
+		}
+	);
+
+
+	// Create Death UI
+	UIText* deathText = CreateObj<UIText>("DeathText");
+	deathText->Init(uiFontSet, "DeathFont", uiBrush);
+	deathText->SetPosition({ 0,100,1.0 });
+	deathText->SetScale({800,100,1});
+	deathText->SetStaticText("You Are Incapacitated!");
+	deathText->SetActive(false);
+	// death text only activate when player is dead
+	player->AddDeathListener([deathText](bool isDead)
+		{
+			deathText->SetActive(isDead);
+		}
+	);
+
+	// Create Death Button
+
+	UIButtonMove* backToTitleButton = CreateObj<UIButtonMove>("backToTitleButton");
+	Material* backToTitleMat = MaterialManager::Instance().GetMaterial("UiBackToTitleButton");
+	backToTitleButton->Init(uiBasicEffect, backToTitleMat, ModelManager::Instance().GetModel("Square"));
+	backToTitleButton->SetButton(BackToTitleButtonPosition, ButtonSize.x, ButtonSize.y);  // Set button size & position
+	backToTitleButton->InitMoveParam(ButtonMoveSpeed, ButtonAmplitude);	 // set button interactive param
+	player->AddDeathListener([backToTitleButton](bool isDead)
+		{
+			backToTitleButton->SetActive(isDead);
+		}
+	);
+	backToTitleButton->SetActive(false);
+
+	UIButtonMove* reviveButton = CreateObj<UIButtonMove>("reviveButton");
+	Material* reviveButtonMat = MaterialManager::Instance().GetMaterial("UiReviveButton");
+	reviveButton->Init(uiBasicEffect, reviveButtonMat, ModelManager::Instance().GetModel("Square"));
+	reviveButton->SetButton(ReviveButtonPosition, ButtonSize.x, ButtonSize.y);  // Set button size & position
+	reviveButton->InitMoveParam(ButtonMoveSpeed, ButtonAmplitude);	 // set button interactive param
+	player->AddDeathListener([reviveButton](bool isDead)
+		{
+			reviveButton->SetActive(isDead);
+			if (isDead)reviveButton->ActiveMove();	//if is active, make revive button move
+		}
+	);
+	reviveButton->SetActive(false);
 	UIManager::Instance().ClearLayers();	// Clear existing UI layers
 
-	UIManager::Instance().AddUiLayer("Aim", 3);
+	UIManager::Instance().AddUiLayer("Aim", 1);
 	UIManager::Instance().GetUILayer("Aim")->AddComponent(uiAim);
 
-	UIManager::Instance().AddUiLayer("Inventory", 4);
-	UIManager::Instance().GetUILayer("Inventory")->AddComponent(uiInventory);
+	UIManager::Instance().AddUiLayer("Button", 2);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(uiInventory);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(backToTitleButton);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(reviveButton);
 
-	UIManager::Instance().AddUiLayer("PlayerStatus", 5);
+	UIManager::Instance().AddUiLayer("PlayerStatus", 3);
 	UIManager::Instance().GetUILayer("PlayerStatus")->AddComponent(uiPlayerStatus);
+
+	UIManager::Instance().AddUiLayer("Message", 4);
+	UIManager::Instance().GetUILayer("Message")->AddComponent(deathText);
+
+
+
+
+	//=====Set Button event
+
+	backToTitleButton->SetOnClick([this]()
+		{
+			SetCurrentScene("Title");	//if clicked back to title scene
+		});
+	backToTitleButton->SetOnHover([backToTitleButton, reviveButton]()
+		{
+			backToTitleButton->ActiveMove();
+			reviveButton->DeActiveMove();
+		});
+	backToTitleButton->SetOnExit([backToTitleButton]()
+		{
+			backToTitleButton->DeActiveMove();
+		});
+
+
+	reviveButton->SetOnClick([player]()
+		{
+			player->Revive();//if clicked player revive
+		});
+	reviveButton->SetOnHover([backToTitleButton, reviveButton]()
+		{
+			reviveButton->ActiveMove();
+			backToTitleButton->DeActiveMove();
+		});
+	reviveButton->SetOnExit([reviveButton]()
+		{
+			reviveButton->DeActiveMove();
+		});
+
 
 	//=====物理の初期化
 
@@ -190,10 +314,11 @@ void SceneGame::Init()
 	floorCollider->SetGameObject(floor); // Set the GameObject for the PhysicsComponent
 	floor->GetTransform().SetScale(HalfFloorScale * 2.f);
 
+
 	// Init Buoyancy system
 	BuoyancySystem* buoyancySystem = CreateObj<BuoyancySystem>("BuoyancySystem");
-	buoyancySystem->Init(WaterWidth,waterHeight);
-
+	Material* waterMaterial = MaterialManager::Instance().GetMaterial("WaterMaterial");
+	buoyancySystem->Init(WaterWidth, waterHeight, waterMaterial, basicEffect);
 
 	//Collider Debug Render Component配置
 	Material* debugMaterial = MaterialManager::Instance().GetMaterial("DebugMaterial");
@@ -203,9 +328,14 @@ void SceneGame::Init()
 	//Debug Collider Render ComponentをPlayerに追加
 	player->AddComponent(MyComponent::ComponentType::DebugRender, debugColliderRender);
 
-
 	//===========Set skybox camera
 	GetObj<Skybox>("Skybox")->GetSkyboxEffect()->InitCamera(m_pCurrentCamera);
+
+	//===========Hide cursor
+#ifdef NDEBUG
+	ShowCursor(FALSE);
+#endif
+
 
 }
 
@@ -214,20 +344,30 @@ void SceneGame::UnInit()
 	m_sceneObjects.clear(); // Clear all scene objects
 	GetObj<DriftManager>("DriftManager")->UnInit(); 
 	
-	PhysicsManager::Instance().RemoveAllBodies(); 
+	PhysicsManager::Instance().RemoveAllBodies();
+	ShowCursor(TRUE);
 }
 
 void SceneGame::Update(float tick)
 {
+	if(m_isChangeScene)
+	{
+		SceneBase::SetCurrentScene(m_sceneName.c_str());
+		return;
+	}
+
+
 	//===============Camera Update
 
 
 	//===============Handle Input
-	if(KInput::IsKeyTrigger(VK_ESCAPE))
+
+	if(KInput::IsKeyTrigger('K'))
 	{
-		m_pSceneManager->SetCurrentScene("Title");
-		return;
+		GetObj<Player>("Player")->Kill();
 	}
+
+
 
 	//===============Skybox Update
 	
@@ -236,16 +376,15 @@ void SceneGame::Update(float tick)
 	GetObj<BuoyancySystem>("BuoyancySystem")->PreUpdate(tick);
 	PhysicsManager::Instance().Update(tick); // 物理システムの更新
 
+
 	//===============Light Update
 	GetObj<DayLight>("DayLight")->Update(tick);
-
-	//===============Object Update
-	GetObj<GameObject>("Floor")->Update(tick);
-
 
 	//===============Player Update
 	GetObj<Player>("Player")->Update(tick);
 
+	//===============Object Update
+	GetObj<GameObject>("Floor")->Update(tick);
 
 	//===============Scene objects Update
 	for(const auto& object:m_sceneObjects)
@@ -256,9 +395,12 @@ void SceneGame::Update(float tick)
 	//===============DriftManager Update
 	GetObj<DriftManager>("DriftManager")->Update(tick); // Update drift manager
 
+	//===============PostProcess Update
+	GetObj<MonoChrome>("MonoChrome")->Update(tick);
 
 	//===============UI Update
 	UIManager::Instance().Update(tick);
+
 
 	//===============Clear all inactive game objects
 	DeleteInactiveSceneObject();
@@ -266,38 +408,12 @@ void SceneGame::Update(float tick)
 
 void SceneGame::Draw()
 {
+	GetObj<MonoChrome>("MonoChrome")->PreDraw();
+
 	GetObj<Skybox>("Skybox")->Draw();
 
+	//============Draw GameObjects
 	GameApp::SetDepthStencilState(RenderStates::DSSLessEqual);
-#if defined(_DEBUG) || defined(DEBUG)
-	//Geometry
-	DirectX::XMFLOAT4X4 fmat;
-	DirectX::XMStoreFloat4x4(&fmat, DirectX::XMMatrixIdentity());
-	Geometry::SetWorld(fmat);
-	Geometry::SetView(m_pCurrentCamera->GetViewXMF());
-	Geometry::SetProjection(m_pCurrentCamera->GetProjXMF());
-	const int GridSize = 10;
-	Geometry::SetColor(DirectX::XMFLOAT4(0.3f, 0.3f, 0.3f, 0.5f));
-	for (int i = 1; i <= GridSize; ++i)
-	{
-		float g = (float)i;
-		Geometry::AddLine(DirectX::XMFLOAT3(g, 0.0f, -GridSize), DirectX::XMFLOAT3(g, 0.0f, GridSize));
-		Geometry::AddLine(DirectX::XMFLOAT3(-g, 0.0f, -GridSize), DirectX::XMFLOAT3(-g, 0.0f, GridSize));
-		Geometry::AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, g), DirectX::XMFLOAT3(GridSize, 0.0f, g));
-		Geometry::AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, -g), DirectX::XMFLOAT3(GridSize, 0.0f, -g));
-	}
-	// 軸描画
-	Geometry::SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
-	Geometry::AddLine(DirectX::XMFLOAT3(-GridSize, 0.0f, 0.0f), DirectX::XMFLOAT3(GridSize, 0.0f, 0.0f));
-	Geometry::SetColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
-	Geometry::AddLine(DirectX::XMFLOAT3(0.0f, -GridSize, 0.0f), DirectX::XMFLOAT3(0.0f, GridSize, 0.0f));
-	Geometry::SetColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
-	Geometry::AddLine(DirectX::XMFLOAT3(0.0f, 0.0f, -GridSize), DirectX::XMFLOAT3(0.0f, 0.0f, GridSize));
-
-	Geometry::DrawLines();
-#endif
-
-
 	GetObj<GameObject>("Floor")->Draw();
 
 	for (const auto& object : m_sceneObjects)
@@ -308,7 +424,11 @@ void SceneGame::Draw()
 	GetObj<DriftManager>("DriftManager")->Draw(); // Draw drift manager items
 
 	// Transparent Draw
+	GetObj<BuoyancySystem>("BuoyancySystem")->Draw();
 	GetObj<Player>("Player")->Draw();
+
+	GetObj<MonoChrome>("MonoChrome")->DrawRenderTarget();
+	
 
 	// Ui描画
 	GameApp::SetDepthStencilState(RenderStates::DSSNoDepthTest);
@@ -334,4 +454,10 @@ void SceneGame::DeleteInactiveSceneObject()
 			++it;
 		}
 	}
+}
+
+void SceneGame::SetCurrentScene(const char* sceneName)
+{
+	m_isChangeScene = true;
+	m_sceneName = sceneName;
 }

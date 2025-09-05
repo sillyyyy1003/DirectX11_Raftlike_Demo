@@ -82,7 +82,5 @@ void GameObject::SetPosition(const DirectX::XMFLOAT3& pos)
 			return;
 		}
 	}
-
 	m_transform.SetPosition(pos);
-
 }

@@ -60,7 +60,7 @@
       "normalTex": "BaseMaterial_Normal",
       "metallicTex": "BaseMaterial_Metallic"
     },
-        {
+    {
       "name": "BaseObjectMaterial1",
       "ambient": [1.0, 1.0, 1.0, 1.0],
       "diffuse": [1.0, 1.0, 1.0, 1.0],
@@ -229,6 +229,36 @@
       "albedoTex": "",
       "normalTex": "",
       "metallicTex": ""
+    },
+    {
+      "name": "WaterMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.1, 0.3, 0.5, 1.0],
+      "specular": [0.8, 0.9, 1.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiReviveButton",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_ReviveButton",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiBackToTitleButton",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_BackToTitleButton",
+      "normalTex": "",
+      "metallicTex": ""
     }
   ],
   "textures": [
@@ -278,11 +308,27 @@
     },
     {
       "name": "Apple_Icon",
-      "file": "Assets/Texture/ObjectIcon/coca-leaves.png"
+      "file": "Assets/Texture/ObjectIcon/apple.png"
     },
     {
       "name": "Banana_Icon",
+      "file": "Assets/Texture/ObjectIcon/banana.png"
+    },
+    {
+      "name": "Coconut_Icon",
+      "file": "Assets/Texture/ObjectIcon/coconut.png"
+    },
+    {
+      "name": "Wood_Icon",
       "file": "Assets/Texture/ObjectIcon/wood.png"
+    },
+    {
+      "name": "Plastic_Icon",
+      "file": "Assets/Texture/ObjectIcon/water-bottle.png"
+    },
+    {
+      "name": "Wire_Icon",
+      "file": "Assets/Texture/ObjectIcon/cable.png"
     },
     {
       "name": "UI_InventorySlotBg",
@@ -299,6 +345,14 @@
     {
       "name": "UI_HungerIcon",
       "file": "Assets/Texture/UI/UI_Hp_Bar_Food_128x128.png"
+    },
+    {
+      "name": "UI_ReviveButton",
+      "file": "Assets/Texture/UI/UI_Button_Revive_300x109.png"
+    },
+    {
+      "name": "UI_BackToTitleButton",
+      "file": "Assets/Texture/UI/UI_Button_BackToTitle_300x109.png"
     }
   ]
 }

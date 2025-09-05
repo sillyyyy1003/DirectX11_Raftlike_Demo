@@ -38,15 +38,13 @@ void ItemInstance::DecreaseCount(int count)
 	if (m_count < 0) m_count = 0; // Ensure count does not go below zero
 }
 
+void ItemInstance::SetState(int state)
+{
+	m_itemState = state;
+}
+
 void ItemInstance::Update(float dt)
 {
-	// Set Item object
-	switch (m_itemState)
-	{
-	case Active:break;
-	case InActive: DeActivate(); break;
-	case Collected: DeActivate(); break;
-	}
 	GameObject::Update(dt);
 }
 

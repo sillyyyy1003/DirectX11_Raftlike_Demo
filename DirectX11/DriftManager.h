@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <map>
-
 #include "Item.h"
 
 class Player;
@@ -61,6 +60,9 @@ private:
 	/// @brief 初期アイテム生成
 	///	@type 生成するアイテムの種類
 	void SpawnInitialItem(DriftObjectType type);
+
+	void UpdateFarObjectStatus();
+
 private:
 
 	Player* m_pPlayer;											// プレイヤーの位置
@@ -68,6 +70,9 @@ private:
 	std::map<DriftObjectType, std::vector<std::unique_ptr<GameObject>>> m_farGameObjects;
 
 	float m_spawnTimer;
+	DirectX::XMFLOAT2 m_spawnRangeX;
+	DirectX::XMFLOAT2 m_spawnRangeZ;
+
 
 };
 

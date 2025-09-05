@@ -13,6 +13,7 @@
 #include <imgui.h>
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
+#include <memory>
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -119,7 +120,10 @@ protected:
     ComPtr<ID3D11Texture2D>        m_pDepthStencilBuffer;                
     ComPtr<ID3D11RenderTargetView> m_pRenderTargetView;                  
     ComPtr<ID3D11DepthStencilView> m_pDepthStencilView;                  
-    D3D11_VIEWPORT                 m_ScreenViewport;                                        
+    D3D11_VIEWPORT                 m_ScreenViewport;
+
+    std::shared_ptr<RenderTarget> m_pDefRenderTarget;
+    std::shared_ptr<DepthStencil> m_pDefDepthStencil;
 
 
     std::wstring m_MainWndCaption;                     
@@ -130,6 +134,8 @@ protected:
 
     int m_scrollValue = 0;	// WIN_APIを使う
     int m_moveUnit = 0;		// wheelによる移動量
+
+
 
 
 public:
@@ -146,6 +152,18 @@ public:
     static void SetCullingMode(ComPtr<ID3D11RasterizerState> _rsState);
 
     static void SetDepthStencilState(ComPtr<ID3D11DepthStencilState> _depthStencilState);
+
+    static void SetRenderTargets(UINT num, std::shared_ptr<RenderTarget>* ppViews, DepthStencil* pView);
+
+    static void SetDefRenderTarget();
+
+    static int GetClientWidth();
+    static int GetClientHeight();
+
+    static bool GetEnable4xMsaa();
+    static int Get4xMsaaQuality();
+
+    static DepthStencil* GetDefDepthStencil();
 };
 
 extern D3DApp* gD3D;

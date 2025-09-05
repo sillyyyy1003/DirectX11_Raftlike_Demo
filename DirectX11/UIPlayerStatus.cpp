@@ -60,6 +60,7 @@ void UIPlayerStatus::Init(const MaterialList& hpMaterials, const MaterialList& h
 
 void UIPlayerStatus::Update(float dt)
 {
+	if (!m_isActive)return;
 	float hungerValue = m_pPlayer->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->GetCurrentHungerPercentage();
 	m_pHungerBar->UpdateUI(hungerValue);
 
@@ -70,7 +71,7 @@ void UIPlayerStatus::Update(float dt)
 
 void UIPlayerStatus::Draw()
 {
-
+	if (!m_isActive)return;
 	m_pHealthBar->Draw();
 	m_pHungerBar->Draw();
 

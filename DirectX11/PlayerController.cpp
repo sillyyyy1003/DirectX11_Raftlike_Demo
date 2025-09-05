@@ -13,6 +13,13 @@
 
 namespace
 {
+    enum ItemState :int
+    {
+        Active = 0,         // Spawned and waiting to be picked up
+        InActive = 1,       // Can be spawned
+        WaitToRecycle = 2,  // Marked for recycling
+    
+    };
     static constexpr float RayDistance = 4.f;
 }
 
@@ -28,7 +35,9 @@ PlayerController::PlayerController(Player* player, PlayerCharacter* playerCharac
 
 void PlayerController::Update(float dt)
 {
+    if (!m_isActive)return;
     if (!m_isControllable)return;
+
     //Cursor SetMoveDir
     {
         POINT cursorPos;
@@ -116,7 +125,8 @@ void PlayerController::Update(float dt)
                         // アイテム全部挿入したら、しーんから消す
                         if (count == insertNum)
                         {
-                            dynamic_cast<ItemInstance*>(object)->SetState(ItemInstance::Collected);
+                            dynamic_cast<ItemInstance*>(object)->SetState(ItemState::WaitToRecycle);    // Mark for recycling in DriftManager
+                            dynamic_cast<ItemInstance*>(object)->DeActivate();
                         }
 #ifdef _DEBUG
                     	DebugLog::Log("Insert {} {}", insertNum, name);
@@ -145,4 +155,14 @@ void PlayerController::UpdateWindowSize(DirectX::XMFLOAT2 windowSize)
 void PlayerController::UpdateWindowCenter(POINT center)
 {
     m_centerPos = center;
+}
+
+void PlayerController::SetControllable(bool isControllable)
+{
+	m_isControllable = isControllable;
+}
+
+void PlayerController::SetActive(bool isActive)
+{
+	m_isActive=isActive;
 }

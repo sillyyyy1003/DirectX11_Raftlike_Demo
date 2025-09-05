@@ -21,6 +21,7 @@ void UIRender::SetViewSize(const DirectX::XMFLOAT2& _viewSize)
 
 void UIRender::Draw()
 {
+	if (!m_isActive)return;
 	assert(m_pRenderComponent != nullptr);
 	m_pRenderComponent->Render(m_transform);
 }
@@ -66,6 +67,7 @@ void UIText::SetScale(const DirectX::XMFLOAT3& scale)
 
 void UIText::Draw()
 {
+	if (!m_isActive)return;	
 	// 文字が設定されていない場合は描画しない
 	if (!m_textProvider && m_staticText.empty())return;
 	// 文字が設定されている場合 

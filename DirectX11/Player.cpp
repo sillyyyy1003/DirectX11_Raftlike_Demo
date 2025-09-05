@@ -117,6 +117,7 @@ bool Player::Init(const char* filePath)
 
 	//PlayerController初期化
 	m_pPlayerController = std::make_unique<PlayerController>(this, m_pPlayerCharacter.get());
+	PlayerController* controller = m_pPlayerController.get();
 
 	//CameraController初期化
 	{
@@ -151,6 +152,7 @@ bool Player::Init(const char* filePath)
 		m_pCameraController->GetCamera()->SetPos(camPos);
 		m_pCameraController->GetCamera()->SetTarget(camTarget);
 		m_pCameraController->SetCameraOffset(camOffset);
+		
 	}
 
 	// hunger component初期化→初期値
@@ -187,6 +189,20 @@ bool Player::Init(const char* filePath)
 			: PlayerInventorySize;
 		m_pInventory = std::make_shared<Inventory>(inventorySize);
 	}
+
+
+	AddDeathListener([controller](bool isDead)
+		{
+			controller->SetActive(!isDead); //if player dies, can't control player move
+		}
+	);
+
+	AddDeathListener([](bool isDead)
+	{
+			if (isDead)ShowCursor(TRUE);
+			else ShowCursor(FALSE);
+	});
+
 	return true;
 }
 
@@ -230,7 +246,7 @@ void Player::Update(float dt)
 	m_pCameraController->Update(dt);
 
 	//=======Input
-	m_pPlayerController->m_isControllable = m_pCameraController->GetFirstPersonCamera();	//カメラがFirstPersonCameraなら操作可能
+	m_pPlayerController->SetControllable(m_pCameraController->GetFirstPersonCamera());	//カメラがFirstPersonCameraなら操作可能
 	m_pPlayerController->Update(dt);
 
 	//=======Status Update
@@ -336,5 +352,10 @@ void Player::OnHungryStateChanged(bool isHungry)
 
 	m_pPlayerCharacter->SetMoveSpeed(m_moveSpeed * moveEffector);	// PlayerCharacterに速度を設定
 	m_pPlayerCharacter->SetJumpSpeed(m_jumpSpeed * moveEffector);	// PlayerCharacterにジャンプ速度を設定
+}
+
+void Player::AddDeathListener(const PlayerEntity::Callback& cb)
+{
+	m_pPlayerEntity->AddDeathListener(cb);
 }
 

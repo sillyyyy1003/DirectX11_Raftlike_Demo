@@ -82,6 +82,7 @@ void UIInventorySlot::OnClick(float x, float y)
 //=============Inventory UI
 void UIInventory::Update(float dt)
 {
+	if (!m_isActive)return;
 	// Input
 	if(KInput::IsKeyTrigger(VK_LEFT))
 	{
@@ -259,6 +260,7 @@ void UIInventory::SetInventory(Inventory* inventory)
 
 void UIInventory::Draw()
 {
+	if (!m_isActive)return;
 	// Draw background
 	m_pBackground->Draw();
 	// Draw Slot

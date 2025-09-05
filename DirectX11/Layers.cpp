@@ -27,7 +27,5 @@ void MyPlayerContactListener::OnContactRemoved(const CharacterVirtual* inCharact
 		DebugLog::Log("[PlayerContactListener] Character gets out of water now");
 		return;
 	}
-
-
 		
 }

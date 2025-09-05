@@ -160,7 +160,10 @@ void PhysicsManager::RemoveAllBodies()
 	{
 		bodyInterface.RemoveBody(id);	//Remove
 		bodyInterface.DestroyBody(id);	//Destroy
+
 	}
+
+	m_bodies.clear();
 }
 
 

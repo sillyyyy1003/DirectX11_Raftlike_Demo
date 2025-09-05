@@ -61,6 +61,5 @@ float4 main(PS_IN pin) : SV_TARGET
     //アルファ値をマテリアルに計算
 	litColor.a = diffuse.a;
 
-	//litColor = Gamma(litColor);
 	return litColor;
 }

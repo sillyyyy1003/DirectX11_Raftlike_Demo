@@ -43,6 +43,7 @@ void UIButtonMove::InitMoveParam(float moveSpeed, float amplitude)
 
 void UIButtonMove::Update(float dt)
 {
+	if (!m_isActive)return;
 	if (!m_isMove)return;
 
 	m_tick += dt * m_moveSpeed;

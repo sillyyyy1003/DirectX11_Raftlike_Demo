@@ -21,6 +21,7 @@ public:
 	virtual void Draw() = 0;
 
 	/// @brief UiComponentの有効/無効を設定する
+	virtual void SetActive(bool isActive) { m_isActive = isActive; }
 	virtual bool IsActive() const { return m_isActive; }
 
 	//============== UIイベント処理 ===================
@@ -101,6 +102,7 @@ public:
 	/// @brief 文字揃い設定(垂直方向)
 	///	@param paragraphAlign Top: 上揃え, Middle: 中央揃え, Bottom: 下揃え
 	void SetParagraphAlignment(ParagraphAlign paragraphAlign);
+
 
 protected:
 

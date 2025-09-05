@@ -1,7 +1,5 @@
 ﻿#include "Skybox.h"
-
 #include "GameApp.h"
-#include "RenderState.h"
 #include "SkyboxEffect.h"
 
 Skybox::Skybox() :

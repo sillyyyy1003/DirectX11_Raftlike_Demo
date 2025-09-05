@@ -20,6 +20,14 @@ CameraController::CameraController() :
 	m_pFirstPersonCamera = std::make_shared<FirstPersonCamera>();
 	m_pThirdPersonCamera = std::make_shared<ThirdPersonCamera>();
 	m_pCurrentCamera = m_pFirstPersonCamera.get();
+	//if is release then set camera mode to FirstPerson
+#if defined(_DEBUG) || defined(DEBUG)
+	m_mode = CameraMode::Free;
+#endif
+#ifdef NDEBUG
+	m_mode = CameraMode::FirstPerson;
+#endif
+
 }
 
 void CameraController::Update(float dt)
@@ -57,9 +65,9 @@ void CameraController::Update(float dt)
 		m_pCurrentCamera = m_pThirdPersonCamera.get();
 	}
 	*/
-
-
 #endif
+
+
 	switch (m_mode)
 	{
 	case CameraMode::Free: UpdateFreeCamera(dt); break;
