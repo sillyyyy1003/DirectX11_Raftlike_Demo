@@ -92,33 +92,29 @@ AppleInstance : bodyIndex:0
 [PlayerContactListener] Character gets out of water now
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 33.
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 33.
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 33.
+Insert 3 Apple
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
-[PlayerContactListener] Character is in water now
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 0.
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 2.
-[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 2.
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 0.
-[PlayerContactListener] Character is in water now
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
 [PlayerContactListener] Character gets out of water now
-WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
-WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
 [PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+Insert 1 Coconut
+[DriftManager] : Recycle near item at 6.9171085, 0, 13.712279
+[BuoyancySystem] : Add object to water! Object num is 4. BodyId is 3
+Insert 10 Banana
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 0.
 WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 2.
-[PlayerContactListener] Character gets out of water now
-WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
-[DriftManager] : Recycle near item at -4.134922, 0, 15.154883
-[BuoyancySystem] : Add object to water! Object num is 4. BodyId is 23
-WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
-WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
 [PlayerContactListener] Character is in water now
 [PlayerContactListener] Character gets out of water now
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
+WARNING::[BuoyancySystem] : Object is already in the list!BodyId is 1.
 [SceneManager] Current Scene: Scene title!

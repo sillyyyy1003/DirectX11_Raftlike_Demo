@@ -164,6 +164,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="BuoyancySystem.cpp" />
     <ClCompile Include="CameraBase.cpp" />
     <ClCompile Include="CameraController.cpp" />
@@ -217,7 +218,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShapeFactory.cpp" />
     <ClCompile Include="GameSignalBus.cpp" />
-    <ClCompile Include="ShipTile.cpp" />
+    <ClCompile Include="Ship.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="SkyboxEffect.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -242,6 +243,7 @@
     <ClCompile Include="UIPlayerStatus.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Behaviour.hpp" />
     <ClInclude Include="BuoyancySystem.h" />
     <ClInclude Include="CameraBase.h" />
     <ClInclude Include="CameraController.h" />
@@ -294,7 +296,7 @@
     <ClInclude Include="SceneTitle.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShapeFactory.h" />
-    <ClInclude Include="ShipTile.h" />
+    <ClInclude Include="Ship.h" />
     <ClInclude Include="Signal.hpp" />
     <ClInclude Include="GameSignalBus.h" />
     <ClInclude Include="Skybox.h" />

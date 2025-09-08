@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "Behaviour.hpp"
 #include "GameObject.h"
 
 class Player;
@@ -9,11 +10,12 @@ class Item
 public:
 	enum class ItemType :uint8_t
 	{
-		Weapon = 0,		// 武器
-		Utility = 1,	// 建築ツール
-		Food = 2,		// 食品
-		Water = 3,		// 飲み物
-		BaseMaterial = 4// 建築材料	
+		Weapon = 0,			// 武器
+		Utility = 1,		// 建築ツール
+		Food = 2,			// 食品
+		Water = 3,			// 飲み物
+		BaseMaterial = 4,	// 建築材料
+		ShipTile=5,
 	};
 	
 	virtual ~Item() = default;
@@ -29,8 +31,10 @@ public:
 	bool HasDurability() const { return m_maxDurability > 0; }
 	std::string GetName() const { return m_itemName; }
 
-	virtual void OnUse(Player* player) const = 0;
-	//virtual void OnHold(Player* player, float deltaTime) {}
+	//todo: switch virtual method to virtual interface IUseBehaviour
+	//todo: e.g. class Food :public IUseBehavior,public Item{void OnUse() override{//};}
+	/// @brief Virtual method for item used
+	virtual void OnUse(Player* player) const {};
 
 	void SetItemId(uint32_t itemId) { m_itemId = itemId; }
 	void SetModelId(uint32_t modelId) { m_modelId = modelId; }
@@ -109,18 +113,17 @@ public:
 	Utility();
 	~Utility() override = default;
 	void OnUse(Player* player) const override;
-	//void OnHold(Player* player, float deltaTime) override;
 
 };
 
 
 class Food:
-	public Item
+	public Item, public IEatBehavior
 {
 public:
 	Food(float _foodValue);
 	~Food() override = default;
-	void OnUse(Player* player) const  override;
+	void OnEat(Player* player) const override;
 
 private:
 	float m_foodValue;	// 回復値

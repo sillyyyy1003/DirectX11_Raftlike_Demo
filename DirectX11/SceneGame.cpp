@@ -306,7 +306,8 @@ void SceneGame::Init()
 
 	// Create the settings for the body itself. Note that here you can also set other properties like the restitution / friction.
 
-	// Create the actual rigid body
+	// Create the actual 
+	// body
 	BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(HalfFloorScale.x,HalfFloorScale.y,HalfFloorScale.z)), Vec3().sZero(), Quat::sIdentity(), EMotionType::Dynamic, Layers::BOAT);
 	std::shared_ptr<PhysicsComponent> floorCollider = make_shared<PhysicsComponent>();
 	floorCollider->Init(floorBoxSettings, EActivation::Activate,floor);

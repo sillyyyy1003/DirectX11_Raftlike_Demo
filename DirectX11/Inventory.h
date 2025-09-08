@@ -26,6 +26,8 @@ public:
 	void Update(float tick);
 	void UseItem(int index, Player* player);
 
+	void ConsumeItem(int index, Player* player, int consumeCount = 1);
+
 private:
 
 	std::vector<Slot> m_slots;

@@ -70,7 +70,8 @@ Food::Food(float _foodValue) :
 	m_foodValue = _foodValue;
 }
 
-void Food::OnUse(Player* player) const
+
+void Food::OnEat(Player* player) const
 {
 	player->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->RestoreHunger(m_foodValue);
 }

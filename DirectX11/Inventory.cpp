@@ -116,4 +116,34 @@ void Inventory::UseItem(int index, Player* player)
 	}
 }
 
+void Inventory::ConsumeItem(int index, Player* player, int consumeCount)
+{
+	if (!m_slots[index].has_value())return;
+
+	switch(m_slots[index].value()->GetProto()->GetItemType())
+	{
+	default:
+		m_slots[index].value()->GetProto()->OnUse(player);
+	case Item::ItemType::Food:
+		auto proto = m_slots[index].value()->GetProto(); // shared_ptr<const Item>
+		auto food = dynamic_cast<const Food*>(proto.get()); // 注意是 const Food*
+		if (food)
+		{
+			food->OnEat(player);
+		}
+		break;
+		//todo: more to set...
+	}
+
+
+	// if item is stackable, decrease count
+	m_slots[index].value()->DecreaseCount(consumeCount);	// Decrease count by 1
+
+	// if count is 0, remove item from slot
+	if (m_slots[index].value()->GetCount() <= 0)
+	{
+		m_slots[index].reset();	// Remove item from slot
+	}
+}
+
 
