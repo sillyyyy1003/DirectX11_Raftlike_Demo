@@ -109,7 +109,8 @@ void UIInventory::Update(float dt)
 
 	if (KInput::IsKeyTrigger(VK_LBUTTON))
 	{
-		m_pInventory->UseItem(m_currentIndex, m_pPlayer);
+		//todo: if is used for build anything, need to brush up method
+		m_pInventory->ConsumeItem(m_currentIndex, m_pPlayer);
 	}
 
 }

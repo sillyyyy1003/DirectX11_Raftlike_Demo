@@ -160,16 +160,5 @@ void PhysicsComponent::DeActivePhysics()
 
 }
 
-void PhysicsComponent::RemoveBody()
-{
-	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
-	bi.RemoveBody(this->m_bodyID);
-}
 
-void PhysicsComponent::AddBody()
-{
-	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
-	bi.AddBody(this->m_bodyID,EActivation::Activate);
-
-}
 

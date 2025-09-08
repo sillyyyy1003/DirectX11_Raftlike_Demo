@@ -258,9 +258,6 @@
     <ClCompile Include="ThirstComponent.cpp">
       <Filter>源文件\Player</Filter>
     </ClCompile>
-    <ClCompile Include="ShipTile.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="SceneTitle.cpp">
       <Filter>源文件\Scene</Filter>
     </ClCompile>
@@ -347,6 +344,12 @@
     </ClCompile>
     <ClCompile Include="RandomManager.cpp">
       <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Ship.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Behaviour.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -494,9 +497,6 @@
     <ClInclude Include="ThirstComponent.h">
       <Filter>头文件\Player</Filter>
     </ClInclude>
-    <ClInclude Include="ShipTile.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="SceneTitle.h">
       <Filter>头文件\Scene</Filter>
     </ClInclude>
@@ -583,6 +583,12 @@
     </ClInclude>
     <ClInclude Include="RandomManager.h">
       <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Ship.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour.hpp">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

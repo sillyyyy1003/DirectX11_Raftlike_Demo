@@ -82,8 +82,5 @@ public:
 
 	void ActivatePhysics();
 	void DeActivePhysics();
-
-	void RemoveBody();
-	void AddBody();
 };
 
