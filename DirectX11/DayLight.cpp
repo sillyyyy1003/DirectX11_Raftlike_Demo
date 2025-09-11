@@ -10,17 +10,24 @@ namespace
     static constexpr float DayLightIntensityMax = 3.5f;
     static constexpr float StartLightIntensity = 1.5f;
 	static constexpr float NightLightIntensityMin = 1.f;
-    static constexpr float DayLength = 1200.f;
-    static constexpr float DayTime = 600.f;
-    static constexpr float NightTime = 600.f;
-    static constexpr float DayLightFadeTime = 60.f; 
+    static constexpr float DayLength = 900.f;
+    static constexpr float DayTime =  600.f;
+    static constexpr float NightTime = 300.f;
+    static constexpr float DayLightFadeTime = 60.f;
+	static constexpr float UnitHour = 37.5f; // 1時間の秒数
+
+}
+
+DayLight::DayLight():
+	m_time(112.5f)//assume sunrise at 6:00 AM(0) make startTime = 9AM so m_time init=37.5*3;
+{
 }
 
 void DayLight::Update(float dt)
 {
-	m_tick += dt;
+	m_time += dt;
 
-	float timeOfDay = fmodf(m_tick, DayLength);
+	float timeOfDay = fmodf(m_time, DayLength);
 
 
 	if (timeOfDay < DayTime)

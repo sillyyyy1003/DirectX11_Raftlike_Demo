@@ -82,5 +82,7 @@ public:
 
 	void ActivatePhysics();
 	void DeActivePhysics();
+
+	ObjectLayer GetLayer() const;
 };
 

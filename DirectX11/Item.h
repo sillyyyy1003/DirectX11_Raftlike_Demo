@@ -8,14 +8,16 @@ class Player;
 class Item
 {
 public:
-	enum class ItemType :uint8_t
+	enum class ItemType :uint16_t
 	{
 		Weapon = 0,			// 武器
 		Utility = 1,		// 建築ツール
 		Food = 2,			// 食品
 		Water = 3,			// 飲み物
 		BaseMaterial = 4,	// 建築材料
-		ShipTile=5,
+		ShipTile = 5,
+		Cup = 6,
+		WaterPurifier,
 	};
 	
 	virtual ~Item() = default;
@@ -30,11 +32,6 @@ public:
 	float GetMaxDurability() const { return m_maxDurability; }
 	bool HasDurability() const { return m_maxDurability > 0; }
 	std::string GetName() const { return m_itemName; }
-
-	//todo: switch virtual method to virtual interface IUseBehaviour
-	//todo: e.g. class Food :public IUseBehavior,public Item{void OnUse() override{//};}
-	/// @brief Virtual method for item used
-	virtual void OnUse(Player* player) const {};
 
 	void SetItemId(uint32_t itemId) { m_itemId = itemId; }
 	void SetModelId(uint32_t modelId) { m_modelId = modelId; }
@@ -60,7 +57,7 @@ private:
 
 /// @brief 実際にゲームワールドで生成するインスタンス
 class ItemInstance :
-	public GameObject
+	public GameObject, public Interactable
 {
 public:
 	ItemInstance();
@@ -84,6 +81,8 @@ public:
 
 	/// @brief Add count to item count
 	void AddCount(int count) { m_count += count; }
+
+	/// @brief Get Item(Proto ptr) Name
 	std::string GetName() const { return m_protoPtr->GetName(); };
 	void DecreaseCount(int count);
 
@@ -95,6 +94,8 @@ public:
 	int GetState() const { return m_itemState; }
 
 	void Update(float dt) override;
+
+	virtual void InteractWith(BodyID& rigidBody, Player* player) override {};
 	
 private:
 	std::shared_ptr<const Item> m_protoPtr;
@@ -112,19 +113,18 @@ class Utility:
 public:
 	Utility();
 	~Utility() override = default;
-	void OnUse(Player* player) const override;
 
 };
 
 
 class Food:
-	public Item, public IEatBehavior
+	public Item
 {
 public:
 	Food(float _foodValue);
 	~Food() override = default;
-	void OnEat(Player* player) const override;
-
+	float GetFoodValue() const { return m_foodValue; }
+	
 private:
 	float m_foodValue;	// 回復値
 };
@@ -137,6 +137,33 @@ class BaseMaterial :
 public:
 	BaseMaterial();
 	~BaseMaterial() override = default;
+};
 
-	void OnUse(Player* player) const override;
+class Cup :
+	public Item
+{
+public:
+
+	Cup(float value);
+	~Cup() override = default;
+	float GetRecoverValue()const { return m_recoverValue; }
+
+private:
+	float m_recoverValue;// 回復値
+
+};
+
+
+class WaterPurifier:
+	public Item
+{
+public:
+
+	WaterPurifier(float timeThreshold);
+	~WaterPurifier() override = default;
+
+	float GetPurifyThreshold()const { return m_timeThreshold; }
+
+protected:
+	float m_timeThreshold;	// 浄水にかかる時間
 };

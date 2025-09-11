@@ -4,6 +4,7 @@
 #include "Inventory.h"
 #include "LivingEntity.h"
 #include "PlayerController.h"
+#include "ThirstComponent.h"
 
 /// <summary>
 /// Player
@@ -51,15 +52,30 @@ public:
 	CameraController* GetCameraController() const { return m_pCameraController.get(); }
 	Inventory* GetInventory() const { return m_pInventory.get(); }
 
-	void OnStarveStateChanged(bool isStarve);
-	void OnHungryStateChanged(bool isHungry);
-
 	/// @brief Register Event to death listener
 	/// @param cb 
 	void AddDeathListener(const PlayerEntity::Callback& cb);
 
 	void Kill() { m_pPlayerEntity->Dead(); }
 	void Revive() { m_pPlayerEntity->Revive(); }
+
+	/// @brief change all param when player is in hunger/thirst
+	///	camera start to shake / move speed slow down
+	void OnNegativeStateChanged();
+
+	/// @brief player will get damaged if is starving
+	void OnStarveStateChanged();
+
+	/// @brief アイテムをピックアップし、インヴェントリーに入れる
+	/// @param component 
+	void PickUpItem(PhysicsComponent* component);
+
+	/// @brief 今手持ちのアイテムを取得
+	ItemInstance* GetItemInHand()const { return m_itemInHand; }
+
+	/// @brief 今手持ちのアイテムを設定
+	void SetItemInHand(ItemInstance* item) { m_itemInHand = item; }
+
 
 private:
 
@@ -75,6 +91,9 @@ private:
 	// Hunger manager
 	std::shared_ptr<HungerComponent> m_pHungerComponent;
 
+	// Thirst manager
+	std::shared_ptr<ThirstComponent> m_pThirstComponent;
+
 	// 物理挙動を扱う
 	std::shared_ptr<PlayerCharacter> m_pPlayerCharacter;
 
@@ -83,11 +102,13 @@ private:
 
 
 	bool m_isInNegativeState = false;	/// true>>if player is in negative state, like hunger, thirst, etc.
-
+	bool m_isInDamagedStatus = false;	/// ture>>iif player is starving/thirst is under 0;
 
 	float m_moveSpeed;				// Player default move speed;
 	float m_jumpSpeed;
 	float m_negativeStatusScale;	// マイナス状態の影響を受けるスケール（空腹、渇きなど）
+
+	ItemInstance* m_itemInHand = nullptr;
 };
 
 

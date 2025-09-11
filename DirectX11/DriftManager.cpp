@@ -11,15 +11,15 @@
 
 namespace
 {
-    static constexpr int NearItemNum = 10;
-    static constexpr int FarItemNum = 500;
+    static constexpr int NearItemNum = 30;
+    static constexpr int FarItemNum = 300;
 
     // ==== 距離判定用パラメーター ====
-    static constexpr float NearToFarDistance = 25.f; // Near → Far 回收
-    static constexpr float FarToNearDistance = 15.f; // Far → Near 回收
-    static constexpr float MaxDistance = -70.f; // FarItem 最大存活距离
+    static constexpr float NearToFarDistance = 45.f; // Near → Far 回收
+    static constexpr float FarToNearDistance = 35.f; // Far → Near 回收
+    static constexpr float MaxDistance = -70.f; // FarItem 最大距離
 
-    static constexpr float SpawnInterval = 2.f;    // FarItem 自动生成间隔
+    static constexpr float SpawnInterval = 2.f;    // FarItem 自動生成間隔
     static constexpr DirectX::XMFLOAT3 FloatVector = { 0,0,-2 };
 
     static constexpr uint InitialSpawnNum = 20;
@@ -70,7 +70,7 @@ void DriftManager::Init(IEffect* effect)
     std::vector<std::shared_ptr<ItemInstance>> woodItems(NearItemNum);
     for (auto& item : woodItems)
     {
-        item = ItemDataBase::Instance().CreateItemInstance("Wood", 1, -1, Layers::DRIFT);
+        item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Wood", 1, -1, Layers::DRIFT);
         item->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(effect);
         item->DeActivate();
         item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
@@ -82,7 +82,7 @@ void DriftManager::Init(IEffect* effect)
     std::vector<std::shared_ptr<ItemInstance>> wireItems(NearItemNum);
     for (auto& item : wireItems)
     {
-        item = ItemDataBase::Instance().CreateItemInstance("Wire", 1, -1, Layers::DRIFT);
+        item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Wire", 1, -1, Layers::DRIFT);
         item->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(effect);
         item->DeActivate();
         item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
@@ -95,7 +95,7 @@ void DriftManager::Init(IEffect* effect)
     std::vector<std::shared_ptr<ItemInstance>> plasticItems(NearItemNum);
     for (auto& item : plasticItems)
     {
-        item = ItemDataBase::Instance().CreateItemInstance("Plastic", 1, -1, Layers::DRIFT);
+        item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Plastic", 1, -1, Layers::DRIFT);
         item->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(effect);
         item->DeActivate();
         item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
@@ -158,8 +158,9 @@ void DriftManager::Init(IEffect* effect, Player* player)
 
 void DriftManager::UnInit()
 {
-    m_nearItemInstances.clear();
     m_farGameObjects.clear();
+    m_nearItemInstances.clear();
+
 }
 
 void DriftManager::Update(float tick)
@@ -195,8 +196,6 @@ void DriftManager::Update(float tick)
                 farItem->DeActivate();
                 DirectX::XMFLOAT3 pos = farItem->GetTransform().GetPosition();
 				spawnNearPos.push_back({ pos,type});
-                DebugLog::Log("[DriftManager] : Recycle near item at {}, {}, {}", pos.x, pos.y, pos.z);
-
             }
         }
     }
@@ -225,7 +224,6 @@ void DriftManager::Update(float tick)
                 item->SetState(WaitToRecycle); // Set Inactive mark
                 DirectX::XMFLOAT3 pos = item->GetTransform().GetPosition();
                 spawnFarPos.push_back({ pos,type });
-                DebugLog::Log("[DriftManager] : Recycle far item at {},{},{}", pos.x, pos.y, pos.z);
             }
         }
     }
@@ -321,7 +319,6 @@ bool DriftManager::ShouldSpawnNearItem(DirectX::XMFLOAT3 pos)
 bool DriftManager::ShouldRecycleFarItem(const DirectX::XMFLOAT3& pos)
 {
     //float dist = GetDistanceFromPlayer(pos);
-    //return dist > MaxDistance;
     return pos.z < MaxDistance;
 }
 
@@ -395,8 +392,4 @@ void DriftManager::SpawnInitialItem(DriftObjectType type)
     {
         CreateFarItem(type, pos);
     }
-}
-
-void DriftManager::UpdateFarObjectStatus()
-{
 }

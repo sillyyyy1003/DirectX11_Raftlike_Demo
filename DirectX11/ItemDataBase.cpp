@@ -9,6 +9,7 @@
 #include <nlohmann/json.hpp>
 
 #include "d3dUtil.h"
+#include "ItemInstances.h"
 
 namespace
 {
@@ -65,17 +66,28 @@ void ItemDataBase::UnInit()
 	m_items.clear();			// Clear the map
 }
 
-std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(const char* itemName, int count, float durability)
+std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorld(const char* itemName, int count, float durability)
 {
-	std::shared_ptr<ItemInstance> itemInstance = std::make_shared<ItemInstance>();
-
-
 	auto it = m_items.find(std::string(itemName));
 	if (it == m_items.end())
 	{
 		DebugLog::LogError("[ItemDataBase] {} is not found in database!", itemName);
 		return nullptr;
 	}
+	std::shared_ptr<ItemInstance> itemInstance = nullptr;
+	switch (it->second->GetItemType())
+	{
+	case Item::ItemType::Food:
+		itemInstance = std::make_shared<FoodInstance>();
+		break;
+	case Item::ItemType::Cup:
+		itemInstance = std::make_shared<CupInstance>();
+		break;
+	default:
+		itemInstance = std::make_shared<ItemInstance>();
+		break;
+	}
+
 	uint32_t id = it->second->GetItemId();
 	uint32_t modelId = it->second->GetModelId();
 	uint32_t materialId = it->second->GetMaterialId();
@@ -88,30 +100,34 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(const char* itemN
 
 	// Add Physics component
 	DirectX::XMFLOAT3 size = m_itemSizes.find(itemName)->second;
-	DirectX::XMFLOAT3 modelSize = ModelManager::Instance().GetModel(modelId)->GetModelSize();
-	BodyCreationSettings boxSettings(new BoxShape(RVec3(modelSize.x * 0.5f * size.x, modelSize.y * 0.5f * size.y, modelSize.z * 0.5f * size.z),0.01f), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, Layers::ITEM);
-	PhysicsManager::Instance().SetBodyCreationMass(1.f, boxSettings);	// Set the mass properties for the apple box
-	std::shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
-	physicsComponent->Init(boxSettings, EActivation::Activate);
-
-	itemInstance->AddComponent(MyComponent::ComponentType::Physics, physicsComponent);
-	physicsComponent->SetGameObject(itemInstance.get()); // Set the GameObject for the PhysicsComponent
-
 	// Set Default scale
 	itemInstance->GetTransform().SetScale(size);
 
 	return itemInstance;
 }
 
-std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(const char* itemName, int count, float durability, ObjectLayer layer)
+std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics(const char* itemName, int count, float durability, ObjectLayer layer)
 {
-	std::shared_ptr<ItemInstance> itemInstance = std::make_shared<ItemInstance>();
 	auto it = m_items.find(std::string(itemName));
 	if (it == m_items.end())
 	{
 		DebugLog::LogError("[ItemDataBase] {} is not found in database!", itemName);
 		return nullptr;
 	}
+	std::shared_ptr<ItemInstance> itemInstance = nullptr;
+	switch (it->second->GetItemType())
+	{
+	case Item::ItemType::Food:
+		itemInstance = std::make_shared<FoodInstance>();
+		break;
+	case Item::ItemType::Cup:
+		itemInstance = std::make_shared<CupInstance>();
+		break;
+	default:
+		itemInstance = std::make_shared<ItemInstance>();
+		break;
+	}
+
 	uint32_t id = it->second->GetItemId();
 	uint32_t modelId = it->second->GetModelId();
 	uint32_t materialId = it->second->GetMaterialId();
@@ -125,6 +141,86 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(const char* itemN
 	DirectX::XMFLOAT3 size = m_itemSizes.find(itemName)->second;
 	DirectX::XMFLOAT3 modelSize = ModelManager::Instance().GetModel(modelId)->GetModelSize();
 	BodyCreationSettings boxSettings(new BoxShape(RVec3(modelSize.x * 0.5f * size.x, modelSize.y * 0.5f * size.y, modelSize.z * 0.5f * size.z)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, layer);
+	PhysicsManager::Instance().SetBodyCreationMass(1.f, boxSettings);	// Set the mass properties for the apple box
+	std::shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
+	physicsComponent->Init(boxSettings, EActivation::Activate);
+	itemInstance->AddComponent(MyComponent::ComponentType::Physics, physicsComponent);
+	physicsComponent->SetGameObject(itemInstance.get()); // Set the GameObject for the PhysicsComponent
+
+	// Set Default scale
+	itemInstance->GetTransform().SetScale(size);
+
+	return itemInstance;
+}
+
+std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(const char* itemName, int count, float durability)
+{
+	auto it = m_items.find(std::string(itemName));
+	if (it == m_items.end())
+	{
+		DebugLog::LogError("[ItemDataBase] {} is not found in database!", itemName);
+		return nullptr;
+	}
+	//====todo: make this a new method
+	std::shared_ptr<ItemInstance> itemInstance = nullptr;
+	switch (it->second->GetItemType())
+	{
+	case Item::ItemType::Food:
+		itemInstance = std::make_shared<FoodInstance>();
+		break;
+	case Item::ItemType::Cup:
+		itemInstance = std::make_shared<CupInstance>();
+		break;
+	default:
+		itemInstance = std::make_shared<ItemInstance>();
+		break;
+	}
+
+	uint32_t id = it->second->GetItemId();
+	uint32_t modelId = it->second->GetModelId();
+	uint32_t materialId = it->second->GetMaterialId();
+
+	(itemInstance)->InitItem(GetItem(itemName), count, durability);
+	return itemInstance;
+}
+
+std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics(const char* itemName, int count,
+	float durability, ObjectLayer layer, EMotionType type)
+{
+
+	auto it = m_items.find(std::string(itemName));
+	if (it == m_items.end())
+	{
+		DebugLog::LogError("[ItemDataBase] {} is not found in database!", itemName);
+		return nullptr;
+	}
+	std::shared_ptr<ItemInstance> itemInstance = nullptr;
+	switch(it->second->GetItemType())
+	{
+	case Item::ItemType::Food:
+		itemInstance = std::make_shared<FoodInstance>();
+		break;
+	case Item::ItemType::Cup:
+		itemInstance = std::make_shared<CupInstance>();
+		break;
+	default:
+		itemInstance = std::make_shared<ItemInstance>();
+		break;
+	}
+
+	uint32_t id = it->second->GetItemId();
+	uint32_t modelId = it->second->GetModelId();
+	uint32_t materialId = it->second->GetMaterialId();
+	itemInstance->InitItem(GetItem(itemName), count, durability);
+	// Add Render component
+	std::shared_ptr<RenderComponent> renderComponent = std::make_shared<RenderComponent>();
+	renderComponent->Init(MaterialManager::Instance().GetMaterial(materialId), nullptr, ModelManager::Instance().GetModel(modelId));
+	itemInstance->AddComponent(MyComponent::ComponentType::Render, renderComponent);
+
+	// Add Physics component
+	DirectX::XMFLOAT3 size = m_itemSizes.find(itemName)->second;
+	DirectX::XMFLOAT3 modelSize = ModelManager::Instance().GetModel(modelId)->GetModelSize();
+	BodyCreationSettings boxSettings(new BoxShape(RVec3(modelSize.x * 0.5f * size.x, modelSize.y * 0.5f * size.y, modelSize.z * 0.5f * size.z)), { 0,0,0, }, Quat::sIdentity(), type, layer);
 	PhysicsManager::Instance().SetBodyCreationMass(1.f, boxSettings);	// Set the mass properties for the apple box
 	std::shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
 	physicsComponent->Init(boxSettings, EActivation::Activate);
@@ -230,6 +326,45 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 				RegisterItem(
 					name.c_str(),
 					baseMaterialPtr,
+					m_nextID,
+					ModelManager::Instance().GetModelId(modelName),
+					MaterialManager::Instance().GetMaterialId(materialName)
+				);
+			}
+		}
+	}
+
+	if (j.contains("Cup"))
+	{
+		const auto& cups = j["Cup"];
+
+		DirectX::XMFLOAT3 globalSize = DefaultSize; // 默认大小
+		if (cups.contains("size"))
+		{
+			globalSize = JsonToXMFLOAT3(cups["size"]);
+		}
+
+		if (cups.contains("items"))
+		{
+			for (const auto& cup : cups["items"])
+			{
+				std::string name = cup["name"];
+				std::string modelName = cup["model"];
+				std::string materialName = cup["material"];
+				float recover = cup["recoverValue"];
+
+				DirectX::XMFLOAT3 itemSize = globalSize;
+				if (cup.contains("size"))
+				{
+					itemSize = JsonToXMFLOAT3(cup["size"]);
+				}
+				m_itemSizes[name] = itemSize;
+
+				auto cupPtr = std::make_shared<Cup>(recover);
+				m_nextID++; // todo: make id format:1001 (itemCode+xxx)
+				RegisterItem(
+					name.c_str(),
+					cupPtr,
 					m_nextID,
 					ModelManager::Instance().GetModelId(modelName),
 					MaterialManager::Instance().GetMaterialId(materialName)

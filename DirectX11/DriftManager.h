@@ -61,8 +61,6 @@ private:
 	///	@type 生成するアイテムの種類
 	void SpawnInitialItem(DriftObjectType type);
 
-	void UpdateFarObjectStatus();
-
 private:
 
 	Player* m_pPlayer;											// プレイヤーの位置

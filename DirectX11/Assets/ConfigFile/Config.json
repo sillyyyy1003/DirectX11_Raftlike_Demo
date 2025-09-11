@@ -27,6 +27,14 @@
       {
       "name": "BaseMaterial_PlasticBottle",
       "file": "Assets/Model/PlasticBottle.fbx"
+    },
+    {
+      "name": "Tool_Cup",
+      "file": "Assets/Model/Cup.fbx"
+    },
+    {
+      "name": "Utility_Cup",
+      "file": "Assets/Model/FilterPurifier.fbx"
     }
   ],
   "materials":[
@@ -69,6 +77,26 @@
       "albedoTex": "BaseMaterial1_Albedo",
       "normalTex": "BaseMaterial1_Normal",
       "metallicTex": "BaseMaterial1_Metallic"
+    },
+    {
+      "name": "ToolMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "ToolMaterial_Albedo",
+      "normalTex": "ToolMaterial_Normal",
+      "metallicTex": "ToolMaterial_Metallic"
+    },
+    {
+      "name": "WaterPurifierMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "WaterPurifierMaterial_Albedo",
+      "normalTex": "WaterPurifierMaterial_Normal",
+      "metallicTex": "WaterPurifierMaterial_Metallic"
     },
     {
       "name": "UiMaterial",
@@ -230,6 +258,36 @@
       "normalTex": "",
       "metallicTex": ""
     },
+        {
+      "name": "ThirstIconMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_ThirstIcon",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "ThirstBarBgMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.2, 0.2, 0.2, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "ThirstBarMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.0, 0.6, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
     {
       "name": "WaterMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
@@ -264,43 +322,71 @@
   "textures": [
     {
       "name": "Food_Albedo",
-      "file": "Assets/Texture/Foods_DefaultMaterial_AlbedoTransparency.png"
+      "file": "Assets/Texture/ModelTexture/Foods_DefaultMaterial_AlbedoTransparency.png"
     },
     {
       "name": "Food_Normal",
-      "file": "Assets/Texture/Foods_DefaultMaterial_Normal.png"
+      "file": "Assets/Texture/ModelTexture/Foods_DefaultMaterial_Normal.png"
     },
     {
       "name": "Food_Metallic",
-      "file": "Assets/Texture/Foods_DefaultMaterial_MetallicSmoothness.png"
+      "file": "Assets/Texture/ModelTexture/Foods_DefaultMaterial_MetallicSmoothness.png"
     },
     {
       "name": "BaseMaterial_Albedo",
-      "file": "Assets/Texture/LargePlatform 1_DefaultMaterial_AlbedoTransparency.png"
+      "file": "Assets/Texture/ModelTexture/LargePlatform 1_DefaultMaterial_AlbedoTransparency.png"
     },
     {
       "name": "BaseMaterial_Normal",
-      "file": "Assets/Texture/LargePlatform 1_DefaultMaterial_MetallicSmoothness.png"
+      "file": "Assets/Texture/ModelTexture/LargePlatform 1_DefaultMaterial_MetallicSmoothness.png"
     },
     {
       "name": "BaseMaterial_Metallic",
-      "file": "Assets/Texture/LargePlatform 1_DefaultMaterial_Normal.png"
+      "file": "Assets/Texture/ModelTexture/LargePlatform 1_DefaultMaterial_Normal.png"
+    },
+    {
+      "name": "ToolMaterial_Albedo",
+      "file": "Assets/Texture/ModelTexture/Tools1_DefaultMaterial_AlbedoTransparency.png"
+    },    
+    {
+      "name": "ToolMaterial_Normal",
+      "file": "Assets/Texture/ModelTexture/Tools1_DefaultMaterial_Normal.png"
+    },
+    {
+      "name": "ToolMaterial_Metallic",
+      "file": "Assets/Texture/ModelTexture/Tools1_DefaultMaterial_MetallicSmoothness.png"
     },
     {
       "name": "BaseMaterial1_Albedo",
-      "file": "Assets/Texture/Battery-wire-circuit board_DefaultMaterial_AlbedoTransparency.png"
+      "file": "Assets/Texture/ModelTexture/Battery-wire-circuit board_DefaultMaterial_AlbedoTransparency.png"
     },
     {
       "name": "BaseMaterial1_Normal",
-      "file": "Assets/Texture/Battery-wire-circuit board_DefaultMaterial_Normal.png"
+      "file": "Assets/Texture/ModelTexture/Battery-wire-circuit board_DefaultMaterial_Normal.png"
     },
     {
       "name": "BaseMaterial1_Metallic",
-      "file": "Assets/Texture/Battery-wire-circuit board_DefaultMaterial_MetallicSmoothness.png"
+      "file": "Assets/Texture/ModelTexture/Battery-wire-circuit board_DefaultMaterial_MetallicSmoothness.png"
+    },
+    {
+      "name": "WaterPurifierMaterial_Albedo",
+      "file": "Assets/Texture/ModelTexture/WaterPurifiers_DefaultMaterial_AlbedoTransparency.png"
+    },    
+    {
+      "name": "WaterPurifierMaterial_Normal",
+      "file": "Assets/Texture/ModelTexture/WaterPurifiers_DefaultMaterial_Normal.png"
+    },
+    {
+      "name": "WaterPurifierMaterial_Metallic",
+      "file": "Assets/Texture/ModelTexture/WaterPurifiers_DefaultMaterial_MetallicSmoothness.png"
     },
     {
       "name": "UI_HungerIcon",
       "file": "Assets/Texture/UI/UI_Hp_Bar_Food_128x128.png"
+    },
+    {
+      "name": "UI_ThirstIcon",
+      "file": "Assets/Texture/UI/UI_Hp_Bar_Water_128x128.png"
     },
     {
       "name": "UI_Aim",
@@ -315,10 +401,6 @@
       "file": "Assets/Texture/ObjectIcon/banana.png"
     },
     {
-      "name": "Coconut_Icon",
-      "file": "Assets/Texture/ObjectIcon/coconut.png"
-    },
-    {
       "name": "Wood_Icon",
       "file": "Assets/Texture/ObjectIcon/wood.png"
     },
@@ -329,6 +411,14 @@
     {
       "name": "Wire_Icon",
       "file": "Assets/Texture/ObjectIcon/cable.png"
+    },
+    {
+      "name": "BasicCup_Icon",
+      "file": "Assets/Texture/ObjectIcon/cup.png"
+    },
+    {
+      "name": "WaterPurifier_Icon",
+      "file": "Assets/Texture/ObjectIcon/drinking.png"
     },
     {
       "name": "UI_InventorySlotBg",
@@ -353,6 +443,10 @@
     {
       "name": "UI_BackToTitleButton",
       "file": "Assets/Texture/UI/UI_Button_BackToTitle_300x109.png"
+    },
+    {
+      "name": "WaterNormalMap",
+      "file": "Assets/Texture/SeaWaves_N.jpg"
     }
   ]
 }

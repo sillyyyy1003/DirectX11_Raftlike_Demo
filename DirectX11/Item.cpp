@@ -5,7 +5,7 @@
 namespace 
 {
 	static constexpr int FoodMaxStack = 10;
-	static constexpr int BasicMaterialMaxStack = 20; //ツールはスタックしない
+	static constexpr float SaltyWaterScaler = -0.5f;
 	
 }
 Item::Item(ItemType _type, bool stackable, int maxStack, float maxDurability):
@@ -16,12 +16,12 @@ Item::Item(ItemType _type, bool stackable, int maxStack, float maxDurability):
 {
 }
 
+//=======Item Instance
 ItemInstance::ItemInstance():
 	GameObject(GameObjectType::Item)
 {
 }
 
-//=======Item Instance
 void ItemInstance::InitItem(std::shared_ptr<const Item> _proto, int _count, float _durability)
 {
 	m_protoPtr = _proto;
@@ -55,9 +55,6 @@ Utility::Utility():
 }
 
 
-void Utility::OnUse(Player* player) const
-{
-}
 
 
 //========Food===========
@@ -71,10 +68,7 @@ Food::Food(float _foodValue) :
 }
 
 
-void Food::OnEat(Player* player) const
-{
-	player->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->RestoreHunger(m_foodValue);
-}
+
 
 //=========BaseMaterial============
 BaseMaterial::BaseMaterial():
@@ -82,10 +76,11 @@ BaseMaterial::BaseMaterial():
 {
 }
 
-void BaseMaterial::OnUse(Player* player) const
-{
-	/* No action on use */
-}
 
+Cup::Cup(float value):
+	Item(ItemType::Cup, false, 1, -1),// 一回だけ
+	m_recoverValue(value)
+{
+}
 
 

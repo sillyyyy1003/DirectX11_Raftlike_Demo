@@ -164,12 +164,14 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Behaviour.cpp" />
     <ClCompile Include="BuoyancySystem.cpp" />
     <ClCompile Include="CameraBase.cpp" />
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="CpuTimer.cpp" />
+    <ClCompile Include="CraftSystem.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="D3DApp.cpp" />
     <ClCompile Include="d3dUtil.cpp" />
@@ -187,6 +189,7 @@
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemDataBase.cpp" />
+    <ClCompile Include="ItemInstances.cpp" />
     <ClCompile Include="ITextBind.cpp" />
     <ClCompile Include="KInput.cpp" />
     <ClCompile Include="Layers.cpp" />
@@ -241,8 +244,11 @@
     <ClCompile Include="UIScaler.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIPlayerStatus.cpp" />
+    <ClCompile Include="Water.cpp" />
+    <ClCompile Include="WaterEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Behaviour.hpp" />
     <ClInclude Include="BuoyancySystem.h" />
     <ClInclude Include="CameraBase.h" />
@@ -250,6 +256,7 @@
     <ClInclude Include="Capsule.h" />
     <ClInclude Include="Component.hpp" />
     <ClInclude Include="CpuTimer.h" />
+    <ClInclude Include="CraftSystem.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="D3DApp.h" />
     <ClInclude Include="d3dUtil.h" />
@@ -267,6 +274,7 @@
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemDataBase.h" />
+    <ClInclude Include="ItemInstances.h" />
     <ClInclude Include="ITextBind.h" />
     <ClInclude Include="KInput.h" />
     <ClInclude Include="Layers.h" />
@@ -321,6 +329,8 @@
     <ClInclude Include="UIScaler.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="UIPlayerStatus.h" />
+    <ClInclude Include="Water.h" />
+    <ClInclude Include="WaterEffect.h" />
     <ClInclude Include="WinMin.h" />
   </ItemGroup>
   <ItemGroup>
@@ -374,6 +384,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
+    <FxCompile Include="PS_Water.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="VS_Geometry.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
@@ -412,6 +428,13 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="VS_Water.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

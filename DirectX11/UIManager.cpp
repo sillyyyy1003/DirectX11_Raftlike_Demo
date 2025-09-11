@@ -100,4 +100,10 @@ void UIManager::ClearLayers()
 	m_layerNameList.clear();
 }
 
+void UIManager::UnInit()
+{
+	m_layers.clear();
+	m_layerNameList.clear();
+}
+
 

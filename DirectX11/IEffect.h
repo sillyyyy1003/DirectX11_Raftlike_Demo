@@ -14,7 +14,7 @@ public:
 	IEffect();
 	virtual ~IEffect();
 	virtual void Apply() = 0;
-
+	virtual void SetConstantBuffer(Transform& transform, Material* material = nullptr);
 	
 	virtual void SetMaterial(Material* mat){};
 	virtual void SetWVPMatrixCB(const Transform& t, CameraBase* camera = nullptr){};

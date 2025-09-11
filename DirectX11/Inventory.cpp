@@ -1,6 +1,9 @@
 ﻿#include "Inventory.h"
 #include "DebugLog.h"
+#include "ItemDataBase.h"
+#include "ItemInstances.h"
 #include "KInput.h"
+#include "Player.h"
 
 Inventory::Inventory(int maxSlots):
 	m_slots(maxSlots)
@@ -45,10 +48,8 @@ int Inventory::Insert(ItemInstance* instance)
 		if (!slot.has_value())
 		{
 			int toInsert = std::min(remaining, maxStack);
-			ItemPtr newInstance = std::make_shared<ItemInstance>();
-			newInstance->InitItem(instance->GetProto(), toInsert, instance->GetDurability());
+			ItemPtr newInstance = ItemDataBase::Instance().CreateItemInstance(instance->GetName().c_str(), toInsert, instance->GetDurability());
 			slot = newInstance;
-
 			remaining -= toInsert;
 			inserted += toInsert;
 			if (remaining == 0) return inserted;
@@ -100,41 +101,22 @@ void Inventory::Update(float tick)
 #endif
 }
 
-void Inventory::UseItem(int index, Player* player)
-{
-	if (!m_slots[index].has_value())return;
-
-	m_slots[index].value()->GetProto()->OnUse(player);	// Call OnUse function of item
-
-	// if item is stackable, decrease count
-	m_slots[index].value()->DecreaseCount(1);	// Decrease count by 1
-
-	// if count is 0, remove item from slot
-	if (m_slots[index].value()->GetCount() <= 0)
-	{
-		m_slots[index].reset();	// Remove item from slot
-	}
-}
 
 void Inventory::ConsumeItem(int index, Player* player, int consumeCount)
 {
+	/*
 	if (!m_slots[index].has_value())return;
 
 	switch(m_slots[index].value()->GetProto()->GetItemType())
 	{
 	default:
-		m_slots[index].value()->GetProto()->OnUse(player);
+		//m_slots[index].value()->OnUse(player);
 	case Item::ItemType::Food:
-		auto proto = m_slots[index].value()->GetProto(); // shared_ptr<const Item>
-		auto food = dynamic_cast<const Food*>(proto.get()); // 注意是 const Food*
-		if (food)
-		{
-			food->OnEat(player);
-		}
+		auto food = dynamic_cast<FoodInstance*>(m_slots[index].value().get());
+		if (food)food->OnEat(player);
 		break;
 		//todo: more to set...
 	}
-
 
 	// if item is stackable, decrease count
 	m_slots[index].value()->DecreaseCount(consumeCount);	// Decrease count by 1
@@ -143,6 +125,91 @@ void Inventory::ConsumeItem(int index, Player* player, int consumeCount)
 	if (m_slots[index].value()->GetCount() <= 0)
 	{
 		m_slots[index].reset();	// Remove item from slot
+	}
+	*/
+}
+
+bool Inventory::RemoveItem(int index, int count)
+{
+	if (!m_slots[index].has_value()) return false;
+
+	m_slots[index].value()->DecreaseCount(count);
+	if (m_slots[index].value()->GetCount() <= 0)
+	{
+		m_slots[index].reset();
+	}
+	return true;
+}
+
+bool Inventory::HasEnoughItem(std::string& itemName, int count)
+{
+	int total = 0;
+	for (const auto& slot : m_slots)
+	{
+		if (slot.has_value() && // has item
+			slot.value()) //item is not nullptr
+		{
+			auto proto = slot.value()->GetProto();// Get item proto
+
+			if (proto && proto->GetName() == itemName)	//if proto is not nullptr && itemName match
+			{
+				total += slot.value()->GetCount();	// calculate slot count is enough for needing
+				if (total >= count)	//if is enough, end loop ;
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;	// inventory doesn't have enough item for needing
+}
+
+bool Inventory::RemoveItem(const std::string& itemName, int count)
+{
+	int remaining = count;
+	for (auto& slot : m_slots)
+	{
+		if (slot.has_value() && // has item
+			slot.value()) //item is not nullptr
+		{
+			auto proto = slot.value()->GetProto();// Get item proto
+			if (proto && proto->GetName() == itemName)//if proto is not nullptr && itemName match
+			{
+				int count = slot.value()->GetCount();
+				if (count <= remaining)
+				{
+					remaining -= count;
+					slot.reset(); // clear slot
+				}
+				else
+				{
+					slot.value()->DecreaseCount(remaining);
+					return true;
+				}
+				if (remaining <= 0) return true;
+			}
+		}
+	}
+	return remaining <= 0;	
+}
+
+
+ItemInstance* Inventory::GetCurrentItem(int index) const
+{
+	if (m_slots[index].has_value() && m_slots[index].value())
+		return m_slots[index].value().get();
+	return nullptr;
+}
+
+void Inventory::UpdateItemOfPlayer(int index, Player* player)
+{
+	if (m_slots[index].has_value() && m_slots[index].value())
+	{
+		player->SetItemInHand(m_slots[index].value().get());
+	}
+	else
+	{
+		player->SetItemInHand(nullptr);
 	}
 }
 

@@ -16,13 +16,6 @@
         "material": "FoodMaterial",
         "size":[0.05,0.05,0.05]
         
-      },
-      {
-        "name": "Coconut",
-        "nutrition": 5.0,
-        "model": "Food_Coconut",
-        "material": "FoodMaterial",
-        "size":[0.05,0.05,0.05]
       }
     ]
   },
@@ -46,6 +39,29 @@
         "model": "BaseMaterial_PlasticBottle",
         "material": "BaseObjectMaterial",
         "size":[0.02,0.02,0.02]
+      }
+    ]
+  },
+  "Cup":{
+     "size": [0.05, 0.05, 0.05],
+     "items":[
+      {
+        "name":"BasicCup",
+        "recoverValue":40.0,
+        "model":"Tool_Cup",
+        "material":"ToolMaterial",
+        "size":[0.05,0.05,0.05]
+      }
+     ]
+  },
+  "WaterPurifier":{
+     "size": [0.05, 0.05, 0.05],
+     "items":[
+      {
+        "name":"WaterPurifier",
+        "model":"Utility_Cup",
+        "material":"WaterPurifierMaterial",
+        "size":[0.05,0.05,0.05]
       }
     ]
   }

@@ -52,7 +52,6 @@ private:
 	std::unique_ptr<RenderComponent> m_pRenderComponent;
 	Transform m_transform;
 
-	std::vector<MeshBuffer::Vertex> m_vertices;
 	float m_time = 0.f;
 };
 

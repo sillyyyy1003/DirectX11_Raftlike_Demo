@@ -1,11 +1,14 @@
 ﻿#include "SceneGame.h"
 #include <DirectXMath.h>
+
+#include "AudioManager.h"
+#include "CraftSystem.h"
 #include "d3dUtil.h"
 #include "DayLight.h"
 #include "DriftManager.h"
 #include "GameApp.h"
-#include "Geometry.h"
 #include "ItemDataBase.h"
+#include "ItemInstances.h"
 #include "KInput.h"
 #include "MaterialManager.h"
 #include "ModelManager.h"
@@ -24,7 +27,7 @@
 #include "UIButtonMove.h"
 #include "UIInventorySlot.h"
 #include "UIPlayerStatus.h"
-
+#include "WaterEffect.h"
 
 namespace
 {
@@ -34,19 +37,10 @@ namespace
 	static constexpr float waterHeight = 20.f;
 
 	//Collider Setting
-	static constexpr DirectX::XMFLOAT3 HalfUnitScale = { 0.5f,0.5f,0.5f };	//Default Cube Size (length,height,width={1,1,1})
 	static constexpr DirectX::XMFLOAT3 HalfFloorScale = { 5,0.1f,5 };
-
 	static constexpr DirectX::XMFLOAT3 DefaultLightPosition = { 0,10,0 };	//Default Light Position
-
 	static constexpr DirectX::XMFLOAT3 UIAimSize = { 32,32,1.f };
-	static constexpr DirectX::XMFLOAT2 ButtonSize = { 300,109 };
-	static constexpr float ButtonAmplitude = 8.f;
-	static constexpr float ButtonMoveSpeed = 3.f;
-	static constexpr DirectX::XMFLOAT3 ReviveButtonPosition = { 0,-100,0.5f };
-	static constexpr DirectX::XMFLOAT3 BackToTitleButtonPosition = { 0,-240,0.5f };
 
-	static constexpr float DefaultObjectScale = 0.05f;
 }
 void SceneGame::Init()
 {
@@ -64,8 +58,7 @@ void SceneGame::Init()
 	light->SetAmbient(DefaultLightColor);
 	light->SetDiffuse({0.5,0.5,0.5,1});
 
-	//===========Init Texture
-	TextureManager::Instance().LoadTextures("Assets/ConfigFile/Config.json");
+
 
 	//============Get Shader
 	VertexShader* basicPosNormalTexVS = GetObj<VertexShader>("BasicPosNormalTexVS");
@@ -74,10 +67,16 @@ void SceneGame::Init()
 	VertexShader* pbrVS = GetObj<VertexShader>("PBRVS");
 	PixelShader* uiElementPS = GetObj<PixelShader>("UIElementPS");
 	VertexShader* uiElementVS = GetObj<VertexShader>("UIElementVS");
+	VertexShader* waterVS = GetObj<VertexShader>("WaterVS");
+	PixelShader* waterPS = GetObj<PixelShader>("WaterPS");
 
 	PixelShader* monoChromePS = CreateObj<PixelShader>("MonoChromePS");
 	monoChromePS->Load("Assets/Shader/PS_Monochrome.cso");
 
+
+
+
+	// Post Effect
 	MonoChrome* monoChrome = CreateObj<MonoChrome>("MonoChrome");
 	monoChrome->Init(monoChromePS);
 
@@ -112,10 +111,9 @@ void SceneGame::Init()
 	debugEffect->InitCamera(player->GetCameraController()->GetCamera());
 	debugEffect->InitEffectDirLight(light);
 
-
-
-	//===========Init Material
-	MaterialManager::Instance().RegisterMaterials("Assets/ConfigFile/Config.json");
+	Texture* waterNormalMap = TextureManager::Instance().GetTexture("WaterNormalMap");
+	WaterEffect* waterEffect = CreateObj<WaterEffect>("WaterEffect");
+	waterEffect->Init(waterVS, waterPS, m_pCurrentCamera, waterNormalMap,light);
 
 
 	//===========Register food data
@@ -123,23 +121,16 @@ void SceneGame::Init()
 
 
 	//===========Init item
-	std::shared_ptr<ItemInstance> appleInstance(ItemDataBase::Instance().CreateItemInstance("Apple",3));
+	std::shared_ptr<ItemInstance> appleInstance(ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Apple", 3, -1, Layers::ITEM));
 	appleInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
 	appleInstance->SetPosition({ -3, 0.5, 0 });
 	RegisterSceneObject(appleInstance);
 	DebugLog::Log("AppleInstance : bodyIndex:{}",appleInstance->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->GetBodyID().GetIndex());
 
-
-	std::shared_ptr<ItemInstance> bananaInstance(ItemDataBase::Instance().CreateItemInstance("Banana",10));
+	std::shared_ptr<ItemInstance> bananaInstance(ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Banana",10, -1, Layers::ITEM));
 	bananaInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
 	bananaInstance->SetPosition({ 3, 0.5, 3 });
 	RegisterSceneObject(bananaInstance);
-
-
-	std::shared_ptr<ItemInstance> coconutInstance (ItemDataBase::Instance().CreateItemInstance("Coconut"));
-	coconutInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
-	coconutInstance->SetPosition({3, 0.5, 0});
-	RegisterSceneObject(coconutInstance);
 
 	GameObject* floor = CreateObj<GameObject>("Floor");
 	std::shared_ptr<RenderComponent> floorRenderComponent = std::make_shared<RenderComponent>();
@@ -189,13 +180,20 @@ void SceneGame::Init()
 	hpMaterials[UIPlayerStatus::MaterialType::Icon] = MaterialManager::Instance().GetMaterial("HpIconMaterial");
 	hpMaterials[UIPlayerStatus::MaterialType::Background] = MaterialManager::Instance().GetMaterial("HpBarBgMaterial");
 	hpMaterials[UIPlayerStatus::MaterialType::Bar] = MaterialManager::Instance().GetMaterial("HpBarMaterial");
+
 	UIPlayerStatus::MaterialList hungerMaterials(3);
 	hungerMaterials[UIPlayerStatus::MaterialType::Icon] = MaterialManager::Instance().GetMaterial("HungerIconMaterial");
 	hungerMaterials[UIPlayerStatus::MaterialType::Background] = MaterialManager::Instance().GetMaterial("HungerBarBgMaterial");
 	hungerMaterials[UIPlayerStatus::MaterialType::Bar] = MaterialManager::Instance().GetMaterial("HungerBarMaterial");
 
+	UIPlayerStatus::MaterialList thirstMaterials(3);
+	thirstMaterials[UIPlayerStatus::MaterialType::Icon] = MaterialManager::Instance().GetMaterial("ThirstIconMaterial");
+	thirstMaterials[UIPlayerStatus::MaterialType::Background] = MaterialManager::Instance().GetMaterial("ThirstBarBgMaterial");
+	thirstMaterials[UIPlayerStatus::MaterialType::Bar] = MaterialManager::Instance().GetMaterial("ThirstBarMaterial");
+
+
 	UIPlayerStatus* uiPlayerStatus = CreateObj<UIPlayerStatus>("UiPlayerStatus");
-	uiPlayerStatus->Init(hpMaterials, hungerMaterials, uiBasicEffect, ModelManager::Instance().GetModel("Square"));
+	uiPlayerStatus->Init(hpMaterials, hungerMaterials, thirstMaterials, uiBasicEffect, ModelManager::Instance().GetModel("Square"));
 	uiPlayerStatus->LoadPositionAndSize("Assets/ConfigFile/UIConfig.json"); // Load position and size from config file
 	uiPlayerStatus->SetPlayer(player); // Set player to UI Player Status
 
@@ -226,8 +224,8 @@ void SceneGame::Init()
 	UIButtonMove* backToTitleButton = CreateObj<UIButtonMove>("backToTitleButton");
 	Material* backToTitleMat = MaterialManager::Instance().GetMaterial("UiBackToTitleButton");
 	backToTitleButton->Init(uiBasicEffect, backToTitleMat, ModelManager::Instance().GetModel("Square"));
-	backToTitleButton->SetButton(BackToTitleButtonPosition, ButtonSize.x, ButtonSize.y);  // Set button size & position
-	backToTitleButton->InitMoveParam(ButtonMoveSpeed, ButtonAmplitude);	 // set button interactive param
+	// Load button interactive param
+	backToTitleButton->LoadButtonConfig("Assets/ConfigFile/UIConfig.json", "BackToTitleButton");
 	player->AddDeathListener([backToTitleButton](bool isDead)
 		{
 			backToTitleButton->SetActive(isDead);
@@ -238,8 +236,8 @@ void SceneGame::Init()
 	UIButtonMove* reviveButton = CreateObj<UIButtonMove>("reviveButton");
 	Material* reviveButtonMat = MaterialManager::Instance().GetMaterial("UiReviveButton");
 	reviveButton->Init(uiBasicEffect, reviveButtonMat, ModelManager::Instance().GetModel("Square"));
-	reviveButton->SetButton(ReviveButtonPosition, ButtonSize.x, ButtonSize.y);  // Set button size & position
-	reviveButton->InitMoveParam(ButtonMoveSpeed, ButtonAmplitude);	 // set button interactive param
+	 // set button interactive param
+	reviveButton->LoadButtonConfig("Assets/ConfigFile/UIConfig.json", "ReviveButton");
 	player->AddDeathListener([reviveButton](bool isDead)
 		{
 			reviveButton->SetActive(isDead);
@@ -253,15 +251,17 @@ void SceneGame::Init()
 	UIManager::Instance().GetUILayer("Aim")->AddComponent(uiAim);
 
 	UIManager::Instance().AddUiLayer("Button", 2);
-	UIManager::Instance().GetUILayer("Button")->AddComponent(uiInventory);
 	UIManager::Instance().GetUILayer("Button")->AddComponent(backToTitleButton);
 	UIManager::Instance().GetUILayer("Button")->AddComponent(reviveButton);
 
-	UIManager::Instance().AddUiLayer("PlayerStatus", 3);
-	UIManager::Instance().GetUILayer("PlayerStatus")->AddComponent(uiPlayerStatus);
+	UIManager::Instance().AddUiLayer("Player", 3);
+	UIManager::Instance().GetUILayer("Player")->AddComponent(uiPlayerStatus);
+	UIManager::Instance().GetUILayer("Player")->AddComponent(uiInventory);	// note that ui inventory is has lower priority than craft system panel
 
 	UIManager::Instance().AddUiLayer("Message", 4);
 	UIManager::Instance().GetUILayer("Message")->AddComponent(deathText);
+	UIManager::Instance().AddUiLayer("CraftSystem", 5);
+	
 
 
 
@@ -301,13 +301,9 @@ void SceneGame::Init()
 	//=====物理の初期化
 
 	// Create the settings for the collision volume (the shape).
-
 	// Create the shape
-
 	// Create the settings for the body itself. Note that here you can also set other properties like the restitution / friction.
-
-	// Create the actual 
-	// body
+	// Create the actual body
 	BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(HalfFloorScale.x,HalfFloorScale.y,HalfFloorScale.z)), Vec3().sZero(), Quat::sIdentity(), EMotionType::Dynamic, Layers::BOAT);
 	std::shared_ptr<PhysicsComponent> floorCollider = make_shared<PhysicsComponent>();
 	floorCollider->Init(floorBoxSettings, EActivation::Activate,floor);
@@ -319,7 +315,7 @@ void SceneGame::Init()
 	// Init Buoyancy system
 	BuoyancySystem* buoyancySystem = CreateObj<BuoyancySystem>("BuoyancySystem");
 	Material* waterMaterial = MaterialManager::Instance().GetMaterial("WaterMaterial");
-	buoyancySystem->Init(WaterWidth, waterHeight, waterMaterial, basicEffect);
+	buoyancySystem->Init(WaterWidth, waterHeight, waterMaterial, waterEffect);
 
 	//Collider Debug Render Component配置
 	Material* debugMaterial = MaterialManager::Instance().GetMaterial("DebugMaterial");
@@ -336,7 +332,23 @@ void SceneGame::Init()
 #ifdef NDEBUG
 	ShowCursor(FALSE);
 #endif
+	//===========Set Sound
+	AudioManager::Instance().StopBgms();
+	AudioManager::Instance().Play("BGM2", true);
 
+
+	//test
+	std::shared_ptr<ItemInstance> bananaInBag = ItemDataBase::Instance().CreateItemInstance("Banana", 10);
+	player->GetInventory()->Insert(bananaInBag.get());
+
+	std::shared_ptr<ItemInstance> cup = ItemDataBase::Instance().CreateItemInstance("BasicCup", 1);
+	player->GetInventory()->Insert(cup.get());
+
+	CraftRecipe* recipe = CreateObj<CraftRecipe>("Recipe");
+	recipe->Init("Apple", { { "Banana",4 } });
+
+	CraftSystem* system = CreateObj<CraftSystem>("CraftSystem");
+	system->Init(player->GetInventory());
 
 }
 
@@ -347,6 +359,7 @@ void SceneGame::UnInit()
 	
 	PhysicsManager::Instance().RemoveAllBodies();
 	ShowCursor(TRUE);
+	
 }
 
 void SceneGame::Update(float tick)
@@ -357,7 +370,7 @@ void SceneGame::Update(float tick)
 		return;
 	}
 
-
+	
 	//===============Camera Update
 
 
@@ -367,7 +380,6 @@ void SceneGame::Update(float tick)
 	{
 		GetObj<Player>("Player")->Kill();
 	}
-
 
 
 	//===============Skybox Update

@@ -16,9 +16,14 @@
     "CameraOffset":[0.0,2.0,0.0]
   },
   "HungerComponent": {
-    "InitialValue": 100.0,
-    "StarveSpeed": 1.0,
-    "StarveThreshHold":30
+    "InitialValue": 200.0,
+    "StarveSpeed": 0.15,
+    "StarveThreshHold":40
+  },
+    "ThirstComponent": {
+    "InitialValue": 200.0,
+    "ThirstSpeed": 0.22,
+    "ThirstThreshHold":40
   },
   "Inventory": {
     "Size": 12

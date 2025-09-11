@@ -49,6 +49,9 @@ public:
 	/// @param size メッシュサイズ
 	void Init(UINT slices, float size = 1);
 
+	/// @brief メッシュ初期化 (頂点情報を外に渡す)
+	void Init(UINT slices, float size, std::vector<MeshBuffer::Vertex>& vertices);
+
 	void Draw() override;
 
 	MeshBuffer* GetMeshBuffer() const
@@ -56,7 +59,7 @@ public:
 		return m_pMeshBuffer.get();
 	}
 
-	void Init(UINT slices, float size, std::vector<MeshBuffer::Vertex>& vertices);
+
 
 	DirectX::XMFLOAT3 GetModelSize() const override { return { 1,1,0.1f }; }
 };

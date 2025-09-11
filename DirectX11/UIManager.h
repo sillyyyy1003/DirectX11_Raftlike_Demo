@@ -37,6 +37,7 @@ public:
 
 	/// @brief Clean all layers for another scene
 	void ClearLayers();
+	void UnInit();
 
 private:
 
