@@ -61,10 +61,8 @@ public:
 
 	bool GetFirstPersonCamera();
 	void SetCameraOffset(const DirectX::XMFLOAT3& offset) { m_cameraOffset = offset; }
-
-	void OnHungryStateChanged(bool isHungry);
 	
-	
+	void OnNegativeStateChanged(bool isNegative);
 
 protected:
 

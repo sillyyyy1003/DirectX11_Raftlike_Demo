@@ -8,7 +8,7 @@ class UIButton :
 public:
 
 	UIButton();
-	~UIButton() override = default;
+	~UIButton() override;
 
 	bool HitTest(float x, float y) const override;
 	void OnMouseEnter() override;

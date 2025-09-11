@@ -26,6 +26,8 @@ public:
 	/// @brief DeActive button move & change to darker color
 	void DeActiveMove();
 
+	void LoadButtonConfig(const char* fileName, const char* buttonName);
+	void LoadButtonConfig(nlohmann::json& j, const char* buttonName);
 private:
 	float m_moveSpeed;				// 移動速度
 	float m_moveAmplitude;			// 移動幅

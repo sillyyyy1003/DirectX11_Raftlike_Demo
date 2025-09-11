@@ -1,4 +1,6 @@
 ﻿#include "SceneTitle.h"
+
+#include "AudioManager.h"
 #include "ModelManager.h"
 #include "UIBasicEffect.h"
 #include "UIButtonMove.h"
@@ -11,20 +13,22 @@
 #include "RenderState.h"
 #include "Skybox.h"
 #include "SkyboxEffect.h"
+#include "GameObject.h"
+#include "MaterialManager.h"
+#include "TextureManager.h"
+#include "Water.h"
+#include "WaterEffect.h"
+
 namespace 
 {
-	static constexpr DirectX::XMFLOAT3 StartButtonPosition = { 450,-50,0.5f };
-	static constexpr DirectX::XMFLOAT3 OptionButtonPosition = { 450,-160,0.5f };
-	static constexpr DirectX::XMFLOAT3 ExitButtonPosition = { 450,-270,0.5f };
-	static constexpr DirectX::XMFLOAT2 ButtonSize = { 300,109 };
+
 	static constexpr DirectX::XMFLOAT3 TitleLogoPosition = { 200,120,0.1f };
 	static constexpr DirectX::XMFLOAT3 LogoSize = { 512,83,1.f };
-	static constexpr float ButtonAmplitude = 5.f;
-	static constexpr float ButtonMoveSpeed = 3.f;
-	static constexpr float ButtonScale = 0.8f;
-	static constexpr float TitleScale =1.8f;
+	static constexpr float TitleScale = 1.8f;
 
 	static constexpr float RotateSpeed = 0.02f;
+	static constexpr DirectX::XMFLOAT3 WaterSize = { 100,1,100 };
+	static constexpr DirectX::XMFLOAT3 WaterPos = { 0,-5,0};
 
 }
 
@@ -32,7 +36,9 @@ void SceneTitle::Init()
 {
 	PixelShader* uiElementPS = GetObj<PixelShader>("UIElementPS");
 	VertexShader* uiElementVS = GetObj<VertexShader>("UIElementVS");
-	PixelShader* uiGlossPS = GetObj<PixelShader>("UIGlossPS");
+	VertexShader* waterVS = GetObj<VertexShader>("WaterVS");
+	PixelShader* waterPS = GetObj<PixelShader>("WaterPS");
+
 	//==========Init Effect
 	UIBasicEffect* uiBasicEffect = CreateObj<UIBasicEffect>("UiBasicEffect");
 	uiBasicEffect->InitPixelShader(uiElementPS);
@@ -61,22 +67,24 @@ void SceneTitle::Init()
 	Material* titleLogoMat = CreateObj<Material>("TitleLogoMaterial");
 	titleLogoMat->SetTexture(Material::Albedo, titleLogoTex);
 
+	//===========Read scene config;
+	std::ifstream ifs("Assets/ConfigFile/SceneConfig.json");
+	assert(ifs.is_open());
+	nlohmann::json j;
+	ifs >> j;
+
 	//===========Init Button
 	UIButtonMove* startButton = CreateObj<UIButtonMove>("StartButton");
 	startButton->Init(uiBasicEffect, startMat, ModelManager::Instance().GetModel("Square"));
-	startButton->SetButton(StartButtonPosition, ButtonSize.x * ButtonScale, ButtonSize.y * ButtonScale);	// Set button size & position
-	startButton->InitMoveParam(ButtonMoveSpeed, ButtonAmplitude);	// set button interactive param
-
+	startButton->LoadButtonConfig(j["Title"]["UI"], "StartButton");
 
 	UIButtonMove* optionButton = CreateObj<UIButtonMove>("OptionButton");
 	optionButton->Init(uiBasicEffect, optionMat, ModelManager::Instance().GetModel("Square"));
-	optionButton->SetButton(OptionButtonPosition, ButtonSize.x * ButtonScale, ButtonSize.y * ButtonScale);  // Set button size & position
-	optionButton->InitMoveParam(ButtonMoveSpeed, ButtonAmplitude);// set button interactive param
+	optionButton->LoadButtonConfig(j["Title"]["UI"], "OptionButton");
 
 	UIButtonMove* exitButton = CreateObj<UIButtonMove>("exitButton");
 	exitButton->Init(uiBasicEffect, exitMat, ModelManager::Instance().GetModel("Square"));
-	exitButton->SetButton(ExitButtonPosition, ButtonSize.x * ButtonScale, ButtonSize.y * ButtonScale);  // Set button size & position
-	exitButton->InitMoveParam(ButtonMoveSpeed, ButtonAmplitude);	 // set button interactive param
+	exitButton->LoadButtonConfig(j["Title"]["UI"], "ExitButton");
 
 	UIRender* titleLogo = CreateObj<UIRender>("TitleLogo");
 	titleLogo->SetEffect(uiBasicEffect);
@@ -98,6 +106,7 @@ void SceneTitle::Init()
 	//===========Set Button Event
 	startButton->SetOnClick([this]()
 		{
+			AudioManager::Instance().Play("Button", false);
 			SetCurrentScene("Game");
 		});
 	startButton->SetOnHover([startButton]()
@@ -111,6 +120,7 @@ void SceneTitle::Init()
 
 	optionButton->SetOnClick([this]()
 		{
+			AudioManager::Instance().Play("Button", false);
 			SetCurrentScene("Option");
 		});
 	optionButton->SetOnHover([optionButton, startButton]()
@@ -141,10 +151,35 @@ void SceneTitle::Init()
 
 	//=======Init Camera
 	FirstPersonCamera* camera = CreateObj<FirstPersonCamera>("Camera");
-	camera->SetPosition({ 0,0,-5 });
+	camera->SetPosition({ 0,0,-10 });
 	camera->SetTarget({ 0,0,0 });
 	GetObj<Skybox>("Skybox")->GetSkyboxEffect()->InitCamera(camera);
 	m_pCurrentCamera = camera;
+
+	//=======Init Water
+	Texture* waterNormalMap = TextureManager::Instance().GetTexture("WaterNormalMap");
+	Material* waterMaterial = MaterialManager::Instance().GetMaterial("WaterMaterial");
+	DirLight* light = GetObj<DirLight>("SystemLight");
+	// init water effect
+	WaterEffect* waterEffect = CreateObj<WaterEffect>("WaterEffect");
+	waterEffect->Init(waterVS, waterPS, m_pCurrentCamera, waterNormalMap, light);
+	// init water mesh
+	PlaneMesh* waterMesh = CreateObj<PlaneMesh>("WaterMesh");
+	const uint waterSlice = 50;	// mesh slice which leads to 51x51 
+	waterMesh->Init(waterSlice, 1);
+	// create render component
+	std::shared_ptr<RenderComponent> waterRender = std::make_shared<RenderComponent>();
+	waterRender->Init(waterMaterial, waterEffect, waterMesh);
+	// create water
+	Water* water = CreateObj<Water>("Water");
+	water->LoadFromConfig(j["Title"], "Water");
+	water->AddComponent<RenderComponent>(MyComponent::ComponentType::Render, waterRender);
+	water->GetTransform().SetPosition(WaterPos);
+	water->GetTransform().SetScale( WaterSize);
+
+	AudioManager::Instance().StopBgms();
+	AudioManager::Instance().Play("BGM1", true);
+	AudioManager::Instance().Play("WaveBackGround", true);
 }
 
 void SceneTitle::UnInit()
@@ -165,9 +200,11 @@ void SceneTitle::Update(float tick)
 	// Camera Update
 	m_pCurrentCamera->m_transform.Rotate({ 0,tick * RotateSpeed,0 });
 
-	// todo: Get another floating boat in sky box as background
 	GetObj<Skybox>("Skybox")->Update(tick);
 
+	// Update water param
+	GetObj<Water>("Water")->GetTransform().Rotate({0,tick * RotateSpeed,0});	// rotate with camera
+	GetObj<Water>("Water")->Update(tick);
 
 	// Button Update
 	UIManager::Instance().Update(tick);
@@ -176,7 +213,11 @@ void SceneTitle::Update(float tick)
 
 void SceneTitle::Draw()
 {
+	// Draw skybox
 	GetObj<Skybox>("Skybox")->Draw();
+
+	// Draw Water
+	GetObj<Water>("Water")->Draw();
 
 	// Draw Buttons
 	GameApp::SetDepthStencilState(RenderStates::DSSNoDepthTest);

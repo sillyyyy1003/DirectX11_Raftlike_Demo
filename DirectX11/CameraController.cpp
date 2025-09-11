@@ -102,11 +102,13 @@ bool CameraController::GetFirstPersonCamera()
 	return m_mode == CameraMode::FirstPerson;
 }
 
-void CameraController::OnHungryStateChanged(bool isHungry)
+
+void CameraController::OnNegativeStateChanged(bool isNegative)
 {
-	if (isHungry) StartShake();
+	if(isNegative)StartShake();
 	else EndShake();
 }
+
 
 void CameraController::UpdateThirdPerson(float dt)
 {

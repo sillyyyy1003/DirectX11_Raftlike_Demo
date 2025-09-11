@@ -10,10 +10,14 @@ using json = nlohmann::json;
 namespace
 {
 	static constexpr float RotateLimit = DirectX::XM_PI * 7 / 18;	// 70度, 限制玩家上下视角旋转范围
+
 	static constexpr float HungerInitialValue = 200.f;	// 初期の空腹度
-	static constexpr float HungerStarveSpeed = 1.f;	// 空腹度の減少速度（1秒あたり1ポイント減少）
-	static constexpr float HungerThreshold = 50.f;	// 空腹度のしきい値（50以下で空腹状態になる）
+	static constexpr float HungerSpeed = 0.15f;	// 空腹度の減少速度（1秒あたり1ポイント減少）(1day =900s  make 1.5day player get starve speed=200/(1350)
+	static constexpr float HungerThreshold = 40.f;	// 空腹度のしきい値（1/4以下で空腹状態になる）
+
 	static constexpr float ThirstInitialValue = 200.f;	// 初期の渇き度
+	static constexpr float ThirstSpeed = 0.22f;	// 渇き度の減少速度（1秒あたり1.5ポイント減少）(1day =900s  make 1day player get starve speed=200/*(900)
+	static constexpr float ThirstThreshold = 40.f;	// 渇き度のしきい値（1/4以下で空腹状態になる）
 
 	static constexpr int PlayerInventorySize = 12;
 	static constexpr float PlayerDefaultHealth = 100.f;
@@ -25,6 +29,14 @@ namespace
 	static constexpr DirectX::XMFLOAT3 DefaultCameraTarget = { 0,0,0 };	// Default Camera Target Position
 	static constexpr DirectX::XMFLOAT3 PlayerEyeHeight = { 0,2,0 };		// Default eye pos
 	static constexpr float NegativeSpeedEffector = 0.5f;	// 負のステータスの影響を受ける速度の倍率（0.5倍）
+
+	enum ItemState :int
+	{
+		Active = 0,         // Spawned and waiting to be picked up
+		InActive = 1,       // Can be spawned
+		WaitToRecycle = 2,  // Marked for recycling
+
+	};
 
 }
 
@@ -45,7 +57,9 @@ Player::~Player()
 	if (m_pPlayerCharacter)m_pPlayerCharacter.reset();
 	if (m_pPlayerEntity)m_pPlayerEntity.reset();
 	if (m_pHungerComponent)m_pHungerComponent.reset();
+	if(m_pThirstComponent)m_pThirstComponent.reset();
 	if (m_pInventory)m_pInventory.reset();
+
 	
 }
 
@@ -69,8 +83,12 @@ bool Player::Init(const char* filePath)
 
 		//hunger component初期化→初期値
 		m_pHungerComponent = std::make_shared<HungerComponent>(HungerInitialValue);
-		m_pHungerComponent->SetStarveSpeed(HungerStarveSpeed); //空腹度の減少速度を設定（1秒あたり1ポイント減少）
+		m_pHungerComponent->SetStarveSpeed(HungerSpeed); //空腹度の減少速度を設定（1.5day）
 		AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent);		// HungerComponentをPlayerに追加
+
+		m_pThirstComponent = std::make_shared<ThirstComponent>(ThirstInitialValue);
+		m_pThirstComponent->SetThirstSpeed(ThirstSpeed); //渇き度の減少速度を設定（1day）
+		AddComponent(MyComponent::ComponentType::Thirst, m_pThirstComponent);		// ThirstComponentをPlayerに追加
 
 		m_pInventory = std::make_shared<Inventory>(PlayerInventorySize);		// assume max slot
 		return true; // No JSON file provided, using default values
@@ -162,8 +180,8 @@ bool Player::Init(const char* filePath)
 			: HungerInitialValue;
 
 		float hungerSpeed = j.contains("HungerComponent")
-			? j["HungerComponent"].value("StarveSpeed", HungerStarveSpeed)
-			: HungerStarveSpeed;
+			? j["HungerComponent"].value("StarveSpeed", HungerSpeed)
+			: HungerSpeed;
 
 		float hungerThreshold =j.contains("HungerComponent")
 			? j["HungerComponent"].value("StarveThreshHold", HungerThreshold)
@@ -174,11 +192,58 @@ bool Player::Init(const char* filePath)
 		AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent);
 
 		// Add callback event to listener hungry
-		m_pHungerComponent->AddHungryListener([this](bool isHungry) { m_pCameraController->OnHungryStateChanged(isHungry); }); //Camera shake
-		m_pHungerComponent->AddHungryListener([this](bool isHungry) { OnHungryStateChanged(isHungry); });	// slow down move speed
+		m_pHungerComponent->AddHungryListener([this](bool isHungry)
+		{
+			//Check status
+			m_isInNegativeState = isHungry || m_pThirstComponent->GetIsThirsty();
+
+			//Camera shake& move speed down
+			OnNegativeStateChanged();
+			
+		}); 
 
 		// Add callback event to listener starve
-		m_pHungerComponent->AddStarveListener([this](bool isStarve) { OnStarveStateChanged(isStarve); });	// get tick damage per sec
+		m_pHungerComponent->AddStarveListener([this](bool isStarve)
+		{
+			// get tick damage per sec
+			m_isInDamagedStatus = isStarve || m_pThirstComponent->GetIsThirstyToDeath();
+			OnStarveStateChanged();
+		});	
+
+	}
+
+
+	// thirst component初期化→初期値
+	{
+		float thirstInit = j.contains("ThirstComponent")
+			? j["ThirstComponent"].value("InitialValue", ThirstInitialValue)
+			: ThirstInitialValue;
+		float thirstSpeed = j.contains("ThirstComponent")?
+			j["ThirstComponent"].value("ThirstSpeed", ThirstSpeed)
+			: ThirstSpeed;
+		float hungerThreshold = j.contains("ThirstComponent")
+		? j["ThirstComponent"].value("ThirstThreshHold", ThirstThreshold)
+			: ThirstThreshold;
+		m_pThirstComponent = std::make_shared<ThirstComponent>(thirstInit);
+		m_pThirstComponent->Init(thirstSpeed, hungerThreshold);
+		AddComponent(MyComponent::ComponentType::Thirst, m_pThirstComponent);
+
+		// Add callback event to listener thirsty
+		m_pThirstComponent->AddThirstyListener([this](bool isThirsty)
+		{
+			//Check status
+			m_isInNegativeState = isThirsty || m_pHungerComponent->GetIsHungry();
+
+			OnNegativeStateChanged();
+		});
+
+		// Add Callback event to listener damaged
+		m_pThirstComponent->AddThirstyToDeathListener([this](bool isThirstToDeath)
+		{
+			m_isInDamagedStatus = isThirstToDeath || m_pHungerComponent->GetIsStarve();
+
+			OnStarveStateChanged();
+		});	// get tick damage per sec
 
 	}
 
@@ -251,6 +316,7 @@ void Player::Update(float dt)
 
 	//=======Status Update
 	m_pHungerComponent->Update(dt);	//空腹度
+	m_pThirstComponent->Update(dt);	//渇き度
 
 	//=======Inventory Update
 	m_pInventory->Update(dt);
@@ -340,22 +406,58 @@ void Player::RotateY(float dt)
 	m_transform.SetRotation(rotation);
 }
 
-void Player::OnStarveStateChanged(bool isStarve)
-{
-	m_pPlayerEntity->OnStateStarveChanged(isStarve);
-}
-
-void Player::OnHungryStateChanged(bool isHungry)
-{
-	float moveEffector = isHungry ?
-		m_negativeStatusScale : 1.f;	// 空腹状態なら速度減衰係数を適用
-
-	m_pPlayerCharacter->SetMoveSpeed(m_moveSpeed * moveEffector);	// PlayerCharacterに速度を設定
-	m_pPlayerCharacter->SetJumpSpeed(m_jumpSpeed * moveEffector);	// PlayerCharacterにジャンプ速度を設定
-}
 
 void Player::AddDeathListener(const PlayerEntity::Callback& cb)
 {
 	m_pPlayerEntity->AddDeathListener(cb);
 }
 
+void Player::OnNegativeStateChanged()
+{
+	// Set camera shake
+	m_pCameraController->OnNegativeStateChanged(m_isInNegativeState);
+
+	// Set Player move speed
+	float moveEffector = m_isInNegativeState ?
+		m_negativeStatusScale : 1.f;	// 空腹状態なら速度減衰係数を適用
+
+	m_pPlayerCharacter->SetMoveSpeed(m_moveSpeed * moveEffector);	// PlayerCharacterに速度を設定
+	m_pPlayerCharacter->SetJumpSpeed(m_jumpSpeed * moveEffector);	// PlayerCharacterにジャンプ速度を設定
+
+}
+
+void Player::OnStarveStateChanged()
+{
+	m_pPlayerEntity->OnStateStarveChanged(m_isInDamagedStatus);
+}
+
+void Player::PickUpItem(PhysicsComponent* component)
+{
+	if (!component)return;
+	GameObject* object = component->GetGameObject();
+
+	// 当たったのがアイテムなら、インヴェントリーに追加
+	if (object->GetGameObjectType() == GameObject::GameObjectType::Item)
+	{
+		auto item = dynamic_cast<ItemInstance*>(object);
+
+		std::string name = item->GetName();
+		int count = item->GetCount();
+		int insertNum = GetInventory()->Insert(item);
+		// アイテム全部挿入したら、しーんから消す
+		if (count == insertNum)
+		{
+			item->SetState(ItemState::WaitToRecycle);    // Mark for recycling in DriftManager
+			item->DeActivate();
+		}
+#ifdef _DEBUG
+		DebugLog::Log("Insert {} {}", insertNum, name);
+#endif
+	}
+	else// If the hit object is not an item
+	{
+#ifdef _DEBUG
+		DebugLog::Log("Hit object is not an item.");
+#endif
+	}
+}

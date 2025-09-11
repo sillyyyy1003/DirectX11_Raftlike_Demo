@@ -83,35 +83,39 @@ void UIInventorySlot::OnClick(float x, float y)
 void UIInventory::Update(float dt)
 {
 	if (!m_isActive)return;
-	// Input
-	if(KInput::IsKeyTrigger(VK_LEFT))
+	// Inpu
+	int move = 0;
+	//===Wheel input
+	if (gD3D->GetWheelMoveUnit() != 0)
 	{
-		m_currentIndex--;
-		// Wrap around if current index exceeds the number of slots
+		move = gD3D->GetWheelMoveUnit(); // +1 or -1
+		gD3D->SetWheelMoveUnit(0);           // リセット
+		move*=-1; // ホイールの回転方向とインデックスの増減を合わせる
+	}
+	if (move != 0)
+	{
+		m_currentIndex += move;
+
+		// wrap around
 		if (m_currentIndex < 0)
 			m_currentIndex = (int)(m_slots.size() - 1);
-			
+		else if (m_currentIndex >= (int)m_slots.size())
+			m_currentIndex = 0;
+
+		// フレーム位置更新
 		m_pChosenSlotFrame->GetTransform().SetPosition(
 			m_slots[m_currentIndex]->GetBackground()->GetTransform().GetPosition()
-		); // Update chosen slot frame position
+		);
+
+		// Update player
+		m_pInventory->UpdateItemOfPlayer(m_currentIndex, m_pPlayer);
 	}
 
-	if (KInput::IsKeyTrigger(VK_RIGHT))
-	{
-		m_currentIndex++;
-		// Wrap around if current index exceeds the number of slots
-		if (m_currentIndex == (int)m_slots.size())m_currentIndex = 0;
 
-		m_pChosenSlotFrame->GetTransform().SetPosition(
-			m_slots[m_currentIndex]->GetBackground()->GetTransform().GetPosition()
-		); // Update chosen slot frame position
-	}
-
-	if (KInput::IsKeyTrigger(VK_LBUTTON))
-	{
-		//todo: if is used for build anything, need to brush up method
-		m_pInventory->ConsumeItem(m_currentIndex, m_pPlayer);
-	}
+	//if (KInput::IsKeyTrigger(VK_LBUTTON))
+	//{
+	//	m_pInventory->ConsumeItem(m_currentIndex, m_pPlayer);
+	//}
 
 }
 
@@ -257,6 +261,12 @@ void UIInventory::SetInventory(Inventory* inventory)
 		// Set text contents
 		m_slots[i]->GetText()->SetProvider(m_pInventory, UIFormat::FormatItemNumber, (int)i);
 	}
+}
+
+void UIInventory::SetPlayer(Player* player)
+{
+	m_pPlayer = player;
+	m_pInventory->UpdateItemOfPlayer(m_currentIndex, m_pPlayer);
 }
 
 void UIInventory::Draw()

@@ -9,6 +9,10 @@ UIButton::UIButton():
 {
 }
 
+UIButton::~UIButton()
+{
+}
+
 bool UIButton::HitTest(float x, float y) const
 {
 	return x >= m_buttonRect.left && x <= m_buttonRect.right

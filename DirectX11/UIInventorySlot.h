@@ -75,7 +75,10 @@ public:
 	void LoadSizeAndPos(const char* filePath);
 
 	void SetInventory(Inventory* inventory);
-	void SetPlayer(Player* player) { m_pPlayer = player; }
+
+	/// @brief Set player& Update item of player 
+	/// @param player 
+	void SetPlayer(Player* player);
 
 	void Draw() override;
 private:

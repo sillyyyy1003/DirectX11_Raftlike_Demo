@@ -3,9 +3,14 @@
 ThirstComponent::ThirstComponent(float initialValue):
 	m_initialThirstValue(initialValue),
 	m_currentThirstValue(initialValue),
-	m_thirstSpeed(0.f),
-	m_pUiComponent(nullptr)
+	m_thirstSpeed(0.f)
 {
+}
+
+void ThirstComponent::Init(float thirstSpeed, float thirstThreshold)
+{
+	m_thirstSpeed = thirstSpeed;
+	m_thirstThreshold = thirstThreshold;
 }
 
 void ThirstComponent::Update(float dt)
@@ -15,17 +20,23 @@ void ThirstComponent::Update(float dt)
 	// Update Thirst Value
 	m_currentThirstValue -= m_thirstSpeed * dt;
 
-	// Check if the thirst value is below 0
-	if(m_currentThirstValue<=0)
+	// check iif over the limit
+	bool hungerState = (m_currentThirstValue <= m_thirstThreshold);
+	if (hungerState != m_isThirsty)
 	{
-		m_currentThirstValue = 0;
-		m_isThirsty = true;
+		m_isThirsty = hungerState;
+		// Notify listeners about the change in thirsty state
+		NotifyThirstyListeners(m_isThirsty);
 	}
 
-	// check if ui is set
-	assert(m_pUiComponent != nullptr);
-	// Ui更新(percentage)
-	m_pUiComponent->UpdateUI(m_currentThirstValue / m_initialThirstValue);
+	bool starveState = (m_currentThirstValue <= 0.f);
+	if (starveState != m_isThirstyToDeath)
+	{
+		m_isThirstyToDeath = starveState;
+		// Notify listeners about the change in dying state
+		NotifyThirstyToDeathListener(m_isThirstyToDeath);
+	}
+
 }
 
 void ThirstComponent::SetThirstSpeed(float speed)
@@ -35,7 +46,7 @@ void ThirstComponent::SetThirstSpeed(float speed)
 
 void ThirstComponent::RestoreThirst(float thirstValue)
 {
-	// recover hunger
+	// recover thirst value
 	m_currentThirstValue += thirstValue;
 
 	//Check if over the limit
@@ -46,13 +57,8 @@ void ThirstComponent::RestoreThirst(float thirstValue)
 	m_isThirsty = false;
 }
 
-void ThirstComponent::SetUIComponent(UIBar* thirstBar)
+float ThirstComponent::GetCurrentThirstPercentage() const
 {
-	m_pUiComponent = thirstBar;
+	return m_currentThirstValue / m_initialThirstValue;
 }
 
-void ThirstComponent::Draw()
-{
-	assert(m_pUiComponent != nullptr); //check if UI component is set
-	m_pUiComponent->Draw();
-}

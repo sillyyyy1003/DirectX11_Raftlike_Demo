@@ -349,6 +349,21 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Behaviour.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterEffect.cpp">
+      <Filter>源文件\Render\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>源文件\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="CraftSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemInstances.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -587,7 +602,22 @@
     <ClInclude Include="Ship.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="WaterEffect.h">
+      <Filter>头文件\Render\Effect</Filter>
+    </ClInclude>
     <ClInclude Include="Behaviour.hpp">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>头文件\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="CraftSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemInstances.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -631,6 +661,12 @@
       <Filter>资源文件\VertexShader</Filter>
     </FxCompile>
     <FxCompile Include="PS_Monochrome.hlsl">
+      <Filter>资源文件\PixelShader</Filter>
+    </FxCompile>
+    <FxCompile Include="VS_Water.hlsl">
+      <Filter>资源文件\VertexShader</Filter>
+    </FxCompile>
+    <FxCompile Include="PS_Water.hlsl">
       <Filter>资源文件\PixelShader</Filter>
     </FxCompile>
   </ItemGroup>

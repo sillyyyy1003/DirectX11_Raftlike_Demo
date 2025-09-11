@@ -14,6 +14,8 @@ PhysicsComponent::~PhysicsComponent()
 void PhysicsComponent::Init(const BodyCreationSettings& settings, EActivation activation)
 {
 	m_bodyID = PhysicsManager::Instance().CreateRigidBody(settings, activation);
+
+	// Add component to manager
 	PhysicsManager::Instance().AddPhysicsComponent(m_bodyID, this);
 }
 
@@ -158,6 +160,12 @@ void PhysicsComponent::DeActivePhysics()
 	BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
 	bi.DeactivateBody(this->m_bodyID);
 
+}
+
+ObjectLayer PhysicsComponent::GetLayer() const
+{
+	const BodyInterface& bi = PhysicsManager::Instance().GetBodyInterface();
+	return bi.GetObjectLayer(m_bodyID);
 }
 
 

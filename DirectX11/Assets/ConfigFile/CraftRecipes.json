@@ -1,0 +1,19 @@
+{
+  "recipes": [
+    {
+      "recipeName": "BasicCup",
+      "ingredients": [
+        { "itemName": "Plastic", "quantity": 3 }
+      ]
+    },
+    {
+      "recipeName": "WaterPurifier",
+      "ingredients": [
+        { "itemName": "Wood", "quantity": 2 },
+        { "itemName": "Plasitc", "quantity": 3 },
+        {"itemName":"Wire","quantity":1}
+      
+      ]
+    }
+  ]
+}

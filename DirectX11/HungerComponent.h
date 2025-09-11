@@ -21,7 +21,8 @@ public:
     /// @brief 空腹度を回復する
     void RestoreHunger(float foodValue);
 
-    bool GetIsStarve() { return m_isStarve; }
+    bool GetIsStarve() const { return m_isStarve; }
+    bool GetIsHungry() const { return m_isHungry; }
 
     /// @brief 今の空腹度を返す
     float GetCurrentHungerValue() const { return m_currentHungerValue; }

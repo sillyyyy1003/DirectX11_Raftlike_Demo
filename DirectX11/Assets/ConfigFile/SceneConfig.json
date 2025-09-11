@@ -1,0 +1,38 @@
+{
+"Title": {
+ "Water": {
+      "waveAmplitude": 0.1,
+      "waveLength": 10.0,
+      "waveSpeed": 0.5,
+      "shallowColor": [0.1, 0.4, 0.8, 1.0],
+      "deepColor": [0.0, 0.2, 0.4, 1.0],
+      "maxDistance": 50.0
+    },
+  "UI":{
+    "StartButton": {
+        "position":[450.0, -50.0, 0.5],
+        "width": 240.0,
+        "height": 87.2,
+        "moveSpeed": 3.0,
+        "amplitude": 5.0
+        },
+    "OptionButton": {
+        "position": [450.0, -160.0, 0.5],
+        "width": 240.0,
+        "height": 87.2,
+        "moveSpeed": 3.0,
+        "amplitude": 5.0
+        },
+    "ExitButton": {
+        "position": [450.0, -270.0, 0.5],
+        "width": 240.0,
+        "height": 87.2,
+        "moveSpeed": 3.0,
+        "amplitude": 5.0
+        }
+      }
+  },
+  "Game":{
+
+  }
+}

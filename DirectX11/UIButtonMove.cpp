@@ -1,4 +1,6 @@
 ﻿#include "UIButtonMove.h"
+#include "d3dUtil.h"
+#include "DebugLog.h"
 
 namespace  
 {
@@ -80,4 +82,42 @@ void UIButtonMove::DeActiveMove()
 	m_isMove = false;
 	m_pUiRender->GetRenderComponent()->GetMaterial()->SetAmbient(DefaultAmbient);	//Set button color
 	SetPosition(m_defaultPos);	//Reset button position
+}
+
+void UIButtonMove::LoadButtonConfig(const char* fileName, const char* buttonName)
+{
+	std::ifstream ifs(fileName);
+	if (!ifs.is_open())
+	{
+		DebugLog::LogError("[UIButton] {} Failed to open JSON file: {}", buttonName, fileName);
+		return;
+	}
+
+	nlohmann::json j;
+	ifs >> j;
+	auto& ui = j[buttonName];
+
+	DirectX::XMFLOAT3 buttonPos= JsonToXMFLOAT3(ui["position"]);
+	float width = ui["width"].get<float>();
+	float height = ui["height"].get<float>();
+	float moveSpeed = ui["moveSpeed"].get<float>();
+	float amplitude = ui["amplitude"].get<float>();
+
+	SetButton(buttonPos,width,height);
+	InitMoveParam(moveSpeed, amplitude);
+
+}
+
+void UIButtonMove::LoadButtonConfig(nlohmann::json& j, const char* buttonName)
+{
+	auto& ui = j[buttonName];
+
+	DirectX::XMFLOAT3 buttonPos = JsonToXMFLOAT3(ui["position"]);
+	float width = ui["width"].get<float>();
+	float height = ui["height"].get<float>();
+	float moveSpeed = ui["moveSpeed"].get<float>();
+	float amplitude = ui["amplitude"].get<float>();
+
+	SetButton(buttonPos, width, height);
+	InitMoveParam(moveSpeed, amplitude);
 }

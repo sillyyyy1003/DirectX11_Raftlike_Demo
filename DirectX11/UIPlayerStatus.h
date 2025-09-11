@@ -19,11 +19,7 @@ public:
 	~UIPlayerStatus() override = default;
 
 	/// @brief 初期化
-	void Init(Material* iconMaterial, Material* barBgMaterial, Material* barMaterial, IEffect* effect, Primitive* model);
-
-	void Init(Material* iconMaterial, Material* barBgMaterial, Material* barMaterial, IEffect* effect, Primitive* model, Texture* hpIconTex, Texture* hungerIconTex);
-
-	void Init(const MaterialList& hpMaterials, const MaterialList& hungerMaterials, IEffect* effect, Primitive* model);
+	void Init(const MaterialList& hpMaterials, const MaterialList& hungerMaterials, const MaterialList& thirstMaterials, IEffect* effect, Primitive* model);
 
 
 	/// @brief 更新処理
@@ -42,10 +38,11 @@ public:
 private:
 	std::unique_ptr<UIBar> m_pHealthBar;		// 体力バー
 	std::unique_ptr<UIBar> m_pHungerBar;		// 飢餓バー
-	//std::unique_ptr<UIBar> m_pThirstBar;      // 渇きバー
+	std::unique_ptr<UIBar> m_pThirstBar;      // 渇きバー
 
 	std::unique_ptr<UIRender> m_pHpIcon;
 	std::unique_ptr<UIRender> m_pHungerIcon;
+	std::unique_ptr<UIRender> m_pThirstIcon;
 
 	Player* m_pPlayer;
 

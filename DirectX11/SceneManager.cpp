@@ -1,4 +1,6 @@
 ﻿#include "SceneManager.h"
+
+#include "AudioManager.h"
 #include "Capsule.h"
 #include "DirLight.h"
 #include "GameApp.h"
@@ -16,6 +18,7 @@
 #include "Skybox.h"
 #include "UIManager.h"
 #include "SkyboxEffect.h"
+#include "Sprite.h"
 #include "TextureManager.h"
 
 namespace
@@ -28,6 +31,10 @@ SceneManager::SceneManager():
 m_currentSceneIndex(SceneConfig::SCENE_NONE),
 isChangeScene(false),
 m_pGameSignalBus(nullptr)
+{
+}
+
+SceneManager::~SceneManager()
 {
 }
 
@@ -58,14 +65,22 @@ void SceneManager::Init()
     PhysicsManager::Instance().Init();
 
 	//Base Light作成
-    lightBase = std::make_shared<DirLight>();
-    lightBase->SetPosition({ 0,10,0 });
-    lightBase->SetAmbient({ 0.5f,0.5f,0.5f,1 });
-    lightBase->SetDiffuse({ 0.5f,0.5f,0.5f,1.f });
-	lightBase->SetIntensity(10.f);
+	DirLight* systemLight = CreateObj<DirLight>("SystemLight");
+    systemLight->SetPosition({ 0,10,0 });
+    systemLight->SetAmbient({ 0.5f,0.5f,0.5f,1 });
+    systemLight->SetDiffuse({ 0.5f,0.5f,0.5f,1.f });
+	systemLight->SetIntensity(10.f);
 
 	// Load models
     ModelManager::Instance().LoadModels("Assets/ConfigFile/Config.json");
+
+
+    // ======Audio
+    AudioManager::Instance().Init();
+    AudioManager::Instance().LoadAudio("WaveBackGround", L"Assets/Sound/SE/SeaBackGround.wav", AudioManager::AudioType::SE);
+    AudioManager::Instance().LoadAudio("Button", L"Assets/Sound/SE/ButtonClick.wav", AudioManager::AudioType::SE);
+    AudioManager::Instance().LoadAudio("BGM1", L"Assets/Sound/BGM/BGM1.wav", AudioManager::AudioType::BGM);
+    AudioManager::Instance().LoadAudio("BGM2", L"Assets/Sound/BGM/BGM2.wav", AudioManager::AudioType::BGM);
 
 	//==========Shader
     InitEffect();
@@ -76,26 +91,26 @@ void SceneManager::Init()
     //==========Scene map
     InitSceneMap();
 
+
     SetCurrentScene("Title");
+  
 
 }
 
 void SceneManager::UnInit()
 {
     Geometry::Uninit(); //Geometryの終了処理
+    UIManager::Instance().UnInit();
+
     ItemDataBase::Instance().UnInit();
     MaterialManager::Instance().UnInit(); // マテリアルマネージャーの終了処理
 	ModelManager::Instance().UnInit(); // モデルマネージャーの終了処理
 	TextureManager::Instance().UnInit(); // テクスチャマネージャーの終了処理
 	PhysicsManager::Instance().UnInit(); // 物理システムの終了処理
-
-
 }
 
 void SceneManager::Update(float dt)
 {
-    lightBase->Update(dt);
-
 }
 
 void SceneManager::Draw()
@@ -221,7 +236,6 @@ bool SceneManager::InitResource()
     skyboxEffect->InitVertexShader(skyboxVS);
     skyboxEffect->InitTexture(textureCube);
 
-    //skyboxEffect->InitCamera(player->GetCameraController()->GetCamera());
 	// Init Skybox
     Skybox* skybox = CreateObj<Skybox>("Skybox");
     skybox->Init(skyboxEffect);
@@ -230,7 +244,12 @@ bool SceneManager::InitResource()
 	//=====Geometryの初期化
 	Geometry::Init();
 
-	//ゲームセーブデータの読み込み
+
+	//=====Textureの初期化
+    TextureManager::Instance().LoadTextures("Assets/ConfigFile/Config.json");
+
+    //=====Materialの初期化
+    MaterialManager::Instance().RegisterMaterials("Assets/ConfigFile/Config.json");
 
     return true;
 }
@@ -247,6 +266,9 @@ bool SceneManager::InitEffect()
     PixelShader* uiGlossPS = CreateObj<PixelShader>("UIGlossPS");
     VertexShader* skyboxVS = CreateObj<VertexShader>("SkyboxVS");
     PixelShader* skyboxPS = CreateObj<PixelShader>("SkyboxPS");
+    VertexShader* waterVS = CreateObj<VertexShader>("WaterVS");
+    PixelShader* waterPS = CreateObj<PixelShader>("WaterPS");
+ 
 
 
 	//=======Load shader
@@ -259,6 +281,8 @@ bool SceneManager::InitEffect()
     uiGlossPS->Load("Assets/Shader/PS_UIGloss.cso");
 	skyboxVS->Load("Assets/Shader/VS_Skybox.cso");
 	skyboxPS->Load("Assets/Shader/PS_Skybox.cso");
+    waterVS->Load("Assets/Shader/VS_Water.cso");
+    waterPS->Load("Assets/Shader/PS_Water.cso");
 
 	return true;
 	

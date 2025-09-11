@@ -19,15 +19,44 @@ public:
 	std::shared_ptr<const Item> GetItem(const char* name);
 	void UnInit();
 
+	/// @brief 描画機能持ちのItemInstanceを生成する
+	/// @param itemName item name
+	/// @param count 数
+	/// @param durability 耐久値 
+	std::shared_ptr<ItemInstance> CreateItemInstanceToWorld(const char* itemName, int count = 1, float durability = -1);
+
+	/// @brief 描画機能・物理演算機能持ちのItemInstanceを生成する
+	/// @param itemName item name
+	/// @param count 数
+	/// @param durability 耐久値 
+	/// @param layer 物理レイヤー
+	std::shared_ptr<ItemInstance> CreateItemInstanceToWorldWithPhysics(const char* itemName, int count, float durability, ObjectLayer layer);
+
+	/// @brief データのみのItemInstanceを生成する
+	/// @param itemName item name
+	/// @param count 数
+	/// @param durability 耐久値 
 	std::shared_ptr<ItemInstance> CreateItemInstance(const char* itemName, int count = 1, float durability = -1);
 
-	std::shared_ptr<ItemInstance> CreateItemInstance(const char* itemName, int count, float durability, ObjectLayer layer);
+	/// @brief 描画機能・物理演算機能持ちのItemInstanceを生成する・Kinematic or Dynamic指定可能
+	/// @param itemName item name
+	/// @param count 数
+	/// @param durability 耐久値 
+	/// @param layer 物理レイヤー
+	/// @param type 物理型
+	/// @return 
+	std::shared_ptr<ItemInstance> CreateItemInstanceToWorldWithPhysics(const char* itemName, int count, float durability, ObjectLayer layer,EMotionType type);
+
+	
 
 
 	void LoadItemDataFromJsonFile(const char* jsonFilePath);
 private:
+
 	ItemDataBase() = default;
 	~ItemDataBase();
+
+	
 	
 private:
 	typedef std::unordered_map<std::string, std::shared_ptr<Item>> Items;

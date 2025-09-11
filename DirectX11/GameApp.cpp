@@ -1,4 +1,6 @@
 ﻿#include "GameApp.h"
+
+#include "AudioManager.h"
 #include "Cube.h"
 #include "d3dUtil.h"
 #include "DebugLog.h"
@@ -19,11 +21,13 @@ GameApp::GameApp(HINSTANCE hInstance, const std::wstring& windowName)
 
 GameApp::~GameApp()
 {
-
     // UnInit game contents
     SceneManager::Get()->UnInit();
 
-    // UnInit Sprite
+    //=====Audioの初期化
+    AudioManager::Instance().UnInit(); // オーディオマネージャーの終了処理
+
+	// UnInit Sprite
     Sprite::Uninit();
 }
 
@@ -120,6 +124,7 @@ bool GameApp::InitResource()
 
     // ======Game内容初期化
 	SceneManager::Get()->InitD2DResource(); // D2Dの初期化
+
     
     SceneManager::Get()->Init();    // Material/Effect/GameObjectの初期化
 

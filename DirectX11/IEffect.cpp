@@ -12,6 +12,21 @@ IEffect::~IEffect()
 {
 }
 
+void IEffect::SetConstantBuffer(Transform& transform, Material* material)
+{
+	//Set WVP
+	SetWVPMatrixCB(transform);
+
+	//Set Light
+	SetDirLightCB();
+
+	//Set Material
+	SetMaterial(material);
+
+	//Set Camera
+	SetCameraCB();
+}
+
 void BasicEffect::ApplyRenderState()
 {
 	GameApp::SetBlendState(RenderStates::BSTransparent);		//AlphaBlend

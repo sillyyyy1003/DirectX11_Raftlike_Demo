@@ -41,14 +41,13 @@ private:
 
 private:
 
-	std::shared_ptr<LightBase> lightBase;	
 	GameSignalBus* m_pGameSignalBus;
 	CameraBase* m_pCurrentCamera;
 
 private:
 
 	SceneManager();
-	~SceneManager() override = default;
+	~SceneManager() override;
 
 
 	/// @brief シーンデータ初期化

@@ -6,17 +6,27 @@
 #include "PhysicsManager.h"
 #include <Core/QuickSort.h>
 
+#include "WaterEffect.h"
+
 
 namespace 
 {
 	static constexpr float		ObjectBuoyancy = 4.f;
-	static constexpr float		ObjectLinearDrag = 0.5f;
+	static constexpr float		ObjectLinearDrag = 0.1f;
 	static constexpr float		ObjectAngularDrag = 0.1f;
-	static constexpr float		WaterLevel =0.f;
+	static constexpr float		WaterLevel =-0.1f;
 
-	static constexpr int		WaterSlices = 50;	// Water mesh slice
+	static constexpr int		WaterSlices = 100;	// Water mesh slice
 	static constexpr float		MinWaterHeight = -0.05f;
 	static constexpr float		MaxWaterHeight = 0.05f;
+
+	static constexpr float WaveAmplitude = 0.1f;  
+	static constexpr float WaveLength = 10.0f;  
+	static constexpr float WaveSpeed = 1.0f;
+
+	static constexpr DirectX::XMFLOAT4 ShallowColor = { 0.2f,0.5f,0.8f,1.f };
+	static constexpr DirectX::XMFLOAT4 DeepColor = { 0.0f,0.2f,0.4f,1.f };
+	static constexpr float MaxDistance = 50.f;
 
 	
 }
@@ -39,6 +49,7 @@ void BuoyancySystem::Init(float waterWidth, float waterHeight)
 	m_waterSensor = PhysicsManager::Instance().GetBodyInterface().CreateAndAddBody(waterSensor, EActivation::Activate);
 
 	m_transform.SetPosition(0, WaterLevel, 0);
+	m_transform.SetScale(waterWidth, 1, waterWidth);
 }
 
 void BuoyancySystem::Init(float waterWidth, float waterHeight, Material* mat, IEffect* effect)
@@ -47,12 +58,12 @@ void BuoyancySystem::Init(float waterWidth, float waterHeight, Material* mat, IE
 
 	// Init mesh
 	m_pMesh = std::make_unique<PlaneMesh>();
-	m_pMesh->Init(WaterSlices, waterWidth, m_vertices);	// Init mesh data& copy vertices data;
+	m_pMesh->Init(WaterSlices,1);	// Init mesh data& copy vertices data;
 
+	// Init render
 	m_pRenderComponent = make_unique<RenderComponent>();
 	m_pRenderComponent->Init(mat, effect, m_pMesh.get());
 
-	
 }
 
 void BuoyancySystem::OnContactAdded(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold,
@@ -68,15 +79,12 @@ void BuoyancySystem::OnContactAdded(const Body& inBody1, const Body& inBody2, co
 			// if body is already in the list, do nothing
 			if(std::find(m_bodiesInWater.begin(), m_bodiesInWater.end(), inBody2.GetID())!=m_bodiesInWater.end())
 			{
-				DebugLog::LogWarning("[BuoyancySystem] : Object is already in the list!BodyId is {}.",inBody2.GetID().GetIndex());
 				return;
 			}
 			// push back body to the list
 			m_bodiesInWater.push_back(inBody2.GetID());
-			DebugLog::Log("[BuoyancySystem] : Add object to water! Object num is {}. BodyId is {}", m_bodiesInWater.size(), inBody2.GetID().GetIndex());
 		}else
 		{
-			DebugLog::Log("[BuoyancySystem] : Object is inactive!");
 			return;
 		}
 		
@@ -88,15 +96,12 @@ void BuoyancySystem::OnContactAdded(const Body& inBody1, const Body& inBody2, co
 			// if body is already in the list, do nothing
 			if (std::find(m_bodiesInWater.begin(), m_bodiesInWater.end(), inBody1.GetID()) != m_bodiesInWater.end())
 			{
-				DebugLog::LogWarning("[BuoyancySystem] : Object is already in the list!BodyId is {}.", inBody1.GetID().GetIndex());
 				return;
 			}
 			// push back body to the list
-			DebugLog::Log("[BuoyancySystem] : Add object to water! Object num is {}. BodyId is {}", m_bodiesInWater.size(),inBody1.GetID().GetIndex());
 			m_bodiesInWater.push_back(inBody1.GetID());
 		}else
 		{
-			DebugLog::Log("[BuoyancySystem] : Object is inactive!");
 			return;
 		}
 	}
@@ -109,12 +114,10 @@ void BuoyancySystem::OnContactRemoved(const SubShapeIDPair& inSubShapePair)
 	lock_guard<Mutex> lock(m_bodiesInWaterMutex);
 	if (inSubShapePair.GetBody1ID() == m_waterSensor)
 	{
-		DebugLog::Log("[BuoyancySystem] : Remove object from water! There are {} objects in water.",m_bodiesInWater.size());
 		m_bodiesInWater.erase(std::find(m_bodiesInWater.begin(), m_bodiesInWater.end(), inSubShapePair.GetBody2ID()));
 	}
 	else if(inSubShapePair.GetBody1ID()==m_waterSensor)
 	{
-		DebugLog::Log("[BuoyancySystem] : Remove object from water! There are {} objects in water.", m_bodiesInWater.size());
 		m_bodiesInWater.erase(std::find(m_bodiesInWater.begin(), m_bodiesInWater.end(), inSubShapePair.GetBody1ID()));
 	}
 		
@@ -123,18 +126,6 @@ void BuoyancySystem::OnContactRemoved(const SubShapeIDPair& inSubShapePair)
 void BuoyancySystem::PreUpdate(float dt)
 {
 	m_time += dt;
-
-	//Update mesh data & water surface
-	for(auto& vtx:m_vertices)
-	{
-		DirectX::XMFLOAT3 pos = GetWaterSurfacePosition(vtx.pos);
-		vtx.pos = pos;	//Update vertex pos
-
-		//todo: Adjust vertex normal according to the triangle vertex in
-	}
-
-	// Write vertices;
-	m_pMesh->GetMeshBuffer()->Write(m_vertices.data());
 
 	lock_guard<Mutex> lock(m_bodiesInWaterMutex);
 
@@ -153,7 +144,7 @@ void BuoyancySystem::PreUpdate(float dt)
 			// Crude way of approximating the surface normal
 			RVec3 p2 = GetWaterSurfacePosition(body.GetCenterOfMassPosition() + Vec3(0, 0, 1));
 			RVec3 p3 = GetWaterSurfacePosition(body.GetCenterOfMassPosition() + Vec3(1, 0, 0));
-			Vec3 surface_normal = Vec3(p2 - surface_position).Cross(Vec3(p3 - surface_position)).Normalized();
+			Vec3 surface_normal = Vec3(p2 - surface_position).Cross(Vec3(p3 - surface_position)).Normalized(); // calculate surface normal through 1 step behind & 1 step forward
 
 			float buoyancy, linear_drag, angular_drag;
 			buoyancy = ObjectBuoyancy;	// 浮力
@@ -177,12 +168,53 @@ void BuoyancySystem::PreUpdate(float dt)
 
 void BuoyancySystem::Draw()
 {
+	IEffect* effect = m_pRenderComponent->GetEffect();
+
+	WaterEffect::WaveVtxShaderCB vtxShaderCb;
+	WaterEffect::WavePixShaderCB pixShaderCb;
+	vtxShaderCb = {
+		m_time,
+		WaveSpeed,		// wave speed
+		WaveAmplitude,	// wave amplitude,
+		WaveLength,	// wave length
+	};
+
+	pixShaderCb = {
+		DeepColor,		// deep color
+		ShallowColor,	// shallow color
+		MaxDistance,	// max distance
+		m_time,
+		0.f,0.0
+	};
+
+	// Set shader buffer
+	dynamic_cast<WaterEffect*>(effect)->SetWaterConstantBuffer(m_transform,vtxShaderCb,pixShaderCb);
+
+	// Draw mesh
 	m_pRenderComponent->Render(m_transform);
 }
 
 DirectX::XMFLOAT3 BuoyancySystem::GetWaterSurfacePosition(const DirectX::XMFLOAT3& pos) const
 {
-	return { pos.x,MinWaterHeight + sin(0.1f * float(pos.z) + m_time) * (MaxWaterHeight - MinWaterHeight),pos.z };
+	DirectX::XMFLOAT2 dir1 = DirectX::XMFLOAT2(1.0f, 0.0f);
+	DirectX::XMFLOAT2 dir2 = DirectX::XMFLOAT2(0.5f, 0.5f);
+	DirectX::XMVECTOR d1 = DirectX::XMVector2Normalize(XMLoadFloat2(&dir1));
+	DirectX::XMVECTOR d2 = DirectX::XMVector2Normalize(XMLoadFloat2(&dir2));
+
+	DirectX::XMFLOAT2 xz(pos.x, pos.z);
+	DirectX::XMVECTOR xzv = XMLoadFloat2(&xz);
+
+	// Wave1 calculation
+	float phase1 = DirectX::XMVectorGetX(DirectX::XMVector2Dot(d1, xzv)) / WaveLength + m_time * WaveSpeed;
+	float wave1 = WaveAmplitude * sinf(phase1);
+
+	// Wave2 calculation
+	float phase2 = DirectX::XMVectorGetX(DirectX::XMVector2Dot(d2, xzv)) / (WaveLength * 0.5f) + m_time * WaveSpeed * 1.2f;
+	float wave2 = WaveAmplitude * 0.5f * sinf(phase2);
+
+	// Combine waves
+	float height = MinWaterHeight + (wave1 + wave2);
+	return DirectX::XMFLOAT3(pos.x, height, pos.z);
 }
 
 RVec3 BuoyancySystem::GetWaterSurfacePosition(RVec3Arg inXZPosition) const

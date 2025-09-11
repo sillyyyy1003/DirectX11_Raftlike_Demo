@@ -1,7 +1,6 @@
 ﻿#include "PlayerController.h"
 #include "KInput.h"
 #include "Player.h"
-
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 #include <Jolt/Physics/Collision/RayCast.h>
@@ -13,13 +12,7 @@
 
 namespace
 {
-    enum ItemState :int
-    {
-        Active = 0,         // Spawned and waiting to be picked up
-        InActive = 1,       // Can be spawned
-        WaitToRecycle = 2,  // Marked for recycling
-    
-    };
+
     static constexpr float RayDistance = 4.f;
 }
 
@@ -81,71 +74,34 @@ void PlayerController::Update(float dt)
             m_pPlayerCharacter->Jump();
     }
 
-    // Ray cast collider
+
+    //F key to Get the object
     {
-        //F key to Get the object
         if(KInput::IsKeyTrigger('F'))
         {
-	        //Get Camera pos & forward vector;
-            CameraBase* camera = m_pPlayer->GetCameraController()->GetCamera();
-            DirectX::XMFLOAT3 originPos = camera->GetPos();
-            DirectX::XMFLOAT3 forwardVec = camera->m_transform.GetForwardAxis();
-          
-            float distance = RayDistance;
-
-            RVec3 origin = {
-                originPos.x,
-                originPos.y,
-                originPos.z
-            };
-
-            RVec3 direction = {
-	            forwardVec.x,
-	            forwardVec.y,
-	            forwardVec.z
-            };
-
-            JPH::RRayCast rayCast(origin, direction * distance);
-            JPH::RayCastResult result;
-            ExcludeLayerFilter layerFilter;
-
-            if (PhysicsManager::Instance().GetPhysicsSystem()->GetNarrowPhaseQuery().CastRay(rayCast, result, {}, layerFilter,{}))  //Hit check
+            BodyID id;
+            if(GetRayHitBodyID(id))
             {
-                PhysicsComponent* component = PhysicsManager::Instance().GetPhysicsComponent(result.mBodyID);
-				if (component != nullptr)// If the component is valid
-                {
-                    GameObject* object = component->GetGameObject();
-
-					// 当たったのがアイテムなら、インヴェントリーに追加
-                    if (object->GetGameObjectType() == GameObject::GameObjectType::Item)
-                    {
-                        std::string name = dynamic_cast<ItemInstance*>(object)->GetName();
-                        int count = dynamic_cast<ItemInstance*>(object)->GetCount();
-                        int insertNum = m_pPlayer->GetInventory()->Insert(dynamic_cast<ItemInstance*>(object));
-                        // アイテム全部挿入したら、しーんから消す
-                        if (count == insertNum)
-                        {
-                            dynamic_cast<ItemInstance*>(object)->SetState(ItemState::WaitToRecycle);    // Mark for recycling in DriftManager
-                            dynamic_cast<ItemInstance*>(object)->DeActivate();
-                        }
-#ifdef _DEBUG
-                    	DebugLog::Log("Insert {} {}", insertNum, name);
-#endif
-                    	
-                    }
-					else// If the hit object is not an item
-                    {
-#ifdef _DEBUG
-                        DebugLog::Log("Hit object is not an item.");
-#endif
-                    }
-                }
+                PhysicsComponent* component = PhysicsManager::Instance().GetPhysicsComponent(id);
+                m_pPlayer->PickUpItem(component);
             }
-
         }
 
     }
+
+    // LMB to use item in inventory 
+    {
+	    if(KInput::IsKeyTrigger(VK_LBUTTON))
+	    {
+            BodyID id;
+            if (GetRayHitBodyID(id))
+            {
+                m_pPlayer->GetItemInHand()->InteractWith(id, m_pPlayer);
+            }
+	    }
+    }
 }
+
 
 void PlayerController::UpdateWindowSize(DirectX::XMFLOAT2 windowSize)
 {
@@ -165,4 +121,38 @@ void PlayerController::SetControllable(bool isControllable)
 void PlayerController::SetActive(bool isActive)
 {
 	m_isActive=isActive;
+}
+
+bool PlayerController::GetRayHitBodyID(BodyID& id) const
+{ //Get Camera pos & forward vector;
+    CameraBase* camera = m_pPlayer->GetCameraController()->GetCamera();
+    DirectX::XMFLOAT3 originPos = camera->GetPos();
+    DirectX::XMFLOAT3 forwardVec = camera->m_transform.GetForwardAxis();
+
+    float distance = RayDistance;
+
+    RVec3 origin = {
+        originPos.x,
+        originPos.y,
+        originPos.z
+    };
+
+    RVec3 direction = {
+        forwardVec.x,
+        forwardVec.y,
+        forwardVec.z
+    };
+
+    JPH::RRayCast rayCast(origin, direction * distance);
+    JPH::RayCastResult result;
+    ExcludeLayerFilter layerFilter;
+
+    if (PhysicsManager::Instance().GetPhysicsSystem()->GetNarrowPhaseQuery().CastRay(rayCast, result, {}, { layerFilter }, {}))
+    {
+        id = result.mBodyID;
+        return true;
+    }else
+    {
+        return false;
+    }
 }
