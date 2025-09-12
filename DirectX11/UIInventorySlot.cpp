@@ -253,6 +253,63 @@ void UIInventory::LoadSizeAndPos(const char* filePath)
 		});
 }
 
+void UIInventory::LoadSizeAndPos(nlohmann::json& j, const char* uiName)
+{
+	if(!j.contains(uiName))
+	{
+		DebugLog::Log("UIInventory data is not found");
+		return;
+	}
+
+	auto& ui = j[uiName];
+
+	DirectX::XMFLOAT3 position = JsonToXMFLOAT3(ui["position"]);
+	DirectX::XMFLOAT3 slotSize = JsonToXMFLOAT3(ui["slotSize"]);
+	float slotScale = ui["slotScale"].get<float>();
+	float iconScale = ui["iconScale"].get<float>();
+	float iconOffset = ui["iconOffset"].get<float>();
+	DirectX::XMFLOAT2 textOffset = JsonToXMFLOAT2(ui["textOffset"]);
+	float backgroundSizeOffset = ui["backgroundSizeOffset"].get<float>();
+
+	// 背景のサイズと位置
+	float totalWidth = m_slots.size() * slotSize.x + (m_slots.size() - 1) * iconOffset + backgroundSizeOffset * 2;
+	float totalHeight = slotSize.y + backgroundSizeOffset * 2;
+	m_pBackground->GetTransform().SetPosition(position);
+	m_pBackground->GetTransform().SetScale(totalWidth, totalHeight, 1.f);
+
+	// スロットのサイズ & 位置
+	float startPosX = position.x - totalWidth / 2.f + slotSize.x / 2.f + backgroundSizeOffset;
+	for (size_t i = 0; i < m_slots.size(); i++)
+	{
+		// サイズ設定
+		m_slots[i]->GetBackground()->GetTransform().SetScale(slotSize);
+		DirectX::XMFLOAT3 iconSize = {
+			iconScale * slotSize.x,
+			iconScale * slotSize.y,
+			slotSize.z
+		};
+		m_slots[i]->GetItemIcon()->GetTransform().SetScale(iconSize);
+		m_slots[i]->GetText()->SetScale(slotSize);
+
+		// 位置設定
+		DirectX::XMFLOAT3 slotPos = {
+			startPosX + i * (slotSize.x + iconOffset),
+			position.y,
+			position.z
+		};
+		m_slots[i]->SetPosition(slotPos, textOffset);
+	}
+
+	// 選択中スロットのフレーム設定
+	m_pChosenSlotFrame->GetTransform().SetPosition({ startPosX, position.y, position.z });
+	m_pChosenSlotFrame->GetTransform().SetScale({
+		slotScale * slotSize.x,
+		slotScale * slotSize.y,
+		slotSize.z
+		});
+
+}
+
 void UIInventory::SetInventory(Inventory* inventory)
 {
 	m_pInventory = inventory;

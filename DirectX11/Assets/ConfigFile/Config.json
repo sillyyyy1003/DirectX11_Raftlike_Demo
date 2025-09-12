@@ -461,6 +461,10 @@
       "file": "Assets/Texture/UI/UI_LeftArrow_109x127.png"
     },
     {
+      "name": "UI_Menu",
+      "file": "Assets/Texture/UI/UI_Menu_800x720.png"
+    },
+    {
       "name": "WaterNormalMap",
       "file": "Assets/Texture/SeaWaves_N.jpg"
     }

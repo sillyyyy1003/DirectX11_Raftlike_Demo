@@ -70,9 +70,9 @@ void UIPlayerStatus::SetSize(const DirectX::XMFLOAT3& iconSize, const DirectX::X
 	m_pHungerIcon->GetTransform().SetScale(iconSize);
 	m_pThirstIcon->GetTransform().SetScale(iconSize);
 
-	m_pHealthBar->SetScale({ barSize.x, barSize.y }, TODO);
-	m_pHungerBar->SetScale({ barSize.x, barSize.y }, TODO);
-	m_pThirstBar->SetScale({ barSize.x, barSize.y }, TODO);
+	m_pHealthBar->SetScale({ barSize.x, barSize.y });
+	m_pHungerBar->SetScale({ barSize.x, barSize.y });
+	m_pThirstBar->SetScale({ barSize.x, barSize.y });
 }
 
 void UIPlayerStatus::InitPositionAndSize(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& iconSize, const DirectX::XMFLOAT3& barSize, float distanceBetweenBars)
@@ -123,6 +123,31 @@ void UIPlayerStatus::LoadPositionAndSize(const char* fileName)
 	UIPlayerStatusConfig config{};
 	auto& ui = j["UIPlayerStatus"];
 
+	config.position = JsonToXMFLOAT3(ui["position"]);
+	config.iconSize = JsonToXMFLOAT3(ui["iconSize"]);
+	config.barSize = JsonToXMFLOAT3(ui["barSize"]);
+	config.distanceBetweenBars = ui["distanceBetweenBars"].get<float>();
+
+	//Set position/size
+	InitPositionAndSize(config.position, config.iconSize, config.barSize, config.distanceBetweenBars);
+}
+
+void UIPlayerStatus::LoadPositionAndSize(nlohmann::json& j, const char* name)
+{
+	if(j.contains(name) == false)
+	{
+		DebugLog::Log("UIPlayerStatus data is not found");
+		return;
+	}
+	struct UIPlayerStatusConfig
+	{
+		DirectX::XMFLOAT3 position;
+		DirectX::XMFLOAT3 iconSize;
+		DirectX::XMFLOAT3 barSize;
+		float distanceBetweenBars;
+	};
+	UIPlayerStatusConfig config{};
+	auto& ui = j[name];
 	config.position = JsonToXMFLOAT3(ui["position"]);
 	config.iconSize = JsonToXMFLOAT3(ui["iconSize"]);
 	config.barSize = JsonToXMFLOAT3(ui["barSize"]);

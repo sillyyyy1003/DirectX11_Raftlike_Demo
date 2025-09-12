@@ -74,6 +74,10 @@ public:
 	/// @param filePath 
 	void LoadSizeAndPos(const char* filePath);
 
+	/// @brief Set inventory ui position & size from config file
+	/// @param filePath 
+	void LoadSizeAndPos(nlohmann::json& j, const char* uiName);
+
 	void SetInventory(Inventory* inventory);
 
 	/// @brief Set player& Update item of player 

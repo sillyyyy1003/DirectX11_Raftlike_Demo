@@ -33,6 +33,37 @@
       }
   },
   "Game":{
+    "UI":{
+        "UIPlayerStatus": {
+        "position": [-630.0, -240.0, 1.0],
+        "iconSize": [32.0, 32.0, 1.0],
+        "barSize": [200.0, 16.0, 1.0],
+        "distanceBetweenBars": 10.0
+      },
+      "UIInventory": {
+        "position": [0.0, -320.0, 1.0],
+        "slotSize": [49.6, 49.6, 1.0],
+        "slotScale": 0.9,
+        "iconScale": 0.75,
+        "iconOffset": 6.0,
+        "textOffset": [-8.0, 4.0],
+        "backgroundSizeOffset": 5.0
+      },
+      "BackToTitleButton":{
+        "position": [0.0,-240.0,0.5],
+        "width": 300.0,
+        "height": 109.0,
+        "moveSpeed": 3.0,
+        "amplitude": 8.0
+      }, 
+      "ReviveButton":{
+        "position": [0.0, -100.0, 0.5],
+        "width": 300.0,
+        "height": 109.0,
+        "moveSpeed": 3.0,
+        "amplitude": 8.0
+      }
+    }
 
   }
 }

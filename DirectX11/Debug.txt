@@ -63,6 +63,11 @@ Loading model finished
 [TextureManager] Registered texture: UI_HungerIcon
 [TextureManager] Registered texture: UI_ReviveButton
 [TextureManager] Registered texture: UI_BackToTitleButton
+[TextureManager] Registered texture: UI_Bar
+[TextureManager] Registered texture: UI_BarBackground
+[TextureManager] Registered texture: UI_RightArrow
+[TextureManager] Registered texture: UI_LeftArrow
+[TextureManager] Registered texture: UI_Menu
 [TextureManager] Registered texture: WaterNormalMap
 [MaterialManager] Loading models from JSON: Assets/ConfigFile/Config.json
 [MaterialManager] Load Material BlinnPhongMaterial
@@ -105,40 +110,9 @@ AppleInstance : bodyIndex:0
 [SceneManager] Current Scene: Scene game!
 [PlayerContactListener] Character is in water now
 [PlayerContactListener] Character gets out of water now
-[Camera]:First Camera Camera
 [PlayerContactListener] Character is in water now
 [PlayerContactListener] Character gets out of water now
 [PlayerContactListener] Character is in water now
 [PlayerContactListener] Character gets out of water now
 [PlayerContactListener] Character is in water now
 [PlayerContactListener] Character gets out of water now
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-WARNING::[PhysicsManager] Didn't find the physics component!
-Get Salty water
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-Drink salty water
-Get Salty water
-Drink salty water
-Get Salty water
-Drink salty water
-Get Salty water
-Drink salty water
-[PlayerContactListener] Character is in water now
-Get Salty water
-[PlayerContactListener] Character gets out of water now
-Drink salty water
-Get Salty water
-Drink salty water
-Get Salty water
-Drink salty water
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-[SceneManager] Current Scene: Scene title!

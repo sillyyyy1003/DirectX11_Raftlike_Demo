@@ -44,6 +44,12 @@ namespace
 }
 void SceneGame::Init()
 {
+	//============Load Scene data
+	std::ifstream ifs("Assets/ConfigFile/SceneConfig.json");
+	assert(ifs.is_open());
+	nlohmann::json j;
+	ifs >> j;
+
 	//============Init Player
 	Player* player = CreateObj<Player>("Player");
 	player->Init("Assets/ConfigFile/PlayerConfig.json");	//json fileから読み込み
@@ -51,14 +57,11 @@ void SceneGame::Init()
 	player->SetPosition({ 0,1,0 });
 	dynamic_cast<SceneManager*>(m_pSceneManager)->SetCurrentCamera(m_pCurrentCamera);
 
-
 	//============ Init light
 	DirLight* light = CreateObj<DayLight>("DayLight");
 	light->SetPosition(DefaultLightPosition);
 	light->SetAmbient(DefaultLightColor);
 	light->SetDiffuse({0.5,0.5,0.5,1});
-
-
 
 	//============Get Shader
 	VertexShader* basicPosNormalTexVS = GetObj<VertexShader>("BasicPosNormalTexVS");
@@ -72,9 +75,6 @@ void SceneGame::Init()
 
 	PixelShader* monoChromePS = CreateObj<PixelShader>("MonoChromePS");
 	monoChromePS->Load("Assets/Shader/PS_Monochrome.cso");
-
-
-
 
 	// Post Effect
 	MonoChrome* monoChrome = CreateObj<MonoChrome>("MonoChrome");
@@ -165,7 +165,8 @@ void SceneGame::Init()
 
 	uiInventory->Init(player->GetInventory(), uiBasicEffect, uiInventoryBgMaterial, uiInventorySlotBgMaterial,uiInventorySlotMaterial, uiInventoryChosenSLotMaterial,ModelManager::Instance().GetModel("Square"),
 		uiFontSet, "InventoryFont", uiBrush);
-	uiInventory->LoadSizeAndPos("Assets/ConfigFile/UIConfig.json"); // Load position and size from config file
+	//uiInventory->LoadSizeAndPos("Assets/ConfigFile/UIConfig.json"); // Load position and size from config file
+	uiInventory->LoadSizeAndPos(j["Game"]["UI"],"UIInventory");
 	uiInventory->SetPlayer(player); // Set player to inventory
 	// Hide inventory when player is dead
 	player->AddDeathListener([uiInventory](bool isDead)
@@ -194,7 +195,7 @@ void SceneGame::Init()
 
 	UIPlayerStatus* uiPlayerStatus = CreateObj<UIPlayerStatus>("UiPlayerStatus");
 	uiPlayerStatus->Init(hpMaterials, hungerMaterials, thirstMaterials, uiBasicEffect, ModelManager::Instance().GetModel("Square"));
-	uiPlayerStatus->LoadPositionAndSize("Assets/ConfigFile/UIConfig.json"); // Load position and size from config file
+	uiPlayerStatus->LoadPositionAndSize(j["Game"]["UI"], "UIPlayerStatus");
 	uiPlayerStatus->SetPlayer(player); // Set player to UI Player Status
 
 	// Hide PlayerStatus when player is dead
@@ -225,7 +226,8 @@ void SceneGame::Init()
 	Material* backToTitleMat = MaterialManager::Instance().GetMaterial("UiBackToTitleButton");
 	backToTitleButton->Init(uiBasicEffect, backToTitleMat, ModelManager::Instance().GetModel("Square"));
 	// Load button interactive param
-	backToTitleButton->LoadButtonConfig("Assets/ConfigFile/UIConfig.json", "BackToTitleButton");
+	//backToTitleButton->LoadButtonConfig("Assets/ConfigFile/UIConfig.json", "BackToTitleButton");
+	backToTitleButton->LoadButtonConfig(j["Game"]["UI"], "BackToTitleButton");
 	player->AddDeathListener([backToTitleButton](bool isDead)
 		{
 			backToTitleButton->SetActive(isDead);
@@ -237,7 +239,8 @@ void SceneGame::Init()
 	Material* reviveButtonMat = MaterialManager::Instance().GetMaterial("UiReviveButton");
 	reviveButton->Init(uiBasicEffect, reviveButtonMat, ModelManager::Instance().GetModel("Square"));
 	 // set button interactive param
-	reviveButton->LoadButtonConfig("Assets/ConfigFile/UIConfig.json", "ReviveButton");
+	//reviveButton->LoadButtonConfig("Assets/ConfigFile/UIConfig.json", "ReviveButton");
+	reviveButton->LoadButtonConfig(j["Game"]["UI"], "ReviveButton");
 	player->AddDeathListener([reviveButton](bool isDead)
 		{
 			reviveButton->SetActive(isDead);
