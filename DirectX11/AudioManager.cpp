@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cassert>
 #include <cstring>
+#include "UIBar.h"
 
 #pragma pack(push, 1)
 
@@ -192,8 +193,16 @@ void AudioManager::SetVolume(AudioType type, float volume)
 {
 	// Clamp volume between 0.0 and 1.0
     volume = max(0.0f, min(volume, 1.0f));
-    if (type == AudioType::SE) m_seVolume = volume;
-    else m_bgmVolume = volume;
+    if (type == AudioType::SE)
+    {
+	    m_seVolume = volume;
+		if (m_seBar) m_seBar->UpdateUI(m_seVolume); // volume is already clamped between 0.0 and 1.0
+    }
+    else
+    {
+	    m_bgmVolume = volume;
+		if (m_bgmBar)m_bgmBar->UpdateUI(m_bgmVolume); // volume is already clamped between 0.0 and 1.0
+    }
     UpdateVolume(type);
 }
 
@@ -238,6 +247,15 @@ void AudioManager::StopBgms()
             instance.sourceVoice->FlushSourceBuffers();
         }
     }
+}
+
+void AudioManager::SetUI(UIBar* bgmBar, UIBar* seBar)
+{
+	m_seBar = seBar;
+	m_bgmBar = bgmBar;
+	if (m_bgmBar) m_bgmBar->UpdateUI(m_bgmVolume);
+	if (m_seBar) m_seBar->UpdateUI(m_seVolume);
+
 }
 
 bool AudioManager::LoadWaveFile(const wchar_t* filepath, std::vector<BYTE>& outBuffer, WAVEFORMATEX& outFormat)

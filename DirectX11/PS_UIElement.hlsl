@@ -21,10 +21,8 @@ SamplerState mySampler : register(s0);
 
 float4 main(PS_IN pin) : SV_TARGET
 {
-	
-
-	float4 texColor = lerp(diffuse, myTex.Sample(mySampler, pin.tex), isTexEnable);
-	float4 color = texColor * ambient; // ˆ½ŽÒ * lightingColor
+	float4 texColor = lerp(float4(1,1,1,1), myTex.Sample(mySampler, pin.tex), isTexEnable);
+	float4 color = texColor * ambient*diffuse; // ˆ½ŽÒ * lightingColor
 
 	//Gamma correction
 	clip(color.a - 0.1f);

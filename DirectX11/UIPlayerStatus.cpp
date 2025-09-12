@@ -70,9 +70,9 @@ void UIPlayerStatus::SetSize(const DirectX::XMFLOAT3& iconSize, const DirectX::X
 	m_pHungerIcon->GetTransform().SetScale(iconSize);
 	m_pThirstIcon->GetTransform().SetScale(iconSize);
 
-	m_pHealthBar->SetScale({ barSize.x, barSize.y });
-	m_pHungerBar->SetScale({ barSize.x, barSize.y });
-	m_pThirstBar->SetScale({ barSize.x, barSize.y });
+	m_pHealthBar->SetScale({ barSize.x, barSize.y }, TODO);
+	m_pHungerBar->SetScale({ barSize.x, barSize.y }, TODO);
+	m_pThirstBar->SetScale({ barSize.x, barSize.y }, TODO);
 }
 
 void UIPlayerStatus::InitPositionAndSize(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& iconSize, const DirectX::XMFLOAT3& barSize, float distanceBetweenBars)

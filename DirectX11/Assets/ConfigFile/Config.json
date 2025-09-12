@@ -211,20 +211,20 @@
     {
       "name": "HpBarBgMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [0.2, 0.2, 0.2, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_BarBackground",
       "normalTex": "",
       "metallicTex": ""
     },
     {
       "name": "HpBarMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [1.0, 0.0, 0.0, 1.0],
+      "diffuse": [2.0, 0.0, 0.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_Bar",
       "normalTex": "",
       "metallicTex": ""
     },
@@ -241,20 +241,20 @@
     {
       "name": "HungerBarBgMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [0.2, 0.2, 0.2, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_BarBackground",
       "normalTex": "",
       "metallicTex": ""
     },
     {
       "name": "HungerBarMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [1.0, 0.5, 0.0, 1.0],
+      "diffuse": [2.0, 0.8, 0.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_Bar",
       "normalTex": "",
       "metallicTex": ""
     },
@@ -271,20 +271,20 @@
     {
       "name": "ThirstBarBgMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [0.2, 0.2, 0.2, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_BarBackground",
       "normalTex": "",
       "metallicTex": ""
     },
     {
       "name": "ThirstBarMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [0.0, 0.6, 1.0, 1.0],
+      "diffuse": [0.0, 1.2, 2.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_Bar",
       "normalTex": "",
       "metallicTex": ""
     },
@@ -443,6 +443,22 @@
     {
       "name": "UI_BackToTitleButton",
       "file": "Assets/Texture/UI/UI_Button_BackToTitle_300x109.png"
+    },
+    {
+      "name": "UI_Bar",
+      "file": "Assets/Texture/UI/UI_SoundBar.png"
+    },    
+    {
+      "name": "UI_BarBackground",
+      "file": "Assets/Texture/UI/UI_SoundBar_980x126.png"
+    }, 
+    {
+      "name": "UI_RightArrow",
+      "file": "Assets/Texture/UI/UI_RightArrow_109x127.png"
+    },
+    {
+      "name": "UI_LeftArrow",
+      "file": "Assets/Texture/UI/UI_LeftArrow_109x127.png"
     },
     {
       "name": "WaterNormalMap",

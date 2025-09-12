@@ -7,6 +7,8 @@
 #include <xaudio2.h>
 #include <wrl/client.h>
 
+class UIBar;
+
 /// @brief This is for managing audio resources and playback in a DirectX11 application.
 class AudioManager
 {
@@ -61,6 +63,12 @@ public:
 
 	/// @brief 全てのBGMを停止させる
 	void StopBgms();
+
+	/// @brief Set UI bars
+	/// @param bgmBar 
+	/// @param seBar 
+	void SetUI(UIBar* bgmBar, UIBar* seBar);
+
 private:
 	struct AudioData
 	{
@@ -84,6 +92,9 @@ private:
 	float m_bgmVolume = 1.0f;
 	bool m_seMute = false;
 	bool m_bgmMute = false;
+
+	UIBar* m_bgmBar = nullptr;
+	UIBar* m_seBar=nullptr;
 
 	/// @brief Load Wav file
 	/// @param filepath file path
