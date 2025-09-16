@@ -8,7 +8,6 @@
 #include "DriftManager.h"
 #include "GameApp.h"
 #include "ItemDataBase.h"
-#include "ItemInstances.h"
 #include "KInput.h"
 #include "MaterialManager.h"
 #include "ModelManager.h"
@@ -25,8 +24,10 @@
 #include "Skybox.h"
 #include "TextureManager.h"
 #include "UIButtonMove.h"
-#include "UIInventorySlot.h"
+#include "UIInventory.h"
+#include "UIMenu.h"
 #include "UIPlayerStatus.h"
+#include "Water.h"
 #include "WaterEffect.h"
 
 namespace
@@ -41,9 +42,21 @@ namespace
 	static constexpr DirectX::XMFLOAT3 DefaultLightPosition = { 0,10,0 };	//Default Light Position
 	static constexpr DirectX::XMFLOAT3 UIAimSize = { 32,32,1.f };
 
+	static constexpr DirectX::XMFLOAT4 WaterBoxColor= { 0.027f, 0.016f, 0.337f, 1.0f };	// Dark blue water box
+	static constexpr DirectX::XMFLOAT3 WaterBoxPos = { 0,-waterHeight / 2.f - 0.1f,0 };	// water face is -0.1f;
+
+	static constexpr DirectX::XMFLOAT3 DeathTextPos={ 0,100,1.0 };
+	static constexpr DirectX::XMFLOAT3 DeathTextScale = { 800,100,1 };
+
 }
 void SceneGame::Init()
 {
+	//============Load Scene data
+	std::ifstream ifs("Assets/ConfigFile/SceneConfig.json");
+	assert(ifs.is_open());
+	nlohmann::json j;
+	ifs >> j;
+
 	//============Init Player
 	Player* player = CreateObj<Player>("Player");
 	player->Init("Assets/ConfigFile/PlayerConfig.json");	//json fileから読み込み
@@ -51,14 +64,11 @@ void SceneGame::Init()
 	player->SetPosition({ 0,1,0 });
 	dynamic_cast<SceneManager*>(m_pSceneManager)->SetCurrentCamera(m_pCurrentCamera);
 
-
 	//============ Init light
 	DirLight* light = CreateObj<DayLight>("DayLight");
 	light->SetPosition(DefaultLightPosition);
 	light->SetAmbient(DefaultLightColor);
 	light->SetDiffuse({0.5,0.5,0.5,1});
-
-
 
 	//============Get Shader
 	VertexShader* basicPosNormalTexVS = GetObj<VertexShader>("BasicPosNormalTexVS");
@@ -72,9 +82,6 @@ void SceneGame::Init()
 
 	PixelShader* monoChromePS = CreateObj<PixelShader>("MonoChromePS");
 	monoChromePS->Load("Assets/Shader/PS_Monochrome.cso");
-
-
-
 
 	// Post Effect
 	MonoChrome* monoChrome = CreateObj<MonoChrome>("MonoChrome");
@@ -101,7 +108,7 @@ void SceneGame::Init()
 	pbrEffect->InitCamera(player->GetCameraController()->GetCamera());
 	pbrEffect->InitEffectDirLight(light);
 
-	UIBasicEffect* uiBasicEffect = CreateObj<UIBasicEffect>("UiBasicEffect");
+	UIBasicEffect* uiBasicEffect = GetObj<UIBasicEffect>("UiBasicEffect");
 	uiBasicEffect->InitPixelShader(uiElementPS);
 	uiBasicEffect->InitVertexShader(uiElementVS);
 
@@ -116,16 +123,19 @@ void SceneGame::Init()
 	waterEffect->Init(waterVS, waterPS, m_pCurrentCamera, waterNormalMap,light);
 
 
-	//===========Register food data
+
+	//=========== Register Item data
 	ItemDataBase::Instance().LoadItemDataFromJsonFile("Assets/ConfigFile/ItemDataBase.json");
 
+	//=========== Drift Manager
+	DriftManager* driftManager = CreateObj<DriftManager>("DriftManager");
+	driftManager->Init(pbrEffect, player); // Initialize drift manager with PBR effect and player
 
-	//===========Init item
+	//=========== Init item
 	std::shared_ptr<ItemInstance> appleInstance(ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Apple", 3, -1, Layers::ITEM));
 	appleInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
 	appleInstance->SetPosition({ -3, 0.5, 0 });
 	RegisterSceneObject(appleInstance);
-	DebugLog::Log("AppleInstance : bodyIndex:{}",appleInstance->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->GetBodyID().GetIndex());
 
 	std::shared_ptr<ItemInstance> bananaInstance(ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Banana",10, -1, Layers::ITEM));
 	bananaInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
@@ -137,9 +147,44 @@ void SceneGame::Init()
 	floorRenderComponent->Init(MaterialManager::Instance().GetMaterial("FloorMaterial"), basicEffect, ModelManager::Instance().GetModel("Cube"));
 	floor->AddComponent(MyComponent::ComponentType::Render, floorRenderComponent);
 
-	// Drift Manager
-	DriftManager* driftManager = CreateObj<DriftManager>("DriftManager");
-	driftManager->Init(pbrEffect,player); // Initialize drift manager with PBR effect and player
+	GameObject* underWaterBox = CreateObj<GameObject>("UnderWaterBox");
+	std::shared_ptr<RenderComponent> underWaterBoxRenderComponent = std::make_shared<RenderComponent>();
+	Material* underWaterBoxMat = CreateObj<Material>("UnderSea");
+	underWaterBoxMat->SetDiffuse(WaterBoxColor);
+	underWaterBoxRenderComponent->Init(underWaterBoxMat, basicEffect, ModelManager::Instance().GetModel("Environment_WaterBox"));
+	underWaterBox->AddComponent(MyComponent::ComponentType::Render, underWaterBoxRenderComponent);
+	underWaterBox->GetTransform().SetScale({ WaterWidth/2.f,waterHeight/2.f,WaterWidth/2.f}); //water box basic size{2,2,2} 
+	underWaterBox->GetTransform().SetPosition(WaterBoxPos);
+
+
+	//=====物理の初期化
+
+	// Create the settings for the collision volume (the shape).
+	// Create the shape
+	// Create the settings for the body itself. Note that here you can also set other properties like the restitution / friction.
+	// Create the actual body
+	BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(HalfFloorScale.x, HalfFloorScale.y, HalfFloorScale.z)), Vec3().sZero(), Quat::sIdentity(), EMotionType::Dynamic, Layers::BOAT);
+	std::shared_ptr<PhysicsComponent> floorCollider = make_shared<PhysicsComponent>();
+	floor->AddComponent(MyComponent::ComponentType::Physics, floorCollider);
+	floorCollider->Init(floorBoxSettings, EActivation::Activate, floor);
+	floor->GetTransform().SetScale(HalfFloorScale * 2.f);
+
+
+	// Init Buoyancy system
+	BuoyancySystem* buoyancySystem = CreateObj<BuoyancySystem>("BuoyancySystem");
+	Material* waterMaterial = MaterialManager::Instance().GetMaterial("WaterMaterial");
+	buoyancySystem->Init(WaterWidth, waterHeight, waterMaterial, waterEffect);
+
+	//Collider Debug Render Component配置
+	Material* debugMaterial = MaterialManager::Instance().GetMaterial("DebugMaterial");
+	std::shared_ptr<RenderComponent> debugColliderRender = std::make_shared<RenderComponent>();
+	debugColliderRender->Init(debugMaterial, debugEffect, ModelManager::Instance().GetModel("Capsule"));
+
+	//Debug Collider Render ComponentをPlayerに追加
+	player->AddComponent(MyComponent::ComponentType::DebugRender, debugColliderRender);
+
+
+
 
 
 	//===========UI初期化
@@ -165,7 +210,7 @@ void SceneGame::Init()
 
 	uiInventory->Init(player->GetInventory(), uiBasicEffect, uiInventoryBgMaterial, uiInventorySlotBgMaterial,uiInventorySlotMaterial, uiInventoryChosenSLotMaterial,ModelManager::Instance().GetModel("Square"),
 		uiFontSet, "InventoryFont", uiBrush);
-	uiInventory->LoadSizeAndPos("Assets/ConfigFile/UIConfig.json"); // Load position and size from config file
+	uiInventory->LoadSizeAndPos(j["Game"]["UI"],"UIInventory");
 	uiInventory->SetPlayer(player); // Set player to inventory
 	// Hide inventory when player is dead
 	player->AddDeathListener([uiInventory](bool isDead)
@@ -194,7 +239,7 @@ void SceneGame::Init()
 
 	UIPlayerStatus* uiPlayerStatus = CreateObj<UIPlayerStatus>("UiPlayerStatus");
 	uiPlayerStatus->Init(hpMaterials, hungerMaterials, thirstMaterials, uiBasicEffect, ModelManager::Instance().GetModel("Square"));
-	uiPlayerStatus->LoadPositionAndSize("Assets/ConfigFile/UIConfig.json"); // Load position and size from config file
+	uiPlayerStatus->LoadPositionAndSize(j["Game"]["UI"], "UIPlayerStatus");
 	uiPlayerStatus->SetPlayer(player); // Set player to UI Player Status
 
 	// Hide PlayerStatus when player is dead
@@ -208,8 +253,8 @@ void SceneGame::Init()
 	// Create Death UI
 	UIText* deathText = CreateObj<UIText>("DeathText");
 	deathText->Init(uiFontSet, "DeathFont", uiBrush);
-	deathText->SetPosition({ 0,100,1.0 });
-	deathText->SetScale({800,100,1});
+	deathText->SetPosition(DeathTextPos);
+	deathText->SetScale(DeathTextScale);
 	deathText->SetStaticText("You Are Incapacitated!");
 	deathText->SetActive(false);
 	// death text only activate when player is dead
@@ -222,10 +267,11 @@ void SceneGame::Init()
 	// Create Death Button
 
 	UIButtonMove* backToTitleButton = CreateObj<UIButtonMove>("backToTitleButton");
-	Material* backToTitleMat = MaterialManager::Instance().GetMaterial("UiBackToTitleButton");
+	Material* backToTitleMat = MaterialManager::Instance().GetMaterial("UiBackToTitleButtonMaterial");
 	backToTitleButton->Init(uiBasicEffect, backToTitleMat, ModelManager::Instance().GetModel("Square"));
 	// Load button interactive param
-	backToTitleButton->LoadButtonConfig("Assets/ConfigFile/UIConfig.json", "BackToTitleButton");
+	//backToTitleButton->LoadButtonConfig("Assets/ConfigFile/UIConfig.json", "BackToTitleButton");
+	backToTitleButton->LoadButtonConfig(j["Game"]["UI"], "BackToTitleButton");
 	player->AddDeathListener([backToTitleButton](bool isDead)
 		{
 			backToTitleButton->SetActive(isDead);
@@ -234,10 +280,10 @@ void SceneGame::Init()
 	backToTitleButton->SetActive(false);
 
 	UIButtonMove* reviveButton = CreateObj<UIButtonMove>("reviveButton");
-	Material* reviveButtonMat = MaterialManager::Instance().GetMaterial("UiReviveButton");
+	Material* reviveButtonMat = MaterialManager::Instance().GetMaterial("UiReviveButtonMaterial");
 	reviveButton->Init(uiBasicEffect, reviveButtonMat, ModelManager::Instance().GetModel("Square"));
 	 // set button interactive param
-	reviveButton->LoadButtonConfig("Assets/ConfigFile/UIConfig.json", "ReviveButton");
+	reviveButton->LoadButtonConfig(j["Game"]["UI"], "ReviveButton");
 	player->AddDeathListener([reviveButton](bool isDead)
 		{
 			reviveButton->SetActive(isDead);
@@ -245,26 +291,11 @@ void SceneGame::Init()
 		}
 	);
 	reviveButton->SetActive(false);
-	UIManager::Instance().ClearLayers();	// Clear existing UI layers
 
-	UIManager::Instance().AddUiLayer("Aim", 1);
-	UIManager::Instance().GetUILayer("Aim")->AddComponent(uiAim);
-
-	UIManager::Instance().AddUiLayer("Button", 2);
-	UIManager::Instance().GetUILayer("Button")->AddComponent(backToTitleButton);
-	UIManager::Instance().GetUILayer("Button")->AddComponent(reviveButton);
-
-	UIManager::Instance().AddUiLayer("Player", 3);
-	UIManager::Instance().GetUILayer("Player")->AddComponent(uiPlayerStatus);
-	UIManager::Instance().GetUILayer("Player")->AddComponent(uiInventory);	// note that ui inventory is has lower priority than craft system panel
-
-	UIManager::Instance().AddUiLayer("Message", 4);
-	UIManager::Instance().GetUILayer("Message")->AddComponent(deathText);
-	UIManager::Instance().AddUiLayer("CraftSystem", 5);
-	
-
-
-
+	UIButtonMove* configButton = CreateObj<UIButtonMove>("ConfigButton");
+	Material* configButtonMaterial= MaterialManager::Instance().GetMaterial("UiConfigButtonMaterial");
+	configButton->Init(uiBasicEffect, configButtonMaterial, ModelManager::Instance().GetModel("Square"));
+	configButton->LoadButtonConfig(j["Game"]["UI"], "ConfigButton");
 
 	//=====Set Button event
 
@@ -286,6 +317,7 @@ void SceneGame::Init()
 	reviveButton->SetOnClick([player]()
 		{
 			player->Revive();//if clicked player revive
+			ShowCursor(FALSE);
 		});
 	reviveButton->SetOnHover([backToTitleButton, reviveButton]()
 		{
@@ -298,33 +330,44 @@ void SceneGame::Init()
 		});
 
 
-	//=====物理の初期化
+	configButton->SetOnClick([this, configButton]
+		{
+			AudioManager::Instance().Play("SE_Button", false);
+			GetObj<UIMenu>("UIMenu")->SetActive(true);	// Enable Menu
+			configButton->DeActiveMove();
+		});
+	configButton->SetOnHover([configButton]
+		{
+			configButton->ActiveMove();
+		});
+	configButton->SetOnExit([configButton]
+		{
+			configButton->DeActiveMove();
+		});
+	player->AddDeathListener([configButton](bool isDead)
+		{
+			configButton->SetActive(!isDead);
+		}
+	);
 
-	// Create the settings for the collision volume (the shape).
-	// Create the shape
-	// Create the settings for the body itself. Note that here you can also set other properties like the restitution / friction.
-	// Create the actual body
-	BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(HalfFloorScale.x,HalfFloorScale.y,HalfFloorScale.z)), Vec3().sZero(), Quat::sIdentity(), EMotionType::Dynamic, Layers::BOAT);
-	std::shared_ptr<PhysicsComponent> floorCollider = make_shared<PhysicsComponent>();
-	floorCollider->Init(floorBoxSettings, EActivation::Activate,floor);
-	floor->AddComponent(MyComponent::ComponentType::Physics, floorCollider);
-	floorCollider->SetGameObject(floor); // Set the GameObject for the PhysicsComponent
-	floor->GetTransform().SetScale(HalfFloorScale * 2.f);
+	//===========Register ui layers
+	UIManager::Instance().AddUiLayer("Aim", 1);
+	UIManager::Instance().GetUILayer("Aim")->AddComponent(uiAim);
 
+	UIManager::Instance().AddUiLayer("Button", 2);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(backToTitleButton);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(reviveButton);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(deathText);
+	UIManager::Instance().GetUILayer("Button")->AddComponent(configButton);
 
-	// Init Buoyancy system
-	BuoyancySystem* buoyancySystem = CreateObj<BuoyancySystem>("BuoyancySystem");
-	Material* waterMaterial = MaterialManager::Instance().GetMaterial("WaterMaterial");
-	buoyancySystem->Init(WaterWidth, waterHeight, waterMaterial, waterEffect);
+	UIManager::Instance().AddUiLayer("Player", 3);
+	UIManager::Instance().GetUILayer("Player")->AddComponent(uiPlayerStatus);
+	UIManager::Instance().GetUILayer("Player")->AddComponent(uiInventory);	// note that ui inventory is has lower priority than craft system panel
 
-	//Collider Debug Render Component配置
-	Material* debugMaterial = MaterialManager::Instance().GetMaterial("DebugMaterial");
-	std::shared_ptr<RenderComponent> debugColliderRender = std::make_shared<RenderComponent>();
-	debugColliderRender->Init(debugMaterial, debugEffect, ModelManager::Instance().GetModel("Capsule"));
+	// Menu Setup
+	GetObj<UIMenu>("UIMenu")->SetButton(this);
 
-	//Debug Collider Render ComponentをPlayerに追加
-	player->AddComponent(MyComponent::ComponentType::DebugRender, debugColliderRender);
-
+	
 	//===========Set skybox camera
 	GetObj<Skybox>("Skybox")->GetSkyboxEffect()->InitCamera(m_pCurrentCamera);
 
@@ -334,7 +377,7 @@ void SceneGame::Init()
 #endif
 	//===========Set Sound
 	AudioManager::Instance().StopBgms();
-	AudioManager::Instance().Play("BGM2", true);
+	AudioManager::Instance().Play("BGM_Game", true);
 
 
 	//test
@@ -358,32 +401,36 @@ void SceneGame::UnInit()
 	GetObj<DriftManager>("DriftManager")->UnInit(); 
 	
 	PhysicsManager::Instance().RemoveAllBodies();
-	ShowCursor(TRUE);
-	
 }
 
 void SceneGame::Update(float tick)
 {
+	//===============Scene Change
 	if(m_isChangeScene)
 	{
 		SceneBase::SetCurrentScene(m_sceneName.c_str());
 		return;
 	}
 
-	
-	//===============Camera Update
-
-
 	//===============Handle Input
-
-	if(KInput::IsKeyTrigger('K'))
+	if (KInput::IsKeyTrigger(VK_LCONTROL))
 	{
-		GetObj<Player>("Player")->Kill();
+		if (!m_isShowCursor)
+		{
+			ShowCursor(TRUE);	// Change cursor status
+			GetObj<Player>("Player")->LockCursor(false);	// Unlock cursor
+			m_isShowCursor = !m_isShowCursor;	
+		}
+		else
+		{
+			ShowCursor(FALSE);// Change cursor status
+			GetObj<Player>("Player")->LockCursor(true);	// Lock cursor
+			m_isShowCursor = !m_isShowCursor;
+		}
 	}
 
-
-	//===============Skybox Update
 	
+
 
 	//===============Physics Update
 	GetObj<BuoyancySystem>("BuoyancySystem")->PreUpdate(tick);
@@ -403,6 +450,7 @@ void SceneGame::Update(float tick)
 	for(const auto& object:m_sceneObjects)
 	{
 		object->Update(tick);
+		
 	}
 
 	//===============DriftManager Update
@@ -410,10 +458,6 @@ void SceneGame::Update(float tick)
 
 	//===============PostProcess Update
 	GetObj<MonoChrome>("MonoChrome")->Update(tick);
-
-	//===============UI Update
-	UIManager::Instance().Update(tick);
-
 
 	//===============Clear all inactive game objects
 	DeleteInactiveSceneObject();
@@ -435,17 +479,17 @@ void SceneGame::Draw()
 	}
 
 	GetObj<DriftManager>("DriftManager")->Draw(); // Draw drift manager items
+	GetObj<GameObject>("UnderWaterBox")->Draw();
 
 	// Transparent Draw
 	GetObj<BuoyancySystem>("BuoyancySystem")->Draw();
 	GetObj<Player>("Player")->Draw();
 
+
 	GetObj<MonoChrome>("MonoChrome")->DrawRenderTarget();
 	
 
-	// Ui描画
-	GameApp::SetDepthStencilState(RenderStates::DSSNoDepthTest);
-	UIManager::Instance().Draw();
+
 
 }
 
@@ -473,4 +517,10 @@ void SceneGame::SetCurrentScene(const char* sceneName)
 {
 	m_isChangeScene = true;
 	m_sceneName = sceneName;
+
+	// Remove layers in this scene
+	UIManager::Instance().RemoveLayer("Aim");
+	UIManager::Instance().RemoveLayer("Button");
+	UIManager::Instance().RemoveLayer("Player");
 }
+

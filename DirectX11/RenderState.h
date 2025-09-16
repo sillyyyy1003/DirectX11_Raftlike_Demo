@@ -14,8 +14,8 @@ public:
     static void InitAll(ID3D11Device* device);
 
 public:
-    static ComPtr<ID3D11RasterizerState> RSWireframe;		         
-    static ComPtr<ID3D11RasterizerState> RSNoCull;			            
+    static ComPtr<ID3D11RasterizerState> RSWireframe;		      
+    static ComPtr<ID3D11RasterizerState> RSNoCull;			          
     static ComPtr<ID3D11RasterizerState> RSCullClockWise;
     static ComPtr<ID3D11RasterizerState> RSShadow;				
 

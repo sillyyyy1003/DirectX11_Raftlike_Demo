@@ -13,10 +13,13 @@ UIButton::~UIButton()
 {
 }
 
-bool UIButton::HitTest(float x, float y) const
+UIComponent* UIButton::HitTest(float x, float y)
 {
-	return x >= m_buttonRect.left && x <= m_buttonRect.right
-		&& y >= m_buttonRect.top && y <= m_buttonRect.bottom;
+	if (x >= m_buttonRect.left && x <= m_buttonRect.right
+		&& y >= m_buttonRect.top && y <= m_buttonRect.bottom)
+		return this;
+
+	return nullptr;
 }
 
 void UIButton::OnMouseEnter()

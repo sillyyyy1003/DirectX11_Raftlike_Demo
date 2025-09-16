@@ -35,6 +35,18 @@
       "FontFamily": "Berlin Sans FB",
       "FontSize":75,
       "IsCentered":true
+    },
+    {
+      "Name": "DeathFont",
+      "FontFamily": "Berlin Sans FB",
+      "FontSize":75,
+      "IsCentered":true
+    },
+    {
+      "Name": "UIMenuFont",
+      "FontFamily": "Impact",
+      "FontSize":55,
+      "IsCentered":false
     }
   ],
   "BrushColor":

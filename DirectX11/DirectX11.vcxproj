@@ -171,6 +171,7 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="CpuTimer.cpp" />
+    <ClCompile Include="CraftRecipeUI.cpp" />
     <ClCompile Include="CraftSystem.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="D3DApp.cpp" />
@@ -216,7 +217,6 @@
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="SceneOption.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShapeFactory.cpp" />
@@ -237,9 +237,11 @@
     <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="UIFontSet.cpp" />
     <ClCompile Include="UIGlossEffect.cpp" />
+    <ClCompile Include="UIInventory.cpp" />
     <ClCompile Include="UIInventorySlot.cpp" />
     <ClCompile Include="UILayer.cpp" />
     <ClCompile Include="UIManager.cpp" />
+    <ClCompile Include="UIMenu.cpp" />
     <ClCompile Include="UIMesh.cpp" />
     <ClCompile Include="UIScaler.cpp" />
     <ClCompile Include="UIComponent.cpp" />
@@ -256,6 +258,7 @@
     <ClInclude Include="Capsule.h" />
     <ClInclude Include="Component.hpp" />
     <ClInclude Include="CpuTimer.h" />
+    <ClInclude Include="CraftRecipeUI.h" />
     <ClInclude Include="CraftSystem.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="D3DApp.h" />
@@ -300,7 +303,6 @@
     <ClInclude Include="SceneBase.hpp" />
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="SceneOption.h" />
     <ClInclude Include="SceneTitle.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShapeFactory.h" />
@@ -322,9 +324,11 @@
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="UIFontSet.h" />
     <ClInclude Include="UIGlossEffect.h" />
+    <ClInclude Include="UIInventory.h" />
     <ClInclude Include="UIInventorySlot.h" />
     <ClInclude Include="UILayer.h" />
     <ClInclude Include="UIManager.h" />
+    <ClInclude Include="UIMenu.h" />
     <ClInclude Include="UIMesh.h" />
     <ClInclude Include="UIScaler.h" />
     <ClInclude Include="UIComponent.h" />

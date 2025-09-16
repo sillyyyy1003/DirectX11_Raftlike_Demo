@@ -37,8 +37,12 @@ public:
 
 	/// @brief Clean all layers for another scene
 	void ClearLayers();
+	void EnableLayers(bool isEnable);
 	void UnInit();
 
+	/// @brief Remove a specific layer by its name
+	/// @param LayerName 
+	void RemoveLayer(const char* LayerName);
 private:
 
 	typedef std::map<Priority, std::shared_ptr<UILayer>> Layers;

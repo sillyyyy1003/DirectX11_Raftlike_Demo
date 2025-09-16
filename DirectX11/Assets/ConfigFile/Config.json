@@ -35,6 +35,10 @@
     {
       "name": "Utility_Cup",
       "file": "Assets/Model/FilterPurifier.fbx"
+    },
+    {
+      "name": "Environment_WaterBox",
+      "file": "Assets/Model/WaterBox.fbx"
     }
   ],
   "materials":[
@@ -141,20 +145,20 @@
     {
       "name": "UiBarMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [1.0, 0.0, 0.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_Bar",
       "normalTex": "",
       "metallicTex": ""
     },
     {
       "name": "UiBarBgMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [0.0, 0.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_BarBackground",
       "normalTex": "",
       "metallicTex": ""
     },
@@ -211,20 +215,20 @@
     {
       "name": "HpBarBgMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [0.2, 0.2, 0.2, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_BarBackground",
       "normalTex": "",
       "metallicTex": ""
     },
     {
       "name": "HpBarMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [1.0, 0.0, 0.0, 1.0],
+      "diffuse": [2.0, 0.0, 0.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_Bar",
       "normalTex": "",
       "metallicTex": ""
     },
@@ -241,20 +245,20 @@
     {
       "name": "HungerBarBgMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [0.2, 0.2, 0.2, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_BarBackground",
       "normalTex": "",
       "metallicTex": ""
     },
     {
       "name": "HungerBarMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [1.0, 0.5, 0.0, 1.0],
+      "diffuse": [2.0, 0.8, 0.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_Bar",
       "normalTex": "",
       "metallicTex": ""
     },
@@ -271,20 +275,20 @@
     {
       "name": "ThirstBarBgMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [0.2, 0.2, 0.2, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_BarBackground",
       "normalTex": "",
       "metallicTex": ""
     },
     {
       "name": "ThirstBarMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [0.0, 0.6, 1.0, 1.0],
+      "diffuse": [0.0, 1.2, 2.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
-      "albedoTex": "",
+      "albedoTex": "UI_Bar",
       "normalTex": "",
       "metallicTex": ""
     },
@@ -299,7 +303,7 @@
       "metallicTex": ""
     },
     {
-      "name": "UiReviveButton",
+      "name": "UiReviveButtonMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
       "diffuse": [1.0, 1.0, 1.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
@@ -309,12 +313,62 @@
       "metallicTex": ""
     },
     {
-      "name": "UiBackToTitleButton",
+      "name": "UiConfigButtonMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_ConfigButton",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiBackToTitleButtonMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
       "diffuse": [1.0, 1.0, 1.0, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
       "albedoTex": "UI_BackToTitleButton",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiMenuBackToTitleButton",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_BackToTitleButton",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiMenuResumeButtonMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_ResumeButton",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiExitButtonMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_ExitButton",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiMenuMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_Menu",
       "normalTex": "",
       "metallicTex": ""
     }
@@ -443,6 +497,38 @@
     {
       "name": "UI_BackToTitleButton",
       "file": "Assets/Texture/UI/UI_Button_BackToTitle_300x109.png"
+    },
+    {
+      "name": "UI_Bar",
+      "file": "Assets/Texture/UI/UI_SoundBar.png"
+    },    
+    {
+      "name": "UI_BarBackground",
+      "file": "Assets/Texture/UI/UI_SoundBar_980x126.png"
+    }, 
+    {
+      "name": "UI_RightArrow",
+      "file": "Assets/Texture/UI/UI_RightArrow_109x127.png"
+    },
+    {
+      "name": "UI_LeftArrow",
+      "file": "Assets/Texture/UI/UI_LeftArrow_109x127.png"
+    },
+    {
+      "name": "UI_Menu",
+      "file": "Assets/Texture/UI/UI_Menu_800x720.png"
+    },
+    {
+      "name": "UI_ExitButton",
+      "file": "Assets/Texture/UI/UI_Button_Exit_300x109.png"
+    },
+    {
+      "name": "UI_ResumeButton",
+      "file": "Assets/Texture/UI/UI_Button_Resume_300x109.png"
+    },
+    {
+      "name": "UI_ConfigButton",
+      "file": "Assets/Texture/UI/UI_ConfigButton_256x256.png"
     },
     {
       "name": "WaterNormalMap",

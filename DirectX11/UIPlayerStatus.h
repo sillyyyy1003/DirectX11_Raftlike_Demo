@@ -33,6 +33,12 @@ public:
 	void InitPositionAndSize(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT3& iconSize, const DirectX::XMFLOAT3& barSize, float distanceBetweenBars);
 
 	void LoadPositionAndSize(const char* fileName);
+
+	/// @brief Load data through json opened
+	/// @param j 
+	/// @param name data category
+	void LoadPositionAndSize(nlohmann::json& j,const char* name);
+
 	void SetPlayer(Player* player) { m_pPlayer = player; }
 
 private:

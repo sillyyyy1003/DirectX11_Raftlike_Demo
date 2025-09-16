@@ -21,7 +21,7 @@ cbuffer Wave : register(b0)
 
 	float maxDistance; //Max distance for depth color blending
 	float time;
-	float padding3;
+	float transparent;
 	float padding4;
 }
 
@@ -75,5 +75,5 @@ float4 main(PS_IN pin) : SV_Target
 	pbrColor += directionalColor;
 
 	float3 totalColor = pbrColor + ambient;
-	return float4(totalColor, 1.0f);
+	return float4(totalColor, transparent);
 }

@@ -10,6 +10,7 @@ class SceneGame :
 {
 
 public:
+	typedef std::vector<std::shared_ptr<GameObject>> Objects;
 	SceneGame() = default;
 	~SceneGame() override = default;
 
@@ -23,6 +24,7 @@ public:
 	void DeleteInactiveSceneObject();
 	void SetCurrentScene(const char* sceneName) override;
 
+
 private:
 	CameraBase* m_pCurrentCamera;
 
@@ -34,6 +36,6 @@ private:
 	bool m_isChangeScene = false;
 	std::string m_sceneName;
 
-	
+	bool m_isShowCursor = false;		// if is pause show cursor	
 };
 

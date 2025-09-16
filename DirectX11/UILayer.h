@@ -22,6 +22,8 @@ public:
 	bool HandleMouseUp(float x, float y);
 	void HandleMouseMove(float x, float y);
 
+
+
 private:
 
 	std::vector<UIComponent*> m_uiComponents;

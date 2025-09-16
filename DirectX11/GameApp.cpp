@@ -82,10 +82,8 @@ void GameApp::OnResize()
 
 void GameApp::UpdateScene(float dt)
 {
-    
     // GameUpdate
     SceneManager::Get()->_update(dt);
-
 }
 
 void GameApp::DrawScene()

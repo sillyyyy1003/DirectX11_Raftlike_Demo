@@ -3,6 +3,7 @@
 #include "HungerComponent.h"
 #include "Inventory.h"
 #include "LivingEntity.h"
+#include "PhysicsManager.h"
 #include "PlayerController.h"
 #include "ThirstComponent.h"
 
@@ -10,10 +11,10 @@
 /// Player
 /// </summary>
 class Player :
-    public GameObject
+	public GameObject
 {
 public:
-	
+
 
 	Player();
 	~Player() override;
@@ -48,6 +49,8 @@ public:
 	/// @param rad +:LEFT -:RIGHT
 	void RotateY(float dt);
 
+	void LockCursor(bool isLocked) { m_pPlayerController->SetCursorLocked(isLocked); }
+
 
 	CameraController* GetCameraController() const { return m_pCameraController.get(); }
 	Inventory* GetInventory() const { return m_pInventory.get(); }
@@ -57,7 +60,7 @@ public:
 	void AddDeathListener(const PlayerEntity::Callback& cb);
 
 	void Kill() { m_pPlayerEntity->Dead(); }
-	void Revive() { m_pPlayerEntity->Revive(); }
+	void Revive();
 
 	/// @brief change all param when player is in hunger/thirst
 	///	camera start to shake / move speed slow down
@@ -66,17 +69,15 @@ public:
 	/// @brief player will get damaged if is starving
 	void OnStarveStateChanged();
 
-	/// @brief アイテムをピックアップし、インヴェントリーに入れる
-	/// @param component 
-	void PickUpItem(PhysicsComponent* component);
-
 	/// @brief 今手持ちのアイテムを取得
 	ItemInstance* GetItemInHand()const { return m_itemInHand; }
 
 	/// @brief 今手持ちのアイテムを設定
 	void SetItemInHand(ItemInstance* item) { m_itemInHand = item; }
 
+	void InteractWithObject(BodyID& id);
 
+	void PickUpItem(BodyID& id);
 private:
 
 	//PlayerのHPを扱う

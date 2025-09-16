@@ -6,23 +6,24 @@
 #include "PhysicsManager.h"
 #include <Core/QuickSort.h>
 
+#include "Water.h"
 #include "WaterEffect.h"
 
 
 namespace 
 {
-	static constexpr float		ObjectBuoyancy = 4.f;
+	static constexpr float		ObjectBuoyancy = 1.5f;
 	static constexpr float		ObjectLinearDrag = 0.1f;
 	static constexpr float		ObjectAngularDrag = 0.1f;
-	static constexpr float		WaterLevel =-0.1f;
+	static constexpr float		WaterLevel = -0.1f;
 
 	static constexpr int		WaterSlices = 100;	// Water mesh slice
 	static constexpr float		MinWaterHeight = -0.05f;
-	static constexpr float		MaxWaterHeight = 0.05f;
+
 
 	static constexpr float WaveAmplitude = 0.1f;  
-	static constexpr float WaveLength = 10.0f;  
-	static constexpr float WaveSpeed = 1.0f;
+	static constexpr float WaveLength = 20.0f;  
+	static constexpr float WaveSpeed = 1.f;
 
 	static constexpr DirectX::XMFLOAT4 ShallowColor = { 0.2f,0.5f,0.8f,1.f };
 	static constexpr DirectX::XMFLOAT4 DeepColor = { 0.0f,0.2f,0.4f,1.f };
@@ -43,7 +44,7 @@ void BuoyancySystem::Init(float waterWidth, float waterHeight)
 	// Create water sensor. We use this to detect which bodies entered the water
 	// aware that box shape use half extent
 	// aware that water sensor pos should be under the horizon which is -0.5*height
-	BodyCreationSettings waterSensor(new BoxShape(Vec3(waterWidth / 2.f, waterHeight / 2.f, waterWidth / 2.f)), Vec3(0, -waterHeight / 2.f, 0), Quat::sIdentity(), EMotionType::Static, Layers::WATER_SENSOR);
+	BodyCreationSettings waterSensor(new BoxShape(Vec3(waterWidth / 2.f, waterHeight / 2.f, waterWidth / 2.f)), Vec3(0, -waterHeight / 2.f + WaterLevel , 0), Quat::sIdentity(), EMotionType::Static, Layers::WATER_SENSOR);
 	waterSensor.mIsSensor = true;
 	// waterSensor doesn't have a rigid body so no need to add to physics bodies container
 	m_waterSensor = PhysicsManager::Instance().GetBodyInterface().CreateAndAddBody(waterSensor, EActivation::Activate);
@@ -184,7 +185,7 @@ void BuoyancySystem::Draw()
 		ShallowColor,	// shallow color
 		MaxDistance,	// max distance
 		m_time,
-		0.f,0.0
+		0.75f,0.0
 	};
 
 	// Set shader buffer
@@ -206,7 +207,7 @@ DirectX::XMFLOAT3 BuoyancySystem::GetWaterSurfacePosition(const DirectX::XMFLOAT
 
 	// Wave1 calculation
 	float phase1 = DirectX::XMVectorGetX(DirectX::XMVector2Dot(d1, xzv)) / WaveLength + m_time * WaveSpeed;
-	float wave1 = WaveAmplitude * sinf(phase1);
+	float wave1 = WaveAmplitude * 0.5f * sinf(phase1);
 
 	// Wave2 calculation
 	float phase2 = DirectX::XMVectorGetX(DirectX::XMVector2Dot(d2, xzv)) / (WaveLength * 0.5f) + m_time * WaveSpeed * 1.2f;
@@ -219,6 +220,10 @@ DirectX::XMFLOAT3 BuoyancySystem::GetWaterSurfacePosition(const DirectX::XMFLOAT
 
 RVec3 BuoyancySystem::GetWaterSurfacePosition(RVec3Arg inXZPosition) const
 {
-	return RVec3(inXZPosition.GetX(), MinWaterHeight + sin(0.1f * float(inXZPosition.GetZ()) + m_time) * (MaxWaterHeight - MinWaterHeight), inXZPosition.GetZ());
+	/*return RVec3(inXZPosition.GetX(), MinWaterHeight + sin(0.1f * float(inXZPosition.GetZ()) + m_time) * (MaxWaterHeight - MinWaterHeight), inXZPosition.GetZ());*/
+	DirectX::XMFLOAT3 pos(float(inXZPosition.GetX()), WaterLevel, float(inXZPosition.GetZ()));
+	pos = GetWaterSurfacePosition(pos);
+	return RVec3(pos.x, pos.y, pos.z);
+
 }
 

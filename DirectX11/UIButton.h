@@ -10,7 +10,7 @@ public:
 	UIButton();
 	~UIButton() override;
 
-	bool HitTest(float x, float y) const override;
+	UIComponent* HitTest(float x, float y) override;
 	void OnMouseEnter() override;
 	void OnMouseExit() override;
 	void OnMouseUp(float x, float y) override;

@@ -20,9 +20,7 @@ namespace SceneConfig{
 	enum SceneIndex :uint8_t
 	{
 		SCENE_TITLE = 1, 
-		SCENE_OPTION = 2,
-		SCENE_GAME = 3,
-		SCENE_TEST = 4,
+		SCENE_GAME = 2,
 		SCENE_NONE = 0,
 	};
 }

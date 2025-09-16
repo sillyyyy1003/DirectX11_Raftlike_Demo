@@ -27,10 +27,13 @@ Loading model finished
 Start model loading
 Loading model finished
 [ModelManager] Loaded model: Utility_Cup (ID=8)
+Start model loading
+Loading model finished
+[ModelManager] Loaded model: Environment_WaterBox (ID=9)
 [ModelManager] Finished loading models.
-[ModelManager] Loaded model: Cube (ID=9)
-[ModelManager] Loaded model: Square (ID=10)
-[ModelManager] Loaded model: Capsule (ID=11)
+[ModelManager] Loaded model: Cube (ID=10)
+[ModelManager] Loaded model: Square (ID=11)
+[ModelManager] Loaded model: Capsule (ID=12)
 [TextureManager] Loading textures from JSON: Assets/ConfigFile/Config.json
 [TextureManager] Registered texture: Food_Albedo
 [TextureManager] Registered texture: Food_Normal
@@ -63,6 +66,14 @@ Loading model finished
 [TextureManager] Registered texture: UI_HungerIcon
 [TextureManager] Registered texture: UI_ReviveButton
 [TextureManager] Registered texture: UI_BackToTitleButton
+[TextureManager] Registered texture: UI_Bar
+[TextureManager] Registered texture: UI_BarBackground
+[TextureManager] Registered texture: UI_RightArrow
+[TextureManager] Registered texture: UI_LeftArrow
+[TextureManager] Registered texture: UI_Menu
+[TextureManager] Registered texture: UI_ExitButton
+[TextureManager] Registered texture: UI_ResumeButton
+[TextureManager] Registered texture: UI_ConfigButton
 [TextureManager] Registered texture: WaterNormalMap
 [MaterialManager] Loading models from JSON: Assets/ConfigFile/Config.json
 [MaterialManager] Load Material BlinnPhongMaterial
@@ -91,54 +102,25 @@ Loading model finished
 [MaterialManager] Load Material ThirstBarBgMaterial
 [MaterialManager] Load Material ThirstBarMaterial
 [MaterialManager] Load Material WaterMaterial
-[MaterialManager] Load Material UiReviveButton
-[MaterialManager] Load Material UiBackToTitleButton
+[MaterialManager] Load Material UiReviveButtonMaterial
+[MaterialManager] Load Material UiConfigButtonMaterial
+[MaterialManager] Load Material UiBackToTitleButtonMaterial
+[MaterialManager] Load Material UiMenuBackToTitleButton
+[MaterialManager] Load Material UiMenuResumeButtonMaterial
+[MaterialManager] Load Material UiExitButtonMaterial
+[MaterialManager] Load Material UiMenuMaterial
 [MaterialManager] Materials loaded from JSON: Assets/ConfigFile/Config.json
 [SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
 [ItemDataBase] Apple is registered!
 [ItemDataBase] Banana is registered!
 [ItemDataBase] Wood is registered!
 [ItemDataBase] Wire is registered!
 [ItemDataBase] Plastic is registered!
 [ItemDataBase] BasicCup is registered!
-AppleInstance : bodyIndex:0
 [SceneManager] Current Scene: Scene game!
 [PlayerContactListener] Character is in water now
 [PlayerContactListener] Character gets out of water now
-[Camera]:First Camera Camera
 [PlayerContactListener] Character is in water now
 [PlayerContactListener] Character gets out of water now
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-WARNING::[PhysicsManager] Didn't find the physics component!
-Get Salty water
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-Drink salty water
-Get Salty water
-Drink salty water
-Get Salty water
-Drink salty water
-Get Salty water
-Drink salty water
-[PlayerContactListener] Character is in water now
-Get Salty water
-[PlayerContactListener] Character gets out of water now
-Drink salty water
-Get Salty water
-Drink salty water
-Get Salty water
-Drink salty water
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
-[SceneManager] Current Scene: Scene title!

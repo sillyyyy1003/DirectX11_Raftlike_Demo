@@ -96,6 +96,7 @@ public:
 	void Update(float dt) override;
 
 	virtual void InteractWith(BodyID& rigidBody, Player* player) override {};
+	virtual void OnUse(Player* player) override{};
 	
 private:
 	std::shared_ptr<const Item> m_protoPtr;

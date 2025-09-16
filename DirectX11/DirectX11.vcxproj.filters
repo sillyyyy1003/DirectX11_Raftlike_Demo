@@ -282,9 +282,6 @@
     <ClCompile Include="UIButtonMove.cpp">
       <Filter>源文件\UI</Filter>
     </ClCompile>
-    <ClCompile Include="SceneOption.cpp">
-      <Filter>源文件\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="BuoyancySystem.cpp">
       <Filter>源文件\Physics</Filter>
     </ClCompile>
@@ -364,7 +361,16 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ItemInstances.cpp">
+      <Filter>源文件\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="UIMenu.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CraftRecipeUI.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UIInventory.cpp">
+      <Filter>源文件\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -536,9 +542,6 @@
     <ClInclude Include="UIButtonMove.h">
       <Filter>头文件\UI</Filter>
     </ClInclude>
-    <ClInclude Include="SceneOption.h">
-      <Filter>头文件\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="BuoyancySystem.h">
       <Filter>头文件\Physics</Filter>
     </ClInclude>
@@ -618,7 +621,16 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ItemInstances.h">
+      <Filter>头文件\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMenu.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CraftRecipeUI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UIInventory.h">
+      <Filter>源文件\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

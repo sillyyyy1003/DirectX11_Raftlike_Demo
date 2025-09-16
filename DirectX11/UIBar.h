@@ -22,8 +22,15 @@ public:
 	void Init(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT2& scale, Material* bgMaterial, Material* barMaterial, IEffect* bgEffect, IEffect* barEffect);
 	void Init(Material* bgMaterial, Material* barMaterial, IEffect* bgEffect, IEffect* barEffect);
 
-	void SetScale(const DirectX::XMFLOAT2& scale);
-	void SetPosition(const DirectX::XMFLOAT3& pos);
+	/// @brief Set UI bar scale with offset 
+	/// @param scale 
+	/// @param offset 
+	void SetScale(const DirectX::XMFLOAT2& scale, const DirectX::XMFLOAT2& offset={10,10});
+
+	/// @brief Set UI bar position with offset
+	/// @param pos
+	///	@param offset
+	void SetPosition(const DirectX::XMFLOAT3& pos,const DirectX::XMFLOAT2& offset={0,0});
 
 	/// @brief Update bar render status
 	/// @param volume current percentage (0~1)

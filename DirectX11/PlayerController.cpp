@@ -33,23 +33,27 @@ void PlayerController::Update(float dt)
 
     //Cursor SetMoveDir
     {
-        POINT cursorPos;
-        GetCursorPos(&cursorPos);
+        if(m_isCursorLocked)
+        {
+            POINT cursorPos;
+            GetCursorPos(&cursorPos);
 
-        float dx = static_cast<float>(cursorPos.x - m_centerPos.x);
-        float dy = static_cast<float>(cursorPos.y - m_centerPos.y);
+            float dx = static_cast<float>(cursorPos.x - m_centerPos.x);
+            float dy = static_cast<float>(cursorPos.y - m_centerPos.y);
 
-        float angleX = 360.0f * dx / m_windowSize.x;
-        float angleY = 180.0f * dy / m_windowSize.y;
+            float angleX = 360.0f * dx / m_windowSize.x;
+            float angleY = 180.0f * dy / m_windowSize.y;
 
-        //プレイヤーのY回転計算
-        m_pPlayer->RotateY(angleX * dt);
-        //カメラの視角回転計算
-        m_pPlayer->Pitch(angleY * dt);
-        //Colliderの回転はY軸だけ
-        m_pPlayerCharacter->SetRotation({0,m_pPlayer->GetTransform().GetRotation().y,0});
+            //プレイヤーのY回転計算
+            m_pPlayer->RotateY(angleX * dt);
+            //カメラの視角回転計算
+            m_pPlayer->Pitch(angleY * dt);
+            //Colliderの回転はY軸だけ
+            m_pPlayerCharacter->SetRotation({ 0,m_pPlayer->GetTransform().GetRotation().y,0 });
 
-        SetCursorPos(m_centerPos.x, m_centerPos.y);
+            SetCursorPos(m_centerPos.x, m_centerPos.y);
+        }
+
     }
 
     // 前後左右移動
@@ -82,8 +86,7 @@ void PlayerController::Update(float dt)
             BodyID id;
             if(GetRayHitBodyID(id))
             {
-                PhysicsComponent* component = PhysicsManager::Instance().GetPhysicsComponent(id);
-                m_pPlayer->PickUpItem(component);
+                m_pPlayer->InteractWithObject(id);
             }
         }
 
@@ -93,11 +96,7 @@ void PlayerController::Update(float dt)
     {
 	    if(KInput::IsKeyTrigger(VK_LBUTTON))
 	    {
-            BodyID id;
-            if (GetRayHitBodyID(id))
-            {
-                m_pPlayer->GetItemInHand()->InteractWith(id, m_pPlayer);
-            }
+            m_pPlayer->GetItemInHand()->OnUse(m_pPlayer);
 	    }
     }
 }
