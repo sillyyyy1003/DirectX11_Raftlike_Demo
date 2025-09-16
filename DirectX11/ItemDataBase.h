@@ -4,6 +4,7 @@
 #include "Item.h"
 #include "Layers.h"
 
+class SceneGame;
 /// @brief Item Instance Manager
 class ItemDataBase
 {
@@ -48,8 +49,6 @@ public:
 	std::shared_ptr<ItemInstance> CreateItemInstanceToWorldWithPhysics(const char* itemName, int count, float durability, ObjectLayer layer,EMotionType type);
 
 	
-
-
 	void LoadItemDataFromJsonFile(const char* jsonFilePath);
 private:
 

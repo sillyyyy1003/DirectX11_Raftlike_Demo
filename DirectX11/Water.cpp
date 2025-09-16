@@ -4,6 +4,10 @@
 #include "RenderComponent.h"
 #include "WaterEffect.h"
 
+namespace 
+{
+	static constexpr  float WaterTransparency=0.75f;
+}
 
 Water::Water()
 {
@@ -41,13 +45,7 @@ void Water::Draw()
 
 	WaterEffect::WaveVtxShaderCB vtxShaderCb;
 	WaterEffect::WavePixShaderCB pixShaderCb;
-	//vtxShaderCb = {
-	//	m_time,
-	//	WaveSpeed,		// wave speed
-	//	WaveAmplitude,	// wave amplitude,
-	//	WaveLength,	// wave length
-	//};
-
+	
 	vtxShaderCb = {
 		m_time,
 		m_waveSpeed,		// wave speed
@@ -55,21 +53,13 @@ void Water::Draw()
 		m_waveLength,	// wave length
 	};
 
-
-	//pixShaderCb = {
-	//	DeepColor,		// deep color
-	//	ShallowColor,	// shallow color
-	//	MaxDistance,	// max distance
-	//	m_time,
-	//	0.f,0.0
-	//};
-
 	pixShaderCb = {
 		m_deepColor,		// deep color
 		m_shallowColor,	// shallow color
 		m_maxDistance,	// max distance
 		m_time,
-		0.f,0.0
+		WaterTransparency,
+		0.0
 	};
 
 	// Set constant buffer

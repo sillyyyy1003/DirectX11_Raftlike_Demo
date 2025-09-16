@@ -21,5 +21,6 @@ class Interactable
 {
 public:
 	virtual void InteractWith(BodyID& rigidBody, Player* player) = 0;
+	virtual void OnUse(Player* player) = 0;
 	virtual ~Interactable() = default;
 };

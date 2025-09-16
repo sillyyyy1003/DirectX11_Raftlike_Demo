@@ -44,6 +44,7 @@ namespace
         DirectX::XMFLOAT3 pos;
         DriftManager::DriftObjectType type;
     };
+	static constexpr float WaterLevel = -0.1f;  // 水面の高さ
 }
 
 DriftManager::DriftManager() :
@@ -232,11 +233,13 @@ void DriftManager::Update(float tick)
     // Spawn new items
     for(auto& it : spawnNearPos)
     {
+        it.pos.y = WaterLevel;
         CreateNearItem(it.type, it.pos);
 	}
 
     for(auto& it : spawnFarPos)
     {
+        it.pos.y = WaterLevel;
         CreateFarItem(it.type, it.pos);
 	}
 
@@ -380,7 +383,7 @@ void DriftManager::SpawnInitialItem(DriftObjectType type)
 
     DirectX::XMFLOAT3 pos = {
          playerPos.x + x,
-         0.f,
+         WaterLevel,
          playerPos.z + z
     };
 

@@ -5,8 +5,8 @@ class FoodInstance :
 	public ItemInstance
 {
 public:
-	/*void OnEat(Player* player) const override;*/
 	void InteractWith(BodyID& rigidBody, Player* player) override;
+	void OnUse(Player* player) override;
 };
 
 class CupInstance:

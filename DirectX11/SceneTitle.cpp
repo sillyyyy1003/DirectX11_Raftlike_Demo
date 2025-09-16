@@ -16,6 +16,7 @@
 #include "GameObject.h"
 #include "MaterialManager.h"
 #include "TextureManager.h"
+#include "UIMenu.h"
 #include "Water.h"
 #include "WaterEffect.h"
 
@@ -34,16 +35,19 @@ namespace
 
 void SceneTitle::Init()
 {
+
 	PixelShader* uiElementPS = GetObj<PixelShader>("UIElementPS");
 	VertexShader* uiElementVS = GetObj<VertexShader>("UIElementVS");
 	VertexShader* waterVS = GetObj<VertexShader>("WaterVS");
 	PixelShader* waterPS = GetObj<PixelShader>("WaterPS");
 
 	//==========Init Effect
-	UIBasicEffect* uiBasicEffect = CreateObj<UIBasicEffect>("UiBasicEffect");
+	UIBasicEffect* uiBasicEffect = GetObj<UIBasicEffect>("UiBasicEffect");
 	uiBasicEffect->InitPixelShader(uiElementPS);
 	uiBasicEffect->InitVertexShader(uiElementVS);
 
+	//==========Init Menu
+	
 	//==========Load Texture
 	Texture* buttonStartTex = CreateObj<Texture>("ButtonStartTex");
 	buttonStartTex->Create("Assets/Texture/UI/UI_Button_Start_300x109.png");
@@ -61,9 +65,7 @@ void SceneTitle::Init()
 	Material* optionMat = CreateObj<Material>("OptionBgMaterial");
 	optionMat->SetTexture(Material::Albedo, buttonOptionTex);
 	
-	Material* exitMat = CreateObj<Material>("ExitBgMaterial");
-	exitMat->SetTexture(Material::Albedo, buttonExitTex);
-
+	Material* exitMat = MaterialManager::Instance().GetMaterial("UiExitButtonMaterial");
 	Material* titleLogoMat = CreateObj<Material>("TitleLogoMaterial");
 	titleLogoMat->SetTexture(Material::Albedo, titleLogoTex);
 
@@ -94,7 +96,6 @@ void SceneTitle::Init()
 	titleLogo->GetTransform().SetScale(LogoSize * TitleScale);
 
 	//===========Register button to ui manager
-	UIManager::Instance().ClearLayers();
 	UIManager::Instance().AddUiLayer("Button", 1);
 	UIManager::Instance().GetUILayer("Button")->AddComponent(startButton);
 	UIManager::Instance().GetUILayer("Button")->AddComponent(optionButton);
@@ -103,10 +104,11 @@ void SceneTitle::Init()
 	UIManager::Instance().AddUiLayer("TitleLogo", 2);
 	UIManager::Instance().GetUILayer("TitleLogo")->AddComponent(titleLogo);
 
+
 	//===========Set Button Event
 	startButton->SetOnClick([this]()
 		{
-			AudioManager::Instance().Play("Button", false);
+			AudioManager::Instance().Play("SE_Button", false);
 			SetCurrentScene("Game");
 		});
 	startButton->SetOnHover([startButton]()
@@ -118,10 +120,12 @@ void SceneTitle::Init()
 			startButton->DeActiveMove();
 		});
 
-	optionButton->SetOnClick([this]()
+	optionButton->SetOnClick([this,optionButton]()
 		{
-			AudioManager::Instance().Play("Button", false);
-			SetCurrentScene("Option");
+			AudioManager::Instance().Play("SE_Button", false);
+			optionButton->DeActiveMove();	// DeActive itself
+			GetObj<UIMenu>("UIMenu")->SetActive(true);	// Enable Menu
+			
 		});
 	optionButton->SetOnHover([optionButton, startButton]()
 		{
@@ -148,6 +152,10 @@ void SceneTitle::Init()
 		});
 
 	startButton->ActiveMove();
+
+
+	// Menu Setup
+	GetObj<UIMenu>("UIMenu")->SetButton(this);
 
 	//=======Init Camera
 	FirstPersonCamera* camera = CreateObj<FirstPersonCamera>("Camera");
@@ -178,8 +186,12 @@ void SceneTitle::Init()
 	water->GetTransform().SetScale( WaterSize);
 
 	AudioManager::Instance().StopBgms();
-	AudioManager::Instance().Play("BGM1", true);
-	AudioManager::Instance().Play("WaveBackGround", true);
+	AudioManager::Instance().Play("BGM_Title", true);
+	AudioManager::Instance().Play("SE_WaveBackGround", true);
+
+
+
+	
 }
 
 void SceneTitle::UnInit()
@@ -188,14 +200,11 @@ void SceneTitle::UnInit()
 
 void SceneTitle::Update(float tick)
 {
-
-	// Handle Input
-	if(KInput::IsKeyTrigger(VK_ESCAPE))
+	if (m_isChangeScene)
 	{
-		m_pSceneManager->RemoveSubScene();
+		SceneBase::SetCurrentScene(m_sceneName.c_str());
 		return;
 	}
-
 
 	// Camera Update
 	m_pCurrentCamera->m_transform.Rotate({ 0,tick * RotateSpeed,0 });
@@ -222,4 +231,15 @@ void SceneTitle::Draw()
 	// Draw Buttons
 	GameApp::SetDepthStencilState(RenderStates::DSSNoDepthTest);
 	UIManager::Instance().Draw();
+}
+
+void SceneTitle::SetCurrentScene(const char* sceneName)
+{
+	// Remove layers in this scene
+	m_isChangeScene = true;
+	m_sceneName = sceneName;
+
+	// Remove layers
+	UIManager::Instance().RemoveLayer("Button");
+	UIManager::Instance().RemoveLayer("TitleLogo");
 }

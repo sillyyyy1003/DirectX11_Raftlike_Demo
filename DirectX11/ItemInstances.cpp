@@ -2,6 +2,7 @@
 
 #include <Physics/PhysicsSystem.h>
 
+#include "AudioManager.h"
 #include "HungerComponent.h"
 #include "PhysicsManager.h"
 #include "Player.h"
@@ -12,8 +13,19 @@ namespace
 
 void FoodInstance::InteractWith(BodyID& rigidBody, Player* player)
 {
+	// food will interact with kitch
+	// Check rigid body is building layer or not. Because food only interactive with kitchen which is in building layer
+	
+	
+}
+
+void FoodInstance::OnUse(Player* player)
+{
 	float recoverValue = dynamic_cast<const Food*>(GetProto().get())->GetFoodValue();
 	player->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->RestoreHunger(recoverValue);
+#ifdef _DEBUG
+	DebugLog::Log("Eat food");
+#endif
 }
 
 CupInstance::CupInstance()
@@ -31,12 +43,14 @@ void CupInstance::OnUse(Player* player)
 #ifdef _DEBUG
 		DebugLog::Log("Drink salty water");
 #endif
+		AudioManager::Instance().Play("SE_Drink", false);
 		break;
 	case FreshWater:
 		m_cupState = Empty;
 #ifdef _DEBUG
 		DebugLog::Log("Drink fresh water");
 #endif
+		AudioManager::Instance().Play("SE_Drink", false);
 		break;
 	case Empty:
 		recoverValue = 0.f;
@@ -48,16 +62,13 @@ void CupInstance::OnUse(Player* player)
 }
 void CupInstance::InteractWith(BodyID& rigidBody, Player* player)
 {
+
 	if (PhysicsManager::Instance().GetBodyInterface().GetObjectLayer(rigidBody) == Layers::WATER_SENSOR)
 	{
 		if (m_cupState == Empty)
 		{
 			DebugLog::Log("Get Salty water");
 			m_cupState = SaltyWater;// if cup is empty , fill with salty water. Else do nothing
-		}
-		else
-		{
-			OnUse(player);
 		}
 		return;
 	}
@@ -67,15 +78,12 @@ void CupInstance::InteractWith(BodyID& rigidBody, Player* player)
 	if (component != nullptr)
 	{
 		GameObject* object = component->GetGameObject();
-		if (dynamic_cast<PurifierInstance*>(object)->GetProto()->GetItemType()==Item::ItemType::WaterPurifier)
+		if (dynamic_cast<ItemInstance*>(object)->GetProto()->GetItemType()==Item::ItemType::WaterPurifier)
 		{
 			dynamic_cast<PurifierInstance*>(object)->InteractWithCup(this);
 			return;
 		}
-
-		OnUse(player);
 	}
-	
 
 
 }

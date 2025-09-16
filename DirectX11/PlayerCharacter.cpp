@@ -82,7 +82,7 @@ void PlayerCharacter::Init()
 
 	//Init character
 	m_pCharacter = new CharacterVirtual(settings, RVec3::sZero(), Quat::sIdentity(), 0, PhysicsManager::Instance().GetPhysicsSystem());
-	m_pCharacter->SetCharacterVsCharacterCollision(&m_characterVsCharacterCollision);//プレイヤー間の衝突を有効化
+	m_pCharacter->SetCharacterVsCharacterCollision(&m_characterVsCharacterCollision);//プレイヤー間の衝突を有効
 	m_characterVsCharacterCollision.Add(m_pCharacter);
 
 	//プレイヤーのCollisionListenerを設定

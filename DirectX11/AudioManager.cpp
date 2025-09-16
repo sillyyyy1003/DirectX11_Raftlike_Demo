@@ -171,7 +171,25 @@ void AudioManager::Play(const char* name, bool loop)
     sourceVoice->SubmitSourceBuffer(&buffer);
 
     // 设置音量
-    float vol = (data.type == AudioType::SE ? (m_seMute ? 0.0f : m_seVolume) : (m_bgmMute ? 0.0f : m_bgmVolume));
+    float vol = 1.f;
+    switch (data.type)
+    {
+    case AudioType::SE:
+        vol = m_seMute ? 0.0f : m_seVolume;
+        break;
+
+    case AudioType::BGM:
+        vol = m_bgmMute ? 0.0f : m_bgmVolume;
+        break;
+
+    case AudioType::ENVIRONMENT:
+        vol = m_environmentMute ? 0.0f : m_environmentVolume;
+        break;
+
+    default:
+        vol = 1.0f; // fallback
+        break;
+    }
     sourceVoice->SetVolume(vol);
 
     sourceVoice->Start();
@@ -193,23 +211,40 @@ void AudioManager::SetVolume(AudioType type, float volume)
 {
 	// Clamp volume between 0.0 and 1.0
     volume = max(0.0f, min(volume, 1.0f));
-    if (type == AudioType::SE)
-    {
-	    m_seVolume = volume;
-		if (m_seBar) m_seBar->UpdateUI(m_seVolume); // volume is already clamped between 0.0 and 1.0
-    }
-    else
-    {
-	    m_bgmVolume = volume;
-		if (m_bgmBar)m_bgmBar->UpdateUI(m_bgmVolume); // volume is already clamped between 0.0 and 1.0
-    }
+	switch(type)
+	{
+		case AudioType::SE:
+            m_seVolume = volume;
+            if (m_seBar) m_seBar->UpdateUI(m_seVolume);
+			break;
+        case AudioType::BGM:
+            m_bgmVolume = volume;
+			if (m_bgmBar) m_bgmBar->UpdateUI(m_bgmVolume);
+			break;
+        case AudioType::ENVIRONMENT:
+            m_environmentVolume = volume;
+			if (m_environmentBar) m_environmentBar->UpdateUI(m_environmentVolume);
+			break;
+	}
+
     UpdateVolume(type);
 }
 
 void AudioManager::SetMute(AudioType type, bool mute)
 {
-    if (type == AudioType::SE) m_seMute = mute;
-    else m_bgmMute = mute;
+	switch (type)
+	{
+	case AudioType::SE:
+		m_seMute = mute;
+        break;
+	case AudioType::BGM:
+        m_bgmMute = mute;
+        break;
+    case AudioType::ENVIRONMENT:
+        m_environmentMute = mute;
+		break;
+	}
+
     UpdateVolume(type);
 }
 
@@ -249,14 +284,32 @@ void AudioManager::StopBgms()
     }
 }
 
-void AudioManager::SetUI(UIBar* bgmBar, UIBar* seBar)
+void AudioManager::SetUI(UIBar* bgmBar, UIBar* seBar, UIBar* environmentBar)
 {
-	m_seBar = seBar;
-	m_bgmBar = bgmBar;
-	if (m_bgmBar) m_bgmBar->UpdateUI(m_bgmVolume);
-	if (m_seBar) m_seBar->UpdateUI(m_seVolume);
-
+    m_seBar = seBar;
+    m_bgmBar = bgmBar;
+	m_environmentBar = environmentBar;
+    if (m_bgmBar) m_bgmBar->UpdateUI(m_bgmVolume);
+    if (m_seBar) m_seBar->UpdateUI(m_seVolume);
+	if (m_environmentBar) m_environmentBar->UpdateUI(m_environmentVolume);
 }
+
+void AudioManager::AddVolume(AudioType type, float delta)
+{
+	switch (type)
+	{
+		case AudioType::SE:
+            SetVolume(type, m_seVolume + delta);
+			break;
+        case AudioType::BGM:
+			SetVolume(type, m_bgmVolume + delta);
+            break;
+		case AudioType::ENVIRONMENT:
+            SetVolume(type, m_environmentVolume + delta);
+			break;
+	}
+}
+
 
 bool AudioManager::LoadWaveFile(const wchar_t* filepath, std::vector<BYTE>& outBuffer, WAVEFORMATEX& outFormat)
 {
@@ -326,8 +379,27 @@ void AudioManager::UpdateVolume(AudioType type)
     {
         if (instance.type == type && instance.sourceVoice)
         {
-            float vol = (type == AudioType::SE ? (m_seMute ? 0.0f : m_seVolume) : (m_bgmMute ? 0.0f : m_bgmVolume));
-            instance.sourceVoice->SetVolume(vol);
+           switch(type)
+           {
+            case AudioType::SE:
+	            {
+            	float vol = m_seMute ? 0.0f : m_seVolume;
+            	instance.sourceVoice->SetVolume(vol);
+	            }
+           		break;
+			case AudioType::BGM:
+				{
+                float vol = m_bgmMute ? 0.0f : m_bgmVolume;
+                instance.sourceVoice->SetVolume(vol);
+				}
+                break;
+            case AudioType::ENVIRONMENT:
+                {
+                float vol = m_environmentMute ? 0.0f : m_environmentVolume;
+                instance.sourceVoice->SetVolume(vol);
+                }
+				break;
+           }
         }
     }
 }

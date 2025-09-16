@@ -125,6 +125,11 @@ void UIText::SetParagraphAlignment(ParagraphAlign paragraphAlign)
 	}
 }
 
+void UIText::SetTextColor(D2D1_COLOR_F color)
+{
+	m_color = color;
+}
+
 
 void UIText::DrawTextW(const std::string& str)
 {

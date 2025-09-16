@@ -17,7 +17,8 @@ public:
 	enum class AudioType : uint8_t
 	{
 		BGM,
-		SE
+		SE,
+		ENVIRONMENT,	//環境　海の音、風の音など
 	};
 
 	static AudioManager& Instance()
@@ -67,7 +68,9 @@ public:
 	/// @brief Set UI bars
 	/// @param bgmBar 
 	/// @param seBar 
-	void SetUI(UIBar* bgmBar, UIBar* seBar);
+	void SetUI(UIBar* bgmBar, UIBar* seBar,UIBar* environmentBar);
+
+	void AddVolume(AudioType type, float delta);
 
 private:
 	struct AudioData
@@ -90,12 +93,16 @@ private:
 	std::map<std::string, SoundInstance> m_soundInstances;
 	float m_seVolume = 1.0f;
 	float m_bgmVolume = 1.0f;
+	float m_environmentVolume = 1.0f;
+
 	bool m_seMute = false;
 	bool m_bgmMute = false;
+	bool m_environmentMute = false;
+
 
 	UIBar* m_bgmBar = nullptr;
 	UIBar* m_seBar=nullptr;
-
+	UIBar* m_environmentBar = nullptr;
 	/// @brief Load Wav file
 	/// @param filepath file path
 	/// @param outBuffer 

@@ -16,7 +16,7 @@ namespace Layers
 	static constexpr ObjectLayer BUILDING = 3;  // 建物
 	static constexpr ObjectLayer DRIFT = 4;  // 漂流物
 	static constexpr ObjectLayer ITEM = 5;  // Drop
-	static constexpr ObjectLayer TOOL = 6;  // ツール
+	static constexpr ObjectLayer TOOL = 6;  // ツール only for hook
 	static constexpr ObjectLayer WEAPON = 7;  // 武器
 	static constexpr ObjectLayer WATER_SENSOR = 8;  // 水センサー
 	static constexpr ObjectLayer NUM_LAYERS = 9;
@@ -45,6 +45,7 @@ public:
 			return inObject2 == Layers::ENEMY ||
 				inObject2 == Layers::BOAT ||
 				inObject2 == Layers::BUILDING ||
+				inObject2 == Layers::ITEM||
 				inObject2 == Layers::WATER_SENSOR;
 
 		case Layers::ENEMY:
@@ -68,7 +69,7 @@ public:
 
 		case Layers::ITEM:
 			return inObject2 == Layers::BOAT ||
-				inObject2 == Layers::WATER_SENSOR;
+				inObject2 == Layers::WATER_SENSOR|| inObject2 == Layers::PLAYER;
 
 		case Layers::TOOL:
 			return inObject2 == Layers::DRIFT ||
@@ -157,7 +158,8 @@ public:
 			return inLayer2 == BroadPhaseLayers::ACTOR ||
 				inLayer2 == BroadPhaseLayers::BOAT ||
 				inLayer2 == BroadPhaseLayers::STATIC ||
-				inLayer2 == BroadPhaseLayers::SENSOR;
+				inLayer2 == BroadPhaseLayers::SENSOR||
+				inLayer2==BroadPhaseLayers::DYNAMIC;
 
 		case Layers::ENEMY:
 			return inLayer2 == BroadPhaseLayers::ACTOR ||
@@ -179,7 +181,8 @@ public:
 
 		case Layers::ITEM:
 			return inLayer2 == BroadPhaseLayers::BOAT ||
-				inLayer2 == BroadPhaseLayers::SENSOR;
+				inLayer2 == BroadPhaseLayers::SENSOR||
+				inLayer2==BroadPhaseLayers::ACTOR;
 
 		case Layers::TOOL:
 			return inLayer2 == BroadPhaseLayers::DYNAMIC ||
@@ -242,7 +245,6 @@ public:
 	virtual void			OnContactPersisted(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold, ContactSettings& ioSettings) override
 	{
 		//DebugLog::Log("[Physics] A contact was persisted.");
-		//cout << "A contact was persisted" << endl;
 		//========ここでOnCollisionStayのロジックを追加する
 		
 
@@ -255,7 +257,7 @@ public:
 	{
 		
 		DebugLog::Log("[Physics] A contact was removed.");
-		//cout << "A contact was removed" << endl;
+
 		//========ここでOnCollisionExitのロジックを追加する
 	}
 };

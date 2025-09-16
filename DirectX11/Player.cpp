@@ -302,6 +302,11 @@ void Player::Update(float dt)
 	ImGui::End();
 #endif
 
+	// Death check
+	if (m_pPlayerCharacter->GetPosition().y < -1.f)
+		Kill();
+
+
 	//　物理挙動更新
 	m_pPlayerCharacter->Update(dt);
 	m_pPlayerCharacter->SyncPlayerWorldPosition(m_transform);	//Transformを更新
@@ -412,6 +417,18 @@ void Player::AddDeathListener(const PlayerEntity::Callback& cb)
 	m_pPlayerEntity->AddDeathListener(cb);
 }
 
+void Player::Revive()
+{
+	m_pPlayerEntity->Revive();
+
+	// Reset position to avoid falling through the ground
+	DirectX::XMFLOAT3 pos = { 0,PlayerEyeHeight.y,0 };
+	m_pPlayerCharacter->SetPosition(pos);
+
+	// todo: Inventory should be 2/3 lost when player dies
+
+}
+
 void Player::OnNegativeStateChanged()
 {
 	// Set camera shake
@@ -431,8 +448,15 @@ void Player::OnStarveStateChanged()
 	m_pPlayerEntity->OnStateStarveChanged(m_isInDamagedStatus);
 }
 
-void Player::PickUpItem(PhysicsComponent* component)
+
+void Player::InteractWithObject(BodyID& id)
 {
+	if (GetItemInHand())
+	{
+		GetItemInHand()->InteractWith(id, this);
+	}
+
+	PhysicsComponent* component = PhysicsManager::Instance().GetPhysicsComponent(id);
 	if (!component)return;
 	GameObject* object = component->GetGameObject();
 
@@ -441,23 +465,78 @@ void Player::PickUpItem(PhysicsComponent* component)
 	{
 		auto item = dynamic_cast<ItemInstance*>(object);
 
-		std::string name = item->GetName();
-		int count = item->GetCount();
-		int insertNum = GetInventory()->Insert(item);
-		// アイテム全部挿入したら、しーんから消す
-		if (count == insertNum)
+		//todo: turn into switch
+		//======== if item type is food/base material pick up
+		if(item->GetProto()->GetItemType()==Item::ItemType::Food)
 		{
-			item->SetState(ItemState::WaitToRecycle);    // Mark for recycling in DriftManager
-			item->DeActivate();
+			std::string name = item->GetName();
+			int count = item->GetCount();
+			int insertNum = GetInventory()->Insert(item);
+			// アイテム全部挿入したら、しーんから消す
+			if (count == insertNum)
+			{
+				item->SetState(ItemState::WaitToRecycle);    // Mark for recycling in DriftManager
+				item->DeActivate();
+			}
+		}else if(item->GetProto()->GetItemType() == Item::ItemType::BaseMaterial)
+		{
+			std::string name = item->GetName();
+			int count = item->GetCount();
+			int insertNum = GetInventory()->Insert(item);
+			// アイテム全部挿入したら、しーんから消す
+			if (count == insertNum)
+			{
+				item->SetState(ItemState::WaitToRecycle);    // Mark for recycling in DriftManager
+				item->DeActivate();
+			}
 		}
-#ifdef _DEBUG
-		DebugLog::Log("Insert {} {}", insertNum, name);
-#endif
+
+		
+
+		//========= if item type is building
+		// Todo: interact with building
+
+
+
 	}
 	else// If the hit object is not an item
 	{
 #ifdef _DEBUG
+		
 		DebugLog::Log("Hit object is not an item.");
 #endif
+	}
+
+}
+
+void Player::PickUpItem(BodyID& id)
+{
+	PhysicsComponent* component = PhysicsManager::Instance().GetPhysicsComponent(id);
+	if (!component)return;
+	GameObject* object = component->GetGameObject();
+
+	// 当たったのがアイテムなら、インヴェントリーに追加
+	if (object->GetGameObjectType() == GameObject::GameObjectType::Item)
+	{
+		auto item = dynamic_cast<ItemInstance*>(object);
+
+		//todo: turn into switch
+		//======== if item type is food/base material pick up
+		if (item->GetProto()->GetItemType() == Item::ItemType::Food||
+			item->GetProto()->GetItemType() == Item::ItemType::BaseMaterial)
+		{
+			std::string name = item->GetName();
+			int count = item->GetCount();
+			int insertNum = GetInventory()->Insert(item);
+			// アイテム全部挿入したら、しーんから消す
+			if (count == insertNum)
+			{
+				item->SetState(ItemState::WaitToRecycle);    // Mark for recycling in DriftManager
+				item->DeActivate();
+			}
+#ifdef _DEBUG
+			DebugLog::Log("Insert {} {}", insertNum, name);
+#endif
+		}
 	}
 }

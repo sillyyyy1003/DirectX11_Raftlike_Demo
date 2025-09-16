@@ -25,7 +25,7 @@ public:
 	virtual bool IsActive() const { return m_isActive; }
 
 	//============== UIイベント処理 ===================
-	virtual bool HitTest(float x, float y) const { return false; }; // ヒットテスト
+	virtual UIComponent* HitTest(float x, float y) { return nullptr; };
 	virtual void OnMouseEnter() {}
 	virtual void OnMouseExit() {}
 	virtual void OnMouseDown(float x, float y) {}
@@ -103,6 +103,7 @@ public:
 	///	@param paragraphAlign Top: 上揃え, Middle: 中央揃え, Bottom: 下揃え
 	void SetParagraphAlignment(ParagraphAlign paragraphAlign);
 
+	void SetTextColor(D2D1_COLOR_F color);
 
 protected:
 

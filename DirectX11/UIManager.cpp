@@ -1,5 +1,4 @@
 ﻿#include "UIManager.h"
-
 #include "DebugLog.h"
 #include "GameApp.h"
 #include "KInput.h"
@@ -65,10 +64,14 @@ bool UIManager::HandleMouseDown(float x, float y)
 {
 	for(auto& [priority, layer] : m_layers)
 	{
-		if(layer->HandleMouseDown(x, y)) 
+		if(layer->IsEnable())
 		{
-			return true; // If any layer handles the mouse down event, return true
+			if (layer->HandleMouseDown(x, y))
+			{
+				return true; // If any layer handles the mouse down event, return true
+			}
 		}
+		
 	}
 	return false;
 }
@@ -77,10 +80,14 @@ bool UIManager::HandleMouseUp(float x, float y)
 {
 	for(auto& [priority, layer] : m_layers)
 	{
-		if(layer->HandleMouseUp(x, y)) 
+		if(layer->IsEnable())
 		{
-			return true; // If any layer handles the mouse up event, return true
+			if (layer->HandleMouseUp(x, y))
+			{
+				return true; // If any layer handles the mouse up event, return true
+			}
 		}
+		
 	}
 	return false;
 }
@@ -89,7 +96,10 @@ void UIManager::HandleMouseMove(float x, float y)
 {
 	for(auto& [priority, layer] : m_layers)
 	{
-		layer->HandleMouseMove(x, y); // Call HandleMouseMove on each layer
+		if(layer->IsEnable())
+		{
+			layer->HandleMouseMove(x, y); // Call HandleMouseMove on each layer
+		}
 	}
 	
 }
@@ -100,10 +110,47 @@ void UIManager::ClearLayers()
 	m_layerNameList.clear();
 }
 
+void UIManager::EnableLayers(bool isEnable)
+{
+	for (auto& [priority, layer] : m_layers)
+	{
+		layer->SetEnable(isEnable);
+	}
+}
+
 void UIManager::UnInit()
 {
 	m_layers.clear();
 	m_layerNameList.clear();
+}
+
+void UIManager::RemoveLayer(const char* LayerName)
+{
+	auto it = m_layerNameList.find(LayerName);
+	if (it == m_layerNameList.end())
+	{
+#ifdef _DEBUG
+		DebugLog::Log("[UIManager] RemoveUiLayer: Layer {} が見つかりません!", LayerName);
+#endif
+		return;
+	}
+
+	// Get Priority
+	Priority priority = it->second;
+
+	// delete layer from layers map
+	auto layerIt = m_layers.find(priority);
+	if (layerIt != m_layers.end())
+	{
+		m_layers.erase(layerIt);
+	}
+
+	// delete from name list
+	m_layerNameList.erase(it);
+
+#ifdef _DEBUG
+	DebugLog::Log("[UIManager] Layer {} (Priority {}) を削除しました", LayerName, priority);
+#endif
 }
 
 

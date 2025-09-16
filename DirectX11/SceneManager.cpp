@@ -12,7 +12,6 @@
 #include "PhysicsManager.h"
 #include "RenderState.h"
 #include "SceneGame.h"
-#include "SceneOption.h"
 #include "SceneTitle.h"
 #include "ShapeFactory.h"
 #include "Skybox.h"
@@ -20,6 +19,7 @@
 #include "SkyboxEffect.h"
 #include "Sprite.h"
 #include "TextureManager.h"
+#include "UIMenu.h"
 
 namespace
 {
@@ -54,8 +54,6 @@ bool SceneManager::InitSceneMap()
 {
 	m_sceneMap["Title"] = SceneConfig::SCENE_TITLE;
 	m_sceneMap["Game"] = SceneConfig::SCENE_GAME;
-	m_sceneMap["Option"] = SceneConfig::SCENE_OPTION;
-	m_sceneMap["Test"] = SceneConfig::SCENE_TEST;
 	return true;
 }
 
@@ -77,10 +75,11 @@ void SceneManager::Init()
 
     // ======Audio
     AudioManager::Instance().Init();
-    AudioManager::Instance().LoadAudio("WaveBackGround", L"Assets/Sound/SE/SeaBackGround.wav", AudioManager::AudioType::SE);
-    AudioManager::Instance().LoadAudio("Button", L"Assets/Sound/SE/ButtonClick.wav", AudioManager::AudioType::SE);
-    AudioManager::Instance().LoadAudio("BGM1", L"Assets/Sound/BGM/BGM1.wav", AudioManager::AudioType::BGM);
-    AudioManager::Instance().LoadAudio("BGM2", L"Assets/Sound/BGM/BGM2.wav", AudioManager::AudioType::BGM);
+    AudioManager::Instance().LoadAudio("SE_WaveBackGround", L"Assets/Sound/SE/SeaBackGround.wav", AudioManager::AudioType::ENVIRONMENT);
+    AudioManager::Instance().LoadAudio("SE_Button", L"Assets/Sound/SE/ButtonClick.wav", AudioManager::AudioType::SE);
+    AudioManager::Instance().LoadAudio("SE_Drink", L"Assets/Sound/SE/Drink.wav", AudioManager::AudioType::SE);
+    AudioManager::Instance().LoadAudio("BGM_Title", L"Assets/Sound/BGM/BGM1.wav", AudioManager::AudioType::BGM);
+    AudioManager::Instance().LoadAudio("BGM_Game", L"Assets/Sound/BGM/BGM2.wav", AudioManager::AudioType::BGM);
 
 	//==========Shader
     InitEffect();
@@ -91,6 +90,71 @@ void SceneManager::Init()
     //==========Scene map
     InitSceneMap();
 
+    //==========Init Menu UI
+
+    PixelShader* uiElementPS = GetObj<PixelShader>("UIElementPS");
+    VertexShader* uiElementVS = GetObj<VertexShader>("UIElementVS");
+    UIBasicEffect* uiBasicEffect = CreateObj<UIBasicEffect>("UiBasicEffect");
+    uiBasicEffect->InitPixelShader(uiElementPS);
+    uiBasicEffect->InitVertexShader(uiElementVS);
+
+    //==============Init Text Font& Brush
+    UIFontSet* uiFontSet = GetObj<UIFontSet>("UIFontSet");
+    UIBrush* uiBrush = GetObj<UIBrush>("UiBrush");
+
+    //==============Init Tex
+    Texture* leftArrowTex = TextureManager::Instance().GetTexture("UI_LeftArrow");
+    Texture* rightArrowTex = TextureManager::Instance().GetTexture("UI_RightArrow");
+
+
+    //==============Init Material
+    Material* uiMenuMat = MaterialManager::Instance().GetMaterial("UiMenuMaterial");
+    Material* uiSoundBarMat = MaterialManager::Instance().GetMaterial("UiBarMaterial");
+    Material* uiSoundBarBackGroundMat = MaterialManager::Instance().GetMaterial("UiBarBgMaterial");
+    Material* resumeMat = MaterialManager::Instance().GetMaterial("UiMenuResumeButtonMaterial");
+    Material* backToTileMat = MaterialManager::Instance().GetMaterial("UiMenuBackToTitleButton");
+
+    Material* bgmLeftArrowMat = CreateObj<Material>("BgmLeftArrowMat");
+    bgmLeftArrowMat->SetTexture(Material::Albedo, leftArrowTex);
+    Material* bgmRightArrowMat = CreateObj<Material>("BgmRightArrowMat");
+    bgmRightArrowMat->SetTexture(Material::Albedo, rightArrowTex);
+
+    Material* seLeftArrowMat = CreateObj<Material>("SeLeftArrowMat");
+    seLeftArrowMat->SetTexture(Material::Albedo, leftArrowTex);
+    Material* seRightArrowMat = CreateObj<Material>("SeRightArrowMat");
+    seRightArrowMat->SetTexture(Material::Albedo, rightArrowTex);
+
+    Material* environLeftArrowMat = CreateObj<Material>("EnvironLeftArrowMat");
+    environLeftArrowMat->SetTexture(Material::Albedo, leftArrowTex);
+    Material* environRightArrowMat = CreateObj<Material>("EnvironRightArrowMat");
+    environRightArrowMat->SetTexture(Material::Albedo, rightArrowTex);
+
+
+    //UIManager::Instance().ClearLayers();
+
+
+    //==============Init Effect
+    UIMenu::MenuResource resource = {
+        uiBasicEffect,
+        uiFontSet,
+        uiBrush,
+        uiMenuMat,
+        uiSoundBarMat,
+        uiSoundBarBackGroundMat,
+        bgmLeftArrowMat,
+        bgmRightArrowMat,
+        seLeftArrowMat,
+        seRightArrowMat,
+        environLeftArrowMat,
+        environRightArrowMat,
+        resumeMat,
+        backToTileMat,
+        ModelManager::Instance().GetModel("Square")
+    };
+
+    UIMenu* uiMenu = CreateObj<UIMenu>("UIMenu");
+    uiMenu->Init(resource);
+   //uiMenu->SetButton(this);
 
     SetCurrentScene("Title");
   
@@ -111,6 +175,9 @@ void SceneManager::UnInit()
 
 void SceneManager::Update(float dt)
 {
+
+	//===============UI Update
+    UIManager::Instance().Update(dt);
 }
 
 void SceneManager::Draw()
@@ -145,7 +212,10 @@ void SceneManager::Draw()
         Geometry::DrawLines();
 #endif
     }
-    
+
+    // Ui描画
+    GameApp::SetDepthStencilState(RenderStates::DSSNoDepthTest);
+    UIManager::Instance().Draw();
 }
 
 void SceneManager::SetSignalBus(GameSignalBus* _signal)
@@ -164,9 +234,6 @@ void SceneManager::SetCurrentScene(const char* sceneName)
 
 void SceneManager::ChangeScene()
 {
-    //clear all layers for next scene
-    UIManager::Instance().ClearLayers();
-
     switch(m_currentSceneIndex)
     {
     case SceneConfig::SCENE_TITLE:AddSubScene<SceneTitle>();
@@ -174,10 +241,6 @@ void SceneManager::ChangeScene()
         break;
     case SceneConfig::SCENE_GAME:AddSubScene<SceneGame>();
         DebugLog::Log("[SceneManager] Current Scene: Scene game!");
-        break;
-    case SceneConfig::SCENE_OPTION:
-        AddSubScene<SceneOption>();
-        DebugLog::Log("[SceneManager] Current Scene: Scene option!");
         break;
     }
 }
