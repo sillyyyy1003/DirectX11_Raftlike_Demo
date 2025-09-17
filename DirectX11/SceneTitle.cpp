@@ -23,9 +23,9 @@
 namespace 
 {
 
-	static constexpr DirectX::XMFLOAT3 TitleLogoPosition = { 200,120,0.1f };
-	static constexpr DirectX::XMFLOAT3 LogoSize = { 512,83,1.f };
-	static constexpr float TitleScale = 1.8f;
+	static constexpr DirectX::XMFLOAT3 TitleLogoPosition = { 300,180,0.1f };
+	static constexpr DirectX::XMFLOAT3 LogoSize = { 512,104,1.f };
+	static constexpr float TitleScale = 2.4f;
 
 	static constexpr float RotateSpeed = 0.02f;
 	static constexpr DirectX::XMFLOAT3 WaterSize = { 100,1,100 };

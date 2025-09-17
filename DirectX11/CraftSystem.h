@@ -26,6 +26,17 @@ public:
 		m_resultItemName = resultItemName;
 		m_ingredients = ingredients;
 	}
+
+	/// @brief 制作物名を取得
+	std::string& GetResultItemName() { return m_resultItemName; }
+
+	int GetIngredientsCount() const { return (int)(m_ingredients.size()); };
+
+	std::vector<Ingredient>& GetIngredients() { return m_ingredients; }
+
+	void AddIngredient(const Ingredient& ing) { m_ingredients.push_back(ing); }
+	void SetRecipeName(const std::string& recipeName) { m_resultItemName = recipeName; }
+private:
 	std::vector<Ingredient> m_ingredients;
 	std::string m_resultItemName; //Use Name as key for new item instance
 };
@@ -60,6 +71,12 @@ public:
 
 	/// @brief Craft the item by item name
 	bool Craft(const std::string& itemName);
+
+	CraftRecipe* GetRecipe(std::string& recipeName);
+
+	int GetItemCountInInventory(std::string& itemName) const;
+
+
 
 private:
 

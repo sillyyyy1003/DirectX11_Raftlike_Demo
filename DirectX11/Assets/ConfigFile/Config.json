@@ -371,6 +371,26 @@
       "albedoTex": "UI_Menu",
       "normalTex": "",
       "metallicTex": ""
+    },
+    {
+      "name": "CraftPanelBackgroundMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.596, 0.341, 0.173, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "CraftPanelButtonMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_CraftButton",
+      "normalTex": "",
+      "metallicTex": ""
     }
   ],
   "textures": [
@@ -529,6 +549,10 @@
     {
       "name": "UI_ConfigButton",
       "file": "Assets/Texture/UI/UI_ConfigButton_256x256.png"
+    },    
+    {
+      "name": "UI_CraftButton",
+      "file": "Assets/Texture/UI/UI_Button_Craft_300x109.png"
     },
     {
       "name": "WaterNormalMap",

@@ -26,17 +26,28 @@ public:
 	/// @brief アイテム名を設定する
 	void SetName(const char* name) { m_itemName = std::string(name); }
 
+	/// @brief アイテムタイプを返す
 	ItemType GetItemType() const { return m_itemType; }
+	/// @brief スタック可能かを返す
 	bool GetIsStackable() const { return m_isStackable; }
+	/// @brief 最大スタック数を返す
 	int GetMaxStack() const { return m_maxStack; }
+	/// @brief 最大耐久値を返す
 	float GetMaxDurability() const { return m_maxDurability; }
+	/// @brief 耐久あるかどうかを返す
 	bool HasDurability() const { return m_maxDurability > 0; }
+	/// @brief アイテム名を返す
 	std::string GetName() const { return m_itemName; }
+	/// @brief アイテムのアイコン名を返す
+	std::string GetIconTextureName() const { return m_iconName; }
+
+	std::string GetItemDescription() const { return m_description; }
 
 	void SetItemId(uint32_t itemId) { m_itemId = itemId; }
 	void SetModelId(uint32_t modelId) { m_modelId = modelId; }
 	void SetMaterialId(uint32_t materialId) { m_materialID = materialId; }
-
+	void SetIconName(const char* name) { m_iconName = name; };
+	void SetDescription(const char* description) { m_description = description; }
 
 	uint32_t GetItemId() const { return m_itemId; }
 	uint32_t GetModelId() const { return m_modelId; }
@@ -49,6 +60,9 @@ private:
 	float m_maxDurability;		// 最大耐久値
 
 	std::string m_itemName;		// アイテム名
+	std::string m_iconName;		// IconTexture
+	std::string m_description;	// description of item
+
 	uint32_t m_itemId = -1;		// アイテムID, -1は未設定
 	uint32_t m_modelId = -1;
 	uint32_t m_materialID = -1;

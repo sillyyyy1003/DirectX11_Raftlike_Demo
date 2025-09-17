@@ -171,7 +171,7 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="CpuTimer.cpp" />
-    <ClCompile Include="CraftRecipeUI.cpp" />
+    <ClCompile Include="UICraftPanel.cpp" />
     <ClCompile Include="CraftSystem.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="D3DApp.cpp" />
@@ -258,7 +258,7 @@
     <ClInclude Include="Capsule.h" />
     <ClInclude Include="Component.hpp" />
     <ClInclude Include="CpuTimer.h" />
-    <ClInclude Include="CraftRecipeUI.h" />
+    <ClInclude Include="UICraftPanel.h" />
     <ClInclude Include="CraftSystem.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="D3DApp.h" />

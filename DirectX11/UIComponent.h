@@ -96,11 +96,11 @@ public:
 	void SetStaticText(const std::string& text) override;
 	void SetTextProvider(TextProvider provider) override;
 
-	/// @brief 文字揃い設定(水平方向)
+	/// @brief 文字揃い設定(水平方向) default:left
 	///	@param textAlign Left: 左揃え, Center: 中央揃え, Right: 右揃え
 	void SetTextAlignment(TextAlign textAlign);
-	/// @brief 文字揃い設定(垂直方向)
-	///	@param paragraphAlign Top: 上揃え, Middle: 中央揃え, Bottom: 下揃え
+	/// @brief 文字揃い設定(垂直方向) default:top
+	///	@param paragraphAlign Top: 上揃え, Middle: 中央揃え, Bottom: 下揃
 	void SetParagraphAlignment(ParagraphAlign paragraphAlign);
 
 	void SetTextColor(D2D1_COLOR_F color);

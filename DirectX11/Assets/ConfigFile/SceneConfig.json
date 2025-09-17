@@ -1,6 +1,6 @@
 {
-"Title": {
- "Water": {
+  "Title": {
+    "Water": {
       "waveAmplitude": 0.1,
       "waveLength": 10.0,
       "waveSpeed": 0.5,
@@ -8,69 +8,84 @@
       "deepColor": [0.0, 0.2, 0.4, 1.0],
       "maxDistance": 50.0
     },
-  "UI":{
-    "StartButton": {
-        "position":[450.0, -50.0, 0.5],
+    "UI": {
+      "StartButton": {
+        "position": [775.0, -155.0, 0.5],
         "width": 240.0,
         "height": 87.2,
         "moveSpeed": 3.0,
         "amplitude": 5.0
-        },
-    "OptionButton": {
-        "position": [450.0, -160.0, 0.5],
+      },
+      "OptionButton": {
+        "position": [775.0, -280.0, 0.5],
         "width": 240.0,
         "height": 87.2,
         "moveSpeed": 3.0,
         "amplitude": 5.0
-        },
-    "ExitButton": {
-        "position": [450.0, -270.0, 0.5],
+      },
+      "ExitButton": {
+        "position": [775.0, -405.0, 0.5],
         "width": 240.0,
         "height": 87.2,
         "moveSpeed": 3.0,
         "amplitude": 5.0
-        }
       }
+    }
   },
-  "Game":{
-    "UI":{
-        "UIPlayerStatus": {
-        "position": [-630.0, -240.0, 1.0],
-        "iconSize": [32.0, 32.0, 1.0],
-        "barSize": [200.0, 16.0, 1.0],
+  "Game": {
+    "UI": {
+      "UIPlayerStatus": {
+        "position": [-950.0, -375.0, 1.0],
+        "iconSize": [40.0, 40.0, 1.0],
+        "barSize": [240.0, 20.0, 1.0],
         "distanceBetweenBars": 10.0
       },
       "UIInventory": {
-        "position": [0.0, -320.0, 1.0],
-        "slotSize": [49.6, 49.6, 1.0],
+        "position": [0.0, -480.0, 1.0],
+        "slotSize": [64, 64, 1.0],
         "slotScale": 0.9,
         "iconScale": 0.75,
         "iconOffset": 6.0,
-        "textOffset": [-8.0, 4.0],
+        "textOffset": [-8.0, 20.0],
         "backgroundSizeOffset": 5.0
       },
-      "BackToTitleButton":{
-        "position": [0.0,-240.0,0.5],
+      "BackToTitleButton": {
+        "position": [0.0, -320.0, 0.5],
         "width": 300.0,
         "height": 109.0,
         "moveSpeed": 3.0,
         "amplitude": 8.0
-      }, 
-      "ReviveButton":{
-        "position": [0.0, -100.0, 0.5],
+      },
+      "ReviveButton": {
+        "position": [0.0, -150.0, 0.5],
         "width": 300.0,
         "height": 109.0,
         "moveSpeed": 3.0,
         "amplitude": 8.0
-      }, 
-      "ConfigButton":{
-        "position": [-590.0, 310.0, 0.5],
+      },
+      "ConfigButton": {
+        "position": [-908.0, 488.0, 0.5],
         "width": 64.0,
         "height": 64.0,
         "moveSpeed": 0.0,
         "amplitude": 0.0
+      },
+      "CraftPanel": {
+        "Position": [0.0, 0.0, 1.5],
+        "Size": [360.0, 600.0],
+        "IconSize": 64.0,
+        "ButtonWidth": 150.0,
+        "ButtonHeight": 54.5,
+        "HorizontalPadding": 10.0,
+        "VerticalPadding": 10.0,
+        "HorizontalSpacing": 10.0,
+        "VerticalSpacing": 10.0,
+        "RectWidth": 200.0,
+        "TitleTextUIHeight": 54.0,
+        "DescriptionHeight": 80.0,
+        "RequireTextHeight": 31.0,
+        "TextColor": [0.902, 0.882, 0.514, 1.0]
       }
     }
-
   }
 }

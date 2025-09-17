@@ -25,8 +25,8 @@
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "DirectXTex.lib")
 
-#define WIN_WIDTH  (1280)
-#define WIN_HEIGHT (720)
+#define WIN_WIDTH  (1920)
+#define WIN_HEIGHT (1080)
 
 class RenderTarget;
 class DepthStencil;

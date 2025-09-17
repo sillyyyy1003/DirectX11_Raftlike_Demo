@@ -72,23 +72,6 @@ bool UILayer::HandleMouseUp(float x, float y)
 
 void UILayer::HandleMouseMove(float x, float y)
 {
-	/*
-	UIComponent* hoveredComponent = nullptr;
-	for(const auto&component:m_uiComponents)
-	{
-		if (component->IsActive() && component->HitTest(x, y))
-		{
-			hoveredComponent = component;
-			break;
-		}
-	}
-
-	if(hoveredComponent!=m_hoveredComponent)
-	{
-		if (m_hoveredComponent)m_hoveredComponent->OnMouseExit();
-		if (hoveredComponent) hoveredComponent->OnMouseEnter();
-		m_hoveredComponent = hoveredComponent;
-	}*/
 	UIComponent* hoveredComponent = nullptr;
 	for (const auto& component : m_uiComponents)
 	{

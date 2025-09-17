@@ -74,6 +74,7 @@ Loading model finished
 [TextureManager] Registered texture: UI_ExitButton
 [TextureManager] Registered texture: UI_ResumeButton
 [TextureManager] Registered texture: UI_ConfigButton
+[TextureManager] Registered texture: UI_CraftButton
 [TextureManager] Registered texture: WaterNormalMap
 [MaterialManager] Loading models from JSON: Assets/ConfigFile/Config.json
 [MaterialManager] Load Material BlinnPhongMaterial
@@ -109,7 +110,12 @@ Loading model finished
 [MaterialManager] Load Material UiMenuResumeButtonMaterial
 [MaterialManager] Load Material UiExitButtonMaterial
 [MaterialManager] Load Material UiMenuMaterial
+[MaterialManager] Load Material CraftPanelBackgroundMaterial
+[MaterialManager] Load Material CraftPanelButtonMaterial
 [MaterialManager] Materials loaded from JSON: Assets/ConfigFile/Config.json
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
 [SceneManager] Current Scene: Scene title!
 [UIManager] Layer Button (Priority 1) を削除しました
 [UIManager] Layer TitleLogo (Priority 2) を削除しました
@@ -119,8 +125,904 @@ Loading model finished
 [ItemDataBase] Wire is registered!
 [ItemDataBase] Plastic is registered!
 [ItemDataBase] BasicCup is registered!
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
 [SceneManager] Current Scene: Scene game!
 [PlayerContactListener] Character is in water now
 [PlayerContactListener] Character gets out of water now
 [PlayerContactListener] Character is in water now
 [PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[Camera]:First Camera Camera
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[UIManager] Layer Aim (Priority 1) を削除しました
+[UIManager] Layer Button (Priority 2) を削除しました
+[UIManager] Layer Player (Priority 3) を削除しました
+[UIManager] Layer CraftPanel (Priority 4) を削除しました
+[SceneManager] Current Scene: Scene title!
+[UIManager] Layer Button (Priority 1) を削除しました
+[UIManager] Layer TitleLogo (Priority 2) を削除しました
+WARNING::[ItemDataBase] Apple already exits
+WARNING::[ItemDataBase] Banana already exits
+WARNING::[ItemDataBase] Wood already exits
+WARNING::[ItemDataBase] Wire already exits
+WARNING::[ItemDataBase] Plastic already exits
+WARNING::[ItemDataBase] BasicCup already exits
+UICraftPanel::LoadPanelConfig -> Config loaded successfully
+[SceneManager] Current Scene: Scene game!
+[Camera]:First Camera Camera
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+WARNING::[PhysicsManager] Didn't find the physics component!
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character is in water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[PlayerContactListener] Character gets out of water now
+[Camera]:Free Camera

@@ -52,6 +52,8 @@ public:
 	ItemInstance* GetCurrentItem(int index) const;
 	void UpdateItemOfPlayer(int index, Player* player);
 
+	int GetTotalCount(std::string& itemName);
+
 private:
 
 	std::vector<Slot> m_slots;

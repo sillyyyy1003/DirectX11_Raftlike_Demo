@@ -130,9 +130,6 @@ void SceneManager::Init()
     environRightArrowMat->SetTexture(Material::Albedo, rightArrowTex);
 
 
-    //UIManager::Instance().ClearLayers();
-
-
     //==============Init Effect
     UIMenu::MenuResource resource = {
         uiBasicEffect,
@@ -154,7 +151,6 @@ void SceneManager::Init()
 
     UIMenu* uiMenu = CreateObj<UIMenu>("UIMenu");
     uiMenu->Init(resource);
-   //uiMenu->SetButton(this);
 
     SetCurrentScene("Title");
   
