@@ -56,11 +56,6 @@ void UIElement::SetTextProvider(ITextBind::TextProvider provider)
 	m_pUiText->SetTextProvider(provider);
 }
 
-
-void UIElement::SetCenterAlignment(bool isCenter)
-{
-}
-
 void UIElement::UpdateScale()
 {
 	m_pUiRender->SetViewSize(m_pUiScaler->GetScale());

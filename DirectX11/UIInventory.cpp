@@ -10,7 +10,7 @@ namespace
 	static constexpr float IconScaler = 0.75f; // アイコンのスケール
 	static constexpr float SlotScaler = .9f; // スロットのサイズ
 	static constexpr float IconOffset = 6.f;
-	static constexpr DirectX::XMFLOAT2 TextOffset = { -8.f, 4.f }; // アイテム数のテキストオフセット
+	static constexpr DirectX::XMFLOAT2 TextOffset = { 0.f, 4.f }; // アイテム数のテキストオフセット
 	static constexpr float InventoryBackgroundSizeOffset = 5.f;
 }
 
@@ -274,8 +274,7 @@ void UIInventory::Draw()
 	{
 		if (m_pInventory->GetSlots()[i].has_value())
 		{
-			// Texture name format: "ItemName_Icon" e.g. "Food_Apple_Icon"
-			std::string texName = m_pInventory->GetSlots()[i].value()->GetName() + "_Icon";
+			std::string texName = m_pInventory->GetSlots()[i].value()->GetProto()->GetIconTextureName();
 			// Get Texture
 			Texture* iconTex = TextureManager::Instance().GetTexture(texName);
 			// Set icon texture to item icon material(passed to shader)

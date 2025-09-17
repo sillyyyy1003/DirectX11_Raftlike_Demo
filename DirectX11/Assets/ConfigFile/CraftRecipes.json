@@ -3,7 +3,7 @@
     {
       "recipeName": "BasicCup",
       "ingredients": [
-        { "itemName": "Plastic", "quantity": 3 }
+        { "itemName": "Plastic", "quantity": 5 }
       ]
     },
     {
@@ -11,7 +11,7 @@
       "ingredients": [
         { "itemName": "Wood", "quantity": 2 },
         { "itemName": "Plasitc", "quantity": 3 },
-        {"itemName":"Wire","quantity":1}
+        { "itemName": "Wire", "quantity": 1 }
       
       ]
     }

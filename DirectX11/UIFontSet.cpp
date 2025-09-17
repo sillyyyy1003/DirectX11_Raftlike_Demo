@@ -64,12 +64,9 @@ void UIFontSet::CreateTextFormat(ID2D1RenderTarget* d2dRenderTarget, IDWriteFact
 			L"ja-JP",
 			font.second.FontFormat.GetAddressOf() // Output text format
 		));
+		font.second.FontFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+		font.second.FontFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
 
-		//文字揃いの設定
-		if (font.second.isCentered)// 中央寄せ
-			font.second.FontFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-		else//左寄せ
-			font.second.FontFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 	}
 }
 

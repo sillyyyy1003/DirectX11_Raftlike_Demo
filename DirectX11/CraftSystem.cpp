@@ -26,7 +26,7 @@ bool CraftSystem::CheckCraft(CraftRecipe* recipe)
 	}
 
 	// check if player has enough ingredients
-	for (const auto& ingredient : recipe->m_ingredients)
+	for (const auto& ingredient : recipe->GetIngredients())
 	{
 		if (!m_pInventory->HasEnoughItem(const_cast<std::string&>(ingredient.itemName), ingredient.quantity))
 		{
@@ -51,13 +51,13 @@ bool CraftSystem::Craft(CraftRecipe* recipe)
 	}
 
 	// Remove ingredients
-	for (const auto& ingredient : recipe->m_ingredients)
+	for (const auto& ingredient : recipe->GetIngredients())
 	{
 		m_pInventory->RemoveItem(ingredient.itemName, ingredient.quantity);
 	}
 
 	// Add new item to inventory　only create data , not spawn in world
-	std::shared_ptr<ItemInstance> newItem = ItemDataBase::Instance().CreateItemInstance(recipe->m_resultItemName.c_str());
+	std::shared_ptr<ItemInstance> newItem = ItemDataBase::Instance().CreateItemInstance(recipe->GetResultItemName().c_str());
 	if (m_pInventory->Insert(newItem.get()) == 1) //insert method return inserted num so if ==1, means success
 	{
 		// play sound
@@ -100,7 +100,8 @@ bool CraftSystem::LoadRecipes(const char* filePath)
 		auto recipe = std::make_unique<CraftRecipe>();
 
 		// Load recipe name
-		recipe->m_resultItemName = recipeJson.value("recipeName", "");//recipe name is item name
+		std::string resultName = recipeJson.value("recipeName", "");
+		recipe->SetRecipeName(resultName);	//recipe name is item name
 
 		// 遍历 ingredient
 		if (recipeJson.contains("ingredients") && recipeJson["ingredients"].is_array())
@@ -110,14 +111,14 @@ bool CraftSystem::LoadRecipes(const char* filePath)
 				CraftRecipe::Ingredient ingredient;
 				ingredient.itemName = ing.value("itemName", "");
 				ingredient.quantity = ing.value("quantity", 0);
-				recipe->m_ingredients.push_back(std::move(ingredient));
+				recipe->AddIngredient(ingredient);
 			}
 		}
 
 		// 存到 m_pRecipes
-		if (!recipe->m_resultItemName.empty())
+		if (!recipe->GetResultItemName().empty())
 		{
-			m_pRecipes[recipe->m_resultItemName] = std::move(recipe);
+			m_pRecipes[recipe->GetResultItemName()] = std::move(recipe);
 		}
 	}
 
@@ -150,4 +151,23 @@ bool CraftSystem::Craft(const std::string& itemName)
 	}
 	CraftRecipe* recipe = it->second.get();
 	return Craft(recipe);
+}
+
+CraftRecipe* CraftSystem::GetRecipe(std::string& recipeName)
+{
+	auto it = m_pRecipes.find(recipeName);
+	if (it == m_pRecipes.end())
+	{
+#ifdef _DEBUG
+		DebugLog::Log("[CraftSystem] :There is no such recipe", recipeName);
+#endif
+		return nullptr;
+	}
+	return it->second.get();
+}
+
+int CraftSystem::GetItemCountInInventory(std::string& itemName) const
+{
+	return m_pInventory->GetTotalCount(itemName);
+
 }

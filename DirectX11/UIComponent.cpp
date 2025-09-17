@@ -144,9 +144,11 @@ void UIText::DrawTextW(const std::string& str)
 	ID2D1RenderTarget* pd2dRenderTarget = gD3D->GetD2DRenderTarget();
 
 	pd2dRenderTarget->BeginDraw();
-
 	// 文字色を反映
 	m_pSolidBrush->SetColor(D2D1_COLOR_F(m_color));
+#ifdef _DEBUG
+	pd2dRenderTarget->DrawRectangle(m_textRect, m_pSolidBrush);
+#endif
 	// 文字描画
 	pd2dRenderTarget->DrawTextW(wStr.c_str(), (UINT32)wStr.size(), m_pTextFormat, m_textRect, m_pSolidBrush);
 

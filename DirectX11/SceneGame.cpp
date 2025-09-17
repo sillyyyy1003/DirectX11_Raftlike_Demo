@@ -24,6 +24,7 @@
 #include "Skybox.h"
 #include "TextureManager.h"
 #include "UIButtonMove.h"
+#include "UICraftPanel.h"
 #include "UIInventory.h"
 #include "UIMenu.h"
 #include "UIPlayerStatus.h"
@@ -256,6 +257,7 @@ void SceneGame::Init()
 	deathText->SetPosition(DeathTextPos);
 	deathText->SetScale(DeathTextScale);
 	deathText->SetStaticText("You Are Incapacitated!");
+	deathText->SetTextAlignment(UIText::TextAlign::Center);
 	deathText->SetActive(false);
 	// death text only activate when player is dead
 	player->AddDeathListener([deathText](bool isDead)
@@ -296,6 +298,37 @@ void SceneGame::Init()
 	Material* configButtonMaterial= MaterialManager::Instance().GetMaterial("UiConfigButtonMaterial");
 	configButton->Init(uiBasicEffect, configButtonMaterial, ModelManager::Instance().GetModel("Square"));
 	configButton->LoadButtonConfig(j["Game"]["UI"], "ConfigButton");
+
+	// Craft system
+	CraftRecipe* recipe = CreateObj<CraftRecipe>("Recipe");
+	recipe->Init("Apple", { { "Banana",4 } });
+
+	CraftSystem* system = CreateObj<CraftSystem>("CraftSystem");
+	system->Init(player->GetInventory());
+	system->LoadRecipes("Assets/ConfigFile/CraftRecipes.json");
+
+	
+
+	//UI Craft panel
+	UICraftPanel* craftPanel = CreateObj<UICraftPanel>("UICraftPanel");
+	craftPanel->InitFonts(uiFontSet,uiBrush,"CraftPanelTitleFont","CraftPanelDescriptionFont","CraftPanelRequiresFont","CraftPanelIngredientNameFont","CraftPanelNumberFont");
+	Material* panelBgMat = MaterialManager::Instance().GetMaterial("CraftPanelBackgroundMaterial");
+	Material* panelButtonMat = MaterialManager::Instance().GetMaterial("CraftPanelButtonMaterial");
+	Material* panelIconMat = CreateObj<Material>("PanelIconMaterial");
+	Material* panelIconBgMat = CreateObj<Material>("PanelIconBgMaterial");
+	craftPanel->InitRender(panelBgMat,panelButtonMat, panelIconBgMat,panelIconMat,uiBasicEffect,ModelManager::Instance().GetModel("Square"));
+	craftPanel->LoadPanelConfig(j["Game"]["UI"], "CraftPanel");
+	craftPanel->SetCraftSystem(system);
+
+	std::string recipeName = "BasicCup";
+	craftPanel->UpdatePanelInfo(recipeName);
+
+
+
+
+
+
+
 
 	//=====Set Button event
 
@@ -364,6 +397,9 @@ void SceneGame::Init()
 	UIManager::Instance().GetUILayer("Player")->AddComponent(uiPlayerStatus);
 	UIManager::Instance().GetUILayer("Player")->AddComponent(uiInventory);	// note that ui inventory is has lower priority than craft system panel
 
+	UIManager::Instance().AddUiLayer("CraftPanel", 4);
+	UIManager::Instance().GetUILayer("CraftPanel")->AddComponent(craftPanel);
+
 	// Menu Setup
 	GetObj<UIMenu>("UIMenu")->SetButton(this);
 
@@ -387,11 +423,8 @@ void SceneGame::Init()
 	std::shared_ptr<ItemInstance> cup = ItemDataBase::Instance().CreateItemInstance("BasicCup", 1);
 	player->GetInventory()->Insert(cup.get());
 
-	CraftRecipe* recipe = CreateObj<CraftRecipe>("Recipe");
-	recipe->Init("Apple", { { "Banana",4 } });
 
-	CraftSystem* system = CreateObj<CraftSystem>("CraftSystem");
-	system->Init(player->GetInventory());
+
 
 }
 
@@ -522,5 +555,6 @@ void SceneGame::SetCurrentScene(const char* sceneName)
 	UIManager::Instance().RemoveLayer("Aim");
 	UIManager::Instance().RemoveLayer("Button");
 	UIManager::Instance().RemoveLayer("Player");
+	UIManager::Instance().RemoveLayer("CraftPanel");
 }
 

@@ -4,6 +4,8 @@
     "items": [
       {
         "name": "Apple",
+        "iconName":"Apple_Icon",
+        "description":"Apple",
         "nutrition": 20.0,
         "model": "Food_Apple",
         "material": "FoodMaterial",
@@ -11,6 +13,8 @@
       },
       {
         "name": "Banana",
+        "iconName":"Banana_Icon",
+        "description":"Banana.",
         "nutrition": 10.0,
         "model": "Food_Banana",
         "material": "FoodMaterial",
@@ -24,18 +28,24 @@
       "items": [
       {
         "name": "Wood",
+        "iconName":"Wood_Icon",
+        "description":"Wood.",
         "model": "BaseMaterial_Wood",
         "material": "BaseObjectMaterial",
         "size":[0.01,0.05,0.01]
       },
       {
         "name": "Wire",
+        "iconName":"Wire_Icon",
+        "description":"Wire.",
         "model": "BaseMaterial_Wire",
         "material": "BaseObjectMaterial1",
         "size":[0.05,0.05,0.05]
       },
       {
         "name": "Plastic",
+        "iconName":"Plastic_Icon",
+        "description":"Plastic bottle.",
         "model": "BaseMaterial_PlasticBottle",
         "material": "BaseObjectMaterial",
         "size":[0.02,0.02,0.02]
@@ -47,6 +57,8 @@
      "items":[
       {
         "name":"BasicCup",
+        "iconName":"BasicCup_Icon",
+        "description":"A basic cup for gathering water.",
         "recoverValue":40.0,
         "model":"Tool_Cup",
         "material":"ToolMaterial",
@@ -59,6 +71,8 @@
      "items":[
       {
         "name":"WaterPurifier",
+        "iconName":"WaterPurifier_Icon",
+        "description":"Purifies saltwater into drinkable water.",
         "model":"Utility_Cup",
         "material":"WaterPurifierMaterial",
         "size":[0.05,0.05,0.05]

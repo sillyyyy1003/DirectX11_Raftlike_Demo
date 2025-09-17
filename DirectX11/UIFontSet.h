@@ -14,11 +14,10 @@ protected:
 		std::string FontName;	// 用途名
 		std::wstring FontFamily;// フォント
 		float FontSize;			// フォントのサイズ
-		bool isCentered;		// true>>中央寄せ false>>左寄せ
 		ComPtr<IDWriteTextFormat> FontFormat;
 
-		Font(const std::string& name, const std::wstring& font, float size, bool isCenter) : FontName(name),FontFamily(font), FontSize(size), isCentered(isCenter),FontFormat(nullptr) {}
-		Font() : FontName("Default"), FontFamily(L"Arial"),FontSize(1.f),isCentered(false), FontFormat(nullptr) {}
+		Font(const std::string& name, const std::wstring& font, float size, bool isCenter) : FontName(name),FontFamily(font), FontSize(size),FontFormat(nullptr) {}
+		Font() : FontName("Default"), FontFamily(L"Arial"),FontSize(1.f), FontFormat(nullptr) {}
 	};
 
 	typedef std::unordered_map<std::string, Font> FontList;

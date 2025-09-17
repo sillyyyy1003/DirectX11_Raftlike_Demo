@@ -213,4 +213,24 @@ void Inventory::UpdateItemOfPlayer(int index, Player* player)
 	}
 }
 
+int Inventory::GetTotalCount(std::string& itemName)
+{
+	int total = 0;
+	for (const auto& slot : m_slots)
+	{
+		if (slot.has_value() && // has item
+			slot.value()) //item is not nullptr
+		{
+			auto proto = slot.value()->GetProto();// Get item proto
+
+			if (proto && proto->GetName() == itemName)	//if proto is not nullptr && itemName match
+			{
+				total += slot.value()->GetCount();	// calculate slot count is enough 
+			}
+		}
+	}
+
+	return total;
+}
+
 

@@ -47,10 +47,11 @@ std::shared_ptr<const Item> ItemDataBase::GetItem(const char* name)
 	return nullptr;
 }
 
-void ItemDataBase::RegisterItem(const char* name, std::shared_ptr<Item> item, uint32_t itemId, uint32_t modelId,
-	uint32_t materialId)
+void ItemDataBase::RegisterItem(const char* name, const char* iconName, const char* description, std::shared_ptr<Item> item, uint32_t itemId, uint32_t modelId, uint32_t materialId)
 {
 	item->SetName(name);
+	item->SetIconName(iconName);
+	item->SetDescription(description);
 	item->SetItemId(itemId);
 	item->SetModelId(modelId);
 	item->SetMaterialId(materialId);
@@ -88,7 +89,6 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorld(const char
 		break;
 	}
 
-	uint32_t id = it->second->GetItemId();
 	uint32_t modelId = it->second->GetModelId();
 	uint32_t materialId = it->second->GetMaterialId();
 
@@ -128,7 +128,6 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics
 		break;
 	}
 
-	uint32_t id = it->second->GetItemId();
 	uint32_t modelId = it->second->GetModelId();
 	uint32_t materialId = it->second->GetMaterialId();
 	itemInstance->InitItem(GetItem(itemName), count, durability);
@@ -176,10 +175,6 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(const char* itemN
 		break;
 	}
 
-	uint32_t id = it->second->GetItemId();
-	uint32_t modelId = it->second->GetModelId();
-	uint32_t materialId = it->second->GetMaterialId();
-
 	(itemInstance)->InitItem(GetItem(itemName), count, durability);
 	return itemInstance;
 }
@@ -208,7 +203,6 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics
 		break;
 	}
 
-	uint32_t id = it->second->GetItemId();
 	uint32_t modelId = it->second->GetModelId();
 	uint32_t materialId = it->second->GetMaterialId();
 	itemInstance->InitItem(GetItem(itemName), count, durability);
@@ -270,9 +264,12 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 			for (const auto& food : foods["items"])
 			{
 				std::string name = food["name"];
+				std::string iconName = food["iconName"];
+				std::string description = food["description"];
 				float nutrition = food["nutrition"];
 				std::string modelName = food["model"];
 				std::string materialName = food["material"];
+
 
 				// 单独覆盖 size
 				DirectX::XMFLOAT3 itemSize = globalSize;
@@ -286,6 +283,8 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 				m_nextID++; // todo: make id format:1001 (itemCode+xxx)
 				RegisterItem(
 					name.c_str(),
+					iconName.c_str(),
+					description.c_str(),
 					foodPtr,
 					m_nextID,
 					ModelManager::Instance().GetModelId(modelName),
@@ -311,6 +310,8 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 			for (const auto& baseMaterial : baseMats["items"])
 			{
 				std::string name = baseMaterial["name"];
+				std::string iconName = baseMaterial["iconName"];
+				std::string description = baseMaterial["description"];
 				std::string modelName = baseMaterial["model"];
 				std::string materialName = baseMaterial["material"];
 
@@ -325,6 +326,8 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 				m_nextID++; // todo: make id format:1001 (itemCode+xxx)
 				RegisterItem(
 					name.c_str(),
+					iconName.c_str(),
+					description.c_str(),
 					baseMaterialPtr,
 					m_nextID,
 					ModelManager::Instance().GetModelId(modelName),
@@ -349,6 +352,8 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 			for (const auto& cup : cups["items"])
 			{
 				std::string name = cup["name"];
+				std::string iconName = cup["iconName"];
+				std::string description = cup["description"];
 				std::string modelName = cup["model"];
 				std::string materialName = cup["material"];
 				float recover = cup["recoverValue"];
@@ -364,6 +369,8 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 				m_nextID++; // todo: make id format:1001 (itemCode+xxx)
 				RegisterItem(
 					name.c_str(),
+					iconName.c_str(),
+					description.c_str(),
 					cupPtr,
 					m_nextID,
 					ModelManager::Instance().GetModelId(modelName),

@@ -15,7 +15,7 @@ public:
 	void RegisterItem(const char* name, std::shared_ptr<Item> item);
 
 	/// @brief アイテムを登録する（IDとモデルID、マテリアルIDも設定）
-	void RegisterItem(const char* name, std::shared_ptr<Item> item, uint32_t itemId, uint32_t modelId, uint32_t materialId);
+	void RegisterItem(const char* name, const char* iconName, const char* description, std::shared_ptr<Item> item, uint32_t itemId, uint32_t modelId, uint32_t materialId);
 
 	std::shared_ptr<const Item> GetItem(const char* name);
 	void UnInit();

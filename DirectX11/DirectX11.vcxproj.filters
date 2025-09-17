@@ -366,7 +366,7 @@
     <ClCompile Include="UIMenu.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CraftRecipeUI.cpp">
+    <ClCompile Include="UICraftPanel.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="UIInventory.cpp">
@@ -626,7 +626,7 @@
     <ClInclude Include="UIMenu.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CraftRecipeUI.h">
+    <ClInclude Include="UICraftPanel.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="UIInventory.h">

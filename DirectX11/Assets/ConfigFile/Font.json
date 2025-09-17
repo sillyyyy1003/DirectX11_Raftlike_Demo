@@ -1,24 +1,6 @@
 {
   "Fonts": [
     {
-      "Name": "TitleFont",
-      "FontFamily": "Arial",
-      "FontSize":90,
-      "IsCentered":true
-    },
-    {
-      "Name": "OptionFont",
-      "FontFamily": "Arial",
-      "FontSize":35,
-      "IsCentered":true
-    },
-    {
-      "Name": "TitleButton",
-      "FontFamily": "Berlin Sans FB",
-      "FontSize":75,
-      "IsCentered":true
-    },
-    {
       "Name": "MessageFont",
       "FontFamily": "Arial",
       "FontSize":25,
@@ -27,26 +9,42 @@
     {
       "Name": "InventoryFont",
       "FontFamily": "Arial",
-      "FontSize":24,
-      "IsCentered":false
+      "FontSize":24
     },
     {
       "Name": "DeathFont",
-      "FontFamily": "Berlin Sans FB",
-      "FontSize":75,
-      "IsCentered":true
-    },
-    {
-      "Name": "DeathFont",
-      "FontFamily": "Berlin Sans FB",
-      "FontSize":75,
-      "IsCentered":true
+      "FontFamily": "Impact",
+      "FontSize":100
     },
     {
       "Name": "UIMenuFont",
       "FontFamily": "Impact",
-      "FontSize":55,
-      "IsCentered":false
+      "FontSize":55
+    },
+    {
+      "Name": "CraftPanelTitleFont",
+      "FontFamily": "Impact",
+      "FontSize":35
+    },
+    {
+      "Name": "CraftPanelDescriptionFont",
+      "FontFamily": "Cascadia Code",
+      "FontSize":20
+    },
+    {
+      "Name": "CraftPanelRequiresFont",
+      "FontFamily": "Impact",
+      "FontSize":30
+    },
+    {
+      "Name": "CraftPanelIngredientNameFont",
+      "FontFamily": "Impact",
+      "FontSize":28
+    },
+    {
+      "Name": "CraftPanelNumberFont",
+      "FontFamily": "Impact",
+      "FontSize":40
     }
   ],
   "BrushColor":

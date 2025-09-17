@@ -62,7 +62,6 @@ public:
 	RenderComponent* GetUiRenderComponent() const	{ return m_pUiRender->GetRenderComponent(); }
 	UIText* GetUiText() const { return m_pUiText.get(); }
 
-	void SetCenterAlignment(bool isCenter = true);
 protected:
 
 	void UpdateScale();
