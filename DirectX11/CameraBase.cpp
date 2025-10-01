@@ -4,8 +4,12 @@
 
 using namespace DirectX;
 
+namespace
+{
+	static constexpr float ForwardY = XM_PI / 3.f;
 
-CameraBase::CameraBase() :m_fovY(XM_PIDIV4), m_aspect(16.f/9.f), m_nearZ(0.1f), m_farZ(1000.0f)
+}
+CameraBase::CameraBase() :m_fovY(ForwardY), m_aspect(16.f/9.f), m_nearZ(0.1f), m_farZ(1000.0f)
 {
 }
 

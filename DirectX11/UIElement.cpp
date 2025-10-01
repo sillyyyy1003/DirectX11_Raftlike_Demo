@@ -5,7 +5,6 @@
 UIElement::UIElement():
 m_pUiRender(nullptr)
 {
-	m_pUiText = std::make_unique<UIText>();
 }
 
 void UIElement::Init(IEffect* effect, Material* material, Primitive* model, UIFontSet* fontSet, const char* fontName,UIBrush* uiBrush)
@@ -21,6 +20,7 @@ void UIElement::Init(IEffect* effect, Material* material, Primitive* model, UIFo
 
 void UIElement::Init(UIFontSet* fontSet, const char* fontName, UIBrush* uiBrush)
 {
+	m_pUiText = std::make_unique<UIText>();
 	m_pUiText->Init(fontSet, fontName, uiBrush);
 }
 
@@ -39,20 +39,22 @@ void UIElement::Draw()
 {
 	if (!m_isActive)return;
 	//===========背景描画
-	m_pUiRender->Draw();
+	if(m_pUiRender)	m_pUiRender->Draw();
 
 	//===========文字描画
-	m_pUiText->Draw();
+	if(m_pUiText)m_pUiText->Draw();
 }
 
 
 void UIElement::SetStaticText(const std::string& text)
 {
+	if (!m_pUiText)return;
 	m_pUiText->SetStaticText(text);
 }
 
 void UIElement::SetTextProvider(ITextBind::TextProvider provider)
 {
+	if (!m_pUiText)return;
 	m_pUiText->SetTextProvider(provider);
 }
 
@@ -67,6 +69,7 @@ void UIElement::SetPosition(const DirectX::XMFLOAT3& pos, const DirectX::XMFLOAT
 	//mesh位置設定
 	m_pUiRender->GetTransform().SetPosition(pos);
 
+	if (!m_pUiText)return;
 	//text位置設定
 	DirectX::XMFLOAT3 textPos = {
 		pos.x + offset.x,
@@ -92,7 +95,7 @@ void UIElement::SetScale(const DirectX::XMFLOAT3& scale)
 	m_pUiRender->GetTransform().SetScale(scale);
 
 	//Text Rect Size設定
-	m_pUiText->SetScale(scale);
+	if (m_pUiText)m_pUiText->SetScale(scale);
 }
 
 void UIElement::SetScale(float x, float y, float z)

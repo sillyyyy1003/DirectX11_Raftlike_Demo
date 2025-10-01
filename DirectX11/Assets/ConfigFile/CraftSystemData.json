@@ -1,0 +1,48 @@
+{
+  "Datas": 
+  {
+      "LivingSuppot":{
+        "iconName":"Category_Life_Icon",
+        "recipes":[
+           {
+            "recipeName": "BasicCup",
+            "ingredients": [
+              { "itemName": "Plastic", "quantity": 5 }
+            ]
+          }
+        ]
+      },
+      "Tool":{
+        "iconName":"Category_Tool_Icon",
+        "recipes":[
+          {
+            "recipeName": "NormalHook",
+            "ingredients": [
+              { "itemName": "Wood", "quantity": 6 },
+              { "itemName": "Plastic", "quantity": 4 }
+            ]
+          },
+          {
+            "recipeName": "WaterPurifier",
+            "ingredients": [
+              { "itemName": "Wood", "quantity": 5},
+              { "itemName": "Plastic", "quantity": 2 },
+              { "itemName": "Wire", "quantity": 3 }
+            ]
+          }
+        ]
+      },
+      "Weapon":{
+        "iconName":"Category_Weapon_Icon",
+        "recipes":[
+          {
+            "recipeName": "WoodSpear",
+            "ingredients": [
+              { "itemName": "Wood", "quantity": 8 },
+              { "itemName": "Wire", "quantity": 3 }
+            ]
+          }
+        ]
+      }
+  }
+}

@@ -4,8 +4,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "AudioManager.h"
-
 /// <summary>
 /// 表示一个制作配方的?。
 /// </summary>
@@ -36,9 +34,11 @@ public:
 
 	void AddIngredient(const Ingredient& ing) { m_ingredients.push_back(ing); }
 	void SetRecipeName(const std::string& recipeName) { m_resultItemName = recipeName; }
+
 private:
 	std::vector<Ingredient> m_ingredients;
-	std::string m_resultItemName; //Use Name as key for new item instance
+	std::string m_resultItemName;	// Use Name as key for new item instance
+	bool m_isRevealed = false;		// このレシピを習得したかどうか？
 };
 
 
@@ -49,9 +49,19 @@ class Inventory;
 class CraftSystem
 {
 public:
+	typedef std::string ItemName;
+	typedef std::string CategoryName;
 
-	CraftSystem();
-	~CraftSystem() = default;
+	typedef std::vector<std::unique_ptr<CraftRecipe>> CraftRecipes;
+	typedef std::unordered_map<CategoryName, CraftRecipes> CraftCategories;
+	typedef std::unordered_map<CategoryName, std::string> IconMap;
+	typedef std::vector<CategoryName> Categories;
+
+	static CraftSystem& Instance()
+	{
+		static CraftSystem instance;
+		return instance;
+	}
 
 	void Init(Inventory* inventory);
 
@@ -65,6 +75,7 @@ public:
 	bool Craft(CraftRecipe* recipe);
 
 	bool LoadRecipes(const char* filePath);
+	bool LoadCraftData(const char* filepath);	// Load craft data to  m_recipes; 
 
 	/// @brief Check if player has enough ingredients to craft the item by item name
 	bool CheckCraft(const std::string& itemName);
@@ -73,19 +84,28 @@ public:
 	bool Craft(const std::string& itemName);
 
 	CraftRecipe* GetRecipe(std::string& recipeName);
+	CraftRecipe* GetRecipe(std::string& category, std::string& recipeName);
+
+	IconMap& GetIconMap() { return m_iconMap; }
+	Categories& GetCategories() { return m_categories; }
 
 	int GetItemCountInInventory(std::string& itemName) const;
+	void UnInit();
 
-
+	std::string GetIconName(std::string& category);
+	CraftRecipes& GetRecipesByCategory(const std::string& categoryName);
 
 private:
-
+	CraftSystem();
+	~CraftSystem() = default;
 	Inventory* m_pInventory;	// Inventory to check
-	//todo: maybe add bag later
 
-	typedef std::string ItemName;
+	CraftCategories m_recipes;	// load all recipes with categories	
+	Categories m_categories;	// 順番でカテゴリーを保存
+	IconMap m_iconMap;			// category icon map
+
 	typedef std::unordered_map<ItemName, std::unique_ptr<CraftRecipe>> Recipes;
-	Recipes m_pRecipes;
+	Recipes m_pAllRecipes;		// 名前に沿って、全てのレシピを保存する
 
 };
 

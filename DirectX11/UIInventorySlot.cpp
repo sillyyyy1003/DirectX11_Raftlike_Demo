@@ -25,15 +25,12 @@ void UIInventorySlot::Init(IEffect* effect, Material* bgMat, Material* iconMat, 
 	m_pText->SetTextAlignment(UIText::TextAlign::Right);
 	m_pText->SetParagraphAlignment(UIText::ParagraphAlign::Bottom);
 
+
 	// Set Material effect & model to background
-	m_pBackground->SetEffect(effect);
-	m_pBackground->SetMaterial(bgMat);
-	m_pBackground->SetModel(model);
+	m_pBackground->Init(bgMat, effect, model);
 
 	// Set Material effect & model to item icon
-	m_pItemIcon->SetEffect(effect);
-	m_pItemIcon->SetMaterial(iconMat);
-	m_pItemIcon->SetModel(model);
+	m_pItemIcon->Init(iconMat, effect, model);
 }
 
 
@@ -56,8 +53,8 @@ void UIInventorySlot::SetPosition(const DirectX::XMFLOAT3& pos, const DirectX::X
 
 	// Set icon position
 	DirectX::XMFLOAT3 iconPos = pos;
-	iconPos.z -= 0.1f; // アイコンは背景の少し手前に表示
-	m_pItemIcon->GetTransform().SetPosition(pos);
+	iconPos.z += 0.1f; // アイコンは背景の少し手前に表示
+	m_pItemIcon->GetTransform().SetPosition(iconPos);
 
 	// Set text position
 	m_pText->SetPosition({

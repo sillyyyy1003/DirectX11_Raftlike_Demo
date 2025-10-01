@@ -76,12 +76,12 @@ void UIMenu::Init(MenuResource& resource)
 
     m_bgmLeftArrow = std::make_unique<UIButtonMove>();
     m_bgmLeftArrow->Init(resource.effect, resource.bgmLeftArrowMat, resource.square);
-    m_bgmLeftArrow->SetButton(BgmLeftArrowPos, ArrowWidth, ArrowHeight);
+    m_bgmLeftArrow->SetButtonRect(BgmLeftArrowPos, ArrowWidth, ArrowHeight);
 
     m_bgmRightArrow = std::make_unique<UIButtonMove>();
     m_bgmRightArrow->Init(resource.effect, resource.bgmRightArrowMat, resource.square);
     m_bgmRightArrow->InitMoveParam(0.005f, 5.f);
-    m_bgmRightArrow->SetButton(BgmRightArrowPos, ArrowWidth, ArrowHeight);
+    m_bgmRightArrow->SetButtonRect(BgmRightArrowPos, ArrowWidth, ArrowHeight);
 
 
     //==============SE
@@ -100,13 +100,13 @@ void UIMenu::Init(MenuResource& resource)
     m_seLeftArrow = std::make_unique<UIButtonMove>();
     m_seLeftArrow->Init(resource.effect, resource.seLeftArrowMat, resource.square);
     m_seLeftArrow->InitMoveParam(0.005f, 5.f);
-    m_seLeftArrow->SetButton(SeLeftArrowPos, ArrowWidth, ArrowHeight);
+    m_seLeftArrow->SetButtonRect(SeLeftArrowPos, ArrowWidth, ArrowHeight);
 
 
     m_seRightArrow = std::make_unique<UIButtonMove>();
     m_seRightArrow->Init(resource.effect, resource.seRightArrowMat, resource.square);
     m_seRightArrow->InitMoveParam(0.005f, 5.f);
-    m_seRightArrow->SetButton(SeRightArrowPos, ArrowWidth, ArrowHeight);
+    m_seRightArrow->SetButtonRect(SeRightArrowPos, ArrowWidth, ArrowHeight);
    
 
     //==============Environment
@@ -124,20 +124,20 @@ void UIMenu::Init(MenuResource& resource)
 
     m_environmentLeftArrow = std::make_unique<UIButtonMove>();
     m_environmentLeftArrow->Init(resource.effect, resource.environmentLeftArrowMat, resource.square);
-    m_environmentLeftArrow->SetButton(EnvironLeftArrowPos, ArrowWidth, ArrowHeight);
+    m_environmentLeftArrow->SetButtonRect(EnvironLeftArrowPos, ArrowWidth, ArrowHeight);
 
     m_environmentRightArrow = std::make_unique<UIButtonMove>();
     m_environmentRightArrow->Init(resource.effect, resource.environmentRightArrowMat, resource.square);
-    m_environmentRightArrow->SetButton(EnvironRightArrowPos, ArrowWidth, ArrowHeight);
+    m_environmentRightArrow->SetButtonRect(EnvironRightArrowPos, ArrowWidth, ArrowHeight);
 
     //==============Buttons
     m_resumeButton = std::make_unique<UIButtonMove>();
     m_resumeButton->Init(resource.effect, resource.resumeMat, resource.square);
-    m_resumeButton->SetButton(ResumeButtonPos, ButtonWidth, ButtonHeight);
+    m_resumeButton->SetButtonRect(ResumeButtonPos, ButtonWidth, ButtonHeight);
 
     m_backToTitleButton = std::make_unique<UIButtonMove>();
     m_backToTitleButton->Init(resource.effect, resource.backToTitleMat, resource.square);
-    m_backToTitleButton->SetButton(BackToTitleButtonPos, ButtonWidth, ButtonHeight);
+    m_backToTitleButton->SetButtonRect(BackToTitleButtonPos, ButtonWidth, ButtonHeight);
  
     //==============AudioManager link
     AudioManager::Instance().SetUI(m_bgmBar.get(), m_seBar.get(), m_environmentBar.get());

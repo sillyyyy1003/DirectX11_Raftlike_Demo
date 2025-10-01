@@ -171,7 +171,8 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="CpuTimer.cpp" />
-    <ClCompile Include="UICraftPanel.cpp" />
+    <ClCompile Include="UICraftCategoryDetailPanel.cpp" />
+    <ClCompile Include="UICraftDetailPanel.cpp" />
     <ClCompile Include="CraftSystem.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="D3DApp.cpp" />
@@ -234,6 +235,8 @@
     <ClCompile Include="UIBasicEffect.cpp" />
     <ClCompile Include="UIButton.cpp" />
     <ClCompile Include="UIButtonMove.cpp" />
+    <ClCompile Include="UICraftCategoryPanel.cpp" />
+    <ClCompile Include="UICraftSlot.cpp" />
     <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="UIFontSet.cpp" />
     <ClCompile Include="UIGlossEffect.cpp" />
@@ -258,7 +261,8 @@
     <ClInclude Include="Capsule.h" />
     <ClInclude Include="Component.hpp" />
     <ClInclude Include="CpuTimer.h" />
-    <ClInclude Include="UICraftPanel.h" />
+    <ClInclude Include="UICraftCategoryDetailPanel.h" />
+    <ClInclude Include="UICraftDetailPanel.h" />
     <ClInclude Include="CraftSystem.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="D3DApp.h" />
@@ -321,6 +325,8 @@
     <ClInclude Include="UIBasicEffect.h" />
     <ClInclude Include="UIButton.h" />
     <ClInclude Include="UIButtonMove.h" />
+    <ClInclude Include="UICraftCategoryPanel.h" />
+    <ClInclude Include="UICraftSlot.h" />
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="UIFontSet.h" />
     <ClInclude Include="UIGlossEffect.h" />

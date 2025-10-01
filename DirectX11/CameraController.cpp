@@ -7,12 +7,17 @@
 #include "PlayerCharacter.h"
 #include "ThirdPersonCamera.h"
 
+namespace
+{
+	static constexpr float CameraMoveSpeed = 3.f;
+}
+
 CameraController::CameraController() :
 	m_mode(CameraMode::Free),
 	m_state(CameraKind::CamNone),
 	m_cameraOffset(),
 	m_oldPos(0, 0),
-	m_moveSpeed(5.f),
+	m_moveSpeed(CameraMoveSpeed),
 	m_pCurrentCamera(nullptr),
 	m_windowSize(WIN_WIDTH, WIN_HEIGHT)
 {

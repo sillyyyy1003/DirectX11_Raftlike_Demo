@@ -380,6 +380,52 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 		}
 	}
 
+	if (j.contains("Hook"))
+	{
+		const auto& hooks = j["Hook"];
+
+		DirectX::XMFLOAT3 globalSize = DefaultSize; // 默认大小
+		if (hooks.contains("size"))
+		{
+			globalSize = JsonToXMFLOAT3(hooks["size"]);
+		}
+
+		if (hooks.contains("items"))
+		{
+			for (const auto& hook : hooks["items"])
+			{
+				std::string name = hook["name"];
+				std::string iconName = hook["iconName"];
+				std::string description = hook["description"];
+				std::string modelName = hook["model"];
+				std::string materialName = hook["material"];
+				float durability = hook["durability"];
+				float chargeTime = hook["chargeTime"];
+				float maxLength = hook["maxLength"];
+
+				DirectX::XMFLOAT3 itemSize = globalSize;
+				if (hook.contains("size"))
+				{
+					itemSize = JsonToXMFLOAT3(hook["size"]);
+				}
+				m_itemSizes[name] = itemSize;
+
+				auto hookPtr = std::make_shared<Hook>(maxLength,chargeTime,durability);
+				m_nextID++; // todo: make id format:1001 (itemCode+xxx)
+				RegisterItem(
+					name.c_str(),
+					iconName.c_str(),
+					description.c_str(),
+					hookPtr,
+					m_nextID,
+					ModelManager::Instance().GetModelId(modelName),
+					MaterialManager::Instance().GetMaterialId(materialName)
+				);
+			}
+		}
+	}
+
+
 	//todo: ほかのアイテムを追加
 }
 

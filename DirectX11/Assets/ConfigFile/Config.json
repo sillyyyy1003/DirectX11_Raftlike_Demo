@@ -391,6 +391,36 @@
       "albedoTex": "UI_CraftButton",
       "normalTex": "",
       "metallicTex": ""
+    },
+    {
+      "name": "UiCraftCategoryPanelMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.41, 0.16, 0.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiCraftCategoryPanelIconBackgroundMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_InventorySlotBg",
+      "normalTex": "",
+      "metallicTex": ""
+    },
+    {
+      "name": "UiCraftCategoryPanelIconMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.8, 0.8, 0.8, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "",
+      "normalTex": "",
+      "metallicTex": ""
     }
   ],
   "textures": [
@@ -493,6 +523,18 @@
     {
       "name": "WaterPurifier_Icon",
       "file": "Assets/Texture/ObjectIcon/drinking.png"
+    },
+    {
+      "name": "Category_Life_Icon",
+      "file": "Assets/Texture/ObjectIcon/Icon_Life.png"
+    },
+    {
+      "name": "Category_Tool_Icon",
+      "file": "Assets/Texture/ObjectIcon/Icon_support.png"
+    },
+    {
+      "name": "Category_Weapon_Icon",
+      "file": "Assets/Texture/ObjectIcon/Icon_battle.png"
     },
     {
       "name": "UI_InventorySlotBg",

@@ -41,9 +41,8 @@ public:
 #ifdef _DEBUG
 		//Error check
 		DebugLog::LogError("[TextureManager] {} is nullptr", name.c_str());
-		return nullptr;
 #endif
-
+		return nullptr;
 	}
 
 	void UnInit();

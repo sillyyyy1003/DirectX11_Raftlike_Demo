@@ -31,12 +31,12 @@ namespace
     static constexpr DirectX::XMFLOAT2 SpawnRangeZ = { 70.f, 80.f };
 
     static constexpr DirectX::XMFLOAT3 NearItemObjectDefaultPos = { 0,100,0 };
-    enum ObjectState:int
+    enum ObjectState :int
     {
         Active = 0,         // Spawned and waiting to be picked up
         InActive = 1,       // Can be spawned
         WaitToRecycle = 2,  // Marked for recycling
-    
+        Hooked = 3          // hooked by player
 	};
 
     struct SpawnParam
@@ -210,7 +210,7 @@ void DriftManager::Update(float tick)
         for (auto& item : items)
         {
             // if item wait to recycle, inactive it&skip loop
-            if (item->GetState() != Active)
+            if (item->GetState() == InActive|| item->GetState() == WaitToRecycle)
             {
                 item->DeActivate();
                 item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
@@ -264,12 +264,18 @@ void DriftManager::Update(float tick)
         {
             if (!item->GetActive()) continue;
 
-            // Set velocity
-            if (auto* physics = item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics))
+            // Only active state will flow with wave
+            // if item is hooked, set velocity player->item without wave effect 
+            if(item->GetState()==Active)    
             {
-                physics->SetVelocity(FloatVector);
+                // Set velocity
+                if (auto* physics = item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics))
+                {
+                    physics->SetVelocity(FloatVector);
+                }
+                item->Update(tick);
             }
-            item->Update(tick);
+           
         }
     }
 

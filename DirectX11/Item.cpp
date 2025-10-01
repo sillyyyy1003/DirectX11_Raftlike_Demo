@@ -56,7 +56,6 @@ Utility::Utility():
 
 
 
-
 //========Food===========
 Food::Food(float _foodValue) :
 	Item(ItemType::Food, 
@@ -68,8 +67,6 @@ Food::Food(float _foodValue) :
 }
 
 
-
-
 //=========BaseMaterial============
 BaseMaterial::BaseMaterial():
 	Item(ItemType::BaseMaterial)
@@ -77,9 +74,25 @@ BaseMaterial::BaseMaterial():
 }
 
 
+
+//=========Cup============
 Cup::Cup(float value):
 	Item(ItemType::Cup, false, 1, -1),// 一回だけ
 	m_recoverValue(value)
+{
+}
+
+//==========Spear============
+Spear::Spear(float damage, float durability):
+	Item(ItemType::Weapon, false,1,durability),
+	m_damage(damage)
+{
+}
+
+Hook::Hook(float maxLength, float chargeTime, float durability):
+	Item(ItemType::Utility,false, 1, durability),
+	m_maxLength(maxLength),
+	m_chargeTimeLimit(chargeTime)
 {
 }
 

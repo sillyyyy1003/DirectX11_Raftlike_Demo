@@ -75,8 +75,40 @@
         "description":"Purifies saltwater into drinkable water.",
         "model":"Utility_Cup",
         "material":"WaterPurifierMaterial",
-        "size":[0.05,0.05,0.05]
+        "size":[0.05,0.05,0.05],
+        "CompleteTime":120
       }
     ]
+  },
+  "Hook":{
+      "size": [0.05, 0.05, 0.05],
+      "items":[
+        {
+          "name":"NormalHook",
+          "iconName":"NormalHook_Icon",
+          "description":"Get items from sea.",
+          "model":"",
+          "material":"",
+          "size":[0.05, 0.05, 0.05],
+          "durability":100.0,
+          "maxLength":10.0,
+          "chargeTime":3.0
+        }
+      ]
+  },
+  "Weapon":{
+     "size": [0.05, 0.05, 0.05],
+      "items":[
+        {
+          "name":"WoodSpear",
+          "iconName":"WoodSpear_Icon",
+          "description":"Wooden spear.",
+          "model":"",
+          "material":"",
+          "size":[0.05, 0.05, 0.05],
+          "durability":100.0,
+          "damage":30.0
+        }
+      ]
   }
 }

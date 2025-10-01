@@ -23,7 +23,7 @@ namespace
 
 	static constexpr float WaveAmplitude = 0.1f;  
 	static constexpr float WaveLength = 20.0f;  
-	static constexpr float WaveSpeed = 1.f;
+	static constexpr float WaveSpeed = 0.5f;
 
 	static constexpr DirectX::XMFLOAT4 ShallowColor = { 0.2f,0.5f,0.8f,1.f };
 	static constexpr DirectX::XMFLOAT4 DeepColor = { 0.0f,0.2f,0.4f,1.f };

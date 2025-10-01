@@ -44,8 +44,8 @@ float4 main(PS_IN pin) : SV_Target
 	float roughness = 1.0f - smooth;
 
 	//======= Use uv animation for water normal =======//
-	float2 uv1 = pin.Tex + float2(time * 0.01, 0);
-	float2 uv2 = pin.Tex + float2(0, time * 0.01);
+	float2 uv1 = pin.Tex + float2(time * 0.005, 0);
+	float2 uv2 = pin.Tex + float2(0, time * 0.005);
 	float3 n1 = normalMap.Sample(samplerState, uv1).xyz;
 	float3 n2 = normalMap.Sample(samplerState, uv2).xyz;
 

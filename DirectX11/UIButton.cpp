@@ -55,7 +55,7 @@ void UIButton::OnClick(float x, float y)
 		m_onClick();
 }
 
-void UIButton::SetButton(const DirectX::XMFLOAT3& pos, float width, float height)
+void UIButton::SetButtonRect(const DirectX::XMFLOAT3& pos, float width, float height)
 {
 	// Set Render element size
 	SetPosition(pos);

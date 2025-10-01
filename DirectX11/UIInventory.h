@@ -30,11 +30,12 @@ public:
 	void InitSizeAndPos(const DirectX::XMFLOAT3& size, const DirectX::XMFLOAT3& pos);
 
 	/// @brief Set inventory ui position & size from config file
-	/// @param filePath 
+	/// @param filePath jsonファイルパス
 	void LoadSizeAndPos(const char* filePath);
 
 	/// @brief Set inventory ui position & size from config file
-	/// @param filePath 
+	/// @param j 読み込んだjsonファイル
+	///	@uiName このuiのID
 	void LoadSizeAndPos(nlohmann::json& j, const char* uiName);
 
 	void SetInventory(Inventory* inventory);
@@ -46,8 +47,6 @@ public:
 	void Draw() override;
 
 	UIComponent* HitTest(float x, float y) override;
-	void OnMouseEnter() override;
-	void OnMouseExit() override;
 
 private:
 	std::vector<std::unique_ptr<UIInventorySlot>> m_slots;	// スロットのリスト

@@ -3,14 +3,14 @@
 #include "UIButton.h"
 #include "UIComponent.h"
 
-/// @brief レシピを表示するUI層:
-class UICraftPanel :
+/// @brief 具体的なレシピを表示するUI層:
+class UICraftDetailPanel :
     public UIComponent
 {
 
 public:
-    UICraftPanel();
-    ~UICraftPanel() override = default;
+    UICraftDetailPanel();
+    ~UICraftDetailPanel() override = default;
 
     void InitRender(Material* backgroundMaterial, Material* buttonMaterial, Material* iconBackGroundMaterial, Material* iconsMaterial,IEffect* effect, Primitive* primitive);
     void InitSizeAndPos(const DirectX::XMFLOAT2& size, const DirectX::XMFLOAT3& pos);
@@ -24,12 +24,12 @@ public:
     /// @param ingredientNameFont ingredients name font
     /// @param numberFont number text Font
     void InitFonts(UIFontSet* fontSet, UIBrush* brush, const char* itemNameFont, const char* descriptionFont, const char* requiresFont, const char* ingredientNameFont, const char* numberFont);
-
     void LoadPanelConfig(nlohmann::json& j, const char* panelName);
-    void SetCraftSystem(CraftSystem* system) { m_craftSystem = system; }
     void UpdatePanelInfo(std::string& recipeName);
     void Draw() override;
 
+    //=========Button Event
+	UIComponent* HitTest(float x, float y) override;
     
 private:
 
@@ -74,8 +74,7 @@ private:
     };
 
     std::vector<UIIngredient> m_ingredients;
-
     int m_currentRecipeIngredientCount = 0;
-    CraftSystem* m_craftSystem;
+
 };
 

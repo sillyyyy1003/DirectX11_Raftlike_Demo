@@ -5,15 +5,6 @@
 
 void UIFontSet::InitFontList()
 {
-	/*
-	Font titleFont = { "TitleFont", L"Arial",90,true };
-	Font optionFont = { "OptionFont",L"Arial", 35,true };
-	Font messageFont = { "MessageFont",L"Arial",25,false };
-
-	m_fontList["TitleFont"] = titleFont;
-	m_fontList["OptionFont"] = optionFont;
-	m_fontList["MessageFont"] = messageFont;
-	*/
 }
 
 bool UIFontSet::LoadFontList(const char* fileName)

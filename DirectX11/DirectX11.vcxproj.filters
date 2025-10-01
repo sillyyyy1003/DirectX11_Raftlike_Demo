@@ -357,20 +357,29 @@
     <ClCompile Include="AudioManager.cpp">
       <Filter>源文件\System</Filter>
     </ClCompile>
-    <ClCompile Include="CraftSystem.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="ItemInstances.cpp">
       <Filter>源文件\Item</Filter>
     </ClCompile>
-    <ClCompile Include="UIMenu.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="UICraftPanel.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="UIInventory.cpp">
       <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="CraftSystem.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="UICraftDetailPanel.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIMenu.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UICraftSlot.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UICraftCategoryPanel.cpp">
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UICraftCategoryDetailPanel.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -617,20 +626,29 @@
     <ClInclude Include="AudioManager.h">
       <Filter>头文件\System</Filter>
     </ClInclude>
-    <ClInclude Include="CraftSystem.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ItemInstances.h">
       <Filter>头文件\Item</Filter>
     </ClInclude>
-    <ClInclude Include="UIMenu.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="UICraftPanel.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="UIInventory.h">
       <Filter>源文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UICraftDetailPanel.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMenu.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="CraftSystem.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="UICraftSlot.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UICraftCategoryPanel.h">
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UICraftCategoryDetailPanel.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

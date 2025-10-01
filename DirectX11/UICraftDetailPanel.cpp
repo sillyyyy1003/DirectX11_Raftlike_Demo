@@ -1,8 +1,9 @@
-﻿#include "UICraftPanel.h"
+﻿#include "UICraftDetailPanel.h"
 #include "CraftSystem.h"
 #include "ItemDataBase.h"
 #include "TextureManager.h"
 #include "d3dUtil.h"
+#include "KInput.h"
 
 namespace
 {
@@ -10,7 +11,7 @@ namespace
 
 }
 
-UICraftPanel::UICraftPanel() :
+UICraftDetailPanel::UICraftDetailPanel() :
 	m_position(0,0,0),
 	m_size(0,0),
 	m_backgroundRender(nullptr),
@@ -20,7 +21,6 @@ UICraftPanel::UICraftPanel() :
 	m_requiresTextUI(nullptr),
 	m_craftButton(nullptr),
 	m_ingredients(IngredientsSize),
-	m_craftSystem(nullptr),
 	m_iconSize(64.f),                // all icon size
 	m_buttonHeight(50.f),            // craft button height
 	m_buttonWidth(128.f),            // craft button width
@@ -35,7 +35,7 @@ UICraftPanel::UICraftPanel() :
 {
 }
 
-void UICraftPanel::InitRender(Material* backgroundMaterial, Material* buttonMaterial, Material* iconBackGroundMaterial, Material* iconsMaterial, IEffect* effect,	Primitive* primitive)
+void UICraftDetailPanel::InitRender(Material* backgroundMaterial, Material* buttonMaterial, Material* iconBackGroundMaterial, Material* iconsMaterial, IEffect* effect,	Primitive* primitive)
 {
 	m_backgroundRender = std::make_unique<UIRender>();
 	m_backgroundRender->Init(backgroundMaterial, effect, primitive);
@@ -58,7 +58,7 @@ void UICraftPanel::InitRender(Material* backgroundMaterial, Material* buttonMate
 	}
 }
 
-void UICraftPanel::InitSizeAndPos(const DirectX::XMFLOAT2& size, const DirectX::XMFLOAT3& pos)
+void UICraftDetailPanel::InitSizeAndPos(const DirectX::XMFLOAT2& size, const DirectX::XMFLOAT3& pos)
 {
 	m_position = pos;
 	m_size = size;
@@ -131,7 +131,7 @@ void UICraftPanel::InitSizeAndPos(const DirectX::XMFLOAT2& size, const DirectX::
 		requiresPos.y - requireTextScale.y / 2.f + m_buttonHeight / 2.f,
 		m_position.z + 0.1f
 	};
-	m_craftButton->SetButton(buttonPos, m_buttonWidth, m_buttonHeight);
+	m_craftButton->SetButtonRect(buttonPos, m_buttonWidth, m_buttonHeight);
 
 	//===========UIIngredient
 	float ingredientPosX = titleIconPos.x;
@@ -183,7 +183,7 @@ void UICraftPanel::InitSizeAndPos(const DirectX::XMFLOAT2& size, const DirectX::
 	}
 }
 
-void UICraftPanel::InitFonts(UIFontSet* fontSet, UIBrush* brush, const char* itemNameFont, const char* descriptionFont,
+void UICraftDetailPanel::InitFonts(UIFontSet* fontSet, UIBrush* brush, const char* itemNameFont, const char* descriptionFont,
 	const char* requiresFont, const char* ingredientNameFont, const char* numberFont)
 {
 	m_itemNameUI = std::make_unique<UIText>();
@@ -216,12 +216,12 @@ void UICraftPanel::InitFonts(UIFontSet* fontSet, UIBrush* brush, const char* ite
 	}
 }
 
-void UICraftPanel::LoadPanelConfig(nlohmann::json& j, const char* panelName)
+void UICraftDetailPanel::LoadPanelConfig(nlohmann::json& j, const char* panelName)
 {
 	// Check if json contains the requested panel data
 	if (!j.contains(panelName))
 	{
-		DebugLog::Log("UICraftPanel::LoadPanelConfig -> Panel data not found in json");
+		DebugLog::Log("UICraftDetailPanel::LoadPanelConfig -> Panel data not found in json");
 		return;
 	}
 
@@ -286,12 +286,13 @@ void UICraftPanel::LoadPanelConfig(nlohmann::json& j, const char* panelName)
 	//================= Apply loaded values to UI =================
 	InitSizeAndPos(m_size, m_position);
 
-	DebugLog::Log("UICraftPanel::LoadPanelConfig -> Config loaded successfully");
+	DebugLog::Log("UICraftDetailPanel::LoadPanelConfig -> Config loaded successfully");
 }
 
-void UICraftPanel::UpdatePanelInfo(std::string& recipeName)
+
+void UICraftDetailPanel::UpdatePanelInfo(std::string& recipeName)
 {
-	CraftRecipe* recipe = m_craftSystem->GetRecipe(recipeName);
+	CraftRecipe* recipe = CraftSystem::Instance().GetRecipe(recipeName);
 
 	std::string itemName = recipe->GetResultItemName();
 	const Item* targetItem = ItemDataBase::Instance().GetItem(itemName.c_str()).get();
@@ -299,7 +300,7 @@ void UICraftPanel::UpdatePanelInfo(std::string& recipeName)
 #ifdef _DEBUG
 	if (!targetItem)
 	{
-		DebugLog::LogError("[UICraftPanel] Target item {} doesn't exist!", itemName);
+		DebugLog::LogError("[UICraftDetailPanel] Target item {} doesn't exist!", itemName);
 		return;
 	}
 #endif
@@ -327,7 +328,7 @@ void UICraftPanel::UpdatePanelInfo(std::string& recipeName)
 		//=========set ingredient text
 		m_ingredients[i].ingredientNameUI->SetStaticText(ingredientName);
 		//=========set required num text
-		std::string requiredNumStr = std::to_string(m_craftSystem->GetItemCountInInventory(ingredientName)) + "/" + std::to_string(ingredients[i].quantity);
+		std::string requiredNumStr = std::to_string(CraftSystem::Instance() .GetItemCountInInventory(ingredientName)) + "/" + std::to_string(ingredients[i].quantity);
 		m_ingredients[i].requiredNumberTextUI->SetStaticText(requiredNumStr);
 
 	}
@@ -348,7 +349,7 @@ void UICraftPanel::UpdatePanelInfo(std::string& recipeName)
 	});
 }
 
-void UICraftPanel::Draw()
+void UICraftDetailPanel::Draw()
 {
 	if (!IsActive())return;
 	m_backgroundRender->Draw();
@@ -376,4 +377,11 @@ void UICraftPanel::Draw()
 	m_descriptionTextUI->Draw();
 	m_itemNameUI->Draw();
 	m_requiresTextUI->Draw();
+}
+
+
+
+UIComponent* UICraftDetailPanel::HitTest(float x, float y)
+{
+	return m_craftButton->HitTest(x,y);
 }

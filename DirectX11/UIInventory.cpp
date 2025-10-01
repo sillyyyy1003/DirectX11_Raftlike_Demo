@@ -307,13 +307,4 @@ UIComponent* UIInventory::HitTest(float x, float y)
 	return nullptr; // 自己没被点中
 }
 
-void UIInventory::OnMouseEnter()
-{
-
-}
-
-void UIInventory::OnMouseExit()
-{
-	
-}
 

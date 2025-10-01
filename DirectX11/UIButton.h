@@ -21,7 +21,7 @@ public:
 	/// @param pos button position in world space
 	/// @param width rectangle width
 	/// @param height rectangle height
-	virtual void SetButton(const DirectX::XMFLOAT3& pos, float width, float height);
+	virtual void SetButtonRect(const DirectX::XMFLOAT3& pos, float width, float height);
 
 	/// @brief Set click function callback
 	/// @param callback 
@@ -38,5 +38,6 @@ protected:
 	std::function<void()> m_onHover;    // Hover event handler
 	std::function<void()> m_onPressed;  // Pressed event handler
 	std::function<void()> m_onExit;  // Exit Event handler
-	};
+
+};
 

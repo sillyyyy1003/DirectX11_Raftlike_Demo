@@ -59,9 +59,9 @@ void UIButtonMove::Update(float dt)
 	SetPosition(pos);
 }
 
-void UIButtonMove::SetButton(const DirectX::XMFLOAT3& pos, float width, float height)
+void UIButtonMove::SetButtonRect(const DirectX::XMFLOAT3& pos, float width, float height)
 {
-	UIButton::SetButton(pos, width, height);
+	UIButton::SetButtonRect(pos, width, height);
 
 	// Default Pos
 	m_defaultPos = pos;
@@ -103,7 +103,7 @@ void UIButtonMove::LoadButtonConfig(const char* fileName, const char* buttonName
 	float moveSpeed = ui["moveSpeed"].get<float>();
 	float amplitude = ui["amplitude"].get<float>();
 
-	SetButton(buttonPos,width,height);
+	SetButtonRect(buttonPos,width,height);
 	InitMoveParam(moveSpeed, amplitude);
 
 }
@@ -118,6 +118,6 @@ void UIButtonMove::LoadButtonConfig(nlohmann::json& j, const char* buttonName)
 	float moveSpeed = ui["moveSpeed"].get<float>();
 	float amplitude = ui["amplitude"].get<float>();
 
-	SetButton(buttonPos, width, height);
+	SetButtonRect(buttonPos, width, height);
 	InitMoveParam(moveSpeed, amplitude);
 }

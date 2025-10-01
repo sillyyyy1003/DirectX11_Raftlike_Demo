@@ -380,8 +380,8 @@ bool D3DApp::InitMainWindow()
         MessageBox(0, L"RegisterClass Failed.", 0, 0);
         return false;
     }
-    DWORD windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
-
+    //DWORD windowStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+    DWORD windowStyle = WS_POPUP;
     // Compute window rectangle dimensions based on requested client area dimensions.
     RECT R = { 0, 0, m_ClientWidth, m_ClientHeight };
     AdjustWindowRect(&R, windowStyle, false);

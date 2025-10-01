@@ -18,7 +18,7 @@ public:
 	/// @param amplitude 移動幅
 	void InitMoveParam(float moveSpeed, float amplitude);
 	void Update(float dt) override;
-	void SetButton(const DirectX::XMFLOAT3& pos, float width, float height) override;
+	void SetButtonRect(const DirectX::XMFLOAT3& pos, float width, float height) override;
 
 	/// @brief Active button move & change to brighter color
 	void ActiveMove();

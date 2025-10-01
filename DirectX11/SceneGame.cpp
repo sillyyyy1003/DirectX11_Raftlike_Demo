@@ -1,6 +1,5 @@
 ﻿#include "SceneGame.h"
 #include <DirectXMath.h>
-
 #include "AudioManager.h"
 #include "CraftSystem.h"
 #include "d3dUtil.h"
@@ -24,7 +23,8 @@
 #include "Skybox.h"
 #include "TextureManager.h"
 #include "UIButtonMove.h"
-#include "UICraftPanel.h"
+#include "UICraftCategoryPanel.h"
+#include "UICraftDetailPanel.h"
 #include "UIInventory.h"
 #include "UIMenu.h"
 #include "UIPlayerStatus.h"
@@ -303,28 +303,30 @@ void SceneGame::Init()
 	CraftRecipe* recipe = CreateObj<CraftRecipe>("Recipe");
 	recipe->Init("Apple", { { "Banana",4 } });
 
-	CraftSystem* system = CreateObj<CraftSystem>("CraftSystem");
-	system->Init(player->GetInventory());
-	system->LoadRecipes("Assets/ConfigFile/CraftRecipes.json");
-
+	CraftSystem::Instance().Init(player->GetInventory());
+	CraftSystem::Instance().LoadRecipes("Assets/ConfigFile/CraftRecipes.json");
+	CraftSystem::Instance().LoadCraftData("Assets/ConfigFile/CraftSystemData.json");
 	
 
 	//UI Craft panel
-	UICraftPanel* craftPanel = CreateObj<UICraftPanel>("UICraftPanel");
+	UICraftDetailPanel* craftPanel = CreateObj<UICraftDetailPanel>("UICraftDetailPanel");
 	craftPanel->InitFonts(uiFontSet,uiBrush,"CraftPanelTitleFont","CraftPanelDescriptionFont","CraftPanelRequiresFont","CraftPanelIngredientNameFont","CraftPanelNumberFont");
 	Material* panelBgMat = MaterialManager::Instance().GetMaterial("CraftPanelBackgroundMaterial");
 	Material* panelButtonMat = MaterialManager::Instance().GetMaterial("CraftPanelButtonMaterial");
 	Material* panelIconMat = CreateObj<Material>("PanelIconMaterial");
 	Material* panelIconBgMat = CreateObj<Material>("PanelIconBgMaterial");
-	craftPanel->InitRender(panelBgMat,panelButtonMat, panelIconBgMat,panelIconMat,uiBasicEffect,ModelManager::Instance().GetModel("Square"));
+	craftPanel->InitRender(panelBgMat,panelButtonMat, uiInventorySlotBgMaterial,panelIconMat,uiBasicEffect,ModelManager::Instance().GetModel("Square"));
 	craftPanel->LoadPanelConfig(j["Game"]["UI"], "CraftPanel");
-	craftPanel->SetCraftSystem(system);
-
-	std::string recipeName = "BasicCup";
-	craftPanel->UpdatePanelInfo(recipeName);
 
 
+	// UI Craft Category
+	Material* categoryPanelBgRenderMat = MaterialManager::Instance().GetMaterial("UiCraftCategoryPanelMaterial");
+	Material* categoryPanelBgMat = MaterialManager::Instance().GetMaterial("UiCraftCategoryPanelIconBackgroundMaterial");
+	Material* categoryIconMat = MaterialManager::Instance().GetMaterial("UiCraftCategoryPanelIconMaterial");
 
+	UICraftCategoryPanel* categoryPanel = CreateObj<UICraftCategoryPanel>("UICraftCategoryPanel");
+	categoryPanel->Init(categoryPanelBgRenderMat,categoryPanelBgMat,categoryIconMat,uiBasicEffect, ModelManager::Instance().GetModel("Square"));
+	categoryPanel->LoadSizeAndPos(j["Game"]["UI"], "CraftCategoryPanel");
 
 
 
@@ -398,7 +400,9 @@ void SceneGame::Init()
 	UIManager::Instance().GetUILayer("Player")->AddComponent(uiInventory);	// note that ui inventory is has lower priority than craft system panel
 
 	UIManager::Instance().AddUiLayer("CraftPanel", 4);
-	UIManager::Instance().GetUILayer("CraftPanel")->AddComponent(craftPanel);
+	//UIManager::Instance().GetUILayer("CraftPanel")->AddComponent(craftPanel);
+	UIManager::Instance().GetUILayer("CraftPanel")->AddComponent(categoryPanel);
+
 
 	// Menu Setup
 	GetObj<UIMenu>("UIMenu")->SetButton(this);
@@ -432,7 +436,8 @@ void SceneGame::UnInit()
 {
 	m_sceneObjects.clear(); // Clear all scene objects
 	GetObj<DriftManager>("DriftManager")->UnInit(); 
-	
+
+	CraftSystem::Instance().UnInit();	// Clear all recipes
 	PhysicsManager::Instance().RemoveAllBodies();
 }
 

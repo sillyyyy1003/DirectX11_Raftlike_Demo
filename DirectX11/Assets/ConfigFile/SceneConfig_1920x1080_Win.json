@@ -46,7 +46,7 @@
         "slotScale": 0.9,
         "iconScale": 0.75,
         "iconOffset": 6.0,
-        "textOffset": [-8.0, 4.0],
+        "textOffset": [-8.0, 20.0],
         "backgroundSizeOffset": 5.0
       },
       "BackToTitleButton": {
@@ -85,14 +85,6 @@
         "DescriptionHeight": 80.0,
         "RequireTextHeight": 31.0,
         "TextColor": [0.902, 0.882, 0.514, 1.0]
-      },
-      "CraftCategoryPanel":
-      {
-        "position":[-905.0,400.0,1.0],
-        "slotSize":[80.0,80.0,1.0],
-        "slotScale":0.8,
-        "slotSpacing":6.0,
-        "panelPadding":5.0
       }
     }
   }

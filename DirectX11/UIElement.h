@@ -63,7 +63,6 @@ public:
 	UIText* GetUiText() const { return m_pUiText.get(); }
 
 protected:
-
 	void UpdateScale();
 };
 

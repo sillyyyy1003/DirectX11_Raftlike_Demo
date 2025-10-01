@@ -128,7 +128,6 @@ class Utility:
 public:
 	Utility();
 	~Utility() override = default;
-
 };
 
 
@@ -173,7 +172,6 @@ class WaterPurifier:
 	public Item
 {
 public:
-
 	WaterPurifier(float timeThreshold);
 	~WaterPurifier() override = default;
 
@@ -181,4 +179,27 @@ public:
 
 protected:
 	float m_timeThreshold;	// 浄水にかかる時間
+};
+
+class Spear :
+	public Item
+{
+public:
+	Spear(float damage,float durability);
+	~Spear() override = default;
+
+private:
+	float m_damage;	// Attack damage;
+};
+
+class Hook:
+public Item
+{
+public:
+	Hook(float maxLength,float chargeTime, float durability);
+	~Hook() override = default;
+private:
+	float m_maxLength;			// 最大距離
+	float m_chargeTimeLimit;	// 最大チャージ需要時間
+
 };

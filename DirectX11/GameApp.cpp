@@ -77,6 +77,7 @@ void GameApp::OnResize()
         assert(m_pd2dRenderTarget);
     }
     m_pd2dRenderTarget->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE);
+
 }
 
 
