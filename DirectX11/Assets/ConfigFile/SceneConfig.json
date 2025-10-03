@@ -71,7 +71,7 @@
         "amplitude": 0.0
       },
       "CraftPanel": {
-        "Position": [0.0, 0.0, 1.5],
+        "Position": [-570.0, 400.0, 1.5],
         "Size": [360.0, 600.0],
         "IconSize": 64.0,
         "ButtonWidth": 150.0,

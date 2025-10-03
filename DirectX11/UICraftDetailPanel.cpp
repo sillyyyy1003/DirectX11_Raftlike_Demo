@@ -181,6 +181,24 @@ void UICraftDetailPanel::InitSizeAndPos(const DirectX::XMFLOAT2& size, const Dir
 		m_ingredients[i].requiredNumberTextUI->SetScale(requiredNumTexScale);
 		m_ingredients[i].requiredNumberTextUI->SetPosition(requiredNumTexPos);
 	}
+
+	// Init button event
+	m_craftButton->SetOnClick([this]()
+		{
+			std::string itemName = this->m_itemNameUI->GetStaticText();
+			CraftSystem::Instance().TryCraftItem(itemName);
+		});
+
+	m_craftButton->SetOnHover([this]()
+		{
+			m_craftButton->GetUiRenderComponent()->GetMaterial()->SetDiffuse({ 1,1,1,1 });
+		});
+
+	m_craftButton->SetOnExit([this]()
+		{
+			m_craftButton->GetUiRenderComponent()->GetMaterial()->SetDiffuse({ 0.6f,0.6f,0.6f,1 });
+
+		});
 }
 
 void UICraftDetailPanel::InitFonts(UIFontSet* fontSet, UIBrush* brush, const char* itemNameFont, const char* descriptionFont,
@@ -277,10 +295,8 @@ void UICraftDetailPanel::LoadPanelConfig(nlohmann::json& j, const char* panelNam
 
 	for (auto& ingredientUi : m_ingredients)
 	{
-
 		ingredientUi.ingredientNameUI->SetTextColor(color);
 		ingredientUi.requiredNumberTextUI->SetTextColor(color);
-	
 	}
 
 	//================= Apply loaded values to UI =================

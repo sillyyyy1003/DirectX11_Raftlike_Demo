@@ -104,6 +104,7 @@ public:
 	void SetParagraphAlignment(ParagraphAlign paragraphAlign);
 
 	void SetTextColor(D2D1_COLOR_F color);
+	const std::string& GetStaticText() { return m_staticText; }
 
 protected:
 

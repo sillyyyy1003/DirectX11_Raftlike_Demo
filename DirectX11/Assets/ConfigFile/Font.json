@@ -45,7 +45,18 @@
       "Name": "CraftPanelNumberFont",
       "FontFamily": "Impact",
       "FontSize":40
+    },
+    {
+      "Name": "CraftCategoryPanelFont",
+      "FontFamily": "Impact",
+      "FontSize":40
+    },
+    {
+      "Name": "CraftCategoryPanelSlotFont",
+      "FontFamily": "Impact",
+      "FontSize":28
     }
+
   ],
   "BrushColor":
   [

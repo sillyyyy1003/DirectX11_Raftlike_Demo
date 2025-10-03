@@ -9,6 +9,14 @@
             "ingredients": [
               { "itemName": "Plastic", "quantity": 5 }
             ]
+          },
+          {
+            "recipeName": "WaterPurifier",
+            "ingredients": [
+              { "itemName": "Wood", "quantity": 5},
+              { "itemName": "Plastic", "quantity": 2 },
+              { "itemName": "Wire", "quantity": 3 }
+            ]
           }
         ]
       },
@@ -20,14 +28,6 @@
             "ingredients": [
               { "itemName": "Wood", "quantity": 6 },
               { "itemName": "Plastic", "quantity": 4 }
-            ]
-          },
-          {
-            "recipeName": "WaterPurifier",
-            "ingredients": [
-              { "itemName": "Wood", "quantity": 5},
-              { "itemName": "Plastic", "quantity": 2 },
-              { "itemName": "Wire", "quantity": 3 }
             ]
           }
         ]

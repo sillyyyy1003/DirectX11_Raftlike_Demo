@@ -60,6 +60,8 @@ Loading model finished
 [TextureManager] Registered texture: Wire_Icon
 [TextureManager] Registered texture: BasicCup_Icon
 [TextureManager] Registered texture: WaterPurifier_Icon
+[TextureManager] Registered texture: NormalHook_Icon
+[TextureManager] Registered texture: WoodSpear_Icon
 [TextureManager] Registered texture: Category_Life_Icon
 [TextureManager] Registered texture: Category_Tool_Icon
 [TextureManager] Registered texture: Category_Weapon_Icon
@@ -129,6 +131,8 @@ Loading model finished
 [ItemDataBase] Plastic is registered!
 [ItemDataBase] BasicCup is registered!
 [ItemDataBase] NormalHook is registered!
+[ItemDataBase] WaterPurifier is registered!
+[ItemDataBase] WoodSpear is registered!
 UICraftDetailPanel::LoadPanelConfig -> Config loaded successfully
 [SceneManager] Current Scene: Scene game!
 [PlayerContactListener] Character is in water now

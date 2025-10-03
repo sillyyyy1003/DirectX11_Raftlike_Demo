@@ -52,7 +52,8 @@ public:
 	typedef std::string ItemName;
 	typedef std::string CategoryName;
 
-	typedef std::vector<std::unique_ptr<CraftRecipe>> CraftRecipes;
+	/*typedef std::vector<std::unique_ptr<CraftRecipe>> CraftRecipes;*/
+	typedef std::vector<CraftRecipe*> CraftRecipes;
 	typedef std::unordered_map<CategoryName, CraftRecipes> CraftCategories;
 	typedef std::unordered_map<CategoryName, std::string> IconMap;
 	typedef std::vector<CategoryName> Categories;
@@ -94,6 +95,8 @@ public:
 
 	std::string GetIconName(std::string& category);
 	CraftRecipes& GetRecipesByCategory(const std::string& categoryName);
+
+	void TryCraftItem(std::string& itemName);
 
 private:
 	CraftSystem();

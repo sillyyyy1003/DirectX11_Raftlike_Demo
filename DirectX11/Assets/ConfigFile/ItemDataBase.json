@@ -76,7 +76,7 @@
         "model":"Utility_Cup",
         "material":"WaterPurifierMaterial",
         "size":[0.05,0.05,0.05],
-        "CompleteTime":120
+        "completeTime":120
       }
     ]
   },
@@ -96,7 +96,7 @@
         }
       ]
   },
-  "Weapon":{
+  "Spear":{
      "size": [0.05, 0.05, 0.05],
       "items":[
         {

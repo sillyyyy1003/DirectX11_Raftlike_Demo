@@ -77,8 +77,15 @@ BaseMaterial::BaseMaterial():
 
 //=========Cup============
 Cup::Cup(float value):
-	Item(ItemType::Cup, false, 1, -1),// 一回だけ
+	Item(ItemType::Cup, false, 1, -1),
 	m_recoverValue(value)
+{
+}
+
+//=========WaterPurifier============
+WaterPurifier::WaterPurifier(float timeThreshold):
+	Item(ItemType::WaterPurifier, false, 1, -1),
+	m_timeThreshold(timeThreshold)
 {
 }
 
@@ -89,6 +96,7 @@ Spear::Spear(float damage, float durability):
 {
 }
 
+//==========Hook=============
 Hook::Hook(float maxLength, float chargeTime, float durability):
 	Item(ItemType::Utility,false, 1, durability),
 	m_maxLength(maxLength),

@@ -1,13 +1,11 @@
 ﻿#include "ItemDataBase.h"
-
+#include <nlohmann/json.hpp>
 #include <memory>
 #include "DebugLog.h"
 #include "MaterialManager.h"
 #include "ModelManager.h"
 #include "PhysicsManager.h"
 #include "RenderComponent.h"
-#include <nlohmann/json.hpp>
-
 #include "d3dUtil.h"
 #include "ItemInstances.h"
 
@@ -337,6 +335,7 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 		}
 	}
 
+	//===========Cup
 	if (j.contains("Cup"))
 	{
 		const auto& cups = j["Cup"];
@@ -380,6 +379,7 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 		}
 	}
 
+	//========Hook
 	if (j.contains("Hook"))
 	{
 		const auto& hooks = j["Hook"];
@@ -417,6 +417,94 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 					iconName.c_str(),
 					description.c_str(),
 					hookPtr,
+					m_nextID,
+					ModelManager::Instance().GetModelId(modelName),
+					MaterialManager::Instance().GetMaterialId(materialName)
+				);
+			}
+		}
+	}
+
+	//============Water purifier
+	if (j.contains("WaterPurifier"))
+	{
+		const auto& waterPurifiers = j["WaterPurifier"];
+
+		DirectX::XMFLOAT3 globalSize = DefaultSize; // 默认大小
+		if (waterPurifiers.contains("size"))
+		{
+			globalSize = JsonToXMFLOAT3(waterPurifiers["size"]);
+		}
+
+		if (waterPurifiers.contains("items"))
+		{
+			for (const auto& waterPurifier : waterPurifiers["items"])
+			{
+				std::string name = waterPurifier["name"];
+				std::string iconName = waterPurifier["iconName"];
+				std::string description = waterPurifier["description"];
+				std::string modelName = waterPurifier["model"];
+				std::string materialName = waterPurifier["material"];
+				float completeTime = waterPurifier["completeTime"];
+
+				DirectX::XMFLOAT3 itemSize = globalSize;
+				if (waterPurifier.contains("size"))
+				{
+					itemSize = JsonToXMFLOAT3(waterPurifier["size"]);
+				}
+				m_itemSizes[name] = itemSize;
+				auto waterPurifierPtr = std::make_shared<WaterPurifier>(completeTime);
+				m_nextID++; 
+				RegisterItem(
+					name.c_str(),
+					iconName.c_str(),
+					description.c_str(),
+					waterPurifierPtr,
+					m_nextID,
+					ModelManager::Instance().GetModelId(modelName),
+					MaterialManager::Instance().GetMaterialId(materialName)
+				);
+			}
+		}
+	}
+
+	//==========Spear
+	if (j.contains("Spear"))
+	{
+		const auto& spears = j["Spear"];
+
+		DirectX::XMFLOAT3 globalSize = DefaultSize; // 默认大小
+		if (spears.contains("size"))
+		{
+			globalSize = JsonToXMFLOAT3(spears["size"]);
+		}
+
+		if (spears.contains("items"))
+		{
+			for (const auto& spear : spears["items"])
+			{
+				std::string name = spear["name"];
+				std::string iconName = spear["iconName"];
+				std::string description = spear["description"];
+				std::string modelName = spear["model"];
+				std::string materialName = spear["material"];
+				float durability = spear["durability"];
+				float damage = spear["damage"];
+
+				DirectX::XMFLOAT3 itemSize = globalSize;
+				if (spear.contains("size"))
+				{
+					itemSize = JsonToXMFLOAT3(spear["size"]);
+				}
+				m_itemSizes[name] = itemSize;
+
+				auto spearPtr = std::make_shared<Spear>(damage,durability);
+				m_nextID++; 
+				RegisterItem(
+					name.c_str(),
+					iconName.c_str(),
+					description.c_str(),
+					spearPtr,
 					m_nextID,
 					ModelManager::Instance().GetModelId(modelName),
 					MaterialManager::Instance().GetMaterialId(materialName)

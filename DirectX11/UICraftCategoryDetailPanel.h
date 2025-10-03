@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include "UIButton.h"
 #include "UIComponent.h"
 
 class UICraftDetailPanel;
 
-/// @brief ƒŒƒVƒs‚Ìí—Ş‚ğ•\¦‚·‚éUI‘w
+/// @brief ãƒ¬ã‚·ãƒ”ã®ç¨®é¡ã‚’è¡¨ç¤ºã™ã‚‹UIå±¤
 class UICraftCategoryDetailPanel :
     public UIComponent
 {
@@ -15,15 +15,15 @@ public:
     UICraftCategoryDetailPanel();
     ~UICraftCategoryDetailPanel() override = default;
 
-    /// @brief UI‰Šú‰»
-	/// @param fontSet •¶š‚ğ•`‰æ‚·‚é‚½‚ß‚ÌƒtƒHƒ“ƒgƒZƒbƒg 
-    /// @param brush •`‰æ‚Ég—p‚·‚éƒuƒ‰ƒV
-    /// @param titleFont ƒ^ƒCƒgƒ‹—pƒtƒHƒ“ƒg
-    /// @param slotText ƒXƒƒbƒg—pƒeƒLƒXƒg
-    /// @param PanelBackground ƒpƒlƒ‹”wŒi
-    /// @param slotMaterial ƒXƒƒbƒg—pƒ}ƒeƒŠƒAƒ‹
-    /// @param effect ƒGƒtƒFƒNƒg
-    /// @param model ƒ‚ƒfƒ‹
+    /// @brief UIåˆæœŸåŒ–
+	/// @param fontSet æ–‡å­—ã‚’æç”»ã™ã‚‹ãŸã‚ã®ãƒ•ã‚©ãƒ³ãƒˆã‚»ãƒƒãƒˆ 
+    /// @param brush æç”»ã«ä½¿ç”¨ã™ã‚‹ãƒ–ãƒ©ã‚·
+    /// @param titleFont ã‚¿ã‚¤ãƒˆãƒ«ç”¨ãƒ•ã‚©ãƒ³ãƒˆ
+    /// @param slotText ã‚¹ãƒ­ãƒƒãƒˆç”¨ãƒ†ã‚­ã‚¹ãƒˆ
+    /// @param PanelBackground ãƒ‘ãƒãƒ«èƒŒæ™¯
+    /// @param slotMaterial ã‚¹ãƒ­ãƒƒãƒˆç”¨ãƒãƒ†ãƒªã‚¢ãƒ«
+    /// @param effect ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+    /// @param model ãƒ¢ãƒ‡ãƒ«
     void Init(UIFontSet* fontSet, UIBrush* brush, const char* titleFont, const char* slotText, Material* PanelBackground, Material* slotMaterial, IEffect* effect, Primitive* model);
 
     UIComponent* HitTest(float x, float y) override;
@@ -36,23 +36,29 @@ public:
 
     void SetDetailPanel(UICraftDetailPanel* detailPanel) { m_pDetailPanel = detailPanel; }
 
-	/// @brief ƒpƒlƒ‹‚ÌˆÊ’u‚ÆÅ‘åƒTƒCƒY‚ğ‰Šú‰»‚·‚é
-	///// @param pos Panel pos(left-top anchor)
- //   /// @param panelSize Panel size
+    /// @brief  ãƒ‘ãƒãƒ«ã®ä½ç½®ã¨æœ€å¤§ã‚µã‚¤ã‚ºã‚’åˆæœŸåŒ–ã™ã‚‹
+    /// @param pos Panel pos(left-top anchor)
+    /// @param panelWidth Panel width
+    /// @param titleSize title size
+    /// @param slotSize slot width/height
     void InitPosAndSize(const DirectX::XMFLOAT3& pos, float panelWidth, const DirectX::XMFLOAT2& titleSize, const DirectX::XMFLOAT2& slotSize);
 
 private:
-    std::unique_ptr<UIRender> m_pBackground;        // Panel ”wŒi
+    std::unique_ptr<UIRender> m_pBackground;        // Panel èƒŒæ™¯
     std::unique_ptr<UIText> m_pTitle;               // Panel title
 
 	Slots m_slots;                                 // Slot list
-   //SlotsTexts m_slotTexts;                        // Slot text
+	SlotsTexts m_slotTexts;                        // Slot text
 
     std::string m_currentCategoryName;
 	std::vector<std::string> m_iconNames;           // icon names for slots
 
     UICraftDetailPanel* m_pDetailPanel = nullptr;
-    //todo: í—Ş‚É‚æ‚Á‚Ä•¡”‚Ìslot set‚É‚·‚é
-    
+    //todo: ç¨®é¡ã«ã‚ˆã£ã¦è¤‡æ•°ã®slot setã«ã™ã‚‹
+
+	DirectX::XMFLOAT3 m_panelPos;		    // Panel anchor pos(left-top)
+    float m_titleHeight;                    // ãƒ‘ãƒãƒ«ã®å¤§ãã•ã‚’èª¿æ•´ã™ã‚‹ãŸã‚ã€€ã‚¿ã‚¤ãƒˆãƒ«æ–‡å­—ã®é«˜ã•
+	float m_slotHeight;                     // ãƒ‘ãƒãƒ«ã®å¤§ãã•ã‚’èª¿æ•´ã™ã‚‹ãŸã‚ã€€ã‚¹ãƒ­ãƒƒãƒˆã®é«˜ã•
+  
 };
 

@@ -1,4 +1,4 @@
-#include "UICraftCategoryPanel.h"
+ï»¿#include "UICraftCategoryPanel.h"
 #include "d3dUtil.h"
 #include "Inventory.h"
 #include "TextureManager.h"
@@ -6,8 +6,8 @@
 namespace
 {
 	static constexpr uint8_t MaxSlot = 3;	// slot number
-	static constexpr float SlotSpacing = 6.f;	// slotŠÔ‚Ì‹——£
-	static constexpr float PanelPadding = 5.f;	// slot‚Æpanel‚Ìpadding
+	static constexpr float SlotSpacing = 6.f;	// sloté–“ã®è·é›¢
+	static constexpr float PanelPadding = 5.f;	// slotã¨panelã®padding
 	static constexpr float IconScale = 0.8f;
 	static constexpr DirectX::XMFLOAT4 SelectedColor = { 1,1,1,1 };
 	static constexpr DirectX::XMFLOAT4 UnselectedColor = { 0.8f,0.8f,0.8f,1 };
@@ -45,7 +45,8 @@ void UICraftCategoryPanel::Init(Material* panelBackgroundMaterial, Material* bac
 				//m_currentCategoryName = CraftSystem::Instance().GetCategories()[m_currentIndex];
 
 				// Set category detail panel active
-				m_categoryPanel->SetActive(true);
+				m_categoryPanel->SetActive(true);	// open category panel
+				m_detailPanel->SetActive(false);	// close detail panel
 				m_categoryPanel->UpdatePanel(m_currentIndex);
 			});
 	}
@@ -183,4 +184,7 @@ void UICraftCategoryPanel::SetPanels(UICraftCategoryDetailPanel* categoryDetailP
 {
 	m_categoryPanel = categoryDetailPanel;
 	m_detailPanel = recipeDetailPanel;
+
+	m_categoryPanel->SetActive(false);
+	m_detailPanel->SetActive(false);
 }

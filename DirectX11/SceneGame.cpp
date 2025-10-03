@@ -308,7 +308,7 @@ void SceneGame::Init()
 	CraftSystem::Instance().LoadCraftData("Assets/ConfigFile/CraftSystemData.json");
 	
 
-	//UI Craft panel
+	//UI Craft panel // Third layer detail
 	UICraftDetailPanel* craftPanel = CreateObj<UICraftDetailPanel>("UICraftDetailPanel");
 	craftPanel->InitFonts(uiFontSet,uiBrush,"CraftPanelTitleFont","CraftPanelDescriptionFont","CraftPanelRequiresFont","CraftPanelIngredientNameFont","CraftPanelNumberFont");
 	Material* panelBgMat = MaterialManager::Instance().GetMaterial("CraftPanelBackgroundMaterial");
@@ -317,6 +317,14 @@ void SceneGame::Init()
 	Material* panelIconBgMat = CreateObj<Material>("PanelIconBgMaterial");
 	craftPanel->InitRender(panelBgMat,panelButtonMat, uiInventorySlotBgMaterial,panelIconMat,uiBasicEffect,ModelManager::Instance().GetModel("Square"));
 	craftPanel->LoadPanelConfig(j["Game"]["UI"], "CraftPanel");
+
+	// Second layer category detail panel
+	UICraftCategoryDetailPanel* craftCategoryDetailPanel = CreateObj<UICraftCategoryDetailPanel>("UICraftCategoryDetailPanel");
+
+	Material* categoryDetailPanelMaterial = CreateObj<Material>("CategoryDetailPanelMaterial");
+	craftCategoryDetailPanel->Init(uiFontSet, uiBrush, "CraftCategoryPanelFont", "CraftCategoryPanelSlotFont", panelBgMat, categoryDetailPanelMaterial, uiBasicEffect, ModelManager::Instance().GetModel("Square"));
+	craftCategoryDetailPanel->InitPosAndSize({ -845,400,1.0 }, 260.f, { 240,50 }, { 64,64 });
+	craftCategoryDetailPanel->SetDetailPanel(craftPanel);
 
 
 	// UI Craft Category
@@ -327,7 +335,7 @@ void SceneGame::Init()
 	UICraftCategoryPanel* categoryPanel = CreateObj<UICraftCategoryPanel>("UICraftCategoryPanel");
 	categoryPanel->Init(categoryPanelBgRenderMat,categoryPanelBgMat,categoryIconMat,uiBasicEffect, ModelManager::Instance().GetModel("Square"));
 	categoryPanel->LoadSizeAndPos(j["Game"]["UI"], "CraftCategoryPanel");
-
+	categoryPanel->SetPanels(craftCategoryDetailPanel, craftPanel);
 
 
 
@@ -400,9 +408,9 @@ void SceneGame::Init()
 	UIManager::Instance().GetUILayer("Player")->AddComponent(uiInventory);	// note that ui inventory is has lower priority than craft system panel
 
 	UIManager::Instance().AddUiLayer("CraftPanel", 4);
-	//UIManager::Instance().GetUILayer("CraftPanel")->AddComponent(craftPanel);
 	UIManager::Instance().GetUILayer("CraftPanel")->AddComponent(categoryPanel);
-
+	UIManager::Instance().GetUILayer("CraftPanel")->AddComponent(craftCategoryDetailPanel);
+	UIManager::Instance().GetUILayer("CraftPanel")->AddComponent(craftPanel);
 
 	// Menu Setup
 	GetObj<UIMenu>("UIMenu")->SetButton(this);

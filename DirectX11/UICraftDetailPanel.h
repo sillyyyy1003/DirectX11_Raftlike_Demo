@@ -51,7 +51,6 @@ private:
 	float m_descriptionHeight;
     float m_requireTextHeight;
     
- 
 
     std::unique_ptr<UIRender> m_backgroundRender;   // 背景を表示する
     std::unique_ptr<UIRender> m_craftIcon;          // Icon表示

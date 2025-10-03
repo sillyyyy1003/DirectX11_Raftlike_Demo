@@ -385,7 +385,7 @@
     {
       "name": "CraftPanelButtonMaterial",
       "ambient": [1.0, 1.0, 1.0, 1.0],
-      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [0.6, 0.6, 0.6, 1.0],
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
       "albedoTex": "UI_CraftButton",
@@ -523,6 +523,14 @@
     {
       "name": "WaterPurifier_Icon",
       "file": "Assets/Texture/ObjectIcon/drinking.png"
+    },
+    {
+      "name": "NormalHook_Icon",
+      "file": "Assets/Texture/ObjectIcon/grappling-hook.png"
+    },
+    {
+      "name": "WoodSpear_Icon",
+      "file": "Assets/Texture/ObjectIcon/spear.png"
     },
     {
       "name": "Category_Life_Icon",

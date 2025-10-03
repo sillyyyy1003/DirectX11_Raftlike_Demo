@@ -126,6 +126,7 @@ bool CraftSystem::LoadRecipes(const char* filePath)
 
 bool CraftSystem::LoadCraftData(const char* filepath)
 {
+	/*
 	std::ifstream file(filepath);
 	if (!file.is_open())
 	{
@@ -195,6 +196,84 @@ bool CraftSystem::LoadCraftData(const char* filepath)
 			m_iconMap[categoryName] = categoryJson["iconName"].get<std::string>();
 		}
 	}
+	return true;*/
+
+	std::ifstream file(filepath);
+	if (!file.is_open())
+	{
+		DebugLog::LogError("[CraftSystem] :Failed to open recipe file:{}", filepath);
+		return false;
+	}
+
+	nlohmann::json j;
+	file >> j;
+
+	// check data
+	if (!j.contains("Datas") || !j["Datas"].is_object())
+	{
+		DebugLog::LogError("[CraftSystem] :Invalid recipe JSON format: missing 'Datas' object");
+		return false;
+	}
+
+	const auto& datas = j["Datas"];
+	for (auto itCat = datas.begin(); itCat != datas.end(); ++itCat)
+	{
+		std::string categoryName = itCat.key();
+		const auto& categoryJson = itCat.value();
+
+		m_categories.push_back(categoryName);
+
+		// error check name& recipies
+		if (!categoryJson.contains("recipes") || !categoryJson["recipes"].is_array())
+		{
+			DebugLog::LogError("[CraftSystem] :Category '{}' has no valid 'recipes' array", categoryName);
+			continue;
+		}
+
+		// load recipes from this category
+		CraftRecipes& recipesInCat = m_recipes[categoryName]; // 改为存裸指针
+
+		for (const auto& recipeJson : categoryJson["recipes"])
+		{
+			if (!recipeJson.contains("recipeName") || !recipeJson["recipeName"].is_string())
+			{
+				DebugLog::LogError("[CraftSystem] :Invalid recipe in category '{}'", categoryName);
+				continue;
+			}
+
+			std::string recipeName = recipeJson["recipeName"];
+
+			// 创建并交给 m_pAllRecipes 管理
+			auto recipe = std::make_unique<CraftRecipe>();
+			recipe->SetRecipeName(recipeName);
+
+			if (recipeJson.contains("ingredients") && recipeJson["ingredients"].is_array())
+			{
+				for (const auto& ingJson : recipeJson["ingredients"])
+				{
+					if (!ingJson.contains("itemName") || !ingJson.contains("quantity"))
+						continue;
+
+					CraftRecipe::Ingredient ing;
+					ing.itemName = ingJson["itemName"].get<std::string>();
+					ing.quantity = ingJson["quantity"].get<int>();
+					recipe->GetIngredients().push_back(ing);
+				}
+			}
+
+			// 保存裸指针到分类容器
+			CraftRecipe* rawPtr = recipe.get();
+			recipesInCat.push_back(rawPtr);
+
+			// 保存到名字映射，unique_ptr 接管生命周期
+			m_pAllRecipes[recipeName] = std::move(recipe);
+		}
+
+		if (categoryJson.contains("iconName") && categoryJson["iconName"].is_string())
+		{
+			m_iconMap[categoryName] = categoryJson["iconName"].get<std::string>();
+		}
+	}
 	return true;
 }
 
@@ -255,7 +334,7 @@ CraftRecipe* CraftSystem::GetRecipe(std::string& category, std::string& recipeNa
 	{
 		if(recipe->GetResultItemName()==recipeName)
 		{
-			return recipe.get();
+			return recipe;
 		}
 	}
 	DebugLog::LogError("[CraftSystem] Recipe not found: {}", recipeName);
@@ -304,7 +383,11 @@ CraftSystem::CraftRecipes& CraftSystem::GetRecipesByCategory(const std::string& 
 #ifdef _DEBUG
 		DebugLog::LogError("[CraftSystem] {} is not found!", categoryName);
 #endif
-		static CraftRecipes emptyRecipes;
-		return emptyRecipes;
 	}
+}
+
+void CraftSystem::TryCraftItem(std::string& itemName)
+{
+	if (CheckCraft(itemName))
+		Craft(itemName);
 }

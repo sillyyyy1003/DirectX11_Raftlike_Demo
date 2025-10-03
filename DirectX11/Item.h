@@ -15,7 +15,7 @@ public:
 		Food = 2,			// 食品
 		Water = 3,			// 飲み物
 		BaseMaterial = 4,	// 建築材料
-		ShipTile = 5,
+		ShipTile = 5,	
 		Cup = 6,
 		WaterPurifier,
 	};

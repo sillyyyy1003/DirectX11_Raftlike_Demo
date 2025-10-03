@@ -1,4 +1,4 @@
-#include "UICraftCategoryDetailPanel.h"
+ï»¿#include "UICraftCategoryDetailPanel.h"
 #include "CraftSystem.h"
 #include "ItemDataBase.h"
 #include "TextureManager.h"
@@ -7,6 +7,7 @@
 namespace
 {
 	static constexpr int MaxSlotSize = 20;
+	static constexpr float SlotTextWidth = 200.f;
 	static constexpr float PanelPadding = 5.f;
 	static constexpr float PanelSpacing = 10.f;
 }
@@ -16,7 +17,11 @@ UICraftCategoryDetailPanel::UICraftCategoryDetailPanel():
 	m_pTitle(nullptr),
 	m_currentCategoryName(""),
 	m_iconNames(0),
-	m_slots(MaxSlotSize)
+	m_slots(MaxSlotSize),
+	m_slotTexts(MaxSlotSize),
+	m_panelPos({0,0,0}),
+	m_titleHeight(0),
+	m_slotHeight(0)
 {
 }
 
@@ -34,6 +39,7 @@ void UICraftCategoryDetailPanel::Init(UIFontSet* fontSet, UIBrush* brush, const 
 
 	for (size_t i = 0; i < m_slots.size(); i++)
 	{
+		// init slot
 		m_slots[i] = std::make_unique<UIButton>();
 		m_slots[i]->Init(effect, slotMaterial, model);
 
@@ -46,6 +52,13 @@ void UICraftCategoryDetailPanel::Init(UIFontSet* fontSet, UIBrush* brush, const 
 				// Activate detail panel
 				m_pDetailPanel->SetActive(true);
 			});
+
+		// init text
+		m_slotTexts[i] = std::make_unique<UIText>();
+		m_slotTexts[i]->Init(fontSet, slotText, brush);
+		m_slotTexts[i]->SetTextAlignment(UIText::TextAlign::Left);
+		m_slotTexts[i]->SetParagraphAlignment(UIText::ParagraphAlign::Middle);
+
 	}
 
 }
@@ -54,7 +67,7 @@ UIComponent* UICraftCategoryDetailPanel::HitTest(float x, float y)
 {
 	for (auto& slot : m_slots)
 	{
-		if (slot->IsActive())//•\Ž¦‚µ‚Ä‚¢‚éslot‚¾‚¯‚ðHitTest
+		if (slot->IsActive())//è¡¨ç¤ºã—ã¦ã„ã‚‹slotã ã‘ã‚’HitTest
 		{
 			if (UIComponent* hit = slot->HitTest(x, y))
 				return hit;
@@ -85,25 +98,42 @@ void UICraftCategoryDetailPanel::UpdatePanel(int currentIndex)
 		std::string itemName = recipes[i]->GetResultItemName();
 		std::string iconTexName = ItemDataBase::Instance().GetItem(itemName.c_str())->GetIconTextureName();
 		m_iconNames[i] = iconTexName;
-		m_slots[i]->SetActive(true);	// •K—v‚ÈSlot‚¾‚¯‚ð•\Ž¦
+		m_slots[i]->SetActive(true);	// å¿…è¦ãªSlotã ã‘ã‚’è¡¨ç¤º
+
+		m_slotTexts[i]->SetStaticText(itemName);
+		m_slotTexts[i]->SetActive(true);
 	}
+
+	// Update panel height
+	DirectX::XMFLOAT3 panelSize = m_pBackground->GetTransform().GetScale();
+	float totalHeight = PanelPadding * 2 + m_titleHeight + PanelSpacing +
+		(recipes.size() > 0 ? (recipes.size() * (m_slotHeight + PanelSpacing)) : 0);
+	panelSize.y = totalHeight;
+	m_pBackground->GetTransform().SetScale(panelSize);
+
+	// Set panel pos
+	m_pBackground->GetTransform().SetPosition({
+		m_panelPos.x + panelSize.x / 2.f,
+		m_panelPos.y - panelSize.y / 2.f,
+		m_panelPos.z
+		});
 
 }
 
 void UICraftCategoryDetailPanel::SetActive(bool isActive)
 {
-	// ƒpƒlƒ‹‚ð•Â‚´‚·ŽžA‘S‚Ä‚ÌƒXƒƒbƒg‚ð”ñ•\Ž¦‚É‚·‚é
-	if (isActive==false)
-	{
-		for(auto& slot:m_slots)
-		{
-			slot->SetActive(isActive);
-		}
-		return;
-	}
-
 	this->m_isActive = isActive;
-	
+
+	// Deactivate detail panel when this panel is deactivated
+	if (isActive == false)
+	{
+		for(size_t i=0;i< m_slots.size();i++)
+		{
+			m_slots[i]->SetActive(false);
+			m_slotTexts[i]->SetActive(false);
+		}
+
+	}
 }
 
 void UICraftCategoryDetailPanel::Draw()
@@ -122,12 +152,13 @@ void UICraftCategoryDetailPanel::Draw()
 #endif
 		m_slots[i]->GetUiRenderComponent()->GetMaterial()->SetTexture(Material::Albedo, iconTexPtr);
 		m_slots[i]->Draw();
+
+		m_slotTexts[i]->Draw();
 	}
 
 }
 
-void UICraftCategoryDetailPanel::InitPosAndSize(const DirectX::XMFLOAT3& pos, float panelWidth,
-	const DirectX::XMFLOAT2& titleSize, const DirectX::XMFLOAT2& slotSize)
+void UICraftCategoryDetailPanel::InitPosAndSize(const DirectX::XMFLOAT3& pos, float panelWidth,	const DirectX::XMFLOAT2& titleSize, const DirectX::XMFLOAT2& slotSize)
 {
 	// Set background
 	float totalHeight = PanelPadding * 2 + titleSize.y + PanelSpacing + slotSize.y * m_slots.size() + PanelSpacing * m_slots.size();
@@ -149,21 +180,28 @@ void UICraftCategoryDetailPanel::InitPosAndSize(const DirectX::XMFLOAT3& pos, fl
 	});
 
 	// Set Slots
-	for(size_t i=0; i< m_slots.size();i++)
+	for (size_t i = 0; i < m_slots.size(); i++)
 	{
-		m_slots[i]->SetScale({ slotSize.x,slotSize.y,1.f });
-		m_slots[i]->SetPosition({
-			
-			});
-
 		DirectX::XMFLOAT3 buttonPos = {
-			pos.x + panelWidth / 2.f,
+			pos.x + PanelPadding + slotSize.x / 2.f,
 			pos.y - PanelPadding - titleSize.y - PanelSpacing - (slotSize.y / 2.f) - i * (slotSize.y + PanelSpacing),
 			pos.z + 0.1f
 		};
-		
+
 		m_slots[i]->SetButtonRect(buttonPos, slotSize.x, slotSize.y);
+
+		DirectX::XMFLOAT3 textPos = {
+			pos.x + PanelPadding + slotSize.x + SlotTextWidth /2.f+ PanelSpacing,
+			pos.y - PanelPadding - titleSize.y - PanelSpacing - (slotSize.y / 2.f) - i * (slotSize.y + PanelSpacing),
+			1.f
+		};
+
+		m_slotTexts[i]->SetScale({ SlotTextWidth,slotSize.y,1.0f });
+		m_slotTexts[i]->SetPosition(textPos);
 	}
+	m_titleHeight = titleSize.y;
+	m_slotHeight = slotSize.y;
+	m_panelPos = pos;
 
 }
 
