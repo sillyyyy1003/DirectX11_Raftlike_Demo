@@ -57,11 +57,13 @@ void PhysicsManager::Init()
 	m_pPhysicsSystem->SetBodyActivationListener(m_pBodyActivationListener.get());
 
 	// A contact listener gets notified when bodies (are about to) collide, and when they separate again.
-	m_pObjectContactListener = make_shared<ObjectContactListener>();
-	m_pPhysicsSystem->SetContactListener(m_pObjectContactListener.get());
+	m_pObjectContactListenerDispatcher = make_shared<ContactListenerDispatcher>();
+	m_pObjectContactListener = std::make_shared<ObjectContactListener>();
+
+	m_pObjectContactListenerDispatcher->AddListener(m_pObjectContactListener.get());
+	m_pPhysicsSystem->SetContactListener(m_pObjectContactListenerDispatcher.get());
 
 	m_pPlayerContactListener = make_shared<MyPlayerContactListener>();
-
 	m_pPhysicsSystem->SetGravity({ 0,-9.8f,0 });
 
 }
@@ -79,7 +81,7 @@ void PhysicsManager::UnInit()
 	m_tempAllocator.reset();	// Reset the temp allocator
 	m_jobSystem.reset();		// Release the job system
 	m_pPhysicsSystem.reset();	// Release the physics system
-	m_pObjectContactListener.reset();	// Release the contact listener
+	m_pObjectContactListenerDispatcher.reset();	// Release the contact listener
 	m_pBodyActivationListener.reset();	// Release the body activation listener
 }
 
@@ -160,7 +162,6 @@ void PhysicsManager::RemoveAllBodies()
 	{
 		bodyInterface.RemoveBody(id);	//Remove
 		bodyInterface.DestroyBody(id);	//Destroy
-
 	}
 
 	m_bodies.clear();

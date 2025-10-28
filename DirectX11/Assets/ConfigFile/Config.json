@@ -39,6 +39,10 @@
     {
       "name": "Environment_WaterBox",
       "file": "Assets/Model/WaterBox.fbx"
+    },
+    {
+      "name":"Hook",
+      "file":"Assets/Model/Hook.fbx"
     }
   ],
   "materials":[
@@ -139,6 +143,16 @@
       "specular": [0.0, 0.0, 0.0, 1.0],
       "emission": [0.0, 0.0, 0.0, 0.0],
       "albedoTex": "UI_Aim",
+      "normalTex": "",
+      "metallicTex": ""
+    },    
+    {
+      "name": "UIChargeMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "UI_Charge",
       "normalTex": "",
       "metallicTex": ""
     },
@@ -495,6 +509,10 @@
     {
       "name": "UI_Aim",
       "file": "Assets/Texture/UI/UI_Aim_128x128.png"
+    },
+    {
+      "name": "UI_Charge",
+      "file": "Assets/Texture/UI/UI_Charge_128x128.png"
     },
     {
       "name": "Apple_Icon",

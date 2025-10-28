@@ -71,7 +71,7 @@ void DriftManager::Init(IEffect* effect)
     std::vector<std::shared_ptr<ItemInstance>> woodItems(NearItemNum);
     for (auto& item : woodItems)
     {
-        item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Wood", 1, -1, Layers::DRIFT);
+        item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Wood", 1,  Layers::DRIFT);
         item->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(effect);
         item->DeActivate();
         item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
@@ -83,7 +83,7 @@ void DriftManager::Init(IEffect* effect)
     std::vector<std::shared_ptr<ItemInstance>> wireItems(NearItemNum);
     for (auto& item : wireItems)
     {
-        item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Wire", 1, -1, Layers::DRIFT);
+        item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Wire", 1, Layers::DRIFT);
         item->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(effect);
         item->DeActivate();
         item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
@@ -96,7 +96,7 @@ void DriftManager::Init(IEffect* effect)
     std::vector<std::shared_ptr<ItemInstance>> plasticItems(NearItemNum);
     for (auto& item : plasticItems)
     {
-        item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Plastic", 1, -1, Layers::DRIFT);
+        item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Plastic", 1, Layers::DRIFT);
         item->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(effect);
         item->DeActivate();
         item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
@@ -215,6 +215,10 @@ void DriftManager::Update(float tick)
                 item->DeActivate();
                 item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
                 item->SetPosition(NearItemObjectDefaultPos);
+            }
+			else if (item->GetState() == Hooked) // if item is hooked by player, skip loop
+            {
+                continue;
             }
 
             if (!item->GetActive()) continue;

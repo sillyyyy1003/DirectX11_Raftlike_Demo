@@ -3,6 +3,10 @@
 #include "DebugLog.h"
 #include <nlohmann/json.hpp>
 
+#include "ItemDataBase.h"
+#include "MaterialManager.h"
+#include "ModelManager.h"
+
 using json = nlohmann::json;
 #include "GameApp.h"
 #include "RenderState.h"
@@ -37,6 +41,8 @@ namespace
 		WaitToRecycle = 2,  // Marked for recycling
 
 	};
+
+	static constexpr DirectX::XMFLOAT3 ItemDefaultOffset = { 0.3f,-0.3f,1.2f };
 
 }
 
@@ -328,6 +334,18 @@ void Player::Update(float dt)
 
 	//=======PlayerEntity Update
 	m_pPlayerEntity->Update(dt);	//PlayerのHPを更新
+
+	//=======Hold Item Update
+	if (m_itemInHand)
+	{
+		m_itemInHand->Update(dt);
+		if(m_itemInHand->HasCharge())
+		{
+			m_pUiCharge->SetProgress(m_itemInHand->GetChargeProgress());
+		}
+	}
+
+
 }
 
 void Player::Draw()
@@ -363,7 +381,10 @@ void Player::Draw()
 	}
 #endif
 
-
+	if(m_itemInHand)
+	{
+		m_itemInHand->Draw();
+	}
 }
 
 void Player::Strafe(float dt)
@@ -448,6 +469,78 @@ void Player::OnStarveStateChanged()
 	m_pPlayerEntity->OnStateStarveChanged(m_isInDamagedStatus);
 }
 
+void Player::SetItemInHand(ItemInstance* item, IEffect* effectPtr)
+{
+	// check if item is same
+	if (m_itemInHand == item)return;
+
+	if (item!=nullptr)
+	{
+		if (m_itemInHand)
+		{
+			// If there is an item in hand, reset item
+			// Remove physics component 
+			if (m_itemInHand->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics))
+				m_itemInHand->RemoveComponent<PhysicsComponent>(MyComponent::ComponentType::Physics);
+			// Remove render component
+			if (m_itemInHand->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Render))
+				m_itemInHand->RemoveComponent<RenderComponent>(MyComponent::ComponentType::Render);
+		}
+	}
+	// Set ptr
+	m_itemInHand = item;
+	if (!m_itemInHand)return;
+
+	// Set Object Transform
+	DirectX::XMFLOAT3 size = ItemDataBase::Instance().GetItemSize(m_itemInHand->GetName());
+	// Set item size
+	m_itemInHand->GetTransform().SetScale(size);
+	// Set item transform parent -》 camera tranform
+	m_itemInHand->GetTransform().SetParent(&(m_pCameraController->GetCamera()->m_transform));
+	// Set item pos
+	m_itemInHand->GetTransform().SetPosition(ItemDefaultOffset);
+
+
+	// Add render component
+	uint32_t modelId = m_itemInHand->GetModelId();
+	uint32_t materialId = m_itemInHand->GetMaterialId();
+	if(!m_itemInHand->GetComponent<RenderComponent>(MyComponent::ComponentType::Render))
+	{
+		std::shared_ptr<RenderComponent> renderComponent = std::make_shared<RenderComponent>();
+		renderComponent->Init(MaterialManager::Instance().GetMaterial(materialId), effectPtr, ModelManager::Instance().GetModel(modelId));
+		m_itemInHand->AddComponent(MyComponent::ComponentType::Render, renderComponent);
+	}
+
+
+
+
+	// Only give collider to weapon/hook
+	if (m_itemInHand->GetProto()->GetItemType() != Item::ItemType::Weapon && m_itemInHand->GetProto()->GetItemType() != Item::ItemType::Hook)return;
+
+	// if there is no physics component add physics component
+	if (!m_itemInHand->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics))
+	{
+		ObjectLayer layer = Layers::NUM_LAYERS;
+		if (m_itemInHand->GetProto()->GetItemType() == Item::ItemType::Weapon)
+			layer = Layers::WEAPON;
+		else if(m_itemInHand->GetProto()->GetItemType() == Item::ItemType::Hook)
+			layer= Layers::TOOL;
+
+		DirectX::XMFLOAT3 modelSize= ModelManager::Instance().GetModel(modelId)->GetModelSize();
+		BodyCreationSettings boxSettings(new BoxShape(RVec3(modelSize.x * 0.5f * size.x, modelSize.y * 0.5f * size.y, modelSize.z * 0.5f * size.z)), { 0,0,0, }, Quat::sIdentity(),EMotionType::Kinematic, layer);
+
+		PhysicsManager::Instance().SetBodyCreationMass(1.f, boxSettings);	// Set the mass properties for the apple box
+		std::shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
+		physicsComponent->Init(boxSettings, EActivation::Activate);
+		m_itemInHand->AddComponent(MyComponent::ComponentType::Physics, physicsComponent);
+		physicsComponent->SetGameObject(m_itemInHand); // Set the GameObject for the PhysicsComponent
+
+
+	}
+
+}
+
+
 
 void Player::InteractWithObject(BodyID& id)
 {
@@ -461,7 +554,7 @@ void Player::InteractWithObject(BodyID& id)
 	GameObject* object = component->GetGameObject();
 
 	// 当たったのがアイテムなら、インヴェントリーに追加
-	if (object->GetGameObjectType() == GameObject::GameObjectType::Item)
+	if (object && object->GetGameObjectType() == GameObjectType::Item)
 	{
 		auto item = dynamic_cast<ItemInstance*>(object);
 

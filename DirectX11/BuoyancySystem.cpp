@@ -39,7 +39,7 @@ BuoyancySystem::BuoyancySystem()
 void BuoyancySystem::Init(float waterWidth, float waterHeight)
 {
 	// Add listener to physics system
-	PhysicsManager::Instance().GetPhysicsSystem()->SetContactListener(this);
+	PhysicsManager::Instance().GetDispatcher()->AddListener(this);
 
 	// Create water sensor. We use this to detect which bodies entered the water
 	// aware that box shape use half extent
@@ -128,11 +128,24 @@ void BuoyancySystem::PreUpdate(float dt)
 {
 	m_time += dt;
 
+	// Check body
+	for (const BodyID& id : m_bodiesInWater)
+	{
+		
+	}
+
+	// Update body buoyancy
 	lock_guard<Mutex> lock(m_bodiesInWaterMutex);
 
 	for (const BodyID& id : m_bodiesInWater)
 	{
 		BodyLockWrite body_lock(PhysicsManager::Instance().GetPhysicsSystem()->GetBodyLockInterface(), id);
+
+		if (id.IsInvalid())
+		{
+			m_bodiesInWater.erase(std::remove(m_bodiesInWater.begin(), m_bodiesInWater.end(), id), m_bodiesInWater.end());
+			continue;
+		}
 		Body& body = body_lock.GetBody();
 
 
@@ -226,4 +239,5 @@ RVec3 BuoyancySystem::GetWaterSurfacePosition(RVec3Arg inXZPosition) const
 	return RVec3(pos.x, pos.y, pos.z);
 
 }
+
 

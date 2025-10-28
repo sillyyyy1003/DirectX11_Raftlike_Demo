@@ -29,6 +29,8 @@ public:
 	///	@param camera
 	void SetWVPMatrixCB(const Transform& t, CameraBase* camera = nullptr) override;
 
+	void SetConstantBuffer(Transform& transform, Material* material) override;
+
 	/// @brief 基本色の設置
 	/// @param mat 
 	void SetMaterial(Material* mat) override;

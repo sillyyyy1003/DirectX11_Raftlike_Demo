@@ -55,6 +55,19 @@ public:
 		return nullptr;
 	}
 
+	/// @brief Remove component from components
+	/// @tparam T template yep
+	/// @param type component type to remove
+	template<typename T>
+	void RemoveComponent(MyComponent::ComponentType type)
+	{
+		auto it = m_components.find(type);
+		if (it != m_components.end())
+		{
+			m_components.erase(it);
+		}
+	}
+
 #if defined(_DEBUG) || defined(DEBUG)
 	/// @brief Set debug collision scale for visualization
 	/// @param scale Scale factor for collision visualization

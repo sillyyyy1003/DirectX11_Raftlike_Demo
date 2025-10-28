@@ -6,11 +6,11 @@ class FoodInstance :
 {
 public:
 	void InteractWith(BodyID& rigidBody, Player* player) override;
-	void OnUse(Player* player) override;
+	void OnUseRelease(Player* player) override;
 };
 
 class CupInstance:
-	public ItemInstance, public IToolBehavior
+	public ItemInstance
 {
 public:
 	CupInstance();
@@ -24,7 +24,7 @@ public:
 	void SetCupState(CupState state) { m_cupState = state; }
 	CupState GetCupState() const { return m_cupState; }
 
-	void OnUse(Player* player) override;
+	void OnUseRelease(Player* player) override;
 
 	/// @brief Interact with the owner item of rigid body
 	/// @param rigidBody 
@@ -59,3 +59,4 @@ private:
 	float m_timer = 0;
 	WaterPurifierState m_waterPurifierState = Idle;
 };
+

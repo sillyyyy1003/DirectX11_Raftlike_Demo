@@ -74,14 +74,14 @@ void PlayerController::Update(float dt)
 
     // ジャンプ
     {
-        if (KInput::IsKeyTrigger(VK_SPACE))
+        if (KInput::IsKeyRelease(VK_SPACE))
             m_pPlayerCharacter->Jump();
     }
 
 
     //F key to Get the object
     {
-        if(KInput::IsKeyTrigger('F'))
+        if(KInput::IsKeyRelease('F'))
         {
             BodyID id;
             if(GetRayHitBodyID(id))
@@ -94,10 +94,28 @@ void PlayerController::Update(float dt)
 
     // LMB to use item in inventory 
     {
+        // On Use Start
 	    if(KInput::IsKeyTrigger(VK_LBUTTON))
 	    {
-            m_pPlayer->GetItemInHand()->OnUse(m_pPlayer);
+            if(m_pPlayer->GetItemInHand())
+                m_pPlayer->GetItemInHand()->OnUseStart(m_pPlayer);
 	    }
+
+        // On Using
+        if(KInput::IsKeyPress(VK_LBUTTON))
+        {
+            if (m_pPlayer->GetItemInHand())
+                m_pPlayer->GetItemInHand()->OnUseHold(m_pPlayer,dt);
+        }
+
+
+        // On Use End
+        if (KInput::IsKeyRelease(VK_LBUTTON))
+        {
+            if (m_pPlayer->GetItemInHand())
+                m_pPlayer->GetItemInHand()->OnUseRelease(m_pPlayer);
+        }
+
     }
 }
 

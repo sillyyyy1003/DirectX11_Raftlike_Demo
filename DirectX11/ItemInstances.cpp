@@ -15,14 +15,15 @@ void FoodInstance::InteractWith(BodyID& rigidBody, Player* player)
 {
 	// food will interact with kitch
 	// Check rigid body is building layer or not. Because food only interactive with kitchen which is in building layer
-	
-	
 }
 
-void FoodInstance::OnUse(Player* player)
+void FoodInstance::OnUseRelease(Player* player)
 {
 	float recoverValue = dynamic_cast<const Food*>(GetProto().get())->GetFoodValue();
 	player->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->RestoreHunger(recoverValue);
+
+	player->GetInventory()->RemoveCurrentSlotItem(1);
+	player->GetInventory()->UpdateItemOfPlayer(player);
 #ifdef _DEBUG
 	DebugLog::Log("Eat food");
 #endif
@@ -32,7 +33,7 @@ CupInstance::CupInstance()
 {
 }
 
-void CupInstance::OnUse(Player* player)
+void CupInstance::OnUseRelease(Player* player)
 {
 	float recoverValue = dynamic_cast<const Cup*>(GetProto().get())->GetRecoverValue();
 	switch (m_cupState)

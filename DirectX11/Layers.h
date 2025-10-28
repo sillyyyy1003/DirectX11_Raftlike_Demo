@@ -6,6 +6,7 @@
 #include <Physics/Collision/BroadPhase/BroadPhaseLayer.h>
 #include "BuoyancySystem.h"
 #include "DebugLog.h"
+
 using namespace JPH;
 
 namespace Layers
@@ -27,10 +28,12 @@ namespace BroadPhaseLayers
 	static constexpr BroadPhaseLayer STATIC(0);     // 建築
 	static constexpr BroadPhaseLayer ACTOR(1);      // プレイヤー・敵
 	static constexpr BroadPhaseLayer BOAT(2);       // 船
-	static constexpr BroadPhaseLayer DYNAMIC(3);    // Drop・漂流物/ツール
+	static constexpr BroadPhaseLayer DYNAMIC(3);    // Drop・漂流物
+
 	static constexpr BroadPhaseLayer PROJECTILE(4); // 武器
 	static constexpr BroadPhaseLayer SENSOR(5);     // 水
-	static constexpr uint NUM_LAYERS(6);
+	static constexpr BroadPhaseLayer KINEMATIC(6);  // HOOK/ツール
+	static constexpr uint NUM_LAYERS(7);
 };
 
 /// Class that determines if two object layers can collide
@@ -74,16 +77,16 @@ public:
 		case Layers::TOOL:
 			return inObject2 == Layers::DRIFT ||
 				inObject2 == Layers::BOAT ||
-				inObject2 == Layers::BUILDING ||
-				inObject2 == Layers::WATER_SENSOR;
+				inObject2 == Layers::BUILDING; /*||
+				inObject2 == Layers::WATER_SENSOR;*/
 
 		case Layers::WATER_SENSOR:
 			return inObject2 == Layers::PLAYER ||
 				inObject2 == Layers::ENEMY ||
 				inObject2 == Layers::BOAT ||
 				inObject2 == Layers::DRIFT ||
-				inObject2 == Layers::ITEM ||
-				inObject2 == Layers::TOOL;
+				inObject2 == Layers::ITEM; /*||
+				inObject2 == Layers::TOOL;*/
 
 		case Layers::WEAPON:
 			return inObject2 == Layers::ENEMY;
@@ -109,7 +112,7 @@ public:
 		m_objectToBroadPhase[Layers::BUILDING] = BroadPhaseLayers::STATIC;
 		m_objectToBroadPhase[Layers::DRIFT] = BroadPhaseLayers::DYNAMIC;
 		m_objectToBroadPhase[Layers::ITEM] = BroadPhaseLayers::DYNAMIC;
-		m_objectToBroadPhase[Layers::TOOL] = BroadPhaseLayers::DYNAMIC;
+		m_objectToBroadPhase[Layers::TOOL] = BroadPhaseLayers::KINEMATIC;
 		m_objectToBroadPhase[Layers::WATER_SENSOR] = BroadPhaseLayers::SENSOR;
 		m_objectToBroadPhase[Layers::WEAPON] = BroadPhaseLayers::PROJECTILE;
 	}
@@ -136,6 +139,7 @@ public:
 		case (BroadPhaseLayer::Type)BroadPhaseLayers::DYNAMIC:     return "DYNAMIC";
 		case (BroadPhaseLayer::Type)BroadPhaseLayers::PROJECTILE:  return "PROJECTILE";
 		case (BroadPhaseLayer::Type)BroadPhaseLayers::SENSOR:      return "SENSOR";
+		case (BroadPhaseLayer::Type)BroadPhaseLayers::KINEMATIC:      return "KINEMATIC";
 		default: JPH_ASSERT(false); return "INVALID";
 		}
 	}
@@ -158,8 +162,8 @@ public:
 			return inLayer2 == BroadPhaseLayers::ACTOR ||
 				inLayer2 == BroadPhaseLayers::BOAT ||
 				inLayer2 == BroadPhaseLayers::STATIC ||
-				inLayer2 == BroadPhaseLayers::SENSOR||
-				inLayer2==BroadPhaseLayers::DYNAMIC;
+				inLayer2 == BroadPhaseLayers::SENSOR ||
+				inLayer2 == BroadPhaseLayers::DYNAMIC;
 
 		case Layers::ENEMY:
 			return inLayer2 == BroadPhaseLayers::ACTOR ||
@@ -177,7 +181,8 @@ public:
 
 		case Layers::DRIFT:
 			return inLayer2 == BroadPhaseLayers::SENSOR ||
-				inLayer2 == BroadPhaseLayers::DYNAMIC;
+				inLayer2 == BroadPhaseLayers::DYNAMIC ||
+				inLayer2 == BroadPhaseLayers::KINEMATIC;
 
 		case Layers::ITEM:
 			return inLayer2 == BroadPhaseLayers::BOAT ||
@@ -186,9 +191,7 @@ public:
 
 		case Layers::TOOL:
 			return inLayer2 == BroadPhaseLayers::DYNAMIC ||
-				inLayer2 == BroadPhaseLayers::STATIC ||
-				inLayer2 == BroadPhaseLayers::BOAT ||
-				inLayer2 == BroadPhaseLayers::SENSOR;
+				inLayer2 == BroadPhaseLayers::STATIC;
 
 		case Layers::WATER_SENSOR:
 			return inLayer2 == BroadPhaseLayers::ACTOR ||
@@ -205,12 +208,52 @@ public:
 	}
 };
 
+class ContactListenerDispatcher : public ContactListener
+{
+public:
+	void AddListener(ContactListener* listener)
+	{
+		m_listeners.push_back(listener);
+	}
+
+	void OnContactAdded(const Body& inBody1, const Body& inBody2,
+		const ContactManifold& inManifold,
+		ContactSettings& ioSettings) override
+	{
+		for (auto* listener : m_listeners)
+		{
+			listener->OnContactAdded(inBody1, inBody2, inManifold, ioSettings);
+		}
+	}
+
+	void OnContactPersisted(const Body& inBody1, const Body& inBody2,
+		const ContactManifold& inManifold,
+		ContactSettings& ioSettings) override
+	{
+		for (auto* listener : m_listeners)
+		{
+			listener->OnContactPersisted(inBody1, inBody2, inManifold, ioSettings);
+		}
+	}
+
+	void OnContactRemoved(const SubShapeIDPair& inSubShapePair) override
+	{
+		for (auto* listener : m_listeners)
+		{
+			listener->OnContactRemoved(inSubShapePair);
+		}
+	}
+
+private:
+	std::vector<ContactListener*> m_listeners;
+};
 
 
 
 class ObjectContactListener : public ContactListener
 {
 public:
+
 	// See: ContactListener
 	/// @brief a cheaper way to not collide two objects, but if you want to ignore a contact before it is created, you can use this callback.
 	/// @param inBody1 
@@ -230,26 +273,14 @@ public:
 	/// @param inBody2 
 	/// @param inManifold 
 	/// @param ioSettings 
-	virtual void			OnContactAdded(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold, ContactSettings& ioSettings) override
-	{
-		DebugLog::Log("[Physics] A contact was added.");
-		//========ここでOnCollisionEnterのロジックを追加する
-
-	}
+	virtual void			OnContactAdded(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold, ContactSettings& ioSettings) override;
 
 	/// @brief OnContactPersisted is called when a contact is persisted between two bodies.
 	/// @param inBody1 
 	/// @param inBody2 
 	/// @param inManifold 
 	/// @param ioSettings 
-	virtual void			OnContactPersisted(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold, ContactSettings& ioSettings) override
-	{
-		//DebugLog::Log("[Physics] A contact was persisted.");
-		//========ここでOnCollisionStayのロジックを追加する
-		
-
-
-	}
+	virtual void			OnContactPersisted(const Body& inBody1, const Body& inBody2, const ContactManifold& inManifold, ContactSettings& ioSettings) override;
 
 	/// @brief is called when a contact is removed between two bodies. OnCollisionExit
 	/// @param inSubShapePair 

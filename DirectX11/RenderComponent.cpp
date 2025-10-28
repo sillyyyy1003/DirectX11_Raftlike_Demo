@@ -22,11 +22,7 @@ void UIRenderComponent::Render(Transform& transform)
 	assert(m_pModel != nullptr);
 	assert(m_pMaterial != nullptr);
 
-	//WVP
-	m_pEffect->SetWVPMatrixCB(transform);
-
-	//Material/texture
-	m_pEffect->SetMaterial(m_pMaterial);
+	m_pEffect->SetConstantBuffer(transform, m_pMaterial);
 
 	//Effect Bind
 	m_pEffect->Apply();

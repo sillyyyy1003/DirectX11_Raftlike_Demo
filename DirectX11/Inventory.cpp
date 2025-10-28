@@ -48,7 +48,7 @@ int Inventory::Insert(ItemInstance* instance)
 		if (!slot.has_value())
 		{
 			int toInsert = std::min(remaining, maxStack);
-			ItemPtr newInstance = ItemDataBase::Instance().CreateItemInstance(instance->GetName().c_str(), toInsert, instance->GetDurability());
+			ItemPtr newInstance = ItemDataBase::Instance().CreateItemInstance(instance->GetName().c_str(), toInsert);
 			slot = newInstance;
 			remaining -= toInsert;
 			inserted += toInsert;
@@ -104,29 +104,7 @@ void Inventory::Update(float tick)
 
 void Inventory::ConsumeItem(int index, Player* player, int consumeCount)
 {
-	/*
-	if (!m_slots[index].has_value())return;
-
-	switch(m_slots[index].value()->GetProto()->GetItemType())
-	{
-	default:
-		//m_slots[index].value()->OnUse(player);
-	case Item::ItemType::Food:
-		auto food = dynamic_cast<FoodInstance*>(m_slots[index].value().get());
-		if (food)food->OnEat(player);
-		break;
-		//todo: more to set...
-	}
-
-	// if item is stackable, decrease count
-	m_slots[index].value()->DecreaseCount(consumeCount);	// Decrease count by 1
-
-	// if count is 0, remove item from slot
-	if (m_slots[index].value()->GetCount() <= 0)
-	{
-		m_slots[index].reset();	// Remove item from slot
-	}
-	*/
+	
 }
 
 bool Inventory::RemoveItem(int index, int count)
@@ -137,6 +115,18 @@ bool Inventory::RemoveItem(int index, int count)
 	if (m_slots[index].value()->GetCount() <= 0)
 	{
 		m_slots[index].reset();
+	}
+	return true;
+}
+
+bool Inventory::RemoveCurrentSlotItem(int count)
+{
+	if (!m_slots[m_currentIndex].has_value()) return false;
+
+	m_slots[m_currentIndex].value()->DecreaseCount(count);
+	if (m_slots[m_currentIndex].value()->GetCount() <= 0)
+	{
+		m_slots[m_currentIndex].reset();
 	}
 	return true;
 }
@@ -201,15 +191,16 @@ ItemInstance* Inventory::GetCurrentItem(int index) const
 	return nullptr;
 }
 
-void Inventory::UpdateItemOfPlayer(int index, Player* player)
+
+void Inventory::UpdateItemOfPlayer(Player* player)
 {
-	if (m_slots[index].has_value() && m_slots[index].value())
+	if (m_slots[m_currentIndex].has_value() && m_slots[m_currentIndex].value())
 	{
-		player->SetItemInHand(m_slots[index].value().get());
+		player->SetItemInHand(m_slots[m_currentIndex].value().get(),m_pItemEffect);
 	}
 	else
 	{
-		player->SetItemInHand(nullptr);
+		player->SetItemInHand(nullptr,nullptr);
 	}
 }
 

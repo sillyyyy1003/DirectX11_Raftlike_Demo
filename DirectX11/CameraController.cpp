@@ -9,7 +9,7 @@
 
 namespace
 {
-	static constexpr float CameraMoveSpeed = 3.f;
+	static constexpr float CameraMoveSpeed = 2.f;
 }
 
 CameraController::CameraController() :

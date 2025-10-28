@@ -171,6 +171,7 @@
     <ClCompile Include="CameraController.cpp" />
     <ClCompile Include="Capsule.cpp" />
     <ClCompile Include="CpuTimer.cpp" />
+    <ClCompile Include="HookInstance.cpp" />
     <ClCompile Include="UICraftCategoryDetailPanel.cpp" />
     <ClCompile Include="UICraftDetailPanel.cpp" />
     <ClCompile Include="CraftSystem.cpp" />
@@ -246,6 +247,8 @@
     <ClCompile Include="UIManager.cpp" />
     <ClCompile Include="UIMenu.cpp" />
     <ClCompile Include="UIMesh.cpp" />
+    <ClCompile Include="UICharge.cpp" />
+    <ClCompile Include="UIChargeEffect.cpp" />
     <ClCompile Include="UIScaler.cpp" />
     <ClCompile Include="UIComponent.cpp" />
     <ClCompile Include="UIPlayerStatus.cpp" />
@@ -261,6 +264,7 @@
     <ClInclude Include="Capsule.h" />
     <ClInclude Include="Component.hpp" />
     <ClInclude Include="CpuTimer.h" />
+    <ClInclude Include="HookInstance.h" />
     <ClInclude Include="UICraftCategoryDetailPanel.h" />
     <ClInclude Include="UICraftDetailPanel.h" />
     <ClInclude Include="CraftSystem.h" />
@@ -336,6 +340,8 @@
     <ClInclude Include="UIManager.h" />
     <ClInclude Include="UIMenu.h" />
     <ClInclude Include="UIMesh.h" />
+    <ClInclude Include="UICharge.h" />
+    <ClInclude Include="UIChargeEffect.h" />
     <ClInclude Include="UIScaler.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="UIPlayerStatus.h" />
@@ -353,6 +359,13 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="PS_ChargeUI.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="PS_Monochrome.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
@@ -446,6 +459,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DirectX111.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

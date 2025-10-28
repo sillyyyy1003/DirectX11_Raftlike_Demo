@@ -70,7 +70,7 @@ public:
 
 	PhysicsSystem* GetPhysicsSystem() { return m_pPhysicsSystem.get(); }
 	TempAllocator* GetTempAllocator() { return m_tempAllocator.get(); }
-	ObjectContactListener* GetContactListener() { return m_pObjectContactListener.get(); }
+	ContactListenerDispatcher* GetDispatcher() { return m_pObjectContactListenerDispatcher.get(); }
 	MyPlayerContactListener* GetPlayerContactListener() { return m_pPlayerContactListener.get(); }
 
 	void AddPhysicsComponent(BodyID id, PhysicsComponent* component);
@@ -78,7 +78,7 @@ public:
 
 	void RemoveAllBodies();
 
-	
+
 private:
 	PhysicsManager() = default;
 	~PhysicsManager() = default;
@@ -92,7 +92,8 @@ private:
 	std::shared_ptr<PhysicsSystem> m_pPhysicsSystem;	// Physics system
 	std::shared_ptr<MyBodyActivationListener> m_pBodyActivationListener;	// Body activation listener for body state changes
 
-	std::shared_ptr<ObjectContactListener> m_pObjectContactListener;	// Contact listener for collision events
+	std::shared_ptr<ContactListenerDispatcher> m_pObjectContactListenerDispatcher;	// Contact listener for collision events
+	std::shared_ptr<ObjectContactListener> m_pObjectContactListener;
 	std::shared_ptr<MyPlayerContactListener> m_pPlayerContactListener;
 
 

@@ -7,6 +7,7 @@
 #include "PhysicsManager.h"
 #include "RenderComponent.h"
 #include "d3dUtil.h"
+#include "HookInstance.h"
 #include "ItemInstances.h"
 
 namespace
@@ -65,7 +66,7 @@ void ItemDataBase::UnInit()
 	m_items.clear();			// Clear the map
 }
 
-std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorld(const char* itemName, int count, float durability)
+std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorld(const char* itemName, int count)
 {
 	auto it = m_items.find(std::string(itemName));
 	if (it == m_items.end())
@@ -73,24 +74,13 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorld(const char
 		DebugLog::LogError("[ItemDataBase] {} is not found in database!", itemName);
 		return nullptr;
 	}
-	std::shared_ptr<ItemInstance> itemInstance = nullptr;
-	switch (it->second->GetItemType())
-	{
-	case Item::ItemType::Food:
-		itemInstance = std::make_shared<FoodInstance>();
-		break;
-	case Item::ItemType::Cup:
-		itemInstance = std::make_shared<CupInstance>();
-		break;
-	default:
-		itemInstance = std::make_shared<ItemInstance>();
-		break;
-	}
-
+	std::shared_ptr<ItemInstance> itemInstance = CreateItemInstance(it->second->GetItemType());
 	uint32_t modelId = it->second->GetModelId();
 	uint32_t materialId = it->second->GetMaterialId();
 
-	(itemInstance)->InitItem(GetItem(itemName), count,durability);
+	float durability =it->second->GetMaxDurability();
+	(itemInstance)->InitItem(GetItem(itemName), count, durability);
+
 	// Add Render component
 	std::shared_ptr<RenderComponent> renderComponent = std::make_shared<RenderComponent>();
 	renderComponent->Init(MaterialManager::Instance().GetMaterial(materialId), nullptr, ModelManager::Instance().GetModel(modelId));
@@ -104,7 +94,7 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorld(const char
 	return itemInstance;
 }
 
-std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics(const char* itemName, int count, float durability, ObjectLayer layer)
+std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics(const char* itemName, int count,  ObjectLayer layer)
 {
 	auto it = m_items.find(std::string(itemName));
 	if (it == m_items.end())
@@ -112,22 +102,13 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics
 		DebugLog::LogError("[ItemDataBase] {} is not found in database!", itemName);
 		return nullptr;
 	}
-	std::shared_ptr<ItemInstance> itemInstance = nullptr;
-	switch (it->second->GetItemType())
-	{
-	case Item::ItemType::Food:
-		itemInstance = std::make_shared<FoodInstance>();
-		break;
-	case Item::ItemType::Cup:
-		itemInstance = std::make_shared<CupInstance>();
-		break;
-	default:
-		itemInstance = std::make_shared<ItemInstance>();
-		break;
-	}
+
+	std::shared_ptr<ItemInstance> itemInstance = CreateItemInstance(it->second->GetItemType());
 
 	uint32_t modelId = it->second->GetModelId();
 	uint32_t materialId = it->second->GetMaterialId();
+
+	float durability = it->second->GetMaxDurability();
 	itemInstance->InitItem(GetItem(itemName), count, durability);
 	// Add Render component
 	std::shared_ptr<RenderComponent> renderComponent = std::make_shared<RenderComponent>();
@@ -150,7 +131,7 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics
 	return itemInstance;
 }
 
-std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(const char* itemName, int count, float durability)
+std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(const char* itemName, int count)
 {
 	auto it = m_items.find(std::string(itemName));
 	if (it == m_items.end())
@@ -158,27 +139,14 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(const char* itemN
 		DebugLog::LogError("[ItemDataBase] {} is not found in database!", itemName);
 		return nullptr;
 	}
-	//====todo: make this a new method
-	std::shared_ptr<ItemInstance> itemInstance = nullptr;
-	switch (it->second->GetItemType())
-	{
-	case Item::ItemType::Food:
-		itemInstance = std::make_shared<FoodInstance>();
-		break;
-	case Item::ItemType::Cup:
-		itemInstance = std::make_shared<CupInstance>();
-		break;
-	default:
-		itemInstance = std::make_shared<ItemInstance>();
-		break;
-	}
-
+	std::shared_ptr<ItemInstance> itemInstance = CreateItemInstance(it->second->GetItemType());
+	float durability = it->second->GetMaxDurability();
 	(itemInstance)->InitItem(GetItem(itemName), count, durability);
 	return itemInstance;
 }
 
 std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics(const char* itemName, int count,
-	float durability, ObjectLayer layer, EMotionType type)
+	ObjectLayer layer, EMotionType type)
 {
 
 	auto it = m_items.find(std::string(itemName));
@@ -187,22 +155,12 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics
 		DebugLog::LogError("[ItemDataBase] {} is not found in database!", itemName);
 		return nullptr;
 	}
-	std::shared_ptr<ItemInstance> itemInstance = nullptr;
-	switch(it->second->GetItemType())
-	{
-	case Item::ItemType::Food:
-		itemInstance = std::make_shared<FoodInstance>();
-		break;
-	case Item::ItemType::Cup:
-		itemInstance = std::make_shared<CupInstance>();
-		break;
-	default:
-		itemInstance = std::make_shared<ItemInstance>();
-		break;
-	}
+	std::shared_ptr<ItemInstance> itemInstance = CreateItemInstance(it->second->GetItemType());
 
 	uint32_t modelId = it->second->GetModelId();
 	uint32_t materialId = it->second->GetMaterialId();
+
+	float durability = it->second->GetMaxDurability();
 	itemInstance->InitItem(GetItem(itemName), count, durability);
 	// Add Render component
 	std::shared_ptr<RenderComponent> renderComponent = std::make_shared<RenderComponent>();
@@ -401,7 +359,9 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 				std::string materialName = hook["material"];
 				float durability = hook["durability"];
 				float chargeTime = hook["chargeTime"];
-				float maxLength = hook["maxLength"];
+				float maxSpeed = hook["maxSpeed"];
+				float minSpeed = hook["minSpeed"];
+				float chargeSpeed = hook["chargeSpeed"];
 
 				DirectX::XMFLOAT3 itemSize = globalSize;
 				if (hook.contains("size"))
@@ -410,7 +370,7 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 				}
 				m_itemSizes[name] = itemSize;
 
-				auto hookPtr = std::make_shared<Hook>(maxLength,chargeTime,durability);
+				auto hookPtr = std::make_shared<Hook>(maxSpeed,minSpeed,chargeTime,chargeSpeed,durability);
 				m_nextID++; // todo: make id format:1001 (itemCode+xxx)
 				RegisterItem(
 					name.c_str(),
@@ -515,6 +475,38 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 
 
 	//todo: ほかのアイテムを追加
+}
+
+std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(Item::ItemType type)
+{
+	std::shared_ptr<ItemInstance> itemInstance=nullptr;
+	switch(type)
+	{
+	case Item::ItemType::Food:
+		itemInstance = std::make_shared<FoodInstance>();
+		break;
+	case Item::ItemType::Cup:
+		itemInstance = std::make_shared<CupInstance>();
+		break;
+	case Item::ItemType::WaterPurifier:
+		itemInstance = std::make_shared<PurifierInstance>();
+		break;
+	case Item::ItemType::Hook:
+		itemInstance = std::make_shared<HookInstance>();
+		break;
+	default:
+		itemInstance = std::make_shared<ItemInstance>();
+		break;
+	}
+
+	return itemInstance;
+}
+
+const DirectX::XMFLOAT3& ItemDataBase::GetItemSize(const std::string& itemName)
+{
+	auto it = m_itemSizes.find(itemName);
+	if (it != m_itemSizes.end()) return it->second;
+	else { return { 0,0,0 }; }
 }
 
 ItemDataBase::~ItemDataBase()

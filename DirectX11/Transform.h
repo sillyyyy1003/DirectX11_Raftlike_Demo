@@ -68,9 +68,20 @@ public:
     void LookTo(const DirectX::XMFLOAT3& direction, const DirectX::XMFLOAT3& up = { 0.0f, 1.0f, 0.0f });
     static DirectX::XMFLOAT3 GetEulerAnglesFromRotationMatrix(const DirectX::XMFLOAT4X4& rotationMatrix);
 
+    void SetParent(Transform* parent);
+    void SetParent(Transform* parent, const DirectX::XMFLOAT3& localPos);
+
+    DirectX::XMFLOAT3 GetWorldPosition() const;
+    DirectX::XMFLOAT3 GetWorldRotation() const;
+
+    DirectX::XMMATRIX GetRotationMatrix() const;
+
+    Transform* GetParent() const { return m_parent; }
+
 private:
     DirectX::XMFLOAT3 m_Scale = { 1.0f, 1.0f, 1.0f };		
     DirectX::XMFLOAT3 m_Rotation = {};								
-    DirectX::XMFLOAT3 m_Position = {};								
+    DirectX::XMFLOAT3 m_Position = {};
+    Transform* m_parent = nullptr;
 };
 

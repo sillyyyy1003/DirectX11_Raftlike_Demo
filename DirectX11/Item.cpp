@@ -40,8 +40,9 @@ void ItemInstance::DecreaseCount(int count)
 
 void ItemInstance::SetState(int state)
 {
-	m_itemState = state;
+	m_objectState = state;
 }
+
 
 void ItemInstance::Update(float dt)
 {
@@ -97,10 +98,12 @@ Spear::Spear(float damage, float durability):
 }
 
 //==========Hook=============
-Hook::Hook(float maxLength, float chargeTime, float durability):
-	Item(ItemType::Utility,false, 1, durability),
-	m_maxLength(maxLength),
-	m_chargeTimeLimit(chargeTime)
+Hook::Hook(float maxSpeed, float minSpeed,  float chargeTime, float chargeSpeed, float durability):
+	Item(ItemType::Hook,false, 1, durability),
+	m_maxSpeed(maxSpeed),
+	m_minSpeed(minSpeed),
+	m_chargeTimeLimit(chargeTime),
+	m_chargeSpeed(chargeSpeed)
 {
 }
 

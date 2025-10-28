@@ -6,6 +6,7 @@
 #include "DayLight.h"
 #include "DriftManager.h"
 #include "GameApp.h"
+#include "HookInstance.h"
 #include "ItemDataBase.h"
 #include "KInput.h"
 #include "MaterialManager.h"
@@ -23,11 +24,13 @@
 #include "Skybox.h"
 #include "TextureManager.h"
 #include "UIButtonMove.h"
+#include "UICharge.h"
 #include "UICraftCategoryPanel.h"
 #include "UICraftDetailPanel.h"
 #include "UIInventory.h"
 #include "UIMenu.h"
 #include "UIPlayerStatus.h"
+#include "UIChargeEffect.h"
 #include "Water.h"
 #include "WaterEffect.h"
 
@@ -41,7 +44,8 @@ namespace
 	//Collider Setting
 	static constexpr DirectX::XMFLOAT3 HalfFloorScale = { 5,0.1f,5 };
 	static constexpr DirectX::XMFLOAT3 DefaultLightPosition = { 0,10,0 };	//Default Light Position
-	static constexpr DirectX::XMFLOAT3 UIAimSize = { 32,32,1.f };
+	static constexpr DirectX::XMFLOAT3 UIAimSize = {40,40,1.f };
+	static constexpr DirectX::XMFLOAT2 UIChargeSize = {50, 50};
 
 	static constexpr DirectX::XMFLOAT4 WaterBoxColor= { 0.027f, 0.016f, 0.337f, 1.0f };	// Dark blue water box
 	static constexpr DirectX::XMFLOAT3 WaterBoxPos = { 0,-waterHeight / 2.f - 0.1f,0 };	// water face is -0.1f;
@@ -64,6 +68,7 @@ void SceneGame::Init()
 	m_pCurrentCamera = player->GetCameraController()->GetCamera();
 	player->SetPosition({ 0,1,0 });
 	dynamic_cast<SceneManager*>(m_pSceneManager)->SetCurrentCamera(m_pCurrentCamera);
+	
 
 	//============ Init light
 	DirLight* light = CreateObj<DayLight>("DayLight");
@@ -80,9 +85,9 @@ void SceneGame::Init()
 	VertexShader* uiElementVS = GetObj<VertexShader>("UIElementVS");
 	VertexShader* waterVS = GetObj<VertexShader>("WaterVS");
 	PixelShader* waterPS = GetObj<PixelShader>("WaterPS");
+	PixelShader* uiRangePS = GetObj<PixelShader>("UIRangePS");
+	PixelShader* monoChromePS = GetObj<PixelShader>("MonoChromePS");
 
-	PixelShader* monoChromePS = CreateObj<PixelShader>("MonoChromePS");
-	monoChromePS->Load("Assets/Shader/PS_Monochrome.cso");
 
 	// Post Effect
 	MonoChrome* monoChrome = CreateObj<MonoChrome>("MonoChrome");
@@ -119,10 +124,13 @@ void SceneGame::Init()
 	debugEffect->InitCamera(player->GetCameraController()->GetCamera());
 	debugEffect->InitEffectDirLight(light);
 
+	UIChargeEffect* uiChargeEffect = CreateObj<UIChargeEffect>("UiRangeEffect");
+	uiChargeEffect->InitPixelShader(uiRangePS);
+	uiChargeEffect->InitVertexShader(uiElementVS);
+
 	Texture* waterNormalMap = TextureManager::Instance().GetTexture("WaterNormalMap");
 	WaterEffect* waterEffect = CreateObj<WaterEffect>("WaterEffect");
 	waterEffect->Init(waterVS, waterPS, m_pCurrentCamera, waterNormalMap,light);
-
 
 
 	//=========== Register Item data
@@ -133,12 +141,12 @@ void SceneGame::Init()
 	driftManager->Init(pbrEffect, player); // Initialize drift manager with PBR effect and player
 
 	//=========== Init item
-	std::shared_ptr<ItemInstance> appleInstance(ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Apple", 3, -1, Layers::ITEM));
+	std::shared_ptr<ItemInstance> appleInstance(ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Apple", 3,  Layers::ITEM));
 	appleInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
 	appleInstance->SetPosition({ -3, 0.5, 0 });
 	RegisterSceneObject(appleInstance);
 
-	std::shared_ptr<ItemInstance> bananaInstance(ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Banana",10, -1, Layers::ITEM));
+	std::shared_ptr<ItemInstance> bananaInstance(ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Banana",10, Layers::ITEM));
 	bananaInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
 	bananaInstance->SetPosition({ 3, 0.5, 3 });
 	RegisterSceneObject(bananaInstance);
@@ -199,6 +207,14 @@ void SceneGame::Init()
 			uiAim->SetActive(!isDead);	//if player revive, isDead=false
 		}
 	);
+
+	// Charge ui
+	UICharge* uiCharge = CreateObj<UICharge>("UiCharge");
+	Material* uiChargeMat = MaterialManager::Instance().GetMaterial("UIChargeMaterial");
+	uiCharge->Init(uiChargeMat, uiChargeEffect, ModelManager::Instance().GetModel("Square"));
+	uiCharge->SetPosition({ 0,0,0.2f });
+	uiCharge->SetScale(UIChargeSize);
+	player->SetUiCharge(uiCharge);	// Set player charger ui
 
 	// Create UI Inventory
 	UIFontSet* uiFontSet=GetObj<UIFontSet>("UIFontSet");
@@ -337,7 +353,7 @@ void SceneGame::Init()
 	categoryPanel->LoadSizeAndPos(j["Game"]["UI"], "CraftCategoryPanel");
 	categoryPanel->SetPanels(craftCategoryDetailPanel, craftPanel);
 
-
+	
 
 
 	//=====Set Button event
@@ -396,6 +412,7 @@ void SceneGame::Init()
 	//===========Register ui layers
 	UIManager::Instance().AddUiLayer("Aim", 1);
 	UIManager::Instance().GetUILayer("Aim")->AddComponent(uiAim);
+	UIManager::Instance().GetUILayer("Aim")->AddComponent(uiCharge);
 
 	UIManager::Instance().AddUiLayer("Button", 2);
 	UIManager::Instance().GetUILayer("Button")->AddComponent(backToTitleButton);
@@ -427,17 +444,14 @@ void SceneGame::Init()
 	AudioManager::Instance().StopBgms();
 	AudioManager::Instance().Play("BGM_Game", true);
 
+	std::shared_ptr<ItemInstance> hook = ItemDataBase::Instance().CreateItemInstance("NormalHook", 1);
+	// Set player item effect
+	player->GetInventory()->SetItemEffectPtr(pbrEffect);
 
-	//test
-	std::shared_ptr<ItemInstance> bananaInBag = ItemDataBase::Instance().CreateItemInstance("Banana", 10);
-	player->GetInventory()->Insert(bananaInBag.get());
+	// Insert hook to player inventory
+	player->GetInventory()->Insert(hook.get());
 
-	std::shared_ptr<ItemInstance> cup = ItemDataBase::Instance().CreateItemInstance("BasicCup", 1);
-	player->GetInventory()->Insert(cup.get());
-
-
-
-
+	player->GetInventory()->UpdateItemOfPlayer(player);
 }
 
 void SceneGame::UnInit()
@@ -446,7 +460,7 @@ void SceneGame::UnInit()
 	GetObj<DriftManager>("DriftManager")->UnInit(); 
 
 	CraftSystem::Instance().UnInit();	// Clear all recipes
-	PhysicsManager::Instance().RemoveAllBodies();
+	
 }
 
 void SceneGame::Update(float tick)
@@ -459,7 +473,7 @@ void SceneGame::Update(float tick)
 	}
 
 	//===============Handle Input
-	if (KInput::IsKeyTrigger(VK_LCONTROL))
+	if (KInput::IsKeyRelease(VK_LCONTROL))
 	{
 		if (!m_isShowCursor)
 		{

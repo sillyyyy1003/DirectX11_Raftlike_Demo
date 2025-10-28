@@ -17,7 +17,9 @@ public:
 		BaseMaterial = 4,	// 建築材料
 		ShipTile = 5,	
 		Cup = 6,
-		WaterPurifier,
+		WaterPurifier=7,
+		Hook = 8,
+		Box=9,				// Box filled with material/ food
 	};
 	
 	virtual ~Item() = default;
@@ -74,6 +76,8 @@ class ItemInstance :
 	public GameObject, public Interactable
 {
 public:
+
+
 	ItemInstance();
 
 	/// @brief Item初期化
@@ -105,19 +109,26 @@ public:
 	uint32_t GetMaterialId() const { return m_protoPtr ? m_protoPtr->GetMaterialId() : -1; }
 
 	void SetState(int state);
-	int GetState() const { return m_itemState; }
+	int GetState() const { return m_objectState; }
 
-	void Update(float dt) override;
+	//void SetItemInstanceState(ItemInstanceState state);
+	//ItemInstanceState GetItemInstanceState() const { return m_itemInstanceState; }
 
+	virtual void Update(float dt) override;
 	virtual void InteractWith(BodyID& rigidBody, Player* player) override {};
-	virtual void OnUse(Player* player) override{};
-	
-private:
+
+	virtual void OnUse(Player* player) override {}	// 状態分け無しの使用
+	virtual void OnUseStart(Player* player) override {}	// 使用開始
+	virtual void OnUseHold(Player* player,float deltaTime) override {}	// 使用中
+	virtual void OnUseRelease(Player* player) override {}	// 使用終了
+
+protected:
 	std::shared_ptr<const Item> m_protoPtr;
 	int m_count = 1;				// 実際のアイテム数
 	float m_durability = -1;		// 現在の耐久値 >>-1 耐久無し
 
-	int m_itemState = 0;
+	int m_objectState = 0;			// physics state for item instance used for driftmanager
+	/*ItemInstanceState m_itemInstanceState;*/
 };
 
 
@@ -142,7 +153,6 @@ public:
 private:
 	float m_foodValue;	// 回復値
 };
-
 
 class BaseMaterial :
 	public Item
@@ -188,6 +198,7 @@ public:
 	Spear(float damage,float durability);
 	~Spear() override = default;
 
+	float GetDamage() const { return m_damage; }
 private:
 	float m_damage;	// Attack damage;
 };
@@ -196,10 +207,16 @@ class Hook:
 public Item
 {
 public:
-	Hook(float maxLength,float chargeTime, float durability);
+	Hook(float maxSpeed, float minSpeed, float chargeTime,float chargeSpeed, float durability);
 	~Hook() override = default;
-private:
-	float m_maxLength;			// 最大距離
-	float m_chargeTimeLimit;	// 最大チャージ需要時間
 
+	float GetMaxSpeed() const { return m_maxSpeed; }
+	float GetMinSpeed() const { return m_minSpeed; }
+	float GetChargeLimit() const { return m_chargeTimeLimit; }
+	float GetChargeSpeed() const { return m_chargeSpeed; }
+private:
+	float m_maxSpeed;			// 最大速度
+	float m_minSpeed;			// 最小速度
+	float m_chargeTimeLimit;	// 最大チャージ需要時間
+	float m_chargeSpeed;
 };

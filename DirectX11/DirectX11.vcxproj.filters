@@ -379,7 +379,16 @@
       <Filter>源文件\UI</Filter>
     </ClCompile>
     <ClCompile Include="UICraftCategoryDetailPanel.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UIChargeEffect.cpp">
+      <Filter>源文件\Render\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="HookInstance.cpp">
+      <Filter>源文件\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="UICharge.cpp">
+      <Filter>源文件\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -647,8 +656,17 @@
     <ClInclude Include="UICraftCategoryPanel.h">
       <Filter>头文件\UI</Filter>
     </ClInclude>
+    <ClInclude Include="HookInstance.h">
+      <Filter>头文件\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="UIChargeEffect.h">
+      <Filter>头文件\Render\Effect</Filter>
+    </ClInclude>
     <ClInclude Include="UICraftCategoryDetailPanel.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UICharge.h">
+      <Filter>头文件\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -699,5 +717,13 @@
     <FxCompile Include="PS_Water.hlsl">
       <Filter>资源文件\PixelShader</Filter>
     </FxCompile>
+    <FxCompile Include="PS_ChargeUI.hlsl">
+      <Filter>资源文件\PixelShader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DirectX111.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

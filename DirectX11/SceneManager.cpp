@@ -327,8 +327,8 @@ bool SceneManager::InitEffect()
     PixelShader* skyboxPS = CreateObj<PixelShader>("SkyboxPS");
     VertexShader* waterVS = CreateObj<VertexShader>("WaterVS");
     PixelShader* waterPS = CreateObj<PixelShader>("WaterPS");
- 
-
+    PixelShader* uiRangePs = CreateObj<PixelShader>("UIRangePS");
+    PixelShader* monoChromePS = CreateObj<PixelShader>("MonoChromePS");
 
 	//=======Load shader
     basicPosNormalTexVS->Load("Assets/Shader/VS_Geometry.cso");
@@ -342,7 +342,8 @@ bool SceneManager::InitEffect()
 	skyboxPS->Load("Assets/Shader/PS_Skybox.cso");
     waterVS->Load("Assets/Shader/VS_Water.cso");
     waterPS->Load("Assets/Shader/PS_Water.cso");
-
+    uiRangePs->Load("Assets/Shader/PS_ChargeUI.cso");
+    monoChromePS->Load("Assets/Shader/PS_Monochrome.cso");
 	return true;
 	
 }

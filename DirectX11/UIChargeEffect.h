@@ -1,0 +1,42 @@
+﻿#pragma once
+#include "IEffect.h"
+class UIChargeEffect :
+    public IEffect
+{
+public:
+	UIChargeEffect();
+	~UIChargeEffect() override = default;
+
+
+	void Apply() override;
+
+	void InitPixelShader(PixelShader* _ps) { m_ps = _ps; };
+	void InitVertexShader(VertexShader* _vs) { m_vs = _vs; };
+
+
+	/// @brief 平行投影を使う描画
+	/// @param t
+	///	@param camera
+	void SetWVPMatrixCB(const Transform& t, CameraBase* camera = nullptr) override;
+
+	void SetConstantBuffer(Transform& transform, Material* material) override;
+
+	/// @brief 基本色の設置
+	/// @param mat 
+	void SetMaterial(Material* mat) override;
+
+	void ApplyRenderState();
+
+	/// @brief 縦横の比率変更
+	/// @param size 
+	void SetViewSize(const DirectX::XMFLOAT2& size) { m_viewSize = size; };
+
+protected:
+
+	PixelShader* m_ps;
+	VertexShader* m_vs;
+
+	DirectX::XMFLOAT2 m_viewSize;	//現在ウィンドウのサイズ
+
+};
+

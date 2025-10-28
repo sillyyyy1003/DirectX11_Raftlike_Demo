@@ -95,8 +95,18 @@ XMMATRIX Transform::GetLocalToWorldMatrixXM() const
     XMVECTOR scaleVec = XMLoadFloat3(&m_Scale);
     XMVECTOR rotationVec = XMLoadFloat3(&m_Rotation);
     XMVECTOR positionVec = XMLoadFloat3(&m_Position);
-    XMMATRIX World = XMMatrixScalingFromVector(scaleVec) * XMMatrixRotationRollPitchYawFromVector(rotationVec) * XMMatrixTranslationFromVector(positionVec);
-    return World;
+
+	// calculate local matrix
+    XMMATRIX localMatrix =
+        XMMatrixScalingFromVector(scaleVec) *
+        XMMatrixRotationRollPitchYawFromVector(rotationVec) *
+        XMMatrixTranslationFromVector(positionVec);
+
+	// if has parent, multiply parent's local to world matrix
+    if (m_parent)
+        return localMatrix * m_parent->GetLocalToWorldMatrixXM();
+
+    return localMatrix;
 }
 
 XMFLOAT4X4 Transform::GetWorldToLocalMatrix() const
@@ -229,4 +239,62 @@ XMFLOAT3 Transform::GetEulerAnglesFromRotationMatrix(const XMFLOAT4X4& rotationM
     rotation.x = atan2f(-rotationMatrix(2, 1), c);
     rotation.y = atan2f(rotationMatrix(2, 0), rotationMatrix(2, 2));
     return rotation;
+}
+
+
+void Transform::SetParent(Transform* parent)
+{
+    m_parent = parent;
+}
+
+void Transform::SetParent(Transform* parent, const DirectX::XMFLOAT3& localPos)
+{
+    m_parent = parent;
+    m_Position = localPos;
+}
+
+DirectX::XMFLOAT3 Transform::GetWorldPosition() const
+{
+    if (!m_parent)
+        return m_Position;
+
+    XMMATRIX parentRot = m_parent->GetRotationMatrix();
+    XMVECTOR localPos = XMLoadFloat3(&m_Position);
+    localPos = XMVector3Transform(localPos, parentRot);
+
+    XMVECTOR parentPos = XMLoadFloat3(&m_parent->m_Position);
+    XMVECTOR worldPos = XMVectorAdd(localPos, parentPos);
+
+    XMFLOAT3 result;
+    XMStoreFloat3(&result, worldPos);
+    return result;
+}
+
+DirectX::XMFLOAT3 Transform::GetWorldRotation() const
+{
+    if (!m_parent)
+        return m_Rotation;
+
+    XMVECTOR qParent = XMQuaternionRotationRollPitchYaw(
+        m_parent->m_Rotation.x, m_parent->m_Rotation.y, m_parent->m_Rotation.z);
+    XMVECTOR qLocal = XMQuaternionRotationRollPitchYaw(
+        m_Rotation.x, m_Rotation.y, m_Rotation.z);
+
+    XMVECTOR qResult = XMQuaternionMultiply(qLocal, qParent);
+
+    // 将 quaternion 转回欧拉角
+    XMFLOAT3 result;
+    XMFLOAT4 q;
+    XMStoreFloat4(&q, qResult);
+    result.x = asinf(-2.0f * (q.y * q.z - q.w * q.x));
+    result.y = atan2f(2.0f * (q.x * q.z + q.w * q.y),
+        q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z);
+    result.z = atan2f(2.0f * (q.x * q.y + q.w * q.z),
+        q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z);
+    return result;
+}
+
+DirectX::XMMATRIX Transform::GetRotationMatrix() const
+{
+	return XMMatrixRotationRollPitchYaw(m_Rotation.x, m_Rotation.y, m_Rotation.z);
 }

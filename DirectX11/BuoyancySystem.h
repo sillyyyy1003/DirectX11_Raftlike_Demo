@@ -40,11 +40,11 @@ public:
 	DirectX::XMFLOAT3 GetWaterSurfacePosition(const DirectX::XMFLOAT3& pos) const;
 	RVec3 GetWaterSurfacePosition(RVec3Arg inXZPosition) const;
 
+
 private:
 	//==== physics data
 	Mutex m_bodiesInWaterMutex;
 	BodyIDVector m_bodiesInWater;
-	//std::vector<BodyID> m_bodiesInWater;
 	BodyID m_waterSensor;
 
 	//==== render data

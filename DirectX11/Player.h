@@ -6,6 +6,7 @@
 #include "PhysicsManager.h"
 #include "PlayerController.h"
 #include "ThirstComponent.h"
+#include "UICharge.h"
 
 /// <summary>
 /// Player
@@ -73,11 +74,15 @@ public:
 	ItemInstance* GetItemInHand()const { return m_itemInHand; }
 
 	/// @brief 今手持ちのアイテムを設定
-	void SetItemInHand(ItemInstance* item) { m_itemInHand = item; }
+	void SetItemInHand(ItemInstance* item, IEffect* effectPtr);
 
 	void InteractWithObject(BodyID& id);
 
 	void PickUpItem(BodyID& id);
+
+	// Ui Charge setter
+	void SetUiCharge(UICharge* pUiCharge) { m_pUiCharge = pUiCharge; }
+
 private:
 
 	//PlayerのHPを扱う
@@ -110,6 +115,8 @@ private:
 	float m_negativeStatusScale;	// マイナス状態の影響を受けるスケール（空腹、渇きなど）
 
 	ItemInstance* m_itemInHand = nullptr;
+
+	UICharge* m_pUiCharge = nullptr;
 };
 
 

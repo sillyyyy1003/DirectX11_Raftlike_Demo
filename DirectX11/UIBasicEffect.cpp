@@ -35,6 +35,15 @@ void UIBasicEffect::SetWVPMatrixCB(const Transform& t, CameraBase* camera)
 
 }
 
+void UIBasicEffect::SetConstantBuffer(Transform& transform, Material* material)
+{
+	//WVP
+	SetWVPMatrixCB(transform);
+
+	//Material/texture
+	SetMaterial(material);
+}
+
 void UIBasicEffect::SetMaterial(Material* mat)
 {
 	struct Material

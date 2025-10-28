@@ -37,6 +37,8 @@ public:
 	/// @return 
 	bool RemoveItem(int index, int count);
 
+	bool RemoveCurrentSlotItem(int count);
+
 	/// @brief Check inventory has enough item or not
 	/// @param itemName key to check slots match or not
 	/// @param count item number needed
@@ -50,12 +52,23 @@ public:
 	bool RemoveItem(const std::string& itemName, int count);
 
 	ItemInstance* GetCurrentItem(int index) const;
-	void UpdateItemOfPlayer(int index, Player* player);
+
+	/// @brief プレイヤー手持ちものを更新する
+	/// @param player 
+	void UpdateItemOfPlayer(Player* player);
+
+	/// @brief 現在のインデックスを設定
+	/// @param index 
+	void SetCurrentIndex(int index) { m_currentIndex = index; }
 
 	int GetTotalCount(std::string& itemName);
 
+	void SetItemEffectPtr(IEffect* effectPtr) { m_pItemEffect = effectPtr; }
 private:
 
 	std::vector<Slot> m_slots;
+	int m_currentIndex = 0;
+
+	IEffect* m_pItemEffect = nullptr;
 };
 

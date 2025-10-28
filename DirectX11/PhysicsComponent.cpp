@@ -2,13 +2,14 @@
 #include <Physics/Body/Body.h>
 #include "PhysicsManager.h"
 
-PhysicsComponent::PhysicsComponent()
+PhysicsComponent::PhysicsComponent():
+	m_pGameObject(nullptr)
 {
 }
 
 PhysicsComponent::~PhysicsComponent()
 {
-
+	PhysicsManager::Instance().DeleteRigidBody(m_bodyID);
 }
 
 void PhysicsComponent::Init(const BodyCreationSettings& settings, EActivation activation)

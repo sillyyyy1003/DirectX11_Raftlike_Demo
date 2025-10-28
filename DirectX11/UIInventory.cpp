@@ -39,13 +39,15 @@ void UIInventory::Update(float dt)
 
 		// フレーム位置更新
 		m_pChosenSlotFrame->GetTransform().SetPosition(
-			m_slots[m_currentIndex]->GetBackground()->GetTransform().GetPosition()
-		);
+			m_slots[m_currentIndex]->GetBackground()->GetTransform().GetPosition());
+		
+		m_pInventory->SetCurrentIndex(m_currentIndex);
+		m_pInventory->UpdateItemOfPlayer(m_pPlayer);
+	
 
 	}
 
 	// Update player todo:this is temperary
-	m_pInventory->UpdateItemOfPlayer(m_currentIndex, m_pPlayer);
 }
 
 void UIInventory::Init(Inventory* inventory, IEffect* effect, Material* bgMat, Material* slotBgMat, Material* iconMat, Material* chosenSlotMat, Primitive* model, UIFontSet* fontSet, const char* fontName, UIBrush* brush)
@@ -62,6 +64,10 @@ void UIInventory::Init(Inventory* inventory, IEffect* effect, Material* bgMat, M
 				m_currentIndex = (int)i; // Set current index to clicked slot
 				// Set chosen slot frame position
 				m_pChosenSlotFrame->GetTransform().SetPosition(m_slots[i]->GetBackground()->GetTransform().GetPosition());
+
+				m_pInventory->SetCurrentIndex(m_currentIndex);
+				m_pInventory->UpdateItemOfPlayer(m_pPlayer);
+
 			});
 	}
 	// Set text provider for each slot(for object count)
@@ -261,7 +267,8 @@ void UIInventory::SetInventory(Inventory* inventory)
 void UIInventory::SetPlayer(Player* player)
 {
 	m_pPlayer = player;
-	m_pInventory->UpdateItemOfPlayer(m_currentIndex, m_pPlayer);
+	m_pInventory->SetCurrentIndex(m_currentIndex);
+	m_pInventory->UpdateItemOfPlayer(m_pPlayer);
 }
 
 void UIInventory::Draw()
