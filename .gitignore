@@ -56,3 +56,5 @@ ARM/
 *.db
 
 .vs
+# Texutre psd
+*.psd
