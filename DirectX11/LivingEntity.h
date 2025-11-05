@@ -6,12 +6,13 @@
 class LivingEntity:
 	public Component
 {
+	
 protected:
 	float m_startLife;
 	float m_life;
 	bool  m_isDead = false;
 public:
-
+	static constexpr MyComponent::ComponentType TYPE = MyComponent::ComponentType::LivingEntity;
 	LivingEntity(float _startLife);
 	~LivingEntity() override = default;
 

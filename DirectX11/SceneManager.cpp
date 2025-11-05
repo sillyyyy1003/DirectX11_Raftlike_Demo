@@ -152,6 +152,13 @@ void SceneManager::Init()
     UIMenu* uiMenu = CreateObj<UIMenu>("UIMenu");
     uiMenu->Init(resource);
 
+    //==============Load Game Config
+	//Load sound volume settings
+    AudioManager::Instance().LoadAudioSettings("Assets/ConfigFile/GameConfig.json");
+    
+
+    //todo: Load light setting
+
     SetCurrentScene("Title");
   
 
@@ -159,6 +166,8 @@ void SceneManager::Init()
 
 void SceneManager::UnInit()
 {
+	AudioManager::Instance().SaveAudioSettings();   // Save audio settings
+
     Geometry::Uninit(); //Geometryの終了処理
     UIManager::Instance().UnInit();
 

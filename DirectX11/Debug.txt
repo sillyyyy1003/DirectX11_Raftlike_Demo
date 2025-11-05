@@ -33,10 +33,13 @@ Loading model finished
 Start model loading
 Loading model finished
 [ModelManager] Loaded model: Hook (ID=10)
+Start model loading
+Loading model finished
+[ModelManager] Loaded model: LootChest (ID=11)
 [ModelManager] Finished loading models.
-[ModelManager] Loaded model: Cube (ID=11)
-[ModelManager] Loaded model: Square (ID=12)
-[ModelManager] Loaded model: Capsule (ID=13)
+[ModelManager] Loaded model: Cube (ID=12)
+[ModelManager] Loaded model: Square (ID=13)
+[ModelManager] Loaded model: Capsule (ID=14)
 [TextureManager] Loading textures from JSON: Assets/ConfigFile/Config.json
 [TextureManager] Registered texture: Food_Albedo
 [TextureManager] Registered texture: Food_Normal
@@ -53,6 +56,9 @@ Loading model finished
 [TextureManager] Registered texture: WaterPurifierMaterial_Albedo
 [TextureManager] Registered texture: WaterPurifierMaterial_Normal
 [TextureManager] Registered texture: WaterPurifierMaterial_Metallic
+[TextureManager] Registered texture: Storage_Albedo
+[TextureManager] Registered texture: Storage_Normal
+[TextureManager] Registered texture: Storage_Metallic
 [TextureManager] Registered texture: UI_HungerIcon
 [TextureManager] Registered texture: UI_ThirstIcon
 [TextureManager] Registered texture: UI_Aim
@@ -92,6 +98,7 @@ Loading model finished
 [MaterialManager] Load Material BaseObjectMaterial1
 [MaterialManager] Load Material ToolMaterial
 [MaterialManager] Load Material WaterPurifierMaterial
+[MaterialManager] Load Material StorageMaterial
 [MaterialManager] Load Material UiMaterial
 [MaterialManager] Load Material DebugMaterial
 [MaterialManager] Load Material FloorMaterial
@@ -126,6 +133,7 @@ Loading model finished
 [MaterialManager] Load Material UiCraftCategoryPanelIconBackgroundMaterial
 [MaterialManager] Load Material UiCraftCategoryPanelIconMaterial
 [MaterialManager] Materials loaded from JSON: Assets/ConfigFile/Config.json
+[AudioManager] Loaded volumes:  BGM=0, SE=0.09999993, Env=0.10000002
 [SceneManager] Current Scene: Scene title!
 [UIManager] Layer Button (Priority 1) を削除しました
 [UIManager] Layer TitleLogo (Priority 2) を削除しました
@@ -138,6 +146,7 @@ Loading model finished
 [ItemDataBase] NormalHook is registered!
 [ItemDataBase] WaterPurifier is registered!
 [ItemDataBase] WoodSpear is registered!
+[ItemDataBase] Loot is registered!
 UICraftDetailPanel::LoadPanelConfig -> Config loaded successfully
 [SceneManager] Current Scene: Scene game!
 [Physics] A contact was added.
@@ -146,15 +155,11 @@ UICraftDetailPanel::LoadPanelConfig -> Config loaded successfully
 [Physics] A contact was added.
 [Physics] A contact was added.
 [Physics] A contact was added.
-[Camera]:First Camera Camera
-[Physics] A contact was removed.
-[Physics] A contact was added.
-[Physics] A contact was removed.
 [Physics] A contact was added.
 [Physics] A contact was added.
-[Physics] A contact was removed.
 [Physics] A contact was added.
-[Physics] A contact was removed.
+[Physics] A contact was added.
+[Physics] A contact was added.
 [Physics] A contact was added.
 [Physics] A contact was removed.
 [Physics] A contact was added.
@@ -162,6 +167,21 @@ UICraftDetailPanel::LoadPanelConfig -> Config loaded successfully
 [Physics] A contact was added.
 [Physics] A contact was removed.
 [Physics] A contact was added.
+[Physics] A contact was removed.
+[Physics] A contact was added.
+[Physics] A contact was removed.
+[Physics] A contact was added.
+[Physics] A contact was removed.
+[Physics] A contact was added.
+[Physics] A contact was added.
+[Physics] A contact was added.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was added.
 [Physics] A contact was added.
 [Physics] A contact was added.
 [Physics] A contact was added.
@@ -169,19 +189,34 @@ UICraftDetailPanel::LoadPanelConfig -> Config loaded successfully
 [Physics] A contact was removed.
 [Physics] A contact was added.
 [Physics] A contact was added.
-[PlayerContactListener] Character is in water now
-[Physics] A contact was removed.
-[PlayerContactListener] Character gets out of water now
-[Camera]:Free Camera
 [Physics] A contact was added.
-[PlayerContactListener] Character is in water now
+[Physics] A contact was added.
 [Physics] A contact was added.
 [Physics] A contact was removed.
-[PlayerContactListener] Character gets out of water now
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
+[Physics] A contact was removed.
 [Physics] A contact was removed.
 [Physics] A contact was added.
-[PlayerContactListener] Character is in water now
-[PlayerContactListener] Character gets out of water now
+[Physics] A contact was added.
+[Physics] A contact was added.
+[Physics] A contact was added.
+[Physics] A contact was added.
+[Physics] A contact was added.
+[Physics] A contact was added.
+[Physics] A contact was added.
+[Physics] A contact was added.
+[Physics] A contact was added.
+[Physics] A contact was added.
+[Physics] A contact was added.
 [Physics] A contact was removed.
 [UIManager] Layer Aim (Priority 1) を削除しました
 [UIManager] Layer Button (Priority 2) を削除しました

@@ -15,6 +15,7 @@ protected:
 	Primitive* m_pModel;
 
 public:
+	static constexpr MyComponent::ComponentType TYPE = MyComponent::ComponentType::Render;
 	RenderComponent() : m_pMaterial(nullptr), m_pEffect(nullptr), m_pModel(nullptr) {}
 	virtual ~RenderComponent() override = default;
 
@@ -40,6 +41,13 @@ public:
 
 	virtual void Render(Transform& transform);
 
+};
+
+class DebugRenderComponent :
+	public RenderComponent
+{
+public:
+	static constexpr MyComponent::ComponentType TYPE = MyComponent::ComponentType::DebugRender;
 };
 
 /// @brief UIの描画コンポーネント

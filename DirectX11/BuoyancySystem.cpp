@@ -12,9 +12,9 @@
 
 namespace 
 {
-	static constexpr float		ObjectBuoyancy = 1.5f;
-	static constexpr float		ObjectLinearDrag = 0.1f;
-	static constexpr float		ObjectAngularDrag = 0.1f;
+	static constexpr float		ObjectBuoyancy = 5.f;
+	static constexpr float		ObjectLinearDrag = 0.4f;
+	static constexpr float		ObjectAngularDrag = 0.4f;
 	static constexpr float		WaterLevel = -0.1f;
 
 	static constexpr int		WaterSlices = 100;	// Water mesh slice
@@ -128,11 +128,6 @@ void BuoyancySystem::PreUpdate(float dt)
 {
 	m_time += dt;
 
-	// Check body
-	for (const BodyID& id : m_bodiesInWater)
-	{
-		
-	}
 
 	// Update body buoyancy
 	lock_guard<Mutex> lock(m_bodiesInWaterMutex);
@@ -146,8 +141,8 @@ void BuoyancySystem::PreUpdate(float dt)
 			m_bodiesInWater.erase(std::remove(m_bodiesInWater.begin(), m_bodiesInWater.end(), id), m_bodiesInWater.end());
 			continue;
 		}
-		Body& body = body_lock.GetBody();
 
+		Body& body = body_lock.GetBody();
 
 		if(body.IsActive())
 		{
@@ -177,7 +172,7 @@ void BuoyancySystem::PreUpdate(float dt)
 		}
 	
 	}
-	
+
 }
 
 void BuoyancySystem::Draw()

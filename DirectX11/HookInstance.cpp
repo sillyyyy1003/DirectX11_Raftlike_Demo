@@ -180,6 +180,12 @@ void HookInstance::Update(float dt)
 	GameObject::Update(dt);
 }
 
+void HookInstance::AddItem(ItemInstance* item)
+{
+	/// Only when hook is retrieving or caught can add item=	
+	if(m_hookState==Retrieving||m_hookState==Caught)m_caughtItems.push_back(item);
+}
+
 float HookInstance::GetChargeProgress()
 {
 	if(m_hookState==Charging)

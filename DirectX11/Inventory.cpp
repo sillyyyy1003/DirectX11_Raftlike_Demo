@@ -3,6 +3,7 @@
 #include "ItemDataBase.h"
 #include "ItemInstances.h"
 #include "KInput.h"
+#include "LootInstance.h"
 #include "Player.h"
 
 Inventory::Inventory(int maxSlots):
@@ -12,25 +13,84 @@ Inventory::Inventory(int maxSlots):
 
 int Inventory::Insert(ItemInstance* instance)
 {
-	// error check if instance is void or has count <0 
+	// bug check
 	if (!instance || instance->GetCount() <= 0 || !instance->GetProto())
 		return 0;
 
+	auto proto = instance->GetProto();
+
+	// if is loot item
+	if (proto->GetItemType() == Item::ItemType::Loot)
+	{
+		int insertedTotal = 0;
+
+		LootInstance* loot = dynamic_cast<LootInstance*>(instance);
+		if (!loot)
+		{
+			DebugLog::Log("[Inventory] Invalid LootInstance cast");
+			return 0;
+		}
+
+		const auto& lootContent = loot->GetLootContent();
+		if (lootContent.empty())
+		{
+			DebugLog::Log("[Inventory] LootInstance is empty");
+			return 0;
+		}
+
+		for (const auto& [itemName, itemCount] : lootContent)
+		{
+			auto itemProto = ItemDataBase::Instance().GetItem(itemName.c_str());
+			if (!itemProto)
+			{
+				DebugLog::Log("[Inventory] Unknown item in Loot: " + itemName);
+				continue;
+			}
+
+			// Create item instance
+			ItemPtr itemInstance = ItemDataBase::Instance().CreateItemInstance(itemName.c_str(), itemCount);
+			if (!itemInstance)
+			{
+				DebugLog::Log("[Inventory] Failed to create item instance for: " + itemName);
+				continue;
+			}
+
+			// insert single item 
+			int inserted = InsertSingleItem(itemInstance.get());
+			insertedTotal += inserted;
+
+			if (inserted < itemCount)
+			{
+				DebugLog::Log("[Inventory] Partial insert for {}. Inserted: {}/{}", itemName, std::to_string(inserted), std::to_string(itemCount));
+			}
+		}
+
+		return 1;	// destroy loot item any way;
+	}
+
+	// regular item
+	return InsertSingleItem(instance);
+}
+
+int Inventory::InsertSingleItem(ItemInstance* instance)
+{
+	if (!instance || instance->GetCount() <= 0 || !instance->GetProto())
+		return 0;
 	auto proto = instance->GetProto();
 	const int maxStack = proto->GetMaxStack();
 	int remaining = instance->GetCount();
 	int inserted = 0;
 
 	// insert item to stackable slots
-	if(instance->IsStackable())
+	if (instance->IsStackable())
 	{
-		for(auto& slot:m_slots)
+		for (auto& slot : m_slots)
 		{
 			if (slot && (*slot)->IsStackable()	// object is stackable
 				&& (*slot)->GetProto() == proto	// has same object	
 				&& (*slot)->GetCount() < maxStack)	//slot is not fully stacked
 			{
-				int canAdd = maxStack - (*slot)->GetCount();	
+				int canAdd = maxStack - (*slot)->GetCount();
 				if (canAdd > 0)
 				{
 					int toAdd = std::min(remaining, canAdd);// Calculate add number

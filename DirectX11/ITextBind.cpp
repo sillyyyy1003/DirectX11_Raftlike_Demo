@@ -6,7 +6,7 @@
 
 std::string UIFormat::FormatHunger(Player* player)
 {
-	return "HP: " + std::to_string(player->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->GetCurrentHungerValue());
+	return "HP: " + std::to_string(player->GetComponent<HungerComponent>()->GetCurrentHungerValue());
 
 }
 

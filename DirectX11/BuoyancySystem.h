@@ -40,7 +40,7 @@ public:
 	DirectX::XMFLOAT3 GetWaterSurfacePosition(const DirectX::XMFLOAT3& pos) const;
 	RVec3 GetWaterSurfacePosition(RVec3Arg inXZPosition) const;
 
-
+	Transform& GetTransform()  { return m_transform; }
 private:
 	//==== physics data
 	Mutex m_bodiesInWaterMutex;

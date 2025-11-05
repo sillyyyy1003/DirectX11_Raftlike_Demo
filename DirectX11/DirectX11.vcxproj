@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Behaviour.cpp" />
+    <ClCompile Include="LootInstance.cpp" />
     <ClCompile Include="BuoyancySystem.cpp" />
     <ClCompile Include="CameraBase.cpp" />
     <ClCompile Include="CameraController.cpp" />
@@ -258,6 +259,7 @@
   <ItemGroup>
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Behaviour.hpp" />
+    <ClInclude Include="LootInstance.h" />
     <ClInclude Include="BuoyancySystem.h" />
     <ClInclude Include="CameraBase.h" />
     <ClInclude Include="CameraController.h" />

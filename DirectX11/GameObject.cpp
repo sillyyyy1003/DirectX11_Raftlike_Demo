@@ -1,4 +1,6 @@
 ﻿#include "GameObject.h"
+
+#include "MaterialManager.h"
 #include "RenderComponent.h"
 #include "PhysicsComponent.h"
 #include "PhysicsManager.h"
@@ -8,6 +10,7 @@ GameObject::GameObject(GameObjectType type) :
 	m_isActive(true),
 	m_objectType(type)
 {
+	
 }
 
 GameObject::~GameObject()
@@ -25,9 +28,9 @@ void GameObject::Update(float dt)
 	if (!m_isActive)return;
 
 	//==========Update Physics
-	if(GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)!=nullptr)
+	if(GetComponent<PhysicsComponent>()!=nullptr)
 	{
-		PhysicsComponent* physics = GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics);
+		PhysicsComponent* physics = GetComponent<PhysicsComponent>();
 		switch(physics->GetEmotionType())
 		{
 		case JPH::EMotionType::Dynamic:
@@ -54,17 +57,26 @@ void GameObject::Update(float dt)
 void GameObject::Draw()
 {
 	if (!m_isActive)return;
-	if (GetComponent<RenderComponent>(MyComponent::ComponentType::Render) != nullptr)
-		GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->Render(m_transform);
+	if (GetComponent<RenderComponent>() != nullptr)
+		GetComponent<RenderComponent>()->Render(m_transform);
+	
+	
 
 #if defined(_DEBUG) || defined(DEBUG)
 	// Draw debug information if needed
-	if(GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender) != nullptr)
+	if(DebugRenderComponent* debugRender = GetComponent<DebugRenderComponent>())
 	{
-		// Transform設定
-		Transform debugTransform = m_transform;
-		debugTransform.SetScale(m_debugCollisionScale);
-		GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender)->Render(debugTransform);
+		if (PhysicsComponent * physics = GetComponent<PhysicsComponent>() )
+		{
+			DirectX::XMFLOAT3 debugScale = physics->GetBodySize();
+	
+			
+			// Transform設定
+			Transform debugTransform = m_transform;
+			debugTransform.SetScale(debugScale);
+			debugTransform.SetPosition(physics->GetPosition());
+			debugRender->Render(debugTransform);
+		}
 	}
 #endif 
 
@@ -73,9 +85,9 @@ void GameObject::Draw()
 void GameObject::SetPosition(const DirectX::XMFLOAT3& pos)
 {
 	// Dynamic physics のみ物理で位置変更
-	if (GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics) != nullptr)
+	if (GetComponent<PhysicsComponent>() != nullptr)
 	{
-		PhysicsComponent* physics = GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics);
+		PhysicsComponent* physics = GetComponent<PhysicsComponent>();
 		if (physics->GetEmotionType() == EMotionType::Dynamic)
 		{
 			physics->SetPosition(pos);

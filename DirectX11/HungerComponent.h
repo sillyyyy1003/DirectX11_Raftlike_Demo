@@ -5,6 +5,7 @@ class HungerComponent :
     public Component
 {
 public:
+    static constexpr MyComponent::ComponentType TYPE = MyComponent::ComponentType::Hunger;
 
     HungerComponent(float initialValue);
     ~HungerComponent() override;

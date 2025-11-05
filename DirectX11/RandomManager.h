@@ -56,7 +56,9 @@ public:
     }
 
     unsigned int GetMasterSeed() const { return m_masterSeed; }
+
 private:
+
     RandomManager()
     {
         m_masterSeed = static_cast<unsigned int>(

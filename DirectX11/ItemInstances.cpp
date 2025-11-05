@@ -20,7 +20,7 @@ void FoodInstance::InteractWith(BodyID& rigidBody, Player* player)
 void FoodInstance::OnUseRelease(Player* player)
 {
 	float recoverValue = dynamic_cast<const Food*>(GetProto().get())->GetFoodValue();
-	player->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->RestoreHunger(recoverValue);
+	player->GetComponent<HungerComponent>()->RestoreHunger(recoverValue);
 
 	player->GetInventory()->RemoveCurrentSlotItem(1);
 	player->GetInventory()->UpdateItemOfPlayer(player);
@@ -58,7 +58,7 @@ void CupInstance::OnUseRelease(Player* player)
 		break;
 	}
 
-	player->GetComponent<ThirstComponent>(MyComponent::ComponentType::Thirst)->RestoreThirst(recoverValue);
+	player->GetComponent<ThirstComponent>()->RestoreThirst(recoverValue);
 
 }
 void CupInstance::InteractWith(BodyID& rigidBody, Player* player)
@@ -130,4 +130,9 @@ void PurifierInstance::Update(float dt)
 		if (m_timer > timeThreshold)
 			m_waterPurifierState = Finished;
 	}
+}
+
+void PurifierInstance::Draw()
+{
+	ItemInstance::Draw();
 }

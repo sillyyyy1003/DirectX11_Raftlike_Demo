@@ -31,6 +31,25 @@ void PlayerController::Update(float dt)
     if (!m_isActive)return;
     if (!m_isControllable)return;
 
+
+    // Show cursor
+    {
+        if (KInput::IsKeyRelease(VK_LCONTROL))
+        {
+            if (!m_isCursorLocked)
+            {
+                m_isCursorLocked = true;
+                ShowCursor(FALSE);
+            }
+            else
+            {
+                m_isCursorLocked = false;
+                ShowCursor(TRUE);
+            }
+
+        }
+    }
+
     //Cursor SetMoveDir
     {
         if(m_isCursorLocked)
@@ -94,29 +113,34 @@ void PlayerController::Update(float dt)
 
     // LMB to use item in inventory 
     {
-        // On Use Start
-	    if(KInput::IsKeyTrigger(VK_LBUTTON))
-	    {
-            if(m_pPlayer->GetItemInHand())
-                m_pPlayer->GetItemInHand()->OnUseStart(m_pPlayer);
-	    }
+       if(m_isCursorLocked)
+       {
+           // On Use Start
+           if (KInput::IsKeyTrigger(VK_LBUTTON))
+           {
+               if (m_pPlayer->GetItemInHand())
+                   m_pPlayer->GetItemInHand()->OnUseStart(m_pPlayer);
+           }
 
-        // On Using
-        if(KInput::IsKeyPress(VK_LBUTTON))
-        {
-            if (m_pPlayer->GetItemInHand())
-                m_pPlayer->GetItemInHand()->OnUseHold(m_pPlayer,dt);
-        }
+           // On Using
+           if (KInput::IsKeyPress(VK_LBUTTON))
+           {
+               if (m_pPlayer->GetItemInHand())
+                   m_pPlayer->GetItemInHand()->OnUseHold(m_pPlayer, dt);
+           }
 
 
-        // On Use End
-        if (KInput::IsKeyRelease(VK_LBUTTON))
-        {
-            if (m_pPlayer->GetItemInHand())
-                m_pPlayer->GetItemInHand()->OnUseRelease(m_pPlayer);
-        }
+           // On Use End
+           if (KInput::IsKeyRelease(VK_LBUTTON))
+           {
+               if (m_pPlayer->GetItemInHand())
+                   m_pPlayer->GetItemInHand()->OnUseRelease(m_pPlayer);
+           }
 
+       }
     }
+
+
 }
 
 

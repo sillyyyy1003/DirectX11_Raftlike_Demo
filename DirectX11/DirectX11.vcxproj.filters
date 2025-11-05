@@ -390,6 +390,9 @@
     <ClCompile Include="UICharge.cpp">
       <Filter>源文件\UI</Filter>
     </ClCompile>
+    <ClCompile Include="LootInstance.cpp">
+      <Filter>源文件\Item</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMin.h">
@@ -667,6 +670,9 @@
     </ClInclude>
     <ClInclude Include="UICharge.h">
       <Filter>头文件\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="LootInstance.h">
+      <Filter>头文件\Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

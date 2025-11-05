@@ -107,4 +107,12 @@ Hook::Hook(float maxSpeed, float minSpeed,  float chargeTime, float chargeSpeed,
 {
 }
 
+//==========Loot=============
+Loot::Loot(int maxItemCount ,const std::vector<std::string>& items):
+	Item(ItemType::Loot,false,1,-1),
+	m_maxItemCount(maxItemCount)
+{
+	m_items = items;
+}
+
 

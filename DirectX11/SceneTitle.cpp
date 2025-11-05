@@ -181,7 +181,7 @@ void SceneTitle::Init()
 	// create water
 	Water* water = CreateObj<Water>("Water");
 	water->LoadFromConfig(j["Title"], "Water");
-	water->AddComponent<RenderComponent>(MyComponent::ComponentType::Render, waterRender);
+	water->AddComponent<RenderComponent>(waterRender);
 	water->GetTransform().SetPosition(WaterPos);
 	water->GetTransform().SetScale( WaterSize);
 

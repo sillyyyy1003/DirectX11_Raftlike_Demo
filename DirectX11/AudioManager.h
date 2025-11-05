@@ -72,6 +72,12 @@ public:
 
 	void AddVolume(AudioType type, float delta);
 
+	/// @brief Load audio settings from json config file
+	/// @param filePath json file path
+	void LoadAudioSettings(const char* filePath);
+
+	/// @brief Save audio settings to json config file
+	void SaveAudioSettings();
 private:
 	struct AudioData
 	{
@@ -103,6 +109,8 @@ private:
 	UIBar* m_bgmBar = nullptr;
 	UIBar* m_seBar=nullptr;
 	UIBar* m_environmentBar = nullptr;
+
+	std::string m_settingsFilePath = "settings.json";	// config file path for load/save
 	/// @brief Load Wav file
 	/// @param filepath file path
 	/// @param outBuffer 

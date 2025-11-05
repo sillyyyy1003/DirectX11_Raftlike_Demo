@@ -2,7 +2,11 @@
 #include <fstream>
 #include <cassert>
 #include <cstring>
+#include <nlohmann/json.hpp>
+
+#include "DebugLog.h"
 #include "UIBar.h"
+
 
 #pragma pack(push, 1)
 
@@ -23,7 +27,7 @@
 #define fourccXWMA 'AMWX'
 #define fourccDPDS 'sdpd'
 #endif
-
+using json = nlohmann::json;
 
 //=============================================================================
 // ユーティリティ関数群
@@ -308,6 +312,78 @@ void AudioManager::AddVolume(AudioType type, float delta)
             SetVolume(type, m_environmentVolume + delta);
 			break;
 	}
+}
+
+void AudioManager::LoadAudioSettings(const char* filePath)
+{
+    std::ifstream inFile(filePath);
+    if (!inFile.is_open())
+    {
+        DebugLog::LogError("[AudioManager] Failed to open settings file:{}", filePath);
+        return;
+    }
+
+    json config;
+    try
+    {
+        inFile >> config;
+    }
+    catch (const std::exception& e)
+    {
+        DebugLog::LogError("[AudioManager] JSON parse error::{}", e.what());
+        return;
+    }
+
+    //==========Load audio settigns
+    if (config.contains("settings") && config["settings"].contains("audio"))
+    {
+		float bgmVolume = 0, seVolume = 0, environmentVolume = 0;
+        auto& audio = config["settings"]["audio"];
+        if (audio.contains("bgmVolume"))         bgmVolume = audio["bgmVolume"].get<float>();
+        if (audio.contains("seVolume"))          seVolume = audio["seVolume"].get<float>();
+        if (audio.contains("environmentVolume")) environmentVolume = audio["environmentVolume"].get<float>();
+
+		// Apply loaded volumes
+        SetVolume(AudioType::BGM, bgmVolume);
+        SetVolume(AudioType::SE, seVolume);
+        SetVolume(AudioType::ENVIRONMENT, environmentVolume);
+
+		DebugLog::Log("[AudioManager] Loaded volumes: "
+			" BGM={}, SE={}, Env={}", m_bgmVolume, m_seVolume, m_environmentVolume);
+	}
+	else
+	{
+        DebugLog::LogError( "[AudioManager] 'settings.audio' section not found in JSON." );
+        return;
+    }
+
+    m_settingsFilePath = filePath;
+}
+
+void AudioManager::SaveAudioSettings()
+{
+    json config;
+
+    config["settings"]["audio"]["bgmVolume"] = m_bgmVolume;
+    config["settings"]["audio"]["seVolume"] = m_seVolume;
+    config["settings"]["audio"]["environmentVolume"] = m_environmentVolume;
+
+    std::ofstream outFile(m_settingsFilePath);
+    if (!outFile.is_open())
+    {
+        DebugLog::Log("[AudioManager] Failed to write JSON file: {}", m_settingsFilePath);
+        return;
+    }
+
+    try
+    {
+        outFile << std::setw(4) << config << std::endl;
+    }
+    catch (const std::exception& e)
+    {
+        DebugLog::Log("[AudioManager] JSON write error: {}" , e.what());
+        return ;
+    }
 }
 
 

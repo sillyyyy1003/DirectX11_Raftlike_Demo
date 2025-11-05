@@ -75,7 +75,7 @@ bool Player::Init(const char* filePath)
 	if(filePath == nullptr)
 	{
 		m_pPlayerEntity = std::make_shared<PlayerEntity>(PlayerDefaultHealth);
-		AddComponent(MyComponent::ComponentType::LivingEntity, m_pPlayerEntity);
+		AddComponent(m_pPlayerEntity);
 
 		//Player Character (Physics Init)
 		m_pPlayerCharacter = std::make_shared<PlayerCharacter>();
@@ -90,11 +90,11 @@ bool Player::Init(const char* filePath)
 		//hunger component初期化→初期値
 		m_pHungerComponent = std::make_shared<HungerComponent>(HungerInitialValue);
 		m_pHungerComponent->SetStarveSpeed(HungerSpeed); //空腹度の減少速度を設定（1.5day）
-		AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent);		// HungerComponentをPlayerに追加
+		AddComponent(m_pHungerComponent);		// HungerComponentをPlayerに追加
 
 		m_pThirstComponent = std::make_shared<ThirstComponent>(ThirstInitialValue);
 		m_pThirstComponent->SetThirstSpeed(ThirstSpeed); //渇き度の減少速度を設定（1day）
-		AddComponent(MyComponent::ComponentType::Thirst, m_pThirstComponent);		// ThirstComponentをPlayerに追加
+		AddComponent(m_pThirstComponent);		// ThirstComponentをPlayerに追加
 
 		m_pInventory = std::make_shared<Inventory>(PlayerInventorySize);		// assume max slot
 		return true; // No JSON file provided, using default values
@@ -125,7 +125,7 @@ bool Player::Init(const char* filePath)
 		   ? j["PlayerEntity"].value("Health", PlayerDefaultHealth)
 		   : PlayerDefaultHealth;
 		m_pPlayerEntity = std::make_shared<PlayerEntity>(health);
-		AddComponent(MyComponent::ComponentType::LivingEntity, m_pPlayerEntity);
+		AddComponent(m_pPlayerEntity);
 	}
 
 	// Player Character
@@ -195,7 +195,7 @@ bool Player::Init(const char* filePath)
 
 		m_pHungerComponent = std::make_shared<HungerComponent>(hungerInit);
 		m_pHungerComponent->Init(hungerSpeed, hungerThreshold);
-		AddComponent(MyComponent::ComponentType::Hunger, m_pHungerComponent);
+		AddComponent(m_pHungerComponent);
 
 		// Add callback event to listener hungry
 		m_pHungerComponent->AddHungryListener([this](bool isHungry)
@@ -232,7 +232,7 @@ bool Player::Init(const char* filePath)
 			: ThirstThreshold;
 		m_pThirstComponent = std::make_shared<ThirstComponent>(thirstInit);
 		m_pThirstComponent->Init(thirstSpeed, hungerThreshold);
-		AddComponent(MyComponent::ComponentType::Thirst, m_pThirstComponent);
+		AddComponent(m_pThirstComponent);
 
 		// Add callback event to listener thirsty
 		m_pThirstComponent->AddThirstyListener([this](bool isThirsty)
@@ -352,7 +352,7 @@ void Player::Draw()
 {
 #if defined(_DEBUG) || defined(DEBUG)
 	//Physical Collider Render
-	if(GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender))
+	if(GetComponent<RenderComponent>())
 	{
 		// Debug Renderスケールを設定（形はCapsule x=z=radius*2 y=height/2）
 		// Capsuleの初期高さは2.fなので、y軸のスケールは半分にする
@@ -368,7 +368,7 @@ void Player::Draw()
 		DirectX::XMFLOAT3 position = m_pPlayerCharacter->GetPosition();
 		position.y += 0.5f * (scale.y + m_pPlayerCharacter->GetDebugDrawRadius()); 
 		
-		RenderComponent* debugRender = GetComponent<RenderComponent>(MyComponent::ComponentType::DebugRender);
+		RenderComponent* debugRender = GetComponent<RenderComponent>();
 		Transform t = {
 			scale,
 			rotation,
@@ -480,10 +480,10 @@ void Player::SetItemInHand(ItemInstance* item, IEffect* effectPtr)
 		{
 			// If there is an item in hand, reset item
 			// Remove physics component 
-			if (m_itemInHand->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics))
+			if (m_itemInHand->GetComponent<PhysicsComponent>())
 				m_itemInHand->RemoveComponent<PhysicsComponent>(MyComponent::ComponentType::Physics);
 			// Remove render component
-			if (m_itemInHand->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Render))
+			if (m_itemInHand->GetComponent<PhysicsComponent>())
 				m_itemInHand->RemoveComponent<RenderComponent>(MyComponent::ComponentType::Render);
 		}
 	}
@@ -495,6 +495,8 @@ void Player::SetItemInHand(ItemInstance* item, IEffect* effectPtr)
 	DirectX::XMFLOAT3 size = ItemDataBase::Instance().GetItemSize(m_itemInHand->GetName());
 	// Set item size
 	m_itemInHand->GetTransform().SetScale(size);
+
+
 	// Set item transform parent -》 camera tranform
 	m_itemInHand->GetTransform().SetParent(&(m_pCameraController->GetCamera()->m_transform));
 	// Set item pos
@@ -504,11 +506,11 @@ void Player::SetItemInHand(ItemInstance* item, IEffect* effectPtr)
 	// Add render component
 	uint32_t modelId = m_itemInHand->GetModelId();
 	uint32_t materialId = m_itemInHand->GetMaterialId();
-	if(!m_itemInHand->GetComponent<RenderComponent>(MyComponent::ComponentType::Render))
+	if(!m_itemInHand->GetComponent<RenderComponent>())
 	{
 		std::shared_ptr<RenderComponent> renderComponent = std::make_shared<RenderComponent>();
 		renderComponent->Init(MaterialManager::Instance().GetMaterial(materialId), effectPtr, ModelManager::Instance().GetModel(modelId));
-		m_itemInHand->AddComponent(MyComponent::ComponentType::Render, renderComponent);
+		m_itemInHand->AddComponent(renderComponent);
 	}
 
 
@@ -518,7 +520,7 @@ void Player::SetItemInHand(ItemInstance* item, IEffect* effectPtr)
 	if (m_itemInHand->GetProto()->GetItemType() != Item::ItemType::Weapon && m_itemInHand->GetProto()->GetItemType() != Item::ItemType::Hook)return;
 
 	// if there is no physics component add physics component
-	if (!m_itemInHand->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics))
+	if (!m_itemInHand->GetComponent<PhysicsComponent>())
 	{
 		ObjectLayer layer = Layers::NUM_LAYERS;
 		if (m_itemInHand->GetProto()->GetItemType() == Item::ItemType::Weapon)
@@ -532,7 +534,7 @@ void Player::SetItemInHand(ItemInstance* item, IEffect* effectPtr)
 		PhysicsManager::Instance().SetBodyCreationMass(1.f, boxSettings);	// Set the mass properties for the apple box
 		std::shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
 		physicsComponent->Init(boxSettings, EActivation::Activate);
-		m_itemInHand->AddComponent(MyComponent::ComponentType::Physics, physicsComponent);
+		m_itemInHand->AddComponent(physicsComponent);
 		physicsComponent->SetGameObject(m_itemInHand); // Set the GameObject for the PhysicsComponent
 
 
@@ -558,33 +560,21 @@ void Player::InteractWithObject(BodyID& id)
 	{
 		auto item = dynamic_cast<ItemInstance*>(object);
 
-		//todo: turn into switch
-		//======== if item type is food/base material pick up
-		if(item->GetProto()->GetItemType()==Item::ItemType::Food)
+		// Check if item is valid
+		if (!item)
 		{
-			std::string name = item->GetName();
-			int count = item->GetCount();
-			int insertNum = GetInventory()->Insert(item);
-			// アイテム全部挿入したら、しーんから消す
-			if (count == insertNum)
-			{
-				item->SetState(ItemState::WaitToRecycle);    // Mark for recycling in DriftManager
-				item->DeActivate();
-			}
-		}else if(item->GetProto()->GetItemType() == Item::ItemType::BaseMaterial)
-		{
-			std::string name = item->GetName();
-			int count = item->GetCount();
-			int insertNum = GetInventory()->Insert(item);
-			// アイテム全部挿入したら、しーんから消す
-			if (count == insertNum)
-			{
-				item->SetState(ItemState::WaitToRecycle);    // Mark for recycling in DriftManager
-				item->DeActivate();
-			}
+			return; 
 		}
-
 		
+		std::string name = item->GetName();
+		int count = item->GetCount();
+		int insertNum = GetInventory()->Insert(item);
+		// アイテム全部挿入したら、しーんから消す
+		if (count == insertNum)
+		{
+			item->SetState(ItemState::WaitToRecycle);    // Mark for recycling in DriftManager
+			item->DeActivate();
+		}
 
 		//========= if item type is building
 		// Todo: interact with building

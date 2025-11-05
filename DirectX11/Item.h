@@ -19,7 +19,7 @@ public:
 		Cup = 6,
 		WaterPurifier=7,
 		Hook = 8,
-		Box=9,				// Box filled with material/ food
+		Loot=9,				// Loot filled with material/ food
 	};
 	
 	virtual ~Item() = default;
@@ -84,7 +84,7 @@ public:
 	/// @param _proto 参照ポインター
 	/// @param _count 数
 	/// @param _durability 耐久値 
-	void InitItem(std::shared_ptr<const Item> _proto, int _count = 1, float _durability = -1);
+	virtual void InitItem(std::shared_ptr<const Item> _proto, int _count = 1, float _durability = -1);
 
 	~ItemInstance() override = default;
 	bool IsStackable() const { return m_protoPtr && m_protoPtr->GetIsStackable(); }
@@ -141,7 +141,7 @@ public:
 	~Utility() override = default;
 };
 
-
+//========Food===========
 class Food:
 	public Item
 {
@@ -154,6 +154,7 @@ private:
 	float m_foodValue;	// 回復値
 };
 
+//========BaseMaterial===========
 class BaseMaterial :
 	public Item
 {
@@ -163,6 +164,8 @@ public:
 	~BaseMaterial() override = default;
 };
 
+
+//========Cup===========
 class Cup :
 	public Item
 {
@@ -178,6 +181,7 @@ private:
 };
 
 
+//========WaterPurifier===========
 class WaterPurifier:
 	public Item
 {
@@ -191,6 +195,7 @@ protected:
 	float m_timeThreshold;	// 浄水にかかる時間
 };
 
+//========Weapon===========
 class Spear :
 	public Item
 {
@@ -203,6 +208,8 @@ private:
 	float m_damage;	// Attack damage;
 };
 
+
+//========Hook===========
 class Hook:
 public Item
 {
@@ -219,4 +226,22 @@ private:
 	float m_minSpeed;			// 最小速度
 	float m_chargeTimeLimit;	// 最大チャージ需要時間
 	float m_chargeSpeed;
+};
+
+
+
+//========Loot===========
+///@brief Box that could get several items from
+class Loot :
+	public Item
+{
+public:
+	Loot(int maxItemCount , const std::vector<std::string>& items);
+	~Loot() override = default;
+	int GetMaxCount() const	{ return m_maxItemCount; }
+	const std::vector<std::string>& GetItemTypes() const { return m_items; }
+
+private:
+	int m_maxItemCount;			// アイテム数の最大値
+	std::vector<std::string> m_items = {};	// 含まれた全てのアイテムタイプ
 };

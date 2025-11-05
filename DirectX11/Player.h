@@ -50,8 +50,11 @@ public:
 	/// @param rad +:LEFT -:RIGHT
 	void RotateY(float dt);
 
+	/// @brief Change Cursor Lock State
+	/// @param isLocked
+	/// true >> cursor is hidden && can't move camera && can't interact with tools && can interact with ui
+	/// false >> cursor is free 
 	void LockCursor(bool isLocked) { m_pPlayerController->SetCursorLocked(isLocked); }
-
 
 	CameraController* GetCameraController() const { return m_pCameraController.get(); }
 	Inventory* GetInventory() const { return m_pInventory.get(); }

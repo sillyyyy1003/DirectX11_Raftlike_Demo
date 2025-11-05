@@ -19,6 +19,8 @@ public:
 	/// @return 挿入した数
 	int Insert(ItemInstance* instance);
 
+	int InsertSingleItem(ItemInstance* instance);
+
 	size_t GetUsedSlotCount() const;
 	size_t GetMaxSlots() const;
 	std::vector<Slot>& GetSlots() { return m_slots; }

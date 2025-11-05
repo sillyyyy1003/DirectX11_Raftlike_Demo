@@ -39,13 +39,13 @@ void UIPlayerStatus::Update(float dt)
 {
 	if (!m_isActive) return;
 
-	float hungerValue = m_pPlayer->GetComponent<HungerComponent>(MyComponent::ComponentType::Hunger)->GetCurrentHungerPercentage();
+	float hungerValue = m_pPlayer->GetComponent<HungerComponent>()->GetCurrentHungerPercentage();
 	m_pHungerBar->UpdateUI(hungerValue);
 
-	float healthValue = m_pPlayer->GetComponent<PlayerEntity>(MyComponent::ComponentType::LivingEntity)->GetCurrentHealthPercentage();
+	float healthValue = m_pPlayer->GetComponent<PlayerEntity>()->GetCurrentHealthPercentage();
 	m_pHealthBar->UpdateUI(healthValue);
 
-	float thirstValue = m_pPlayer->GetComponent<ThirstComponent>(MyComponent::ComponentType::Thirst)->GetCurrentThirstPercentage();
+	float thirstValue = m_pPlayer->GetComponent<ThirstComponent>()->GetCurrentThirstPercentage();
 	m_pThirstBar->UpdateUI(thirstValue);
 
 }

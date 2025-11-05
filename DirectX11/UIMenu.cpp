@@ -1,6 +1,7 @@
 ﻿#include "UIMenu.h"
 #include "AudioManager.h"
 #include "SceneBase.hpp"
+#include "SceneGame.h"
 #include "UIManager.h"
 
 namespace UIMenuConst
@@ -178,6 +179,7 @@ void UIMenu::SetButton(SceneBase* scene)
 	    AudioManager::Instance().AddVolume(AudioManager::AudioType::BGM, 0.1f);
         AudioManager::Instance().Play("SE_Button", false);
     });
+
     m_bgmRightArrow->SetOnHover([this]() { m_bgmRightArrow->ActiveMove(); });
     m_bgmRightArrow->SetOnExit([this]() { m_bgmRightArrow->DeActiveMove(); });
 
@@ -228,7 +230,7 @@ void UIMenu::SetButton(SceneBase* scene)
     m_environmentRightArrow->SetOnExit([this]() { m_environmentRightArrow->DeActiveMove(); });
 
 
-    m_resumeButton->SetOnClick([this]()
+    m_resumeButton->SetOnClick([this,scene]()
     {
             AudioManager::Instance().Play("SE_Button", false);
             this->SetActive(false);
@@ -264,6 +266,8 @@ void UIMenu::Draw()
 
 void UIMenu::SetActive(bool isActive)
 {
+    m_isActive = isActive;
+
     m_menuBg->SetActive(isActive);
 
     m_bgmText->SetActive(isActive);

@@ -25,7 +25,7 @@ public:
 	void SetHookState(HookState state) { m_hookState = state; }
 	HookState GetHookState() const { return m_hookState; }
 
-	void AddItem(ItemInstance* item) { m_caughtItems.push_back(item); }
+	void AddItem(ItemInstance* item);
 	bool HasCharge() override { return true; }
 	float GetChargeProgress() override;
 private:
@@ -38,7 +38,6 @@ private:
 	/// current velocity
 	/// </summary>
 	DirectX::XMFLOAT3 m_velocity = { 0,0,0 };
-
 	std::vector<ItemInstance*> m_caughtItems = {};
 };
 

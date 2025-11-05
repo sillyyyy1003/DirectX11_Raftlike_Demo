@@ -43,6 +43,10 @@
     {
       "name":"Hook",
       "file":"Assets/Model/Hook.fbx"
+    },
+    {
+      "name":"LootChest",
+      "file":"Assets/Model/MediumChest.fbx"
     }
   ],
   "materials":[
@@ -105,6 +109,16 @@
       "albedoTex": "WaterPurifierMaterial_Albedo",
       "normalTex": "WaterPurifierMaterial_Normal",
       "metallicTex": "WaterPurifierMaterial_Metallic"
+    },    
+    {
+      "name": "StorageMaterial",
+      "ambient": [1.0, 1.0, 1.0, 1.0],
+      "diffuse": [1.0, 1.0, 1.0, 1.0],
+      "specular": [0.0, 0.0, 0.0, 1.0],
+      "emission": [0.0, 0.0, 0.0, 0.0],
+      "albedoTex": "Storage_Albedo",
+      "normalTex": "Storage_Normal",
+      "metallicTex": "Storage_Metallic"
     },
     {
       "name": "UiMaterial",
@@ -497,6 +511,18 @@
     {
       "name": "WaterPurifierMaterial_Metallic",
       "file": "Assets/Texture/ModelTexture/WaterPurifiers_DefaultMaterial_MetallicSmoothness.png"
+    },
+    {
+      "name":"Storage_Albedo",
+      "file": "Assets/Texture/ModelTexture/SmallChests_DefaultMaterial_AlbedoTransparency.png"
+    },
+    {
+      "name":"Storage_Normal",
+      "file": "Assets/Texture/ModelTexture/SmallChests_DefaultMaterial_Normal.png"
+    },
+    {
+      "name":"Storage_Metallic",
+      "file": "Assets/Texture/ModelTexture/SmallChests_DefaultMaterial_MetallicSmoothness.png"
     },
     {
       "name": "UI_HungerIcon",

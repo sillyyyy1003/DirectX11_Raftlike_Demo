@@ -11,9 +11,10 @@ public:
 
 	enum class DriftObjectType :uint8_t
 	{
-		Wood = 0, 	// Wood
-		Wire = 1,	// Wire
-		Plastic = 2	// Plastic
+		Wood = 0, 		// Wood
+		Wire = 1,		// Wire
+		Plastic = 2,	// Plastic
+		Loot = 3		// Loot
 	};
 
 	DriftManager();

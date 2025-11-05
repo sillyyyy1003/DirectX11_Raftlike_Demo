@@ -9,6 +9,7 @@
 #include "d3dUtil.h"
 #include "HookInstance.h"
 #include "ItemInstances.h"
+#include "LootInstance.h"
 
 namespace
 {
@@ -84,7 +85,7 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorld(const char
 	// Add Render component
 	std::shared_ptr<RenderComponent> renderComponent = std::make_shared<RenderComponent>();
 	renderComponent->Init(MaterialManager::Instance().GetMaterial(materialId), nullptr, ModelManager::Instance().GetModel(modelId));
-	itemInstance->AddComponent(MyComponent::ComponentType::Render, renderComponent);
+	itemInstance->AddComponent(renderComponent);
 
 	// Add Physics component
 	DirectX::XMFLOAT3 size = m_itemSizes.find(itemName)->second;
@@ -113,7 +114,7 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics
 	// Add Render component
 	std::shared_ptr<RenderComponent> renderComponent = std::make_shared<RenderComponent>();
 	renderComponent->Init(MaterialManager::Instance().GetMaterial(materialId), nullptr, ModelManager::Instance().GetModel(modelId));
-	itemInstance->AddComponent(MyComponent::ComponentType::Render, renderComponent);
+	itemInstance->AddComponent(renderComponent);
 
 	// Add Physics component
 	DirectX::XMFLOAT3 size = m_itemSizes.find(itemName)->second;
@@ -121,9 +122,8 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics
 	BodyCreationSettings boxSettings(new BoxShape(RVec3(modelSize.x * 0.5f * size.x, modelSize.y * 0.5f * size.y, modelSize.z * 0.5f * size.z)), { 0,0,0, }, Quat::sIdentity(), EMotionType::Dynamic, layer);
 	PhysicsManager::Instance().SetBodyCreationMass(1.f, boxSettings);	// Set the mass properties for the apple box
 	std::shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
-	physicsComponent->Init(boxSettings, EActivation::Activate);
-	itemInstance->AddComponent(MyComponent::ComponentType::Physics, physicsComponent);
-	physicsComponent->SetGameObject(itemInstance.get()); // Set the GameObject for the PhysicsComponent
+	physicsComponent->Init(boxSettings, EActivation::Activate, itemInstance.get() ,{ modelSize.x *  size.x, modelSize.y * size.y, modelSize.z * size.z });
+	itemInstance->AddComponent(physicsComponent);
 
 	// Set Default scale
 	itemInstance->GetTransform().SetScale(size);
@@ -165,7 +165,7 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics
 	// Add Render component
 	std::shared_ptr<RenderComponent> renderComponent = std::make_shared<RenderComponent>();
 	renderComponent->Init(MaterialManager::Instance().GetMaterial(materialId), nullptr, ModelManager::Instance().GetModel(modelId));
-	itemInstance->AddComponent(MyComponent::ComponentType::Render, renderComponent);
+	itemInstance->AddComponent(renderComponent);
 
 	// Add Physics component
 	DirectX::XMFLOAT3 size = m_itemSizes.find(itemName)->second;
@@ -173,9 +173,8 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstanceToWorldWithPhysics
 	BodyCreationSettings boxSettings(new BoxShape(RVec3(modelSize.x * 0.5f * size.x, modelSize.y * 0.5f * size.y, modelSize.z * 0.5f * size.z)), { 0,0,0, }, Quat::sIdentity(), type, layer);
 	PhysicsManager::Instance().SetBodyCreationMass(1.f, boxSettings);	// Set the mass properties for the apple box
 	std::shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
-	physicsComponent->Init(boxSettings, EActivation::Activate);
-	itemInstance->AddComponent(MyComponent::ComponentType::Physics, physicsComponent);
-	physicsComponent->SetGameObject(itemInstance.get()); // Set the GameObject for the PhysicsComponent
+	physicsComponent->Init(boxSettings, EActivation::Activate, itemInstance.get(), { modelSize.x  * size.x, modelSize.y  * size.y, modelSize.z * size.z });
+	itemInstance->AddComponent(physicsComponent);
 
 	// Set Default scale
 	itemInstance->GetTransform().SetScale(size);
@@ -474,12 +473,71 @@ void ItemDataBase::LoadItemDataFromJsonFile(const char* jsonFilePath)
 	}
 
 
+	//===========Loot
+	if (j.contains("Loot"))
+	{
+		const auto& lootData = j["Loot"];
+
+		DirectX::XMFLOAT3 globalSize = DefaultSize;
+		if (lootData.contains("size"))
+		{
+			globalSize = JsonToXMFLOAT3(lootData["size"]);
+		}
+
+		if (lootData.contains("items"))
+		{
+			for (const auto& lootItem : lootData["items"])
+			{
+				std::string name = lootItem["name"];
+				std::string iconName = lootItem["iconName"];
+				std::string description = lootItem["description"];
+				std::string modelName = lootItem["model"];
+				std::string materialName = lootItem["material"];
+
+				DirectX::XMFLOAT3 itemSize = globalSize;
+				if (lootItem.contains("size"))
+				{
+					itemSize = JsonToXMFLOAT3(lootItem["size"]);
+				}
+				m_itemSizes[name] = itemSize;
+
+				int maxCount = 0;
+				if (lootItem.contains("maxCount"))
+				{
+					maxCount = lootItem["maxCount"];
+				}
+
+				std::vector<std::string> subItems(0);
+				if (lootItem.contains("itemTypes"))
+				{
+					for (const auto& subItem : lootItem["itemTypes"])
+					{
+						subItems.push_back(subItem.get<std::string>());
+					}
+				}
+
+				auto lootPtr = std::make_shared<Loot>(maxCount, subItems);
+				m_nextID++;
+				RegisterItem(
+					name.c_str(),
+					iconName.c_str(),
+					description.c_str(),
+					lootPtr,
+					m_nextID,
+					ModelManager::Instance().GetModelId(modelName),
+					MaterialManager::Instance().GetMaterialId(materialName)
+				);
+			}
+		}
+	}
+
 	//todo: ほかのアイテムを追加
 }
 
 std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(Item::ItemType type)
 {
 	std::shared_ptr<ItemInstance> itemInstance=nullptr;
+
 	switch(type)
 	{
 	case Item::ItemType::Food:
@@ -493,6 +551,9 @@ std::shared_ptr<ItemInstance> ItemDataBase::CreateItemInstance(Item::ItemType ty
 		break;
 	case Item::ItemType::Hook:
 		itemInstance = std::make_shared<HookInstance>();
+		break;
+	case Item::ItemType::Loot:
+		itemInstance = std::make_shared<LootInstance>();
 		break;
 	default:
 		itemInstance = std::make_shared<ItemInstance>();

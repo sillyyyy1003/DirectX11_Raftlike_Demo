@@ -54,7 +54,6 @@ public:
 
 	WaterPurifierState GetPurifierState() const { return m_waterPurifierState; }
 	void Update(float dt) override;
-
 private:
 	float m_timer = 0;
 	WaterPurifierState m_waterPurifierState = Idle;

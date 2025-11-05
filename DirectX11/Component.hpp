@@ -14,6 +14,7 @@ namespace MyComponent
 		Hunger = 1 << 3,			// Hunger Component
 		Thirst = 1 << 4,			// Thirst Component
 		LivingEntity = 1 << 5,		// Living Entity Component
+		PlayerController = 1 << 6,	// Player Controller Component
 	};
 
 }

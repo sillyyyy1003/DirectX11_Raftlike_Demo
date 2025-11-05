@@ -6,6 +6,8 @@ class ThirstComponent :
     public Component
 {
 public:
+    static constexpr MyComponent::ComponentType TYPE = MyComponent::ComponentType::Thirst;
+
     ThirstComponent(float initialValue);
     ~ThirstComponent() override = default;
 

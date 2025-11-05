@@ -36,12 +36,12 @@ void Water::Draw()
 	if (!m_isActive)return;
 
 	RenderComponent* render;
-	if (GetComponent<RenderComponent>(MyComponent::ComponentType::Render) != nullptr)
-		render = GetComponent<RenderComponent>(MyComponent::ComponentType::Render);
+	if (GetComponent<RenderComponent>() != nullptr)
+		render = GetComponent<RenderComponent>();
 	else
 		return;
 
-	IEffect* effect = GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->GetEffect();
+	IEffect* effect = GetComponent<RenderComponent>()->GetEffect();
 
 	WaterEffect::WaveVtxShaderCB vtxShaderCb;
 	WaterEffect::WavePixShaderCB pixShaderCb;

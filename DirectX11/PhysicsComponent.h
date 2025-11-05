@@ -26,8 +26,10 @@ private:
 
 	JPH::BodyID m_bodyID;
 	GameObject* m_pGameObject;	// 所属しているGameObjectを設定
+	DirectX::XMFLOAT3 m_bodySize;	// Body Size
 
 public:
+	static constexpr MyComponent::ComponentType TYPE = MyComponent::ComponentType::Physics;
 
 	PhysicsComponent();
 	~PhysicsComponent() override;
@@ -35,6 +37,7 @@ public:
 	void Init(const BodyCreationSettings& settings,EActivation activation);
 	void Init(BodyID id);
 	void Init(const BodyCreationSettings& settings, EActivation activation, GameObject* obj);
+	void Init(const BodyCreationSettings& settings, EActivation activation, GameObject* obj, const DirectX::XMFLOAT3& bodySize);
 
 	BodyID GetBodyID()const { return m_bodyID; }
 
@@ -84,5 +87,7 @@ public:
 	void DeActivePhysics();
 
 	ObjectLayer GetLayer() const;
+
+	DirectX::XMFLOAT3 GetBodySize() const { return m_bodySize; }
 };
 

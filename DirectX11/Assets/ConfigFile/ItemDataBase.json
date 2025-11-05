@@ -112,5 +112,20 @@
           "damage":30.0
         }
       ]
+  },
+   "Loot":{
+     "size": [0.05, 0.05, 0.05],
+      "items":[
+        {
+          "name":"Loot",
+          "iconName":"Loot_Icon",
+          "description":"Box full of treasures.",
+          "model":"LootChest",
+          "material":"StorageMaterial",
+          "size":[0.01, 0.01, 0.01],
+          "itemTypes":["Wood","Wire","Plastic","Banana","Apple"],
+          "maxCount":5
+        }
+      ]
   }
 }

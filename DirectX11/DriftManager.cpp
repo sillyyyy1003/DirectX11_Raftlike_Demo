@@ -26,6 +26,7 @@ namespace
     static constexpr DirectX::XMFLOAT3 WoodSize = { 0.01f,0.05f,0.01f };
     static constexpr DirectX::XMFLOAT3 WireSize = { 0.05f,0.05f,0.05f };
     static constexpr DirectX::XMFLOAT3 PlasticBarrelSize = { 0.02f,0.02f,0.02f };
+    static constexpr DirectX::XMFLOAT3 lootSize = { 0.01f,0.01f,0.01f };
 
     static constexpr float SpawnRangeX = 15.f;
     static constexpr DirectX::XMFLOAT2 SpawnRangeZ = { 70.f, 80.f };
@@ -72,9 +73,9 @@ void DriftManager::Init(IEffect* effect)
     for (auto& item : woodItems)
     {
         item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Wood", 1,  Layers::DRIFT);
-        item->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(effect);
+        item->GetComponent<RenderComponent>()->SetEffect(effect);
         item->DeActivate();
-        item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
+        item->GetComponent<PhysicsComponent>()->DeActivePhysics();
         item->SetState(InActive);
         item->SetPosition(NearItemObjectDefaultPos);
     }
@@ -84,9 +85,9 @@ void DriftManager::Init(IEffect* effect)
     for (auto& item : wireItems)
     {
         item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Wire", 1, Layers::DRIFT);
-        item->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(effect);
+        item->GetComponent<RenderComponent>()->SetEffect(effect);
         item->DeActivate();
-        item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
+        item->GetComponent<PhysicsComponent>()->DeActivePhysics();
         item->SetState(InActive);
         item->SetPosition(NearItemObjectDefaultPos);
 
@@ -97,14 +98,28 @@ void DriftManager::Init(IEffect* effect)
     for (auto& item : plasticItems)
     {
         item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Plastic", 1, Layers::DRIFT);
-        item->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(effect);
+        item->GetComponent<RenderComponent>()->SetEffect(effect);
         item->DeActivate();
-        item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
+        item->GetComponent<PhysicsComponent>()->DeActivePhysics();
         item->SetState(InActive);
         item->SetPosition(NearItemObjectDefaultPos);
 
     }
     m_nearItemInstances.emplace(DriftObjectType::Plastic, std::move(plasticItems));
+
+
+    std::vector<std::shared_ptr<ItemInstance>> lootItems(NearItemNum);
+    for (auto& item : lootItems)
+    {
+        item = ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Loot", 1, Layers::DRIFT);
+        item->GetComponent<RenderComponent>()->SetEffect(effect);
+        item->DeActivate();
+        item->GetComponent<PhysicsComponent>()->DeActivePhysics();
+        item->SetState(InActive);
+        item->SetPosition(NearItemObjectDefaultPos);
+
+    }
+    m_nearItemInstances.emplace(DriftObjectType::Loot, std::move(lootItems));
 
 
     //================Far Items
@@ -114,7 +129,7 @@ void DriftManager::Init(IEffect* effect)
         item = std::make_unique<GameObject>(GameObject::GameObjectType::Item);
         std::shared_ptr<RenderComponent> render = std::make_shared<RenderComponent>();
         render->Init(material, effect, woodModel);
-        item->AddComponent<RenderComponent>(MyComponent::ComponentType::Render, render);
+        item->AddComponent<RenderComponent>(render);
         item->GetTransform().SetScale(WoodSize);
         item->DeActivate();
     }
@@ -126,7 +141,7 @@ void DriftManager::Init(IEffect* effect)
         item = std::make_unique<GameObject>(GameObject::GameObjectType::Item);
         std::shared_ptr<RenderComponent> render = std::make_shared<RenderComponent>();
         render->Init(material1, effect, wireModel);
-        item->AddComponent<RenderComponent>(MyComponent::ComponentType::Render, render);
+        item->AddComponent<RenderComponent>(render);
         item->GetTransform().SetScale(WireSize);
         item->DeActivate();
     }
@@ -138,15 +153,28 @@ void DriftManager::Init(IEffect* effect)
         item = std::make_unique<GameObject>(GameObject::GameObjectType::Item);
         std::shared_ptr<RenderComponent> render = std::make_shared<RenderComponent>();
         render->Init(material, effect, plasticModel);
-        item->AddComponent<RenderComponent>(MyComponent::ComponentType::Render, render);
+        item->AddComponent<RenderComponent>(render);
         item->GetTransform().SetScale(PlasticBarrelSize);
         item->DeActivate();
     }
     m_farGameObjects.emplace(DriftObjectType::Plastic, std::move(plasticFarItems));
 
+    std::vector<std::unique_ptr<GameObject>> lootFarItems(FarItemNum);
+    for (auto& item : lootFarItems)
+    {
+        item = std::make_unique<GameObject>(GameObject::GameObjectType::Item);
+        std::shared_ptr<RenderComponent> render = std::make_shared<RenderComponent>();
+        render->Init(material, effect, plasticModel);
+        item->AddComponent<RenderComponent>(render);
+        item->GetTransform().SetScale(lootSize);
+        item->DeActivate();
+    }
+    m_farGameObjects.emplace(DriftObjectType::Loot, std::move(lootFarItems));
+
+
     for (int i = 0; i < InitialSpawnNum; ++i) // 初始数量可调
     {
-        int type = RandomManager::Instance().GetGenerator("Drift").GetRandomInt(0, 2);
+        int type = RandomManager::Instance().GetGenerator("Drift").GetRandomInt(0, 3);
         SpawnInitialItem(static_cast<DriftObjectType>(type));
     }
 }
@@ -171,7 +199,7 @@ void DriftManager::Update(float tick)
     if (m_spawnTimer > SpawnInterval)
     {
         m_spawnTimer = 0.f;
-        int type = RandomManager::Instance().GetGenerator("Drift").GetRandomInt(0, 2);
+        int type = RandomManager::Instance().GetGenerator("Drift").GetRandomInt(0, 3);
         CreateFarItem(static_cast<DriftObjectType>(type), GetRandomFarPosition());
     }
 
@@ -213,7 +241,7 @@ void DriftManager::Update(float tick)
             if (item->GetState() == InActive|| item->GetState() == WaitToRecycle)
             {
                 item->DeActivate();
-                item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->DeActivePhysics();
+                item->GetComponent<PhysicsComponent>()->DeActivePhysics();
                 item->SetPosition(NearItemObjectDefaultPos);
             }
 			else if (item->GetState() == Hooked) // if item is hooked by player, skip loop
@@ -273,7 +301,7 @@ void DriftManager::Update(float tick)
             if(item->GetState()==Active)    
             {
                 // Set velocity
-                if (auto* physics = item->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics))
+                if (auto* physics = item->GetComponent<PhysicsComponent>())
                 {
                     physics->SetVelocity(FloatVector);
                 }
@@ -375,7 +403,7 @@ void DriftManager::CreateNearItem(DriftObjectType type, const DirectX::XMFLOAT3&
         nearItem->Activate();
         nearItem->SetState(Active);
         nearItem->SetPosition(pos);
-        nearItem->GetComponent<PhysicsComponent>(MyComponent::ComponentType::Physics)->ActivatePhysics();
+        nearItem->GetComponent<PhysicsComponent>()->ActivatePhysics();
 
     }
 

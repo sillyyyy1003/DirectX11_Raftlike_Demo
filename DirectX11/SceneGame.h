@@ -35,7 +35,5 @@ private:
 
 	bool m_isChangeScene = false;
 	std::string m_sceneName;
-
-	bool m_isShowCursor = false;		// if is pause show cursor	
 };
 

@@ -3,7 +3,8 @@
 #include "PhysicsManager.h"
 
 PhysicsComponent::PhysicsComponent():
-	m_pGameObject(nullptr)
+	m_pGameObject(nullptr),
+	m_bodySize({1,1,1})
 {
 }
 
@@ -30,6 +31,12 @@ void PhysicsComponent::Init(const BodyCreationSettings& settings, EActivation ac
 {
 	Init(settings, activation);
 	SetGameObject(obj);
+}
+
+void PhysicsComponent::Init(const BodyCreationSettings& settings, EActivation activation, GameObject* obj, const DirectX::XMFLOAT3& bodySize)
+{
+	m_bodySize = bodySize;
+	Init(settings, activation, obj);
 }
 
 void PhysicsComponent::SetPosition(const DirectX::XMFLOAT3& pos, JPH::EActivation eActivation)
@@ -65,7 +72,9 @@ void PhysicsComponent::SetRotation(float* rot, JPH::EActivation eActivation)
 
 void PhysicsComponent::SyncPhysicsToTransform(Transform& transform)
 {
-	transform.SetPosition(GetPosition());	//Sync Position
+	DirectX::XMFLOAT3 position = GetPosition();
+	position.y -= m_bodySize.y / 2.f;	// Adjust for collider center offset
+	transform.SetPosition(position);	//Sync Position
 	transform.SetRotation(GetRotation());	//Sync Rotation
 
 }

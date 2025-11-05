@@ -142,26 +142,31 @@ void SceneGame::Init()
 
 	//=========== Init item
 	std::shared_ptr<ItemInstance> appleInstance(ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Apple", 3,  Layers::ITEM));
-	appleInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
+	appleInstance->GetComponent<RenderComponent>()->SetEffect(pbrEffect);
 	appleInstance->SetPosition({ -3, 0.5, 0 });
 	RegisterSceneObject(appleInstance);
 
 	std::shared_ptr<ItemInstance> bananaInstance(ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Banana",10, Layers::ITEM));
-	bananaInstance->GetComponent<RenderComponent>(MyComponent::ComponentType::Render)->SetEffect(pbrEffect);
+	bananaInstance->GetComponent<RenderComponent>()->SetEffect(pbrEffect);
 	bananaInstance->SetPosition({ 3, 0.5, 3 });
 	RegisterSceneObject(bananaInstance);
+
+	std::shared_ptr<ItemInstance> lootInstance(ItemDataBase::Instance().CreateItemInstanceToWorldWithPhysics("Loot", 1,Layers::ITEM));
+	lootInstance->GetComponent<RenderComponent>()->SetEffect(pbrEffect);
+	lootInstance->SetPosition({ 0 ,10, -3 });
+	RegisterSceneObject(lootInstance);
 
 	GameObject* floor = CreateObj<GameObject>("Floor");
 	std::shared_ptr<RenderComponent> floorRenderComponent = std::make_shared<RenderComponent>();
 	floorRenderComponent->Init(MaterialManager::Instance().GetMaterial("FloorMaterial"), basicEffect, ModelManager::Instance().GetModel("Cube"));
-	floor->AddComponent(MyComponent::ComponentType::Render, floorRenderComponent);
+	floor->AddComponent(floorRenderComponent);
 
 	GameObject* underWaterBox = CreateObj<GameObject>("UnderWaterBox");
 	std::shared_ptr<RenderComponent> underWaterBoxRenderComponent = std::make_shared<RenderComponent>();
 	Material* underWaterBoxMat = CreateObj<Material>("UnderSea");
 	underWaterBoxMat->SetDiffuse(WaterBoxColor);
 	underWaterBoxRenderComponent->Init(underWaterBoxMat, basicEffect, ModelManager::Instance().GetModel("Environment_WaterBox"));
-	underWaterBox->AddComponent(MyComponent::ComponentType::Render, underWaterBoxRenderComponent);
+	underWaterBox->AddComponent(underWaterBoxRenderComponent);
 	underWaterBox->GetTransform().SetScale({ WaterWidth/2.f,waterHeight/2.f,WaterWidth/2.f}); //water box basic size{2,2,2} 
 	underWaterBox->GetTransform().SetPosition(WaterBoxPos);
 
@@ -174,9 +179,10 @@ void SceneGame::Init()
 	// Create the actual body
 	BodyCreationSettings floorBoxSettings(new BoxShape(RVec3(HalfFloorScale.x, HalfFloorScale.y, HalfFloorScale.z)), Vec3().sZero(), Quat::sIdentity(), EMotionType::Dynamic, Layers::BOAT);
 	std::shared_ptr<PhysicsComponent> floorCollider = make_shared<PhysicsComponent>();
-	floor->AddComponent(MyComponent::ComponentType::Physics, floorCollider);
-	floorCollider->Init(floorBoxSettings, EActivation::Activate, floor);
+	floor->AddComponent(floorCollider);
 	floor->GetTransform().SetScale(HalfFloorScale * 2.f);
+	floorCollider->Init(floorBoxSettings, EActivation::Activate, floor,floor->GetTransform().GetScale());
+	
 
 
 	// Init Buoyancy system
@@ -184,13 +190,24 @@ void SceneGame::Init()
 	Material* waterMaterial = MaterialManager::Instance().GetMaterial("WaterMaterial");
 	buoyancySystem->Init(WaterWidth, waterHeight, waterMaterial, waterEffect);
 
+#ifdef _DEBUG
 	//Collider Debug Render Component配置
 	Material* debugMaterial = MaterialManager::Instance().GetMaterial("DebugMaterial");
-	std::shared_ptr<RenderComponent> debugColliderRender = std::make_shared<RenderComponent>();
+	std::shared_ptr<DebugRenderComponent> debugColliderRender = std::make_shared<DebugRenderComponent>();
 	debugColliderRender->Init(debugMaterial, debugEffect, ModelManager::Instance().GetModel("Capsule"));
 
 	//Debug Collider Render ComponentをPlayerに追加
-	player->AddComponent(MyComponent::ComponentType::DebugRender, debugColliderRender);
+	player->AddComponent(debugColliderRender);
+
+	std::shared_ptr<DebugRenderComponent> lootRenderComponent = make_shared<DebugRenderComponent>();
+		lootRenderComponent->Init(debugMaterial, debugEffect, ModelManager::Instance().GetModel("Cube"));
+	lootInstance->AddComponent(lootRenderComponent);
+
+#endif
+
+
+
+
 
 
 
@@ -316,9 +333,6 @@ void SceneGame::Init()
 	configButton->LoadButtonConfig(j["Game"]["UI"], "ConfigButton");
 
 	// Craft system
-	CraftRecipe* recipe = CreateObj<CraftRecipe>("Recipe");
-	recipe->Init("Apple", { { "Banana",4 } });
-
 	CraftSystem::Instance().Init(player->GetInventory());
 	CraftSystem::Instance().LoadRecipes("Assets/ConfigFile/CraftRecipes.json");
 	CraftSystem::Instance().LoadCraftData("Assets/ConfigFile/CraftSystemData.json");
@@ -472,24 +486,8 @@ void SceneGame::Update(float tick)
 		return;
 	}
 
-	//===============Handle Input
-	if (KInput::IsKeyRelease(VK_LCONTROL))
-	{
-		if (!m_isShowCursor)
-		{
-			ShowCursor(TRUE);	// Change cursor status
-			GetObj<Player>("Player")->LockCursor(false);	// Unlock cursor
-			m_isShowCursor = !m_isShowCursor;	
-		}
-		else
-		{
-			ShowCursor(FALSE);// Change cursor status
-			GetObj<Player>("Player")->LockCursor(true);	// Lock cursor
-			m_isShowCursor = !m_isShowCursor;
-		}
-	}
-
-	
+	// if open the menu panel, Game pause
+	if (GetObj<UIMenu>("UIMenu")->IsActive())return;
 
 
 	//===============Physics Update

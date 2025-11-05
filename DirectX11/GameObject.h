@@ -31,25 +31,23 @@ public:
 
 	/// @brief Add Component to the GameObject
 	/// @tparam T 
-	/// @param type Component type to add
 	/// @param comp Component pointer
 	template<typename T>
-	void AddComponent(MyComponent::ComponentType type, std::shared_ptr<T> comp)
+	void AddComponent(std::shared_ptr<T> comp)
 	{
-		m_components[type] = comp;
+		m_components[T::TYPE] = comp;
 	}
 
 	/// @brief Get Component from the GameObject
 	/// @tparam T Component type to retrieve
-	/// @param type Component type
 	/// @return Component pointer of type T if found, otherwise nullptr
 	template<typename T>
-	T* GetComponent(MyComponent::ComponentType type)
+	T* GetComponent()
 	{
-		auto it = m_components.find(type);
+		auto it = m_components.find(T::TYPE);
 		if (it != m_components.end())
 		{
-			return dynamic_cast<T*>(it->second.get()); 
+			return dynamic_cast<T*>(it->second.get());
 		}
 
 		return nullptr;
@@ -68,15 +66,6 @@ public:
 		}
 	}
 
-#if defined(_DEBUG) || defined(DEBUG)
-	/// @brief Set debug collision scale for visualization
-	/// @param scale Scale factor for collision visualization
-	void SetDebugCollisionScale(const DirectX::XMFLOAT3& scale) { m_debugCollisionScale = scale; };
-
-	/// @brief Get debug collision scale
-	/// @return Current debug collision scale
-	const DirectX::XMFLOAT3& GetDebugCollisionScale() const { return m_debugCollisionScale; };
-#endif
 
 	void Activate() { m_isActive = true; }
 	void DeActivate() { m_isActive = false; }
@@ -93,11 +82,6 @@ protected:
 
 	bool m_isActive;
 	GameObjectType m_objectType;
-#if defined(_DEBUG) || defined(DEBUG)
-	DirectX::XMFLOAT3 m_debugCollisionScale = { 1,1,1 };
-#endif
-
-
 };
 
 
